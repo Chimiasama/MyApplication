@@ -26,6 +26,7 @@ class ValidateSpecialRulesUseCase {
         val compendioFantasiaAtivo: Boolean,
         val compendioHorrorAtivo: Boolean,
         val compendioPathfinderAtivo: Boolean,
+        val compendioSciFiAtivo: Boolean,
         val compendioCrystalHeartAtivo: Boolean,
         val estagioAtual: Estagio,
         val listaDeEstagios: List<Estagio>,
@@ -57,6 +58,14 @@ class ValidateSpecialRulesUseCase {
             if (!hasObligation) return false
         }
 
+        // 1b) Regra especial: ASSASSINO IMPIEDOSO (Deadlands - Wiseguys) exige Sem Escrúpulos no grau Maior
+        if (v.id == "assassino_impiedoso") {
+            val hasSemEscrupulosMaior = input.complicacoesSelecionadas.entries.any { (k, v) ->
+                k.id.keyify() == "SEM_ESCRUPULOS" && v == "Maior"
+            }
+            if (!hasSemEscrupulosMaior) return false
+        }
+
         // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
         if (v.categoria == Categoria.ATORMENTADO) {
             val temRessuscitado = input.vantagensSelecionadas.any { it.id == "atormentado" }
@@ -70,7 +79,8 @@ class ValidateSpecialRulesUseCase {
             } else if (!input.permiteMultiAntecedenteArcano &&
                 !input.compendioFantasiaAtivo &&
                 !input.compendioHorrorAtivo &&
-                !input.compendioPathfinderAtivo) {
+                !input.compendioPathfinderAtivo &&
+                !input.compendioSciFiAtivo) {
 
                 val anyArcano = input.vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
                 if (anyArcano && input.vantagensSelecionadas.none { it.nome.keyify() == key }) {

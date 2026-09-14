@@ -159,6 +159,11 @@ object RacialTraitPointCatalog {
         "CONHECIMENTO_GERAL" to RacialTraitEffect.PericiaStep("Conhecimento Geral"), // Akaimimi: "começa com Conhecimento Geral d6"
         "DICAS_CULTURAIS" to RacialTraitEffect.PericiaStep("Convenção"), // Akaimimi: "começando com um d6 em Convenção"
         "BRINCANDO_COM_O_DESTINO" to RacialTraitEffect.PericiaStep("Jogar"), // Nekomimi: "Começam com d6 em Jogar"
+        // Araiguma (Arte da Guerra) "Brincalhão": "recebe Provocar d4 (1)" — mesmo
+        // achado dos três de cima (custoDe já cobrava o ponto certo via
+        // RacialTraitPointCatalog, mas o dado de perícia em si nunca era
+        // concedido por faltar aqui).
+        "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar"),
 
         // Humanos (Fantasia) - Pacotes Culturais: cada opção de Variante
         // concede um piso de atributo/perícia igual a qualquer outra raça —

@@ -19026,7 +19026,7 @@
       }
     ]
   },
-  {
+    {
     "tipo": "Armaduras",
     "subtipo": "Medievais",
     "livros": [
@@ -19037,97 +19037,128 @@
         "id": "tunica_ou_gibao_tronco_bracos",
         "nome": "Túnica ou Gibão (Tronco/Braços)",
         "custo": "20 po",
-        "peso": "5,5"
+        "peso": "5,5",
+        "armadura": "+2",
+        "forcaMin": "d6"
       },
       {
         "id": "perneiras_de_couro_pernas",
         "nome": "Perneiras de Couro (Pernas)",
         "custo": "20 po",
-        "peso": "4"
+        "peso": "4",
+        "armadura": "+2",
+        "forcaMin": "d6"
       },
       {
         "id": "capuz_de_couro_cabeca",
         "nome": "Capuz de Couro (Cabeça)",
         "custo": "10 po",
-        "peso": "0,5"
+        "peso": "0,5",
+        "armadura": "+2",
+        "forcaMin": "d6"
       },
       {
         "id": "camisao_de_malha_tronco_bracos",
         "nome": "Camisão de Malha (Tronco/Braços)",
         "custo": "100 po",
-        "peso": "11"
+        "peso": "11",
+        "armadura": "+3",
+        "forcaMin": "d8"
       },
       {
         "id": "perneiras_de_malha_pernas",
         "nome": "Perneiras de Malha (Pernas)",
         "custo": "100 po",
-        "peso": "5"
+        "peso": "5",
+        "armadura": "+3",
+        "forcaMin": "d8"
       },
       {
         "id": "capuz_de_cota_elmo_cabeca",
         "nome": "Capuz de Cota/Elmo (Cabeça)",
         "custo": "50 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "armadura": "+3",
+        "forcaMin": "d8"
       },
       {
         "id": "peitoral_de_aco_tronco",
         "nome": "Peitoral de Aço (Tronco)",
         "custo": "500 po",
-        "peso": "15"
+        "peso": "15",
+        "armadura": "+4",
+        "forcaMin": "d10"
       },
       {
         "id": "bracadeiras_de_placas_bracos",
         "nome": "Braçadeiras de Placas (Braços)",
         "custo": "250 po",
-        "peso": "5"
+        "peso": "5",
+        "armadura": "+4",
+        "forcaMin": "d10"
       },
       {
         "id": "grevas_de_placas_pernas",
         "nome": "Grevas de Placas (Pernas)",
         "custo": "500 po",
-        "peso": "5"
+        "peso": "5",
+        "armadura": "+4",
+        "forcaMin": "d10"
       },
       {
         "id": "elmo_pesado_cabeca",
         "nome": "Elmo Pesado (Cabeça)",
         "custo": "250 po",
-        "peso": "2"
+        "peso": "2",
+        "armadura": "+4",
+        "forcaMin": "d10"
       },
       {
         "id": "elmo_pesado_fechado_cabeca",
         "nome": "Elmo Pesado Fechado (Cabeça)",
         "custo": "300 po",
-        "peso": "4"
+        "peso": "4",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "observacoes": "-1 em rolagens de Perceber baseadas em visão."
       },
       {
         "id": "barda_de_couro",
         "nome": "Barda de Couro",
         "custo": "300 po",
-        "peso": "25"
+        "peso": "25",
+        "armadura": "+2",
+        "forcaMin": "d8"
       },
       {
         "id": "barda_de_malha",
         "nome": "Barda de Malha",
         "custo": "500 po",
-        "peso": "55"
+        "peso": "55",
+        "armadura": "+3",
+        "forcaMin": "d10"
       },
       {
         "id": "barda_de_placas",
         "nome": "Barda de Placas",
         "custo": "5.000 po",
-        "peso": "75"
+        "peso": "75",
+        "armadura": "+4",
+        "forcaMin": "d12"
       },
       {
         "id": "armadura_de_espinhos",
         "nome": "Armadura de Espinhos",
         "custo": "+50 po",
-        "peso": "+5"
+        "peso": "+5",
+        "observacoes": "Dano +1 ao Esmagar durante um Agarrão."
       },
       {
         "id": "manopla_fechada",
         "nome": "Manopla fechada",
         "custo": "8 po",
-        "peso": "2,5"
+        "peso": "2,5",
+        "observacoes": "Força +1 contra Desarmar. (cotas de malha e braçadeiras, requer uma ação para apertar/soltar.)"
       },
       {
         "id": "placa_de_peito_do_cavaleiro_infernal_tronco",
@@ -19181,7 +19212,7 @@
       }
     ]
   },
-  {
+    {
     "tipo": "Escudos",
     "subtipo": "Medievais",
     "livros": [
@@ -19192,29 +19223,38 @@
         "id": "escudo_leve",
         "nome": "Escudo Leve",
         "custo": "5 po",
-        "peso": "2"
+        "peso": "2",
+        "aparar": "+1",
+        "forcaMin": "d6"
       },
       {
         "id": "escudo_medio",
         "nome": "Escudo Médio",
         "custo": "9 po",
-        "peso": "4"
+        "peso": "4",
+        "aparar": "+2",
+        "forcaMin": "d8",
+        "observacoes": "Cobertura -2."
       },
       {
         "id": "escudo_pesado",
         "nome": "Escudo Pesado",
         "custo": "20 po",
-        "peso": "6"
+        "peso": "6",
+        "aparar": "+2",
+        "forcaMin": "d10",
+        "observacoes": "Cobertura -4. Movimentação -1."
       },
       {
         "id": "escudo_com_espinhos",
         "nome": "Escudo com Espinhos",
         "custo": "20 po",
-        "peso": "2,5"
+        "peso": "2,5",
+        "observacoes": "Dano +1 quando ataca com o escudo."
       }
     ]
   },
-  {
+    {
     "tipo": "Armas Medievais",
     "subtipo": "Corpo a Corpo",
     "livros": [
@@ -19225,223 +19265,332 @@
         "id": "adaga_faca",
         "nome": "Adaga/Faca",
         "custo": "2 po",
-        "peso": "0,5"
+        "peso": "0,5",
+        "dano": "For+d4",
+        "forcaMin": "d4"
       },
       {
         "id": "alabarda",
         "nome": "Alabarda",
         "custo": "10 po",
-        "peso": "6"
+        "peso": "6",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "pa": 1,
+        "observacoes": "Alcance 1, Duas Mãos"
       },
       {
         "id": "alfange",
         "nome": "Alfange",
         "custo": "75 po",
-        "peso": "4"
+        "peso": "4",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "pa": 1,
+        "observacoes": "Pode ser usada com Duas Mãos (nesse caso, causa dano +1)."
       },
       {
         "id": "cajado_bastao",
         "nome": "Cajado/Bastão",
         "custo": "-",
-        "peso": "2,5"
+        "peso": "5",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "observacoes": "Aparar +1, Alcance 1, Duas Mãos."
       },
       {
         "id": "chicote",
         "nome": "Chicote",
         "custo": "5 po",
-        "peso": "1"
+        "peso": "1",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "observacoes": "Aparar -1, Alcance 2. Uma ampliação na rolagem de ataque enreda a vítima em vez de causar o bônus de dano."
       },
       {
         "id": "cimitarra",
         "nome": "Cimitarra",
         "custo": "15 po",
-        "peso": "2"
+        "peso": "2",
+        "dano": "For+d6",
+        "forcaMin": "d6"
       },
       {
         "id": "clava_leve",
         "nome": "Clava Leve",
         "custo": "1 po",
-        "peso": "1"
+        "peso": "1",
+        "dano": "For+d4",
+        "forcaMin": "d4"
       },
       {
         "id": "clava_pesada",
         "nome": "Clava Pesada",
         "custo": "2 po",
-        "peso": "2,5"
+        "peso": "2,5",
+        "dano": "For+d6",
+        "forcaMin": "d6"
       },
       {
         "id": "corrente_com_cravos",
         "nome": "Corrente com Cravos",
-        "custo": "25 po",
-        "peso": "3"
+        "custo": "8 po",
+        "peso": "3",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "pa": 1,
+        "observacoes": "Ignora o bônus de Escudo, Duas Mãos."
       },
       {
         "id": "espada_bastarda",
         "nome": "Espada Bastarda",
         "custo": "35 po",
-        "peso": "3"
+        "peso": "3",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "pa": 1,
+        "observacoes": "Pode ser usada com Duas Mãos (nesse caso, causa dano +1)."
       },
       {
         "id": "espada_curta",
         "nome": "Espada Curta",
         "custo": "10 po",
-        "peso": "1"
+        "peso": "1",
+        "dano": "For+d6",
+        "forcaMin": "d6"
       },
       {
         "id": "espada_grande",
         "nome": "Espada Grande",
         "custo": "50 po",
-        "peso": "4"
+        "peso": "4",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "pa": 2,
+        "observacoes": "Duas Mãos."
       },
       {
         "id": "espada_longa",
         "nome": "Espada Longa",
         "custo": "15 po",
-        "peso": "2"
+        "peso": "2",
+        "dano": "For+d8",
+        "forcaMin": "d8"
       },
       {
         "id": "faca_estrela",
         "nome": "Faca Estrela",
-        "custo": "24 po",
-        "peso": "1,5"
+        "custo": "28 po",
+        "peso": "1,5",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "observacoes": "Aparar +1."
       },
       {
         "id": "foice",
         "nome": "Foice",
         "custo": "3 po",
-        "peso": "1"
+        "peso": "1",
+        "dano": "For+d4",
+        "forcaMin": "d4"
       },
       {
         "id": "glaive",
         "nome": "Glaive",
         "custo": "8 po",
-        "peso": "5"
+        "peso": "5",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "observacoes": "Alcance 1, Duas Mãos."
       },
       {
         "id": "guisarme",
         "nome": "Guisarme",
         "custo": "9 po",
-        "peso": "6"
+        "peso": "6",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "pa": 1,
+        "observacoes": "Alcance 1, Duas Mãos."
       },
       {
         "id": "katana",
         "nome": "Katana",
         "custo": "50 po",
-        "peso": "3"
+        "peso": "1,5",
+        "dano": "For+d6+1",
+        "forcaMin": "d6",
+        "observacoes": "Duas Mãos."
       },
       {
         "id": "lanca",
         "nome": "Lança",
         "custo": "2 po",
-        "peso": "3"
+        "peso": "3",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "observacoes": "Alcance 1. Aparar +1 se usada com as duas mãos."
       },
       {
         "id": "lanca_curta",
         "nome": "Lança Curta",
         "custo": "1 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "observacoes": "Uma mão."
       },
       {
         "id": "lanca_de_cavalaria",
         "nome": "Lança de Cavalaria",
         "custo": "10 po",
-        "peso": "5"
+        "peso": "5",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "observacoes": "PA 2 em investidas, Alcance 2, só pode ser usada em combate montado."
       },
       {
         "id": "maca_leve",
         "nome": "Maça Leve",
         "custo": "5 po",
-        "peso": "2"
+        "peso": "2",
+        "dano": "For+d6",
+        "forcaMin": "d6"
       },
       {
         "id": "maca_pesada",
         "nome": "Maça Pesada",
         "custo": "12 po",
-        "peso": "4"
+        "peso": "4",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "pa": 1
       },
       {
         "id": "maca_estrela",
         "nome": "Maça-estrela",
         "custo": "8 po",
-        "peso": "3"
+        "peso": "3",
+        "dano": "For+d6",
+        "forcaMin": "d6"
       },
       {
         "id": "machado_de_batalha",
         "nome": "Machado de Batalha",
         "custo": "10 po",
-        "peso": "3"
+        "peso": "3",
+        "dano": "For+d8",
+        "forcaMin": "d8"
       },
       {
         "id": "machado_de_mao",
         "nome": "Machado de Mão",
         "custo": "6 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "dano": "For+d6",
+        "forcaMin": "d6"
       },
       {
         "id": "machado_grande",
         "nome": "Machado Grande",
         "custo": "20 po",
-        "peso": "6"
+        "peso": "6",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "pa": 3,
+        "observacoes": "Aparar -1, Duas Mãos."
       },
       {
         "id": "malho",
         "nome": "Malho",
         "custo": "12 po",
-        "peso": "5"
+        "peso": "5",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "pa": 2,
+        "observacoes": "Duas Mãos, +2 para quebrar objetos."
       },
       {
         "id": "mangual",
         "nome": "Mangual",
         "custo": "8 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "observacoes": "Ignora o bônus por escudo."
       },
       {
         "id": "mangual_pesado",
         "nome": "Mangual Pesado",
         "custo": "15 po",
-        "peso": "5"
+        "peso": "5",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "observacoes": "Ignora o bônus de escudo, Duas mãos."
       },
       {
         "id": "martelo_de_guerra",
         "nome": "Martelo de Guerra",
         "custo": "12 po",
-        "peso": "2,5"
+        "peso": "2,5",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "pa": 1
       },
       {
         "id": "pique",
         "nome": "Pique",
         "custo": "20 po",
-        "peso": "9"
+        "peso": "9",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "observacoes": "PA 1 quando preparada, Alcance 2, Duas Mãos."
       },
       {
         "id": "ranseur",
         "nome": "Ranseur",
         "custo": "10 po",
-        "peso": "6"
+        "peso": "6",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "pa": 1,
+        "observacoes": "Alcance 1."
       },
       {
         "id": "rapieira",
         "nome": "Rapieira",
         "custo": "20 po",
-        "peso": "1"
+        "peso": "1",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "observacoes": "Aparar +1."
       },
       {
         "id": "sai",
         "nome": "Sai",
-        "custo": "1 po",
-        "peso": "0,5"
+        "custo": "2 po",
+        "peso": "0,5",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "observacoes": "Dano Não Letal (página 140)."
       },
       {
         "id": "segadeira",
         "nome": "Segadeira",
         "custo": "18 po",
-        "peso": "5"
+        "peso": "5",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "observacoes": "Duas Mãos."
       },
       {
         "id": "tridente",
         "nome": "Tridente",
         "custo": "15 po",
-        "peso": "2"
+        "peso": "2",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "observacoes": "Alcance 1."
       },
       {
         "id": "cachecol_laminado",
@@ -19498,7 +19647,7 @@
       }
     ]
   },
-  {
+    {
     "tipo": "Armas Medievais",
     "subtipo": "Distância",
     "livros": [
@@ -19509,85 +19658,155 @@
         "id": "arco_composto",
         "nome": "Arco Composto",
         "custo": "100 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "distancia": "12/24/48",
+        "dano": "For+d6",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "d6"
       },
       {
         "id": "arco_curto",
         "nome": "Arco Curto",
         "custo": "30 po",
-        "peso": "1"
+        "peso": "1",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "cdt": 1,
+        "forcaMin": "d6"
       },
       {
         "id": "arco_longo",
         "nome": "Arco Longo",
         "custo": "75 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "d8"
       },
       {
         "id": "besta_de_mao",
         "nome": "Besta de Mão",
         "custo": "20 po",
-        "peso": "1"
+        "peso": "1",
+        "distancia": "5/10/20",
+        "dano": "2d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "observacoes": "Recarga 1. Besta de uma mão, similar a uma pistola."
       },
       {
         "id": "besta_de_mao_de_repeticao",
         "nome": "Besta de Mão de Repetição",
         "custo": "160 po",
-        "peso": "1,5"
+        "peso": "1,5",
+        "distancia": "5/10/20",
+        "dano": "2d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "observacoes": "Recarga 1 para um estojo com 5 setas ou 1 para uma única seta."
       },
       {
         "id": "besta_leve",
         "nome": "Besta Leve",
         "custo": "35 po",
-        "peso": "2,5"
+        "peso": "2,5",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "observacoes": "Recarga 1. Engatilhada Manualmente."
       },
       {
         "id": "besta_leve_de_repeticao",
         "nome": "Besta Leve de Repetição",
         "custo": "250 po",
-        "peso": "4"
+        "peso": "4",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "observacoes": "Recarga 1 para um estojo com 5 setas ou 1 para uma única seta."
       },
       {
         "id": "besta_pesada",
         "nome": "Besta Pesada",
         "custo": "50 po",
-        "peso": "4"
+        "peso": "4",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "observacoes": "Requer um molinete para recarregar. Recarga 2."
       },
       {
         "id": "besta_pesada_de_repeticao",
         "nome": "Besta Pesada de Repetição",
         "custo": "400 po",
-        "peso": "6"
+        "peso": "6",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d8",
+        "observacoes": "Recarga 2 para um estojo com 5 setas ou 2 para uma única seta."
       },
       {
         "id": "boleadeira",
         "nome": "Boleadeira",
         "custo": "5 po",
-        "peso": "1"
+        "peso": "1",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "observacoes": "Alvos atingidos com uma ampliação estão Enredados. Boleadeiras têm Dureza 8."
       },
       {
         "id": "funda",
         "nome": "Funda",
         "custo": "-",
-        "peso": "0,5"
+        "peso": "0,5",
+        "distancia": "4/8/16",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "observacoes": "Arremessada com Atletismo."
       },
       {
         "id": "rede_balanceada",
         "nome": "Rede (Balanceada)",
         "custo": "20 po",
-        "peso": "4"
+        "peso": "4",
+        "distancia": "3/6/12",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "observacoes": "Um ataque bem-sucedido significa que o alvo está Enredado. A rede tem Dureza 10."
       },
       {
         "id": "shuriken_5",
         "nome": "Shuriken (5)",
         "custo": "1 po",
-        "peso": "0,5"
+        "peso": "0,5",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4"
       },
       {
         "id": "zarabatana",
         "nome": "Zarabatana",
         "custo": "2 po",
-        "peso": "0,5"
+        "peso": "0,5",
+        "distancia": "3/6/12",
+        "dano": "d4-2",
+        "cdt": 1,
+        "forcaMin": "d4"
       }
     ]
   },
@@ -19624,7 +19843,7 @@
       }
     ]
   },
-  {
+    {
     "tipo": "Armas Especiais",
     "subtipo": "Armas de Cerco",
     "livros": [
@@ -19635,37 +19854,63 @@
         "id": "ariete",
         "nome": "Aríete",
         "custo": "1.000 po",
-        "peso": "N/A"
+        "peso": "N/A",
+        "dano": "3d6",
+        "observacoes": "Não é uma arma de longa distância, usada para bater em objetos (Quebrando Coisas)."
       },
       {
         "id": "balista",
         "nome": "Balista",
         "custo": "500 po",
-        "peso": "N/A"
+        "peso": "N/A",
+        "distancia": "15/30/60",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": "Especial",
+        "observacoes": "Arma Pesada. Recarga 5 minutos para um único operador, ou 2 minutos para uma equipe com 2."
       },
       {
         "id": "catapulta",
         "nome": "Catapulta",
         "custo": "800 po",
-        "peso": "N/A"
+        "peso": "N/A",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": "Especial",
+        "explosao": "MME",
+        "observacoes": "Arma Pesada. Recarga 5 minutos para uma equipe com 4."
       },
       {
         "id": "torre_de_cerco",
         "nome": "Torre de Cerco",
         "custo": "2.000 po",
-        "peso": "N/A"
+        "peso": "N/A",
+        "observacoes": "Não é uma arma de longa distância, usada para escalar muros; atiradores podem atirar dos andares superiores."
       },
       {
         "id": "trabuco",
         "nome": "Trabuco",
         "custo": "1.000 po",
-        "peso": "N/A"
+        "peso": "N/A",
+        "distancia": "30/60/120",
+        "dano": "3d8",
+        "pa": 4,
+        "cdt": "Especial",
+        "explosao": "MME",
+        "observacoes": "Arma Pesada. Recarga 5 minutos para uma equipe com 4."
       },
       {
         "id": "canhoes",
         "nome": "Canhões",
         "custo": "Preço Variável (Raro)",
-        "peso": "N/A"
+        "peso": "N/A",
+        "distancia": "50/100/200",
+        "dano": "3d6+1",
+        "pa": 4,
+        "cdt": 1,
+        "explosao": "MME",
+        "observacoes": "Munição: Balas Sólidas. Arma Pesada, Recarga 8. Dois membros da equipe podem recarregar ao mesmo tempo."
       }
     ]
   },
@@ -27668,6 +27913,23 @@
     ]
   },
   {
+    "tipo": "Veículos",
+    "subtipo": "Modificações (Wiseguys)",
+    "livros": [
+      "WISEGUYS"
+    ],
+    "itens": [
+      {
+        "id": "vidros_peliculados",
+        "nome": "Vidros Peliculados",
+        "custo": "-",
+        "observacoes": "O interior do veículo é tratado como Penumbra (Nível I), Escuridão (Nível II) ou Escuro como Breu (Nível III) para fins de visibilidade.",
+        "origem": "WISEGUYS",
+        "descricaoLite": "Trata o interior do veículo como Penumbra/Escuridão/Escuro como Breu (Níveis I-III) para visibilidade."
+      }
+    ]
+  },
+  {
     "tipo": "Equipamento Comum",
     "subtipo": "Animais e Arreios",
     "livros": [
@@ -27855,81 +28117,6 @@
     ]
   },
   {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "sabre_de_abordagem",
-        "nome": "Sabre de Abordagem",
-        "dano": "For+d6",
-        "forcaMin": "d4",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "—",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "—"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Orientais",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "nodachi",
-        "nome": "Nodachi",
-        "dano": "For+d8",
-        "pa": 2,
-        "peso": "6",
-        "custo": 500,
-        "observacoes": "Jutsu (Espada). Duas mãos. Aparar -1.",
-        "jutsu_grupo": "Espada",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Jutsu (Espada). Duas mãos. Aparar -1."
-      },
-      {
-        "id": "kusarigama",
-        "nome": "Kusarigama",
-        "dano": "For+d6/d4",
-        "peso": "2",
-        "custo": 200,
-        "observacoes": "Jutsu (Corrente). Alcance 2, Duas mãos, Desarmar, Enredar.",
-        "jutsu_grupo": "Corrente",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Jutsu (Corrente). Alcance 2, Duas mãos, Desarmar, Enredar."
-      },
-      {
-        "id": "tetsubo",
-        "nome": "Tetsubo",
-        "dano": "For+d10",
-        "peso": "7,5",
-        "custo": 300,
-        "observacoes": "Jutsu (Concussão). Duas mãos. Arma Pesada se tiver For d10+.",
-        "jutsu_grupo": "Concussão",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Jutsu (Concussão). Duas mãos. Arma Pesada se tiver For d10+."
-      },
-      {
-        "id": "kunai",
-        "nome": "Kunai",
-        "dano": "For+d4",
-        "peso": "0,5",
-        "custo": 35,
-        "observacoes": "Jutsu (Leve). Pode ser arremessada.",
-        "jutsu_grupo": "Leve",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Jutsu (Leve). Pode ser arremessada."
-      }
-    ]
-  },
-  {
     "tipo": "Itens Especiais",
     "subtipo": "Talismãs",
     "livros": [
@@ -27971,68 +28158,6 @@
         "observacoes": "Talismã de Papel do Véu: Donzelas de templo produzem e disponibilizam este talismã para cidadãos e paroquianos se protegerem de espectros. Aqueles que usam o talismã do véu de noiva em papel podem passar em segurança e sem ser percebido por criaturas desmortas. Rasgar um pedaço ativa o talismã, ocultando o usuário e tornando-o invisível para os desmortos por um minuto. Se ocorrer uma interação com os desmortos, a magia do talismã se dissipa.",
         "origem": "ARTE_DA_GUERRA",
         "descricaoLite": "Talismã tradicionalmente distribuído por templos para proteção contra espectros. Ao ser rasgado, torna o usuário invisível para criaturas desmortas por um minuto, mas o efeito termina caso haja qualquer interação com elas."
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Lâminas",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "wakizashi",
-        "nome": "Wakizashi",
-        "dano": "For+d6",
-        "pa": "1",
-        "peso": "2",
-        "custo": 200,
-        "observacoes": "Pode ser usada com Katana (Daisho).",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Pode ser usada com Katana (Daisho)."
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Distância",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "yumi_arco_longo",
-        "nome": "Yumi (Arco Longo)",
-        "dano": "2d6",
-        "distancia": "15/30/60",
-        "peso": "3",
-        "custo": 250,
-        "forcaMin": 8,
-        "observacoes": "Requer Força d8 para puxar.",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Requer Força d8 para puxar."
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "katana",
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 1000,
-        "observacoes": "Duas mãos",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Duas mãos"
       }
     ]
   },
@@ -28108,156 +28233,6 @@
         "observacoes": "Causa Distraído e pode Enredar.",
         "origem": "ARTE_DA_GUERRA",
         "descricaoLite": "Causa Distraído e pode Enredar."
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "katana",
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 50,
-        "observacoes": "Duas Mãos",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Duas Mãos"
-      },
-      {
-        "id": "podao_de_guerra",
-        "nome": "Podão de Guerra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "6",
-        "custo": 10,
-        "observacoes": "PA 1, Alcance 1",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "PA 1, Alcance 1"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Medievais",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "boleadeira",
-        "nome": "Boleadeira",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 5,
-        "observacoes": "Ampliação = Enredado.",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Ampliação = Enredado."
-      },
-      {
-        "id": "shuriken",
-        "nome": "Shuriken",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "—",
-        "custo": 1,
-        "observacoes": "",
-        "origem": "ARTE_DA_GUERRA"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Orientais",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "katana",
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "pa": 1,
-        "peso": "1,5",
-        "custo": 500,
-        "observacoes": "Jutsu (Espada). Duas mãos: d8 dano.",
-        "jutsu_grupo": "Espada",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Jutsu (Espada). Duas mãos: d8 dano."
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Armas de Rua",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "shuriken",
-        "nome": "Shuriken",
-        "dano": "For+1",
-        "forcaMin": "d4",
-        "peso": "0.5",
-        "custo": 5,
-        "observacoes": "Distância 3/6/12.",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Distância 3/6/12."
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Lâminas",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "naginata",
-        "nome": "Naginata",
-        "dano": "For+d8",
-        "pa": "1",
-        "peso": "6",
-        "custo": 400,
-        "forcaMin": 6,
-        "observacoes": "Alcance 1. Duas Mãos. Aparar +1.",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "Alcance 1. Duas Mãos. Aparar +1."
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Distância",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "itens": [
-      {
-        "id": "shuriken",
-        "nome": "Shuriken",
-        "dano": "For+d4",
-        "distancia": "4/8/16",
-        "peso": "0.5",
-        "custo": 5,
-        "observacoes": "CdT 2. Não acumula penalidade de saque rápido.",
-        "origem": "ARTE_DA_GUERRA",
-        "descricaoLite": "CdT 2. Não acumula penalidade de saque rápido."
       }
     ]
   },

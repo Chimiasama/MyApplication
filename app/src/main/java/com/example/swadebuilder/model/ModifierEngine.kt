@@ -320,7 +320,7 @@ object ModifierEngine {
             if (comp.id == Constants.ID_IDOSO) {
                 modifiers.add(Modifier("comp_idoso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
             }
-            if (comp.id == Constants.ID_LENTO) {
+            if (comp.id == Constants.ID_LENTO || comp.id == Constants.ID_LENTO_CH) {
                 val penalty = if (nivel == "Maior") -2 else -1
                 modifiers.add(Modifier("comp_lento_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, penalty))
             }

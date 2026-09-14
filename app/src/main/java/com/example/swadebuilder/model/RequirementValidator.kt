@@ -58,7 +58,10 @@ object RequirementValidator {
                 if (v.id != Constants.ID_AA_AGENT_SYN) return false
             }
 
-            if (!state.permiteMultiAntecedenteArcano) {
+            // CriadorState.permiteMultiplosAntecedentesArcanos: mesma condição usada em
+            // ValidateSpecialRulesUseCase (criação); antes esta checagem (usada em Progressos)
+            // faltava esse bypass, bloqueando na evolução o que era permitido na criação.
+            if (!state.permiteMultiplosAntecedentesArcanos) {
                 val anyArcano = state.vantagensSelecionadas.any { it.nome.keyify().startsWith(Constants.EDGE_ARCANE_BACKGROUND) }
                 if (anyArcano && state.vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false

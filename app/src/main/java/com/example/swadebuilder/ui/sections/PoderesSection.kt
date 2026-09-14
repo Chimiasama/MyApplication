@@ -206,7 +206,10 @@ fun PoderesSection(
     }
 
     // Determine which ABs to display
-    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) {
+    // Fantasia/Horror/SciFi/Pathfinder tratam múltiplos Antecedentes Arcanos como prática normal
+    // do cenário (reserva de PP compartilhada, livro) — não dependem da regra opcional pra mostrar
+    // mais de um AB de uma vez.
+    val displayKeys = if (!state.permiteMultiplosAntecedentesArcanos) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
@@ -214,8 +217,8 @@ fun PoderesSection(
 
     val hasStandardAB = arcanosAtivos.any { it.normAAKey() != "MISTICO" }
 
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
-        if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) 0 else {
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioSciFiAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
+        if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo && !state.compendioSciFiAtivo) 0 else {
             val maxBase = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
             val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && hasStandardAB) 1 else 0
             maxBase + state.bonusPoderExtra + gnomeBonus
@@ -261,18 +264,25 @@ fun PoderesSection(
                 advantage == null &&
                 (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
             val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "MESTRE DO CHI"
-
-            val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
-                ?: ArcaneConfig.getPermittedPowers(arcKey)
-            val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
-            val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)
-            val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
             val originRaw = when {
                 usaListaChi -> "ARTE DA GUERRA"
                 else -> advantage?.origem
                     ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
             }
             val normalizedOrigin = powerAssetOriginKey(originRaw)
+
+            // "MESTRE DO CHI" é usado tanto pelo Antecedente Arcano de Deadlands (via
+            // `advantage`) quanto pelo sistema de Mestre do Chi por Tropo da Arte da
+            // Guerra (chave literal, sem Vantagem correspondente — `usaTecnicasTropo`).
+            // Os dois têm listas de poderes diferentes; corrigir a chave de Deadlands
+            // em ArcaneConfig sem esse guard vazaria a lista de Deadlands pro Tropo da
+            // Arte da Guerra (ou o inverso), então só consulta ArcaneConfig fora do
+            // caminho por Tropo. `originRaw` desambigua outras colisões (ex.: ALQUIMIA
+            // entre Fantasia/Horror, ELEMENTALISTA entre Fantasia/Arte da Guerra).
+            val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
+                ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey, originRaw)
+            val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)
+            val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
 
             val specificList = powerCache[normalizedOrigin] ?: emptyList()
             val basicList = powerCache["BASICO"] ?: emptyList()
@@ -356,8 +366,6 @@ fun PoderesSection(
                     true // Already filtered by domain logic above (Miracles AB)
                 } else if (permittedSet != null) {
                     power.id in permittedSet
-                } else if (blockedSet.isNotEmpty()) {
-                    power.id !in blockedSet
                 } else {
                     true // No restriction
                 }
@@ -367,6 +375,8 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
+                } else if (!state.poderAtendeEstagio(power.estagio)) {
+                    return@filter false
                 }
 
                 // Requisito de "precisa ter outra Vantagem antes" (ex.: Disfarce
@@ -566,7 +576,7 @@ fun PoderesSection(
                 val ppDisplay = if (arcKey == "MISTICO") {
                     val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && !hasStandardAB) 1 else 0
                     ppTotal + gnomeBonus
-                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo) {
+                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
                     sharedTotalPP
                 } else {
                     ppTotal

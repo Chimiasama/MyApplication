@@ -48,7 +48,12 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Atletismo, Lutar ou Atirar d6+"
+      "observacoes": "Atletismo, Lutar ou Atirar d6+",
+      "periciaMinOpcional": {
+        "Atletismo": 6,
+        "Lutar": 6,
+        "Atirar": 6
+      }
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -646,7 +651,11 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Atletismo d8+ ou Atirar d8+"
+      "observacoes": "Atletismo d8+ ou Atirar d8+",
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      }
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -813,9 +822,7 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Permite que a personagem conjure seus poderes de forma a afetar grandes unidades de Extras, como tropas ou grupos de inimigos.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Permite que a personagem conjure seus poderes de forma a afetar grandes unidades de Extras, como tropas ou grupos de inimigos."  },
   {
     "id": "mago_de_sangue",
     "nome": "MAGO DE SANGUE",
@@ -836,9 +843,7 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Sempre que a personagem causar diretamente (com poderes, mãos ou armas) um Ferimento não Absorvido em um ser consciente, recupera d6 Pontos de Poder; dano causado indiretamente, por aliados ou lacaios controlados, não conta.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Sempre que a personagem causar diretamente (com poderes, mãos ou armas) um Ferimento não Absorvido em um ser consciente, recupera d6 Pontos de Poder; dano causado indiretamente, por aliados ou lacaios controlados, não conta."  },
   {
     "id": "poder_favorito",
     "nome": "PODER FAVORITO",
@@ -1007,7 +1012,12 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Alquimia, Curar ou Sobrevivência d6+"
+      "observacoes": "Alquimia, Curar ou Sobrevivência d6+",
+      "periciaMinOpcional": {
+        "Alquimia": 6,
+        "Curar": 6,
+        "Sobrevivência": 6
+      }
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -1205,10 +1215,8 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "licantropo"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Requer ter contraído Licantropia (condição narrativa, não uma Vantagem/Complicação selecionável)"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -1642,9 +1650,7 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Das 0h à 1h, elimina o risco de Falha Crítica e oferece uma tentativa gratuita de Absorção a cada ferimento sofrido.",
-    "subtipoArcano": "BRUXA"
-  },
+    "descricaoLite": "Das 0h à 1h, elimina o risco de Falha Crítica e oferece uma tentativa gratuita de Absorção a cada ferimento sofrido."  },
   {
     "id": "mau_olhado",
     "nome": "MAU-OLHADO",
@@ -5490,10 +5496,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -5555,10 +5559,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -5577,10 +5580,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -6224,9 +6225,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Asas retráteis dão ao demônio Movimentação 12 em voo; uma segunda aquisição da vantagem eleva isso para 24, e uma terceira, para 48.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Asas retráteis dão ao demônio Movimentação 12 em voo; uma segunda aquisição da vantagem eleva isso para 24, e uma terceira, para 48."  },
   {
     "id": "couro_blindado",
     "nome": "COURO BLINDADO",
@@ -6265,9 +6264,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Armas não mágicas causam apenas metade do dano (arredondado para cima) ao ser demoníaco, com exceção das feitas de ferro frio.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Armas não mágicas causam apenas metade do dano (arredondado para cima) ao ser demoníaco, com exceção das feitas de ferro frio."  },
   {
     "id": "fogo_infernal",
     "nome": "FOGO INFERNAL",
@@ -6308,9 +6305,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "O Fogo Infernal do demônio sobe para 2d6 de dano, liberando ainda o uso irrestrito do Modelo de Cone (ou Raio).",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "O Fogo Infernal do demônio sobe para 2d6 de dano, liberando ainda o uso irrestrito do Modelo de Cone (ou Raio)."  },
   {
     "id": "garras_demonio",
     "nome": "GARRAS (Demônio)",
@@ -6329,9 +6324,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Garras retráteis causam For+d4 de dano ao demônio e somam +2 em Atletismo para escalar; adquirida pela segunda vez, o dano das garras sobe para For+d6 com PA 2.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Garras retráteis causam For+d4 de dano ao demônio e somam +2 em Atletismo para escalar; adquirida pela segunda vez, o dano das garras sobe para For+d6 com PA 2."  },
   {
     "id": "sentido_sobrenatural_demonio",
     "nome": "SENTIDO SOBRENATURAL",
@@ -6412,9 +6405,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Concede presas que causam For+d6 de dano, usáveis contra alvos agarrados; adquirida novamente, ganham PA 2.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Concede presas que causam For+d6 de dano, usáveis contra alvos agarrados; adquirida novamente, ganham PA 2."  },
   {
     "id": "poderes_misticos_demonio",
     "nome": "PODERES MÍSTICOS (Demônio)",
@@ -7450,9 +7441,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Durante a hora entre meia-noite e uma da manhã, o personagem fica imune a Falhas Críticas (suas falhas contam como normais) e, ao sofrer um Ferimento, pode fazer uma rolagem de Absorção sem custo.",
-    "subtipoArcano": "BRUXA"
-  },
+    "descricaoLite": "Durante a hora entre meia-noite e uma da manhã, o personagem fica imune a Falhas Críticas (suas falhas contam como normais) e, ao sofrer um Ferimento, pode fazer uma rolagem de Absorção sem custo."  },
   {
     "id": "poder_sombrio",
     "nome": "PODER SOMBRIO",
@@ -10220,9 +10209,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -11133,10 +11120,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -11198,10 +11183,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -11220,10 +11204,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -13324,9 +13306,7 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -14237,10 +14217,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -14302,10 +14280,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -14324,10 +14301,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -14762,7 +14737,10 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Novato",
-      "pericias": {
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Navegar": 4,
+        "Dirigir": 4,
         "Pilotar": 4
       }
     },
@@ -14877,7 +14855,9 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Experiente",
-      "pericias": {
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 8,
         "Atirar": 8
       }
     },
@@ -15157,9 +15137,10 @@
       "pericias": {
         "Canalizar Cristal": 8
       },
-      "vantagensPrevias": [
+      "vantagens_previas": [
         "focus_ch"
-      ]
+      ],
+      "observacoes": ""
     },
     "descricao": "Rerrolagem gratuita em Canalizar Cristal.",
     "livros": [
@@ -15254,9 +15235,10 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagensPrevias": [
+      "vantagens_previas": [
         "especialista_cristal"
-      ]
+      ],
+      "observacoes": ""
     },
     "descricao": "Ganha novo poder com o Cristal especializado. No Heroico, ganha mais um.",
     "livros": [
@@ -17600,10 +17582,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -17665,10 +17645,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -17687,10 +17666,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -20217,10 +20194,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -20282,10 +20257,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -20304,10 +20278,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -20417,9 +20389,9 @@
       },
       "pericias": {},
       "vantagens_previas": [
-        "sem escrúpulos (maior)"
+        "sem_escrupulos"
       ],
-      "observacoes": "",
+      "observacoes": "Exige a Complicação Sem Escrúpulos no grau Maior",
       "choiceOptions": []
     },
     "limite_compra": "",
@@ -20484,7 +20456,7 @@
         "Intimidar": 8
       },
       "vantagens_previas": [],
-      "observacoes": "",
+      "observacoes": "Carta Selvagem",
       "choiceOptions": []
     },
     "limite_compra": "",
@@ -23479,10 +23451,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -23544,10 +23514,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -23566,10 +23535,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -24432,8 +24399,7 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Escolha um tipo de criatura (demônio, oni ou shamni): ganha +2 em Sobrevivência para rastreá-la ou caçá-la, +1 em Jutsu, Atletismo (arremesso) ou Atirar e no dano contra ela, e +1 em Ocultismo para obter informações sobre o tipo. Se já enfrentou um exemplar específico como Carta Selvagem, o bônus também vale para Perceber e para o Aparar contra ele. Pode ser escolhida várias vezes para tipos diferentes.",
-    "subtipoArcano": "DEMONIO"
+    "descricaoLite": "Escolha um tipo de criatura (demônio, oni ou shamni): ganha +2 em Sobrevivência para rastreá-la ou caçá-la, +1 em Jutsu, Atletismo (arremesso) ou Atirar e no dano contra ela, e +1 em Ocultismo para obter informações sobre o tipo. Se já enfrentou um exemplar específico como Carta Selvagem, o bônus também vale para Perceber e para o Aparar contra ele. Pode ser escolhida várias vezes para tipos diferentes."
   },
   {
     "id": "detetive",
@@ -24636,10 +24602,8 @@
       "pericias": {
         "Ocultismo": 8
       },
-      "vantagens_previas": [
-        "vinculo_espiritual"
-      ],
-      "observacoes": "Requer Tropo Kui"
+      "vantagens_previas": [],
+      "observacoes": "Requer Tropo Kui com a escolha de Ferramentas do Ofício \"Vínculo Espiritual\""
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -24827,10 +24791,8 @@
       "pericias": {
         "Idiomas": 6
       },
-      "vantagens_previas": [
-        "talismas"
-      ],
-      "observacoes": "Requer Tropo Kui"
+      "vantagens_previas": [],
+      "observacoes": "Requer Tropo Kui com a escolha de Ferramentas do Ofício \"Talismãs\""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -24851,10 +24813,8 @@
         "Espírito": 8
       },
       "pericias": {},
-      "vantagens_previas": [
-        "talismas"
-      ],
-      "observacoes": "Requer Tropo Kui"
+      "vantagens_previas": [],
+      "observacoes": "Requer Tropo Kui com a escolha de Ferramentas do Ofício \"Talismãs\""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -27626,10 +27586,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -27691,10 +27649,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -27713,10 +27670,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -27915,8 +27870,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Permite usar a perícia Tecnomagia no lugar de Consertar (aplicando os modificadores de nível do emissor) para reparar objetos, inclusive os normalmente irreparáveis; processar matéria dessa forma custa 1 PP e 10 minutos.",
-    "subtipoArcano": "MAGO"
+    "descricaoLite": "Permite usar a perícia Tecnomagia no lugar de Consertar (aplicando os modificadores de nível do emissor) para reparar objetos, inclusive os normalmente irreparáveis; processar matéria dessa forma custa 1 PP e 10 minutos."
   },
   {
     "id": "molda_carne",
@@ -28429,8 +28383,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede +2 em todas as rolagens de Ocultismo; gastando um Bene e tocando a cabeça de um cadáver, o personagem pode ver a última cena vivida pelo morto ou conversar com seu espírito usando um objeto ligado a ele, com cada pergunta após a primeira exigindo uma rolagem de Persuadir com penalidade cumulativa de -2.",
-    "subtipoArcano": "RITUALISTA"
+    "descricaoLite": "Concede +2 em todas as rolagens de Ocultismo; gastando um Bene e tocando a cabeça de um cadáver, o personagem pode ver a última cena vivida pelo morto ou conversar com seu espírito usando um objeto ligado a ele, com cada pergunta após a primeira exigindo uma rolagem de Persuadir com penalidade cumulativa de -2."
   },
   {
     "id": "taro_confusao",
@@ -28573,8 +28526,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Quando atacado, o personagem pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante; vencendo, redireciona o dano do ataque para um personagem aleatório a até cinco quadros de distância.",
-    "subtipoArcano": "DEMONIO"
+    "descricaoLite": "Quando atacado, o personagem pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante; vencendo, redireciona o dano do ataque para um personagem aleatório a até cinco quadros de distância."
   },
   {
     "id": "taro_estrela_morta",
@@ -30478,9 +30430,7 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -31391,10 +31341,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -31456,10 +31404,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -31478,10 +31425,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -31642,9 +31587,10 @@
       "pericias": {
         "Foco": 4
       },
-      "vantagens": [
-        "Artista Marcial"
-      ]
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "observacoes": ""
     },
     "descricao": "Algumas pessoas no oeste estranho estudaram as antigas artes asiáticas de combate. Muito poucos desses combatentes extremamente habilidosos alcançaram a disciplina espiritual necessária para canalizar a força sobrenatural chamada chi através de seus próprios corpos. Esses combatentes iluminados usam a Vantagem Antecedente Arcano (Mestre do Chi) para refletir suas habilidades surpreendentes. Mestres e mestras do chi usam Foco como sua perícia arcana.",
     "livros": [
@@ -31740,9 +31686,8 @@
       "pericias": {
         "Ocultismo": 6
       },
-      "vantagens": [
-        "Carta Selvagem"
-      ]
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "descricao": "Então você quer ser um herói? Um herói grande, durão e experiente? Saquei. Apenas verifique a sua sanidade antes de entrar, porque aqueles que já deram a volta pelos cactos algumas vezes, viram coisas que paralisariam a maioria das pessoas. Como resultado, eles já não são como eram!\nVeteranos do Oeste Estranho começam jogando como Experiente (ou um Estágio acima do restante dos vaqueiros e vaqueiras em sua campanha), o que significa que eles ganham quatro Progressos imediatamente. Vá em frente e os aplique agora.\nMas há um preço. Quando você escolher esta Vantagem, saque uma única carta do Baralho de Ação. Mostre-a ao Xerife e ele vai checar a tabela na página 100 para ver em que tipo de azar você esbarrou no seu caminho para tornar-se calejado.\nCuidado – os resultados podem variar de mutilação a insanidade. O seu Xerife tem todos os detalhes. Lhe avisamos, Tex!",
     "livros": [
@@ -31797,9 +31742,10 @@
       "pericias": {
         "Atirar": 10
       },
-      "vantagens": [
-        "Martelar o Cão"
-      ]
+      "vantagens_previas": [
+        "martelar_o_cao"
+      ],
+      "observacoes": ""
     },
     "descricao": "Como Martelar o Cão, acima, mas a penalidade de Atirar aplicada a cada tiro é de apenas –2.",
     "livros": [
@@ -31863,9 +31809,10 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Mateiro"
-      ]
+      "vantagens_previas": [
+        "mateiro"
+      ],
+      "observacoes": ""
     },
     "descricao": "Batedores são mestres da navegação na vastidão selvagem do Oeste. Quando o Xerife sacar uma carta de figura enquanto o grupo estiver viajando — indicando um encontro — o Batedor pode fazer uma rolagem de Perceber com –2 para detectar antes o perigo, criatura ou evento. Batedores sempre são considerados atentos para rolagens resistidas de Perceber contra Furtividade, ignoram até 2 pontos de penalidades em rolagens de Sobrevivência para rastrear, com uma ampliação recebem informações mais específicas sobre o que eles estão seguindo. Também adicionam +2 as rolagens de Conhecimento Geral para recordar informações sobre cidades, postos avançados, pontos de referência e poços, pessoas ou tribos ao longo de uma rota específica que já percorreram antes.",
     "livros": [
@@ -32021,9 +31968,8 @@
       "atributos": {
         "Espírito": 6
       },
-      "vantagens": [
-        "Carta Selvagem"
-      ]
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "descricao": "Alguns pistoleiros são demasiadamente tenazes para se deitarem e ficarem mortos depois de serem assassinados. O preço que pagam é uma batalha eterna pela sua própria alma. Se escolher esta Vantagem, a sua personagem renasceu na não-vida e você pode ler detalhes pavorosos na página 63.\nA Vantagem Atormentado só pode ser selecionada na criação da personagem. Tornar-se um Atormentado mais tarde requer a eliminação da carcaça mortal e muita sorte (o Xerife tem informações sobre como isso pode ocorrer), ou pegando a Vantagem Condenado no estágio lendário.\nObservação: Converse com o seu Xerife antes de escolher esta Vantagem, porque ela às vezes pode se tornar uma Complicação involuntária para todos os outros no grupo!",
     "livros": [
@@ -32040,9 +31986,10 @@
       "atributos": {
         "Espírito": 8
       },
-      "vantagens": [
-        "Coragem"
-      ]
+      "vantagens_previas": [
+        "coragem"
+      ],
+      "observacoes": ""
     },
     "descricao": "Através da perseverança e talvez um pouco de insanidade, estes casca-grossa reduzem em 2 as penalidades nos teste de Medo. Isto se acumula com Corajoso.",
     "livros": [
@@ -32072,10 +32019,10 @@
       "atributos": {
         "Espírito": 6
       },
-      "vantagens": [
-        "Carta Selvagem",
-        "Reputação"
-      ]
+      "vantagens_previas": [
+        "reputacao"
+      ],
+      "observacoes": "Carta Selvagem"
     },
     "descricao": "Pistoleiros velhos não morrem, eles apenas.… Está bem, eles de fato morrem. Normalmente de formas confusas e embaraçosas. Mas se o sua personagem veterana calejada do Oeste Estranho cair, ela definitivamente vai voltar. Escolher esta Vantagem é uma apólice de seguro contra ter seus planos para esta velha mão encerrados prematuramente.\nSe o seu herói ou heroína for morto, ele ou ela retorna automaticamente do túmulo como um Atormentado (veja página 63 para mais detalhes). O tempo que isso leva depende dos caprichos do Xerife e da história. Pode ser quase instantaneamente, ou pode ser depois dos seus colegas terem lhe colocado numa caixa de pinho e lido o Salmo 23. Uma vez que você retorne como um Atormentado, você pode trocar esta Vantagem por uma Vantagem de Atormentado adicional.",
     "livros": [
@@ -32092,9 +32039,10 @@
       "atributos": {
         "Espírito": 10
       },
-      "vantagens": [
-        "Determinação"
-      ]
+      "vantagens_previas": [
+        "determinacao"
+      ],
+      "observacoes": ""
     },
     "descricao": "Estas pessoas veteranas e calejadas viram coisas que fariam os olhos dos outros saltarem como se tivessem visto uma cascavel no seu leito de rocha. Elas ignoram todas as penalidades ao fazerem testes de Medo e se falharem, recebem uma rerrolagem gratuita na Tabela de Efeitos de Medo se assim desejarem.",
     "livros": [
@@ -32121,14 +32069,15 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "pericias": {
+      "periciaMinOpcional": {
         "Atirar": 10,
         "Lutar": 10,
         "Atletismo": 10
       },
-      "vantagens": [
-        "Arma Predileta"
-      ]
+      "vantagens_previas": [
+        "arma_predileta"
+      ],
+      "observacoes": ""
     },
     "descricao": "O teu herói ou heroína é rápido no gatilho e renomado como um \"hombre\" ruim. As pessoas começaram a lhe chamar de Mão Direita do Diabo (ou Esquerda se o seu vaqueiro ou vaqueira é canhoto, em vez de destro). Seja qual for a arma que o seu atirador normalmente usa na sua mão favorecida, ela foi infundida com parte do status mítico que lhe foi concedido, transformando essa arma numa poderosa relíquia. Uma arma relíquia causa um dado extra de dano do mesmo tipo que o maior dado de dano dessa arma. Então, um rifle Colt revolver relíquia causaria um dano terrível de 3d8. A Vantagem permanece com a arma, por isso, se o atirador perdê-la, também perde a Vantagem – pelo menos até recuperá-la de volta. E sim, qualquer outro que a encontre nesse meio tempo recebe os seus benefícios!",
     "livros": [
@@ -32145,9 +32094,10 @@
       "atributos": {
         "Agilidade": 10
       },
-      "vantagens": [
-        "Rápido"
-      ]
+      "vantagens_previas": [
+        "rapido"
+      ],
+      "observacoes": ""
     },
     "descricao": "Quando o seu herói ou heroína pega o ferro, as pessoas raramente têm tempo para piscar, muito menos para derrubá-lo. Alguns dizem que ele ou ela tem o gatilho mais rápido do Oeste. Você ganha uma quarta ação. Isto aumenta a penalidade máxima de Ação Múltipla para –6 (que pode ser reduzida por quaisquer Vantagens ou habilidades que o fazem, como Atirar ou Lutar com Duas Armas).",
     "livros": [
@@ -32161,9 +32111,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Esta Vantagem permite a um desmorto criar uma barreira que mantém afastado fantasmas, assombrações e outras entidades etéreas — não tem nenhum efeito em entidades físicas. O Atormentado faz uma rolagem de Espírito e, em seguida, coloca um Modelo Médio de Explosão centrado em si mesmo. O Arame Espiritual persiste enquanto o vaqueiro ou vaqueira se concentrar nele, o que inflige uma penalidade de –2 em outras rolagens.",
     "livros": [
@@ -32177,9 +32126,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "O Atormentado ganha a capacidade de escavar através da terra bruta, como no poder (veja em Savage Worlds). O desmorto pode cavar em terra macia e se mover através dela com metade de sua Movimentação (ele ou ela não pode correr). Normalmente, não se pode ser atacado enquanto cavando, e é possível tentar surpreender oponentes que não lhes vejam chegando ao fazer uma rolagem resistida de Furtividade contra Perceber. Se tiver sucesso, quem cava adiciona +2 ao seu ataque e rolagens de dano nessa rodada, ou +4 com uma ampliação e, nesse caso, ganha a Finalização sobre o alvo.",
     "livros": [
@@ -32193,9 +32141,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Chamado dos Mortos é a habilidade de sentir a direção de todos os cadáveres — animais, humanos ou outros — dentro de 1,5 km. Isto aparece quase como um radar na mente dos Atormentados. Detectar os mortos é uma ação, mas não requer uma rolagem de característica. E sim, isso absolutamente pode ser usado para dizer se um indivíduo é um cadáver ambulante, embora não lhe diga de que tipo — outro Atormentado, um vampiro, um morto ambulante, etc.",
     "livros": [
@@ -32209,9 +32156,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Contorcer permite que um Atormentado desloque praticamente todos os ossos do seu corpo – incluindo escápulas, costelas e pelve. Para escapar de estar Preso ou Enredado, ou se espremer através de uma fenda com aproximadamente a largura do crânio do Atormentado, como uma ação, o desmorto faz uma rolagem de Vigor para deslocar alguns ossos de suas juntas e deslizar ou rastejar através de uma abertura. Falha significa que ele sofre Fadiga e não consegue nenhum progresso (ou recebe um Ferimento com uma Falha Crítica). Sucesso significa que ele ou melhora sua situação em um passo (de Preso para Enredado) ou desliza através da fenda (mas isto leva todo o seu turno — nenhuma outra ação é permitida). Uma ampliação significa que o contorcionista não está mais Preso ou Enredado, ou se move através de uma abertura como um movimento normal.",
     "livros": [
@@ -32225,9 +32171,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um Corcel Infernal é um tipo estranho de cavalo desenterrado dos Campos de Caça pelo manitu do Atormentado. Quando invocado (escolhendo esta Vantagem), ele sai de um portal do Inferno, bufando fogo, com olhos flamejantes e uma nuvem de enxofre em seu encalço. Em poucos minutos a besta chega a um acordo com o reino mortal e se torna um cavalo normal — embora um que é claramente mais feroz e poderoso.\nO cavalo tem as estatísticas habituais para um Cavalo de Guerra (veja em Savage Worlds), é destemido e uma Carta Selvagem. A besta é Leal e tem uma inteligência sinistra que compreende os comandos do seu mestre (trate a sua Astúcia como humana em vez de animal). Se o Corcel Infernal for morto, o Atormentado não recebe um substituto automaticamente! No entanto, ele pode pegar a Vantagem novamente para convocar uma nova besta. Um Atormentado não pode ter mais do que um Corcel Infernal por vez.",
     "livros": [
@@ -32241,9 +32186,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Atormentados com este poder podem se aproveitar da conexão espiritual para convocar o espírito de um cadáver e falar com ele. O contato requer toque e o cadáver não pode estar morto há mais tempo do que o dado de Astúcia do Atormentado em meses. Uma vez iniciado o contato, o Xerife rola um d6. Em um 2-6, o espírito é arrastado e responde a algumas perguntas antes de ser puxado de volta para os Campos de Caça e não pode ser convocado novamente até a próxima lua cheia. Com 1, um manitu responde em vez disso, fingindo ser o espírito do cadáver e causa o máximo de estrago possível!",
     "livros": [
@@ -32257,9 +32201,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Hálito da Sepultura é a habilidade de reunir o pior fedor de decadência no corpo de um Atormentado, sobrenaturalmente piorá-lo ainda mais e expeli-lo sobre um alvo desavisado ao alcance do braço. Para fazer isso, ele ou ela sopra uma nuvem de vapores tóxicos em um Modelo Médio de Explosão adjacente à sua posição. Aqueles atingidos devem fazer uma rolagem de Vigor com –2 ou sofrem Fadiga. Este efeito só pode causar Incapacitação, não morte. Seres que não respiram são imunes. Um Atormentado só pode liberar esses vapores imundos depois de comer alguma coisa e esperar pelo menos uma hora.",
     "livros": [
@@ -32273,9 +32216,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Esta Vantagem concede ao Atormentado um grupo de cinco aliados Extras. A hoste consiste em cinco Mortos Errantes. Eles são animados por manitus menores, que servem como aliados cruéis e caóticos. Eles podem falar, usar armas ou fazer qualquer outra coisa que uma pessoa normal pode fazer. O herói ou heroína não tem uma ligação mental com a sua Hoste Profana, mas quando lhes dá ordens, eles são obrigados a segui-las. Se algum deles for perdido, o Atormentado precisa apenas de um novo suprimento de cadáveres para deixar os manitus voltarem.",
     "livros": [
@@ -32289,9 +32231,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Quando qualquer poder que usa a perícia Conjurar é usado diante do Atormentado, ele ganha a capacidade de lançá-lo. Ele só pode fazer isto uma vez e deve estar no mesmo encontro em que o viu sendo usado. O Atormentado usa Conjurar para lançar o feitiço se possuir essa perícia, ou Astúcia se não a tiver. Quaisquer Pontos de Poder ou modificadores devem ser idênticos. Uma Falha Crítica significa que o Atormentado está Fadigado e todos os poderes atualmente mantidos (se houver) terminam.",
     "livros": [
@@ -32305,9 +32246,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Atormentados com esse poder continuam a controlar partes decepadas de seu corpo – normalmente uma mão ou um olho – por curtos períodos de tempo. Para usar a Vantagem, o desmorto decepa a própria mão ou arranca um globo ocular. A parte do corpo decepada permanece ativa e sob o controle mental do seu dono até uma Distância de 1,5 km. Mãos cortadas usam o perfil da Mão Animada (Mov 6). Olhos magicamente transmitem tudo o que enxergam para o seu dono e podem rolar com Mov 6. Decepar uma parte do corpo causa um Ferimento imediato e qualquer Complicação associada.",
     "livros": [
@@ -32324,9 +32264,8 @@
       "pericias": {
         "Persuadir": 6
       },
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "O uso desta Vantagem permite que um Atormentado se pareça como quando ainda estava vivo, negando as atitudes hostis dos outros e a penalidade inata de –2 em Persuadir que os Atormentados possuem. Máscara da Morte é ativada com uma ação, mas não requer uma rolagem de Característica. Uma vez ativada, os Atormentados podem mantê-la pelo tempo que quiserem. Se o Atormentado for Abalado, Atordoado ou sofrer um ou mais Ferimentos, ele deve fazer uma rolagem de Espírito com –2 para manter o disfarce ativo.",
     "livros": [
@@ -32340,9 +32279,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um Atormentado cujo verme cerebral lhe concede este poder, pode partilhar a sua miséria, dando a outras mentes vivas sonhos sombrios e terríveis. O Atormentado precisa de algo do alvo para causar pesadelos sobre ele — pode ser algo de seu corpo ou um item de significado. O desmorto então simplesmente decide se ele quer que seu manitu atormente o alvo todas as noites. Se assim for, a vítima tem a Complicação Terrores Noturnos enquanto o Atormentado desejar atormentá-la. Uma vítima pode livrar-se dos pesadelos matando o Atormentado ou dormindo em solo santificado. Dissipar não tem efeito, mas detectar arcano sente uma presença maligna na vítima.",
     "livros": [
@@ -32356,9 +32294,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Se um manitu é bom em alguma coisa, é assumir o controle do corpo de outra pessoa. Este poder concede ao Atormentado uma capacidade limitada de fazer o mesmo. Controlar alguém funciona exatamente como o poder fantoche do Savage Worlds, mas o Atormentado usa seu Espírito –2 para a rolagem de perícia arcana. O desmorto fica Distraído enquanto mantiver o controle. Ele pode manter o poder o quanto quiser, mas permanece Distraído ao fazê-lo. Se for Abalado, Atordoado ou Ferido, ele tem que fazer uma rolagem de Astúcia ou o poder também termina.",
     "livros": [
@@ -32372,9 +32309,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Normalmente, os cadáveres não se movem muito depressa. Mas o Atormentado com esta Vantagem pode se mover com velocidade sobrenatural quando a necessidade surge. Isto aumenta a sua Movimentação em 3 e o seu dado de corrida em um passo. Isto se acumula com Ligeiro e habilidades semelhantes!",
     "livros": [
@@ -32388,9 +32324,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Aqueles com esta Vantagem podem controlar partes do corpo, estejam ligadas ao resto do cadáver ou não! Um Atormentado inteligente pode aprender a usá-la não só para manter o controle de suas partes, mas também saber do paradeiro de seus inimigos. Ele precisa simplesmente colocar um pedaço substancial de si mesmo (osso, dente) dentro de uma pessoa ou em algo dela. Enquanto a parte do Atormentado estiver dentro de 15 km, ele ou ela pode automaticamente sentir sua direção e distância aproximada.",
     "livros": [
@@ -32404,10 +32339,10 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
-        "Atormentado",
-        "Rastro de Dentes"
-      ]
+      "vantagens_previas": [
+        "rastro_de_dentes"
+      ],
+      "observacoes": ""
     },
     "descricao": "Como acima, exceto que a parte pode ser rastreada até 150 km de distância.",
     "livros": [
@@ -32421,9 +32356,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um desmorto usa este poder para infligir uma dor terrível a todos os que se aproximam demais do seu cadáver. Ativar Rigor Mortis é uma ação livre que cria um campo de agonia do tamanho de um Modelo Médio de Explosão centrado no Atormentado. Todos os que entram no modelo (amigos e inimigos) são devastados pela dor e rigidez e ficam Distraídos. A condição termina no final do turno da vítima, se ela não estiver mais na área de efeito. Rigor Mortis pode ser mantido enquanto o Atormentado desejar, mas termina se ele não fizer uma rolagem de Astúcia quando for Abalado, Atordoado ou Ferido.",
     "livros": [
@@ -32440,9 +32374,8 @@
       "pericias": {
         "Furtividade": 8
       },
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Enquanto os pés deste desmorto estiverem em contato com a terra, ele pode se mover sem fazer barulho (mesmo que esteja usando botas). Ele adiciona +4 à Furtividade onde o som for o principal fator de detecção.",
     "livros": [
@@ -32456,9 +32389,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Manitus têm um talento para fazer os mortais dormirem. Atormentados com esta Vantagem podem acessar as habilidades dos manitus para enviar uma vítima diretamente para a Terra de Nod com um único toque. Até mesmo outros atormentados são afetados. Isso funciona muito como o poder do sono (veja em Savage Worlds), exceto que não custa Pontos de Poder, tem um Alcance de Toque e é decretado com uma rolagem resistida de Espírito contra o alvo como uma ação. Se o Atormentado vencer a rolagem resistida de Espírito, o alvo adormece por um minuto ou 1d6 horas com uma ampliação. Isto não pode ser mantido.",
     "livros": [
@@ -32472,9 +32404,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um Atormentado com esta vantagem pode, com um toque, interromper o funcionamento de qualquer engenhoca de cientista louco ou dispositivo Infernal. Isto é uma ação e uma rolagem de Espirito. Se for bem-sucedido, qualquer falha ao usar o dispositivo conta como uma Falha Crítica. Isto dura três rodadas após o dispositivo ser tocado, ou cinco com uma ampliação.",
     "livros": [
@@ -32488,9 +32419,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Visão Espiritual permite que o Atormentado toque a mente do manitu e consiga dar uma rápida olhada no mundo dos espíritos. Ativar a Visão Espiritual é uma ação livre (mas só pode ser feito uma vez por turno se o jogo estiver em rodadas). Isto é desorientador, pois a personagem fica Distraída até o final do turno após desativar a Visão Espiritual. Enquanto espreita os campos de Caça, o Atormentado pode ver coisas como manitus, Nível de Medo, efeitos mágicos, ou se um manitu está contorcendo-se dentro de alguém. Isto pode permitir ao desmorto notar uma criatura Invisível se ela possuir um espírito. Além disso, qualquer criatura com a Habilidade Especial de Medo deixa um rastro sombrio através do mundo espiritual por até uma hora (teste de Perceber para seguir).",
     "livros": [
@@ -32508,17 +32438,16 @@
         "Ciência Estranha": 8,
         "Ocultismo": 6
       },
-      "vantagens": [
-        "Antecedente Arcano (Cientista Louco)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_cientista_louco"
+      ],
+      "observacoes": ""
     },
     "descricao": "Magos do Metal são inventores que descobriram e aceitaram o fato de que seus poderes são dados a eles por manitus. Magos de Metal usam dispositivos como qualquer outro cientista estranho, mas também podem Barganhar com o Diabo como um mascate! Isso permite que eles lancem quaisquer poderes disponíveis para cientistas loucos, mesmo aqueles que eles não possuem ou que estão acima de seu Estágio. O processo envolve sacar cartas de poker. Veja detalhes completos nas regras de Barganhar com o Diabo para Magos do Metal.",
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Vantagem de inventor que usa dispositivos como um cientista louco, mas também pode Barganhar com o Diabo como um mascate para lançar, por meio de saque de cartas, qualquer poder de cientista louco disponível ao seu Estágio, mesmo os que não possui ou que estão acima dele.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Vantagem de inventor que usa dispositivos como um cientista louco, mas também pode Barganhar com o Diabo como um mascate para lançar, por meio de saque de cartas, qualquer poder de cientista louco disponível ao seu Estágio, mesmo os que não possui ou que estão acima dele."  },
   {
     "id": "antecedente_arcano_vuduismo",
     "nome": "Antecedente Arcano (Vuduísmo)",
@@ -32551,9 +32480,10 @@
       "pericias": {
         "Fé": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Vuduísmo)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_vuduismo"
+      ],
+      "observacoes": ""
     },
     "descricao": "Este herói ou heroína quase morreu em algum momento, mas retornou. Ele ou ela viu a encruzilhada entre os mundos e os espíritos ouvem o seu chamado melhor do que os da maioria. Essa Vantagem só pode ser escolhida na criação da personagem. A personagem deve ter sido Incapacitado devido a um efeito que poderia causar a morte. Recebe uma rerrolagem gratuita em rolagens de Fé.",
     "livros": [
@@ -32573,9 +32503,10 @@
       "pericias": {
         "Fé": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Vuduísmo)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_vuduismo"
+      ],
+      "observacoes": ""
     },
     "descricao": "Esta Vantagem só pode ser escolhida uma vez e significa uma relação especial entre uma mambo ou um houngan e um loa específico. Só beneficia aqueles que têm os feitiços aspecto do loa rada ou a fúria do loa petro. O herói ou heroína deve clara e visivelmente marcar sua lealdade ao loa escolhido de alguma forma. Enquanto esta homenagem estiver presente, ambos os poderes custam 3 Pontos de Poder ao invés de 5.",
     "livros": [
@@ -32612,17 +32543,16 @@
       "pericias": {
         "Conjurar": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Bruxa)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_bruxa"
+      ],
+      "observacoes": ""
     },
     "descricao": "Mina Devlin ensina suas meninas órfãs a ler, escrever, aritmética, etiqueta e, é claro, bruxaria! A máscara negra e roupas de couro identificam a bruxa. Quando totalmente paramentada, ela adiciona +1 às rolagens de Intimidar e +1 às rolagens de Persuadir com quem possa sentir atração por ela (mas -1 com autoridades). As bruxas de Wichita também aprendem a carregar o seu chicote com energia violenta (custa 1 PP, ação livre, se acertar com ampliação adiciona dado de bônus ao dano).",
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Quando totalmente paramentada com trajes característicos, adiciona +1 em Intimidar e +1 em Persuadir contra quem sinta atração por ela, mas -1 contra autoridades. Também pode carregar seu chicote com energia por 1 Ponto de Poder (ação livre); se acertar o ataque com ampliação, adiciona um dado de bônus ao dano.",
-    "subtipoArcano": "BRUXA"
-  },
+    "descricaoLite": "Quando totalmente paramentada com trajes característicos, adiciona +1 em Intimidar e +1 em Persuadir contra quem sinta atração por ela, mas -1 contra autoridades. Também pode carregar seu chicote com energia por 1 Ponto de Poder (ação livre); se acertar o ataque com ampliação, adiciona um dado de bônus ao dano."  },
   {
     "id": "familiar",
     "nome": "Familiar",
@@ -32632,9 +32562,10 @@
       "pericias": {
         "Conjurar": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Bruxa)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_bruxa"
+      ],
+      "observacoes": ""
     },
     "descricao": "Sua bruxa tem uma pequena criatura (Tamanho –3) que a serve. O familiar é Leal, uma Carta Selvagem, e tem ligação mental. A bruxa pode transferir Ferimentos/Fadiga para ele, aumentar uma característica dele, usar seus sentidos (15km) ou usar seus 5 Pontos de Poder próprios.",
     "livros": [
@@ -32687,66 +32618,66 @@
     ],
     "descricao": "Magos usam Conjurar como sua perícia arcana e têm Interferência de Armadura (Leve) (o que significa que subtraem 4 de suas rolagens de conjurar, Agilidade e perícias baseadas em Agilidade se usarem armaduras médias e pesadas ou escudos).\nAo escolher esta Vantagem, você começa com três poderes e 10 Pontos de Poder.",
     "poderes_permitidos": [
-      "adivinhacao_pf",
-      "amigo_das_feras_pf",
-      "andar_nas_paredes_pf",
-      "atordoar_pf",
-      "aumentar_reduzir_caracteristica_pf",
-      "banir_pf",
-      "barreira_pf",
-      "campo_de_dano_pf",
-      "cavar_pf",
-      "cegar_pf",
-      "confusao_pf",
-      "conjurar_aliado_pf",
+      "adivinhacao",
+      "amigo_das_feras",
+      "andar_nas_paredes",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "barreira",
+      "campo_de_dano",
+      "cavar",
+      "cegar",
+      "confusao",
+      "conjurar_aliado",
       "conjurar_item_pf",
-      "crescimento_encolhimento_pf",
-      "deflexao_pf",
+      "crescimento_encolhimento",
+      "deflexao",
       "desejo_pf",
-      "detectar_ocultar_arcano_pf",
-      "devastacao_pf",
-      "disfarce_pf",
-      "dissipar_pf",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "disfarce",
+      "dissipar",
       "drenar_pontos_de_poder_pf",
-      "dadiva_do_guerreiro_pf",
-      "elo_mental_pf",
-      "empatia_pf",
-      "enredar_pf",
-      "explosao_pf",
-      "falar_idioma_pf",
-      "ferir_pf",
-      "iluminar_obscurecer_pf",
+      "dadiva_do_guerreiro",
+      "elo_mental",
+      "empatia",
+      "enredar",
+      "explosao",
+      "falar_idioma",
+      "ferir",
+      "iluminar_obscurecer",
       "ilusao_pf",
-      "intangibilidade_pf",
-      "invisibilidade_pf",
-      "leitura_de_objeto_pf",
-      "leitura_mental_pf",
-      "limpeza_mental_pf",
+      "intangibilidade",
+      "invisibilidade",
+      "leitura_de_objeto",
+      "leitura_mental",
+      "limpeza_mental",
       "localizar_pf",
-      "maldicao_pf",
-      "manipulacao_elemental_pf",
-      "fantoche_pf",
-      "medo_pf",
-      "morosidade_velocidade_pf",
-      "mudanca_de_forma_pf",
+      "maldicao",
+      "manipulacao_elemental",
+      "fantoche",
+      "medo",
+      "morosidade_velocidade",
+      "mudanca_de_forma",
       "parar_o_tempo_pf",
       "polimorfia_perniciosa_pf",
-      "protecao_pf",
-      "protecao_ambiental_pf",
-      "protecao_arcana_pf",
-      "raio_pf",
-      "rajada_pf",
-      "ajuda_pf",
-      "som_silencio_pf",
-      "sono_pf",
-      "telecinese_pf",
-      "teleporte_pf",
+      "protecao",
+      "protecao_ambiental",
+      "protecao_arcana",
+      "raio",
+      "rajada",
+      "ajuda",
+      "som_silencio",
+      "sono",
+      "telecinese",
+      "teleporte",
       "viagem_planar_pf",
       "videncia_pf",
-      "visao_distante_pf",
-      "visao_sombria_pf",
-      "voar_pf",
-      "zumbi_pf"
+      "visao_distante",
+      "visao_sombria",
+      "voar",
+      "zumbi"
     ],
     "livros": [
       "PATHFINDER"
@@ -33126,33 +33057,33 @@
     ],
     "descricao": "• ANTECEDENTE ARCANO (Bardo): Personagens da classe bardo usam Performance como perícia arcana. Têm 3 poderes iniciais e 10 Pontos de Poder. • INTERFERÊNCIA DA ARMADURA (Leve): Armaduras grandes interferem na graça e destreza de bardos. Subtraem 4 de suas rolagens de Performance, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. • LÍNGUA AFIADA: Bardos podem usar Performance como Provocar em Desafios. Também podem ignorar o conselho de Repetição presente nos Desafios (veja a página 141), desde que possam recitar versos, estrofes ou músicas diferentes. Bardos também podem usar Performance no lugar de Provocar para atender aos Requisitos de Vantagem.",
     "poderes_permitidos": [
-      "adivinhacao_pf",
-      "conjurar_aliado_pf",
-      "amigo_das_feras_pf",
-      "atordoar_pf",
-      "aumentar_reduzir_caracteristica_pf",
-      "banir_pf",
-      "confusao_pf",
+      "adivinhacao",
+      "conjurar_aliado",
+      "amigo_das_feras",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "confusao",
       "conjurar_item_pf",
-      "cura_pf",
-      "deflexao_pf",
-      "detectar_ocultar_arcano_pf",
-      "dissipar_pf",
+      "cura",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "dissipar",
       "drenar_pontos_de_poder_pf",
-      "dadiva_do_guerreiro_pf",
-      "elo_mental_pf",
-      "empatia_pf",
-      "falar_idioma_pf",
+      "dadiva_do_guerreiro",
+      "elo_mental",
+      "empatia",
+      "falar_idioma",
       "ilusao_pf",
-      "leitura_mental_pf",
-      "leitura_de_objeto_pf",
-      "fantoche_pf",
-      "medo_pf",
-      "morosidade_velocidade_pf",
-      "protecao_arcana_pf",
-      "som_silencio_pf",
-      "sono_pf",
-      "teleporte_pf"
+      "leitura_mental",
+      "leitura_de_objeto",
+      "fantoche",
+      "medo",
+      "morosidade_velocidade",
+      "protecao_arcana",
+      "som_silencio",
+      "sono",
+      "teleporte"
     ],
     "livros": [
       "PATHFINDER"
@@ -33227,21 +33158,21 @@
     "subtipoArcano": "CLERIGO_PF",
     "descricao": "• ANTECEDENTE ARCANO (Clérigo): Clérigos usam Fé como perícia arcana. Ao escolher esta Vantagem, ganham 10 Pontos de Poder e devem escolher um Domínio referente à divindade que servem da lista da página 50. • CANALIZAR ENERGIA: Clérigos podem conjurar o poder cura à uma Distância igual a seu dado de Espírito em vez de Toque. Seu poder cura também têm o Modificador Receptores Adicionais, permitindo que curem aliados próximos ao custo de um Ponto de Poder extra para cada. • VOTO (Maior): Clérigos têm o voto de servir a sua divindade. Aqueles que desejam usar energia de fontes divinas devem seguir os princípios de seu Domínio. Se violar a confiança de sua divindade (decisão do Mestre) o clérigo subtrai 2 de suas rolagens de Fé por uma semana. Atos de verdadeiro sacrilégio podem retirar seus poderes inteiramente até que busquem redenção de alguma forma.",
     "poderes_permitidos": [
-      "adivinhacao_pf",
-      "aumentar_reduzir_caracteristica_pf",
-      "banir_pf",
+      "adivinhacao",
+      "aumentar_reduzir_caracteristica",
+      "banir",
       "conjurar_item_pf",
-      "cura_pf",
-      "dissipar_pf",
-      "empatia_pf",
-      "ferir_pf",
-      "iluminar_obscurecer_pf",
-      "ressurreicao_pf",
-      "santuario_pf",
-      "ajuda_pf",
-      "som_silencio_pf",
-      "sono_pf",
-      "visao_sombria_pf"
+      "cura",
+      "dissipar",
+      "empatia",
+      "ferir",
+      "iluminar_obscurecer",
+      "ressurreicao",
+      "santuario",
+      "ajuda",
+      "som_silencio",
+      "sono",
+      "visao_sombria"
     ],
     "livros": [
       "PATHFINDER"
@@ -33280,9 +33211,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) ao conjurar os poderes cura, santuário ou ferir, desde que a personagem já os possua.",
-    "subtipoArcano": "CLERIGO"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) ao conjurar os poderes cura, santuário ou ferir, desde que a personagem já os possua."  },
   {
     "id": "maestria_divina_clerigo",
     "nome": "MAESTRIA DIVINA (CLÉRIGO)",
@@ -33298,9 +33227,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes.",
-    "subtipoArcano": "CLERIGO"
-  },
+    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes."  },
   {
     "id": "classe_druida",
     "nome": "DRUIDA",
@@ -33321,32 +33248,32 @@
     ],
     "descricao": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Recebe 3 poderes iniciais e 10 Pontos de Poder. • ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem). • IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico. • INTERFERÊNCIA DA ARMADURA (leve): Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal. • SENTIDO NATURAL: Sobrevivência é ligada a seu Espírito em vez de Astúcia. • TRAVESSIA DE FLORESTA: Ignoram as penalidades de Terreno Acidentado. • VOTO (Maior): Druidas tem um voto maior de proteger a natureza.",
     "poderes_permitidos": [
-      "adivinhacao_pf",
-      "ajuda_pf",
-      "amigo_das_feras_pf",
-      "andar_nas_paredes_pf",
-      "aumentar_reduzir_caracteristica_pf",
-      "banir_pf",
-      "barreira_pf",
-      "conjurar_aliado_pf",
+      "adivinhacao",
+      "ajuda",
+      "amigo_das_feras",
+      "andar_nas_paredes",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "barreira",
+      "conjurar_aliado",
       "conjurar_item_pf",
-      "cura_pf",
-      "dissipar_pf",
-      "empatia_pf",
-      "enredar_pf",
-      "explosao_pf",
-      "ferir_pf",
-      "iluminar_obscurecer_pf",
-      "manipulacao_elemental_pf",
-      "mudanca_de_forma_pf",
+      "cura",
+      "dissipar",
+      "empatia",
+      "enredar",
+      "explosao",
+      "ferir",
+      "iluminar_obscurecer",
+      "manipulacao_elemental",
+      "mudanca_de_forma",
       "polimorfia_perniciosa_pf",
-      "protecao_pf",
-      "protecao_ambiental_pf",
-      "ressurreicao_pf",
-      "santuario_pf",
-      "som_silencio_pf",
-      "sono_pf",
-      "visao_sombria_pf"
+      "protecao",
+      "protecao_ambiental",
+      "ressurreicao",
+      "santuario",
+      "som_silencio",
+      "sono",
+      "visao_sombria"
     ],
     "livros": [
       "PATHFINDER"
@@ -33385,9 +33312,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes enredar, ferir ou proteção, desde que já os possua.",
-    "subtipoArcano": "DRUIDA"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes enredar, ferir ou proteção, desde que já os possua."  },
   {
     "id": "maestria_divina_druida",
     "nome": "MAESTRIA DIVINA (DRUIDA)",
@@ -33403,9 +33328,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes.",
-    "subtipoArcano": "DRUIDA"
-  },
+    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes."  },
   {
     "id": "classe_feiticeiro",
     "nome": "FEITICEIRO",
@@ -33424,66 +33347,66 @@
     ],
     "descricao": "• ANTECEDENTE ARCANO (Feiticeiro): Personagens de classe Feiticeiro usam Conjurar como sua perícia arcana, mas ela é ligada à Espírito em vez de Astúcia. Ganha 15 Pontos de Poder e dois poderes iniciais. • INTERFERÊNCIA DE ARMADURA (qualquer uma): Feitiçaria requer movimentos somáticos rápidos, intrincados e desimpedidos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados. • LINHAGEM: Personagens da classe Feiticeiro devem escolher uma linhagem (veja a página 58). Abaixo da descrição de cada Linhagem há também habilidades especiais adicionais recebidas ao escolher a Vantagem Linhagem Avançada.",
     "poderes_permitidos": [
-      "adivinhacao_pf",
-      "amigo_das_feras_pf",
+      "adivinhacao",
+      "amigo_das_feras",
       "ancora_planar_pf",
-      "andar_nas_paredes_pf",
-      "atordoar_pf",
-      "aumentar_reduzir_caracteristica_pf",
-      "banir_pf",
-      "barreira_pf",
-      "campo_de_dano_pf",
-      "cavar_pf",
-      "cegar_pf",
-      "confusao_pf",
+      "andar_nas_paredes",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "barreira",
+      "campo_de_dano",
+      "cavar",
+      "cegar",
+      "confusao",
       "conjurar_item_pf",
-      "conjurar_aliado_pf",
-      "crescimento_encolhimento_pf",
-      "deflexao_pf",
+      "conjurar_aliado",
+      "crescimento_encolhimento",
+      "deflexao",
       "desejo_pf",
-      "detectar_ocultar_arcano_pf",
-      "devastacao_pf",
-      "disfarce_pf",
-      "dissipar_pf",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "disfarce",
+      "dissipar",
       "drenar_pontos_de_poder_pf",
-      "dadiva_do_guerreiro_pf",
-      "elo_mental_pf",
-      "empatia_pf",
-      "enredar_pf",
-      "explosao_pf",
-      "falar_idioma_pf",
-      "ferir_pf",
-      "iluminar_obscurecer_pf",
+      "dadiva_do_guerreiro",
+      "elo_mental",
+      "empatia",
+      "enredar",
+      "explosao",
+      "falar_idioma",
+      "ferir",
+      "iluminar_obscurecer",
       "ilusao_pf",
-      "intangibilidade_pf",
-      "invisibilidade_pf",
-      "leitura_mental_pf",
-      "leitura_de_objeto_pf",
-      "limpeza_mental_pf",
+      "intangibilidade",
+      "invisibilidade",
+      "leitura_mental",
+      "leitura_de_objeto",
+      "limpeza_mental",
       "localizar_pf",
-      "maldicao_pf",
-      "manipulacao_elemental_pf",
-      "fantoche_pf",
-      "medo_pf",
-      "morosidade_velocidade_pf",
-      "mudanca_de_forma_pf",
+      "maldicao",
+      "manipulacao_elemental",
+      "fantoche",
+      "medo",
+      "morosidade_velocidade",
+      "mudanca_de_forma",
       "parar_o_tempo_pf",
       "polimorfia_perniciosa_pf",
-      "protecao_pf",
-      "protecao_ambiental_pf",
-      "protecao_arcana_pf",
-      "raio_pf",
-      "rajada_pf",
-      "som_silencio_pf",
-      "sono_pf",
-      "telecinese_pf",
-      "teleporte_pf",
+      "protecao",
+      "protecao_ambiental",
+      "protecao_arcana",
+      "raio",
+      "rajada",
+      "som_silencio",
+      "sono",
+      "telecinese",
+      "teleporte",
       "viagem_planar_pf",
       "videncia_pf",
-      "visao_distante_pf",
-      "visao_sombria_pf",
-      "voar_pf",
-      "zumbi_pf"
+      "visao_distante",
+      "visao_sombria",
+      "voar",
+      "zumbi"
     ],
     "livros": [
       "PATHFINDER"
@@ -33505,9 +33428,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes manipulação elemental, proteção ou raio, desde que já os possua.",
-    "subtipoArcano": "FEITICEIRO"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes manipulação elemental, proteção ou raio, desde que já os possua."  },
   {
     "id": "maestria_arcana_feiticeiro",
     "nome": "MAESTRIA ARCANA (FEITICEIRO)",
@@ -33523,9 +33444,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes.",
-    "subtipoArcano": "FEITICEIRO"
-  },
+    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes."  },
   {
     "id": "linhagem_avancada",
     "nome": "LINHAGEM AVANÇADA",
@@ -33711,66 +33630,66 @@
     ],
     "descricao": "• ANTECEDENTE ARCANO (Mago): Magos usam Conjurar como perícia arcana. Ao adquirir esta Vantagem você recebe 10 Pontos de Poder e três poderes. • ESCOLA: Especialistas devem escolher uma escola favorita e duas escolas opostas. Recebem uma rerrolagem gratuita nas rolagens de perícia arcana para conjurar magias de sua escola, mas magias de suas escolas opostas custam um Ponto de Poder adicional e sofrem uma penalidade de -2 na rolagem de perícia arcana. • ELO ARCANO: Magos possuem um intenso elo mágico com um objeto ou criatura (Familiar ou Objeto Ligado). • GRIMÓRIO: Magos devem manter grimórios. • INTERFERÊNCIA DE ARMADURA (Qualquer um): Assim como feiticeiros, magos devem fazer gestos com padrões precisos. Subtraem 4 de suas rolagens de Conjurar , de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados.",
     "poderes_permitidos": [
-      "adivinhacao_pf",
-      "amigo_das_feras_pf",
+      "adivinhacao",
+      "amigo_das_feras",
       "ancora_planar_pf",
-      "andar_nas_paredes_pf",
-      "atordoar_pf",
-      "aumentar_reduzir_caracteristica_pf",
-      "banir_pf",
-      "barreira_pf",
-      "campo_de_dano_pf",
-      "cavar_pf",
-      "cegar_pf",
-      "confusao_pf",
+      "andar_nas_paredes",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "barreira",
+      "campo_de_dano",
+      "cavar",
+      "cegar",
+      "confusao",
       "conjurar_item_pf",
-      "conjurar_aliado_pf",
-      "crescimento_encolhimento_pf",
-      "deflexao_pf",
+      "conjurar_aliado",
+      "crescimento_encolhimento",
+      "deflexao",
       "desejo_pf",
-      "detectar_ocultar_arcano_pf",
-      "devastacao_pf",
-      "disfarce_pf",
-      "dissipar_pf",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "disfarce",
+      "dissipar",
       "drenar_pontos_de_poder_pf",
-      "dadiva_do_guerreiro_pf",
-      "elo_mental_pf",
-      "empatia_pf",
-      "enredar_pf",
-      "explosao_pf",
-      "falar_idioma_pf",
-      "ferir_pf",
-      "iluminar_obscurecer_pf",
+      "dadiva_do_guerreiro",
+      "elo_mental",
+      "empatia",
+      "enredar",
+      "explosao",
+      "falar_idioma",
+      "ferir",
+      "iluminar_obscurecer",
       "ilusao_pf",
-      "intangibilidade_pf",
-      "invisibilidade_pf",
-      "leitura_mental_pf",
-      "leitura_de_objeto_pf",
-      "limpeza_mental_pf",
+      "intangibilidade",
+      "invisibilidade",
+      "leitura_mental",
+      "leitura_de_objeto",
+      "limpeza_mental",
       "localizar_pf",
-      "maldicao_pf",
-      "manipulacao_elemental_pf",
-      "fantoche_pf",
-      "medo_pf",
-      "morosidade_velocidade_pf",
-      "mudanca_de_forma_pf",
+      "maldicao",
+      "manipulacao_elemental",
+      "fantoche",
+      "medo",
+      "morosidade_velocidade",
+      "mudanca_de_forma",
       "parar_o_tempo_pf",
       "polimorfia_perniciosa_pf",
-      "protecao_pf",
-      "protecao_ambiental_pf",
-      "protecao_arcana_pf",
-      "raio_pf",
-      "rajada_pf",
-      "som_silencio_pf",
-      "sono_pf",
-      "telecinese_pf",
-      "teleporte_pf",
+      "protecao",
+      "protecao_ambiental",
+      "protecao_arcana",
+      "raio",
+      "rajada",
+      "som_silencio",
+      "sono",
+      "telecinese",
+      "teleporte",
       "viagem_planar_pf",
       "videncia_pf",
-      "visao_distante_pf",
-      "visao_sombria_pf",
-      "voar_pf",
-      "zumbi_pf"
+      "visao_distante",
+      "visao_sombria",
+      "voar",
+      "zumbi"
     ],
     "livros": [
       "PATHFINDER"
@@ -33792,9 +33711,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes proteção arcana, deflexão ou dissipar, desde que já os possua.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes proteção arcana, deflexão ou dissipar, desde que já os possua."  },
   {
     "id": "maestria_arcana_mago",
     "nome": "MAESTRIA ARCANA (MAGO)",
@@ -33810,9 +33727,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes."  },
   {
     "id": "inspiracao_mistica",
     "nome": "INSPIRAÇÃO MÍSTICA",
@@ -38177,9 +38092,7 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -39090,10 +39003,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -39155,10 +39066,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -39177,10 +39087,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -39391,6 +39299,10 @@
         "Perceber": 6,
         "Furtividade": 8
       },
+      "vantagens_previas": [
+        "arma_predileta",
+        "lutar_com_duas_armas"
+      ],
       "observacoes": "Arma Predileta (sabre serrilhado), Lutar com Duas Armas"
     },
     "descricao": "Assassinas louva-a-deus vermelhas matam com o \"ataque louvador\": segurando o(s) sabre(s) serrilhado(s) apontado(s) para baixo e entrelaçando as lâminas no ar, a até 5 quadros (10 metros) e visível para a vítima. Uma vez por encontro, como ação limitada, a assassina faz um Desafio com Lutar resistido pelo Espírito do alvo. Sucesso deixa o alvo Atordoado (ou Paralisado com uma ampliação). Criaturas Atordoadas desta forma não são consideradas indefesas e não podem ser atingidas com um Golpe de Misericórdia.",
@@ -39683,9 +39595,7 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar."  },
   {
     "id": "ascensao_estelar",
     "nome": "ASCENSÃO ESTELAR",

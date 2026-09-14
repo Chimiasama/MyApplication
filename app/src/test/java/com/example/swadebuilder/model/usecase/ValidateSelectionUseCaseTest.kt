@@ -22,6 +22,7 @@ class ValidateSelectionUseCaseTest {
             compendioFantasiaAtivo = false,
             compendioPathfinderAtivo = false,
             compendioHorrorAtivo = false,
+            compendioSciFiAtivo = false,
             compendioArteDaGuerraAtivo = false,
             valoresAtributos = mapOf("FORCA" to 6, "AGILIDADE" to 6, "VIGOR" to 6, "ASTUCIA" to 6, "ESPIRITO" to 6),
             pericias = emptyList(),
