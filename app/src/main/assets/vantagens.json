@@ -628,6 +628,10 @@
       "estagio": "Heroico",
       "atributos": {},
       "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 10,
+        "Atirar": 10
+      },
       "vantagens_previas": [
         "tiro_duplo"
       ],
@@ -765,7 +769,7 @@
     "nome": "FAMILIAR",
     "categoria": "PODER",
     "requisitos": {
-      "estagio": "Experiente",
+      "estagio": "Novato",
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
@@ -828,7 +832,7 @@
     "nome": "MAGO DE SANGUE",
     "categoria": "PODER",
     "requisitos": {
-      "estagio": "Experiente",
+      "estagio": "Novato",
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [

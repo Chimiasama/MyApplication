@@ -150,10 +150,108 @@ refazer o trabalho depois)
   ~3358-3359) confirma "Novato, Agilidade d8+, **Atletismo d6+**" — o JSON
   está certo, é a tabela-resumo (extração de PDF) que está incompleta.
 
+## Nota de método a partir daqui
+
+Antes de auditar o Fantasia percebi que dá pra economizar trabalho: como
+várias vantagens do Básico são *reimpressas* nos livros-companion com a
+mesma tag (`"livros": ["<BOOK>"]`), comparei programaticamente o
+`requisitos`/`limite_compra`/`vinculado_pericia` de cada reimpressão contra
+a cópia do Básico já auditada, em vez de reler o texto inteiro de cada
+companion pra cada vantagem repetida. Resultado: FANTASIA, SCI_FI, HORROR,
+DEADLANDS e CRYSTAL_HEART reimprimem todas as vantagens do Básico
+byte-a-byte iguais (0 diferenças) — nada a corrigir aí além do que já foi
+corrigido globalmente (Muito Duro na Queda, Drenar a Alma, Surto de Poder,
+Pau Pra Toda Obra, que se aplicam a todas as reimpressões). Já
+ARTE_DA_GUERRA, WISEGUYS, CIDADE_SOL_VAPOR, SUPER e PATHFINDER têm
+reimpressões que DIVERGEM do Básico (esperado — esses cenários trocam
+perícia-base, Antecedente Arcano específico etc.) — essas divergências
+específicas serão conferidas contra o texto de cada um desses livros na
+hora de auditá-los. Daqui pra frente, cada seção de livro cobre só (a) as
+vantagens genuinamente novas daquele livro e (b) as reimpressões que
+divergem do Básico.
+
+## FANTASIA — 59 vantagens novas + 14 Antecedentes Arcanos + 29 vantagens de arquétipo
+
+Conferidas as 102 entradas tageadas `["FANTASIA"]` que não são reimpressão
+byte-a-byte do Básico, contra o texto "REQUISITOS:" de `docs/swade_fantasia`.
+
+### Bugs confirmados — CORRIGIDOS
+
+1. **Familiar (`familiar`) — estágio errado.** Livro (linha ~2294):
+   "REQUISITOS: Novato, Antecedente Arcano (Bruxo, Diabolista, Druida,
+   Elementalista, Feiticeiro, Mago, Necromante, Xamã)". JSON tinha
+   `estagio: "Experiente"`. **Corrigido** para `"Novato"`.
+2. **Mago de Sangue (`mago_de_sangue`) — estágio errado.** Livro (linha
+   ~2406): "REQUISITOS: Novato, Antecedente Arcano (qualquer um), uma
+   disposição maligna". JSON tinha `estagio: "Experiente"`. **Corrigido**
+   para `"Novato"`.
+3. **Tiro Duplo Aprimorado (`tiro_duplo_aprimorado`) — faltava o requisito
+   de perícia d10+.** Livro (linha ~2239-2241): "Heroico, Tiro Duplo,
+   Atletismo d10+ (arremesso) ou Atirar d10+ (arco)". O texto já estava
+   corretamente descrito em `observacoes`, mas não havia campo estruturado
+   pra isso — só `vantagens_previas: [tiro_duplo]`. Note que
+   `CriadorState.kt` (~linha 5477) já tem um caso especial pra essa vantagem
+   específica, checando via `choice` da Tiro Duplo base se a MESMA perícia
+   escolhida (Atletismo ou Atirar) está em d10+ — só que isso só existe
+   nessa cópia do validador dentro de `CriadorState`, não em
+   `ValidateRequirementsUseCase.kt` (a classe genérica equivalente). **Corrigido**
+   adicionando `"periciaMinOpcional": {"Atletismo": 10, "Atirar": 10}` — não
+   quebra o caso especial existente (que continua rodando depois e é mais
+   restrito, pois exige a MESMA perícia escolhida na base), e cobre o
+   validador genérico que não tinha nenhuma checagem de perícia.
+
+### Achados sem correção — precisam de decisão de produto ou engine
+
+4. **Bando de Guerra (`bando_de_guerra`) — requisito "pelo menos duas outras
+   Vantagens de Liderança" não é modelável hoje.** Livro (linha ~2797-2799):
+   "Carta Selvagem, Lendário, Comando **e pelo menos duas outras Vantagens
+   de Liderança**, Seguidores". O JSON só tem
+   `vantagens_previas: ["comando", "seguidores"]` — falta a exigência de "2
+   das outras 6 Vantagens de Liderança" (Presença de Comando, Estrategista,
+   Mestre Estrategista, Fervor, Inspirar, Líder Nato, Mantenham a
+   Formação!). O esquema atual de `vantagens_previas` só sabe expressar
+   "TEM estas vantagens específicas" (lista fixa, AND), não "tem N de um
+   grupo" — precisaria de um campo novo (tipo
+   `categoriasCustomizadasRequeridas`, mas contando mínimo de N em vez de
+   "pelo menos 1 de cada categoria"). Não mexi porque isso é feature nova de
+   engine, não correção de dado — fica registrado pra você decidir se vale a
+   pena implementar. Nota à parte: a `observacoes` atual ("Carta Selvagem,
+   +2 Liderança") parece um resquício de anotação errada/confusa, não bate
+   com a descrição real da vantagem (ganho de Resiliente para Seguidores) —
+   sugiro pelo menos trocar o texto da observação por algo que descreva
+   corretamente o requisito que falta modelar.
+5. **Conjurador Silencioso — exclusão "exceto Bardo" só em texto.** Mesmo
+   padrão de limitação já visto no Básico (Antecedente Arcano específico
+   exigido só por texto): o requisito real é "qualquer Antecedente Arcano
+   EXCETO Bardo", mas o JSON usa o id genérico `antecedente_arcano` (que
+   aceita Bardo também) + uma nota em `observacoes`. Não há mecanismo de
+   "excluir X" no schema atual. Registrado, não corrigido.
+6. **Cavaleiro — "Obrigação (Maior)" só em texto.** Mesmo padrão: existe uma
+   Complicação `obrigacao` no catálogo (sem variação estrutural de
+   Menor/Maior), então dava pra reforçar com `vantagens_previas:
+   ["obrigacao"]` pra pelo menos exigir ALGUMA Obrigação — mas isso não
+   distinguiria Menor de Maior. Não mexi sem confirmar se vale a pena (viria
+   com risco de travar personagens com Obrigação Menor que hoje passam
+   livre pela falta de checagem nenhuma).
+
+### Confirmado correto (nada a corrigir)
+
+Todas as outras 96 vantagens (23 de Combate, 6 de Antecedente restantes, 7
+de Poder restantes, 10 Profissionais, 1 Social, 2 Estranhas restantes, 3
+Lendárias restantes, os 14 Antecedentes Arcanos por arquétipo e as 29
+vantagens específicas de arquétipo) batem exatamente com o texto
+"REQUISITOS:" do livro, incluindo casos que já usam mecanismos corretos
+(`tags` para Golpe de Asa/Asas e Queimar/Arma de Sopro, `periciaMinOpcional`
+para Inimigo Predileto/Tiro Duplo/Tiro Preciso/Envenenador). Algumas têm
+grafia sem acento em `atributos`/`pericias` (ex.: `"Espirito"`, `"Forca"`,
+`"Sobrevivencia"`, `"Astucia"`) — não são bugs funcionais, porque toda
+comparação de nome no app passa por `keyify()`/`semAcentos()`, que ignora
+acentuação; é só uma inconsistência cosmética no JSON-fonte, sem efeito no
+app.
+
 ## Próximos livros
 
-Ainda faltam: Fantasia, Sci-Fi, Horror, Superpoderes, Pathfinder (Básico +
+Ainda faltam: Sci-Fi, Horror, Superpoderes, Pathfinder (Básico +
 Compêndio), Deadlands (Básico + Compêndio), Arte da Guerra (+ Diário do
 Kui), Crystal Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3
-livros). Vou seguir na mesma ordem de `docs/reports/book_index/` e anexar
-uma seção por livro neste mesmo arquivo.
+livros).
