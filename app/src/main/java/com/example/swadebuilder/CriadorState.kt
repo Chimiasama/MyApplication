@@ -32,6 +32,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.GrupoAlternativo
 import com.example.swadebuilder.model.IncompatibilityRules
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.ModificadorCustomizado
@@ -439,33 +440,62 @@ class CriadorState {
         return selecionadas.any { it in liberadoras }
     }
 
-    private fun atendeVantagensPrevias(v: Vantagem): Boolean {
-        if (v.requisitos.vantagensPrevias.isEmpty()) return true
-
-        if (atendePreviasPorComplicacaoParaAmeacador(v)) return true
-
-        val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-            when (prevId.keyify().replace(" ", "_")) {
-                "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
-                    vantagensSelecionadas.none { poss ->
-                        poss.id.startsWith("antecedente_arcano_") ||
-                                poss.id.startsWith("aa_") ||
-                                (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
-                    }
-                }
-                else -> {
-                    val idNorm = prevId.keyify().replace(" ", "_")
-                    val temVantagem = vantagensSelecionadas.any { poss ->
-                        poss.id.keyify().replace(" ", "_") == idNorm
-                    }
-                    val temComplicacao = complicacoesSelecionadas.keys.any {
-                        it.id.keyify().replace(" ", "_") == idNorm
-                    }
-                    !temVantagem && !temComplicacao
+    // Extraído do corpo antigo de `atendeVantagensPrevias` sem mudar comportamento nenhum —
+    // reaproveitado agora também por `grupoMinimo`/`gruposAlternativos` (ver Requisito.kt),
+    // que citam a mesma sintaxe de id ("ANTECEDENTE_ARCANO" pra qualquer variante específica,
+    // ou um id exato de Vantagem/Complicação).
+    private fun temVantagemOuComplicacao(refId: String): Boolean {
+        return when (refId.keyify().replace(" ", "_")) {
+            "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
+                vantagensSelecionadas.any { poss ->
+                    poss.id.startsWith("antecedente_arcano_") ||
+                            poss.id.startsWith("aa_") ||
+                            (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
                 }
             }
+            else -> {
+                val idNorm = refId.keyify().replace(" ", "_")
+                val temVantagem = vantagensSelecionadas.any { poss ->
+                    poss.id.keyify().replace(" ", "_") == idNorm
+                }
+                val temComplicacao = complicacoesSelecionadas.keys.any {
+                    it.id.keyify().replace(" ", "_") == idNorm
+                }
+                temVantagem || temComplicacao
+            }
         }
-        return !faltam
+    }
+
+    private fun satisfazAlternativa(alt: GrupoAlternativo): Boolean {
+        val vantagensOk = alt.vantagens.all { temVantagemOuComplicacao(it) }
+        val periciasOk = alt.pericias.all { (nome, min) ->
+            val per = getBestPericia(nome) ?: return@all false
+            rawTotal(per) >= min
+        }
+        return vantagensOk && periciasOk
+    }
+
+    private fun atendeVantagensPrevias(v: Vantagem): Boolean {
+        // 1) Lista fixa de pré-requisitos (E/AND) — comportamento inalterado.
+        if (v.requisitos.vantagensPrevias.isNotEmpty() && !atendePreviasPorComplicacaoParaAmeacador(v)) {
+            val faltam = v.requisitos.vantagensPrevias.any { prevId -> !temVantagemOuComplicacao(prevId) }
+            if (faltam) return false
+        }
+
+        // 2) "Pelo menos N destas opções" (ex.: Bando de Guerra — Comando + pelo menos duas
+        // outras Vantagens de Liderança). Soma-se ao item 1 (E), nunca o substitui.
+        val grupoMinimo = v.requisitos.grupoMinimo
+        if (grupoMinimo != null && grupoMinimo.opcoes.isNotEmpty()) {
+            val quantasTem = grupoMinimo.opcoes.count { temVantagemOuComplicacao(it) }
+            if (quantasTem < grupoMinimo.minimo) return false
+        }
+
+        // 3) "Isto OU aquilo" — basta uma alternativa bater por completo (ex.: Antecedente
+        // Arcano (qualquer um) OU Poderes Místicos (qualquer um)).
+        val alternativas = v.requisitos.gruposAlternativos
+        if (alternativas.isNotEmpty() && alternativas.none { satisfazAlternativa(it) }) return false
+
+        return true
     }
 
     var appTheme by mutableStateOf(AppTheme.DEFAULT)

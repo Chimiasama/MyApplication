@@ -885,11 +885,11 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Em mundos onde a magia é relativamente comum, aventureiros e aventureiras com disciplina podem aprender alguns poderes simples que os ajudem em suas missões. Escolha uma das opções a seguir. A personagem possui 10 Pontos de Poder dedicados que recarregam normalmente. Como ação livre limitada, é possível ativar automaticamente o poder com sucesso pelo seu custo normal, ou com uma ampliação por 2 Pontos de Poder adicionais. É possível usar Modificadores de Poder aplicáveis, se desejar (ao custo normal).\nA Vantagem Poderes Místicos não concede acesso a Vantagens que exigem um Antecedente Arcano, mas pode adquirir Pontos de Poder ou Drenar Alma. Se o herói ou heroína também tiver um Antecedente Arcano, suas Vantagens e habilidades não poderão ser usadas com Poderes Místicos e vice-versa. Habilidades indicadas como Pessoal não recebem nenhum benefício adicional dessa Limitação.\n• BÁRBARO (Força d8+): Aumentar Característica (somente Lutar, Força, Espírito ou Vigor), ferir e velocidade. Todos têm a Limitação Pessoal.\n• GUERREIRO (Lutar d8+): Aumentar Característica (somente Lutar, Atirar, Força e Vigor), ferir e proteção. Todos têm a Limitação Pessoal.\n• LADRÃO (Ladinagem d8+): Andar nas paredes, aumentar Característica (somente Atletismo, Furtividade e Ladinagem), trancar/destrancar e visão sombria. Todos, exceto trancar/destrancar, têm a Limitação Pessoal.\n• MONGE (Atletismo d8+): Aumentar Característica (somente Agilidade, Atletismo, Lutar e Espírito), deflexão e ferir. Todos têm a Limitação Pessoal.\n• PALADINO (Espírito d8+): Aumentar Característica (somente Lutar e Espírito), cura, ferir, proteção e santuário. Todos, exceto, cura têm a Limitação Pessoal.\n• PATRULHEIRO (Sobrevivência d8+): Amigo das feras, aumentar Característica (somente Atletismo, Atirar e Sobrevivência), enredar e visão distante. Todos, exceto enredar e amigo das feras, têm a Limitação Pessoal.",
-    "livros": [
-      "FANTASIA"
-    ],
     "descricaoLite": "Concede 10 Pontos de Poder dedicados, que recarregam normalmente, e acesso a um conjunto fixo de poderes ligado a uma trilha escolhida (guerreira, ladina, mística etc.), cada uma exigindo um atributo ou perícia mínimo; como ação livre limitada, ativa automaticamente um desses poderes com sucesso, ou com ampliação gastando 2 PP extras. Não dá acesso a vantagens que exigem Antecedente Arcano, e suas habilidades não podem ser combinadas com as de um Antecedente Arcano que a personagem já possua.",
-    "subtipoArcano": "MISTICO"
+    "subtipoArcano": "MISTICO",
+    "livros": [
+      "PATHFINDER"
+    ]
   },
   {
     "id": "transferencia",
@@ -1243,7 +1243,19 @@
         "comando",
         "seguidores"
       ],
-      "observacoes": "Carta Selvagem, +2 Liderança"
+      "observacoes": "Carta Selvagem",
+      "grupoMinimo": {
+        "opcoes": [
+          "presenca_de_comando",
+          "estrategista",
+          "mestre_estrategista",
+          "fervor",
+          "inspirar",
+          "lider_nato",
+          "mantenham_a_formacao"
+        ],
+        "minimo": 2
+      }
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -24546,7 +24558,19 @@
       "vantagens_previas": [
         "comando"
       ],
-      "observacoes": "Requer Tropo Samurai, quaisquer duas Vantagens de Liderança"
+      "observacoes": "Requer Tropo Samurai",
+      "grupoMinimo": {
+        "opcoes": [
+          "presenca_de_comando",
+          "estrategista",
+          "mestre_estrategista",
+          "fervor",
+          "inspirar",
+          "lider_nato",
+          "mantenham_a_formacao"
+        ],
+        "minimo": 2
+      }
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -28474,12 +28498,25 @@
     "nome": "IRMANDADE DAS SEIS CHAVES",
     "categoria": "ANTECEDENTE",
     "requisitos": {
-        "estagio": "Veterano",
-        "atributos": {},
-        "pericias": {},
-        "vantagens_previas": [],
-        "observacoes": "Vantagem Magomecânico OU Consertar d10+ e Ciência d10+"
-      },
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Vantagem Magomecânico OU Consertar d10+ e Ciência d10+",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "magomecanico"
+          ]
+        },
+        {
+          "pericias": {
+            "Consertar": 10,
+            "Ciência": 10
+          }
+        }
+      ]
+    },
     "descricao": "Seu personagem se destacou como um inventor proeminente e recebeu um convite para a Irmandade das Seis Chaves, onde se encontram os cientistas, inventores e magomecânicos que mais se destacam na Teia. Como sinal de reconhecimento, você pode escolher um dos animais de estimação magomecânicos especiais (estatísticas prontas, abaixo). Se necessário, um animal de estimação pode ser substituído por outro, mas o novo animal será entregue em d6 dias. Se um animal for destruído ou perdido de alguma forma, ele só será substituído na próxima aventura. Em acordo com o Mestre, um animal de estimação personalizado também pode ser criado, ao invés de escolher um dos listados. Todos os animais têm a habilidade Autômato (Construto: +2 para sair do Estado Abalado, não respira, imune a venenos/doenças/poderes que afetam a mente, ignora um Ferimento, Ferimentos não curam com o tempo nem com Curar; Destemido: imune a Medo/Intimidar; Bloco de comando de voz; Receptor tecnomágico: aceita poderes com as Limitações Ressonância e Óculos).\n\nModelo EB-18.28.Q \"Anansi\", assistente universal — aranha com membros manipuladores adicionais. Agilidade d8, Astúcia d8, Espírito d6, Força d8, Vigor d6; Atletismo d6, Curar d8, Consertar d10, Ladinagem d8, Perceber d8; Movimentação 4, Aparar 2, Resistência 7(2); Armadura +2; Ferramentas embutidas (ferramentas e gazuas nos membros); Combustível: bateria de 20 PP, dura 4 horas.\n\nModelo CM-18.99.B \"Hanuman\", guarda-costas — autômato de combate em forma de primata, equipado com duas lâminas de aço vermelho. Agilidade d6, Astúcia d6, Espírito d8, Força d10, Vigor d10; Atletismo d8, Intimidar d8, Lutar d10, Perceber d8; Vantagens: Ambidestro, Varredura; Movimentação 8, Aparar 7, Resistência 12(4); Armadura +4; Lâminas de aço vermelho (For+d6+2, PA 2); Tamanho 1 (meia tonelada); Resiliente (sofre um Ferimento antes da Incapacitação); Reconhecimento amigo-inimigo (via faróis tecnomágicos); Combustível: bateria de 5 PP/dia + briquete de enxofre (~100g) por 4h de operação.\n\nModelo EE-19.31.S \"Hugin\", pássaro espião — pequeno pássaro mecânico (corvo, coruja ou sob encomenda) com câmera de filme (30 min sem som). Agilidade d10, Astúcia d8, Espírito d6, Força d4-2, Vigor d8; Atletismo d8, Furtividade d8, Lutar d6, Perceber d10; Movimentação 3, Aparar 5, Resistência 5(2); Voar (Movimentação 36, impossível fora da cidade pelos ventos do Limbo); Armadura +2; Garras (For+d4); Visão no Escuro (ignora Penumbra/Escuridão, não Escuridão como Breu); Rede de Navegação pelos faróis da Irmandade; Rastreamento de alvos com rastreador plantado; Tamanho -3 (~50cm); Bateria tecnomágica média de 10 PP, dura 4h, retorna à base com bateria fraca.\n\nModelo HD-19.03.M \"Sleipnir\", cavalo mecânico — transporte para as ruas da cidade. Agilidade d6, Astúcia d4, Espírito d6, Força d12, Vigor d10; Atletismo d8, Lutar d6, Perceber d6; Vantagens: Ligeiro; Movimentação 10, Aparar 5, Resistência 14(4); Armadura +4; Coice (For+d4+2, dianteiras e traseiras); Tamanho 3 (~1 tonelada); Transporte Elegante (concede Conexões [Alta Sociedade] enquanto disponível; dobra os usos por sessão se já tiver essa Vantagem); Combustível: briquete de enxofre (~100g) por 1h de operação.\n\nCriação de um magomecânico: mecanismo extremamente complexo — só o criador o entende plenamente; outro personagem com Magomecânico pode consertá-lo em mau funcionamento com sucesso em Tecnomagia a -4 e 1d8 horas.",
     "livros": [
       "CIDADE_SOL_VAPOR"
@@ -35426,7 +35463,10 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
-      "observacoes": "Antecedente Arcano (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um)",
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ]
     },
     "descricao": "Artífices podem criar Dispositivos Arcanos e dá-los a aliados (veja a página 180). Quando possível, o dispositivo representa o antecedente de quem o forjou.",
     "livros": [
@@ -35440,7 +35480,10 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
-      "observacoes": "Antecedente Arcano (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um)",
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ]
     },
     "descricao": "Quando conseguir uma ampliação na sua rolagem de perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), reduz seu custo em Pontos de Poder em 1. Isso pode reduzi-lo a 0.",
     "livros": [
@@ -35454,7 +35497,19 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Através de treino e foco, quem tem essa Vantagem se tornou extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
@@ -35471,7 +35526,19 @@
       "atributos": {
         "Espírito": 8
       },
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Uma vez por dia, Drenar Alma permite a personagem receber um Nível de Fadiga para recuperar até cinco Pontos de Poder como uma ação livre limitada. É possível receber dois níveis de Fadiga (exaustão) para recuperar até 10 Pontos de Poder. Não se poder ficar Incapacitado dessa maneira.",
     "livros": [
@@ -35485,7 +35552,22 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um), Voto (sua divindade)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um), Voto (sua divindade)",
+      "vantagens_previas": [
+        "voto"
+      ],
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural. Adicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4.",
     "livros": [
@@ -35499,7 +35581,10 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Novato",
-      "observacoes": "Antecedente Arcano (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um)",
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ]
     },
     "limite_compra": "infinito",
     "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor normalmente disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo.",
@@ -35514,7 +35599,19 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Novato",
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "limite_compra": "uma_vez_por_estagio",
     "descricao": "Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais.",
@@ -35534,7 +35631,10 @@
         "Performance": 8,
         "Fé": 8
       },
-      "observacoes": "Carta Selvagem, Antecedente Arcano (qualquer um)"
+      "observacoes": "Carta Selvagem, Antecedente Arcano (qualquer um)",
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ]
     },
     "descricao": "Recupere 10 Pontos de Poder quando sua Carta de Ação for um Curinga. Isso não pode exceder seu limite normal.",
     "livros": [
@@ -35551,7 +35651,19 @@
       "pericias": {
         "Atirar": 8
       },
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Arqueiros Arcanos usam energias místicas para melhorar suas flechas e setas. É possível garantir automaticamente uma \"qualidade\" em qualquer flecha que dispare (designada por disparo). As primeiras duas qualidades que arqueiros arcanos aprendem são: Ampliar (Adiciona +1 em Atirar e dano) e Manifestação (A flecha tem uma Manifestação ambiental como fogo, frio, escuridão etc).",
     "livros": [
@@ -35646,7 +35758,19 @@
       "pericias": {
         "Lutar": 8
       },
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Recarga Mística: Sempre que cavaleiros místicos conseguirem uma ampliação em uma rolagem de ataque para provocar dano (Atletismo (arremessar), Lutar, Atirar ou perícia arcana), recuperam um Ponto de Poder.",
     "livros": [
@@ -35800,7 +35924,19 @@
       "pericias": {
         "Ocultismo": 6
       },
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Sopro: Uma vez por encontro, como ação limitada, discípulos do dragão podem fazer um ataque de sopro em um Modelo de Cone. O ataque causa 3d6 de dano e pode ser Evadido. O ataque tem um dos seguintes efeitos baseados no tipo de dragão da qual a personagem descende: fogo, ácido, eletricidade ou frio.",
     "livros": [
@@ -36002,7 +36138,19 @@
       "pericias": {
         "Ladinagem": 8
       },
-      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um), Ataque Furtivo"
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um), Ataque Furtivo",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Prestigiditação à Distância: Personagens trapaceiras podem usar Ladinagem a 5 quadros (10 metros) de distância, ou menos, com uma penalidade de -2. Qualquer objeto manipulado à distância deve pesar menos de 2,5 kg. Ataque Furtivo Improvisado: Uma vez por encontro, trapaceiros podem usar a habilidade Ataque Furtivo mesmo se o alvo não está Vulnerável ou sujeito à Finalização.",
     "livros": [
@@ -39830,7 +39978,19 @@
         "Ocultismo": 6,
         "Performance": 6
       },
-      "observacoes": "Antecedente Arcano (Qualquer) ou Poderes Místicos (Qualquer)"
+      "observacoes": "Antecedente Arcano (Qualquer) ou Poderes Místicos (Qualquer)",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "descricao": "Agoureiros usam sua habilidade de adivinhação para ver o futuro, aplicando essa visão para influenciar o curso da batalha. Uma vez por encontro, como uma ação livre, um agoureiro ganha um benefício baseado no naipe de sua Carta de Ação, com duração de cinco rodadas: Espadas (escolha um inimigo na linha de visão; +2 nos ataques contra o alvo), Copas (+2 em testes de Suporte), Ouros (Aparar +2), Paus (rerrolagem grátis em rolagens de Absorção).",
     "livros": [

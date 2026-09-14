@@ -85,9 +85,12 @@ class ValidateSelectionUseCase(
         // 3. Prerequisites (Previous Edges)
         if (!validatePrerequisiteUseCase.execute(
                 ValidatePrerequisiteUseCase.Input(
-                    vantagem,
-                    context.vantagensSelecionadas,
-                    context.complicacoesSelecionadas.keys
+                    vantagem = vantagem,
+                    vantagensSelecionadas = context.vantagensSelecionadas,
+                    complicacoesSelecionadas = context.complicacoesSelecionadas.keys,
+                    pericias = context.pericias,
+                    rawTotalPericia = context.rawTotalPericia,
+                    getBestPericia = context.getBestPericia
                 )
             )) return false
 

@@ -1,6 +1,8 @@
 package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.GrupoAlternativo
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 
@@ -9,7 +11,16 @@ class ValidatePrerequisiteUseCase {
     data class Input(
         val vantagem: Vantagem,
         val vantagensSelecionadas: List<Vantagem>,
-        val complicacoesSelecionadas: Collection<Complicacao>
+        val complicacoesSelecionadas: Collection<Complicacao>,
+        // Só usados por `requisitos.gruposAlternativos` (perícia mínima dentro de uma
+        // alternativa, ex.: "Magomecânico OU Consertar d10+ e Ciência d10+"). Todo o resto
+        // desta classe (vantagensPrevias/grupoMinimo) não precisa de perícia nenhuma.
+        val pericias: List<Pericia> = emptyList(),
+        val rawTotalPericia: (Pericia) -> Int = { 0 },
+        val getBestPericia: (String) -> Pericia? = { nome ->
+            val key = nome.keyify()
+            pericias.firstOrNull { it.nome.keyify() == key }
+        }
     )
 
     private val ameacadorComplicacoesLiberadoras = setOf(
@@ -33,33 +44,70 @@ class ValidatePrerequisiteUseCase {
         return selecionadas.any { it in liberadoras }
     }
 
-    fun execute(input: Input): Boolean {
-        val v = input.vantagem
-        if (v.requisitos.vantagensPrevias.isEmpty()) return true
-
-        if (atendePreviasPorComplicacaoParaAmeacador(v, input.complicacoesSelecionadas)) return true
-
-        val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-            when (prevId.keyify().replace(" ", "_")) {
-                "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
-                    input.vantagensSelecionadas.none { poss ->
-                        poss.id.startsWith("antecedente_arcano_") ||
-                                poss.id.startsWith("aa_") ||
-                                (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
-                    }
-                }
-                else -> {
-                    val idNorm = prevId.keyify().replace(" ", "_")
-                    val temVantagem = input.vantagensSelecionadas.any { poss ->
-                        poss.id.keyify().replace(" ", "_") == idNorm
-                    }
-                    val temComplicacao = input.complicacoesSelecionadas.any {
-                        it.id.keyify().replace(" ", "_") == idNorm
-                    }
-                    !temVantagem && !temComplicacao
+    // Extraído do antigo corpo de `execute` sem mudar comportamento nenhum — só reaproveitado
+    // agora também pelos itens de `grupoMinimo`/`gruposAlternativos`, que citam a mesma
+    // sintaxe de id ("ANTECEDENTE_ARCANO" pra qualquer variante específica, ou um id exato de
+    // Vantagem/Complicação).
+    private fun temVantagemOuComplicacao(refId: String, input: Input): Boolean {
+        return when (refId.keyify().replace(" ", "_")) {
+            "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
+                input.vantagensSelecionadas.any { poss ->
+                    poss.id.startsWith("antecedente_arcano_") ||
+                            poss.id.startsWith("aa_") ||
+                            (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
                 }
             }
+            else -> {
+                val idNorm = refId.keyify().replace(" ", "_")
+                val temVantagem = input.vantagensSelecionadas.any { poss ->
+                    poss.id.keyify().replace(" ", "_") == idNorm
+                }
+                val temComplicacao = input.complicacoesSelecionadas.any {
+                    it.id.keyify().replace(" ", "_") == idNorm
+                }
+                temVantagem || temComplicacao
+            }
         }
-        return !faltam
+    }
+
+    private fun satisfazAlternativa(alt: GrupoAlternativo, input: Input): Boolean {
+        val vantagensOk = alt.vantagens.all { temVantagemOuComplicacao(it, input) }
+        val periciasOk = alt.pericias.all { (nome, min) ->
+            val per = input.getBestPericia(nome) ?: return@all false
+            input.rawTotalPericia(per) >= min
+        }
+        return vantagensOk && periciasOk
+    }
+
+    fun execute(input: Input): Boolean {
+        val v = input.vantagem
+
+        // 1) Lista fixa de pré-requisitos (E/AND) — comportamento inalterado.
+        if (v.requisitos.vantagensPrevias.isNotEmpty() &&
+            !atendePreviasPorComplicacaoParaAmeacador(v, input.complicacoesSelecionadas)
+        ) {
+            val faltam = v.requisitos.vantagensPrevias.any { prevId -> !temVantagemOuComplicacao(prevId, input) }
+            if (faltam) return false
+        }
+
+        // 2) "Pelo menos N destas opções" (ex.: Bando de Guerra — Comando + pelo menos duas
+        // outras Vantagens de Liderança). Independente do item 1: soma-se a ele (E), nunca o
+        // substitui.
+        val grupoMinimo = v.requisitos.grupoMinimo
+        if (grupoMinimo != null && grupoMinimo.opcoes.isNotEmpty()) {
+            val quantasTem = grupoMinimo.opcoes.count { temVantagemOuComplicacao(it, input) }
+            if (quantasTem < grupoMinimo.minimo) return false
+        }
+
+        // 3) "Isto OU aquilo" — cada alternativa é um pacote de vantagens/perícias que precisa
+        // ser satisfeito por completo (E dentro da alternativa); basta UMA alternativa bater
+        // (ex.: Antecedente Arcano (qualquer um) OU Poderes Místicos (qualquer um); ou
+        // Magomecânico OU Consertar d10+ e Ciência d10+).
+        val alternativas = v.requisitos.gruposAlternativos
+        if (alternativas.isNotEmpty()) {
+            if (alternativas.none { satisfazAlternativa(it, input) }) return false
+        }
+
+        return true
     }
 }

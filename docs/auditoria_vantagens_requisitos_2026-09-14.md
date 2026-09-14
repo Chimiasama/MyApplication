@@ -687,3 +687,137 @@ Isso fecha a auditoria pedida: todos os livros do catálogo (Básico,
 Fantasia, Sci-Fi, Horror, Superpoderes, Pathfinder, Deadlands, Arte da
 Guerra, Crystal Heart, Wiseguys, Cidade do Sol a Vapor) foram conferidos
 vantagem por vantagem contra o texto original.
+
+## Rodada 2 — implementação das duas limitações estruturais (mesma data)
+
+Depois do relatório acima, o dono do projeto pediu pra reconferir contra o
+livro as duas limitações de schema documentadas ("N vantagens de um grupo"
+e "vantagem A OU vantagem/perícias B") e implementar do jeito certo, sem
+quebrar nada do que já existia.
+
+### Reconferência contra o livro (achei imprecisões na Rodada 1)
+
+- **"N de um grupo"**: só existem mesmo 2 casos no catálogo inteiro — Bando
+  de Guerra (Fantasia, linha ~2797-2799: "Comando e pelo menos duas outras
+  Vantagens de Liderança, Seguidores") e Ordem-Unida (Arte da Guerra, linha
+  ~7868-7869: "Samurai, Comando, quaisquer duas Vantagens de Liderança").
+  Busquei "pelo menos duas/três", "quaisquer duas/três", "dois Antecedentes"
+  e "duas outras" em todos os 17 arquivos-fonte pra confirmar que não
+  ficou nenhum caso parecido de fora — os outros resultados eram blocos de
+  NPC ou efeitos de jogo (não requisitos).
+- **"A OU B"**: reconferi cada uma das vantagens do Pathfinder que citei
+  como "AA ou PM" na Rodada 1 e a lista **estava errada em 4 itens**. Lendo
+  de novo linha por linha:
+  - **Têm mesmo "AA ou PM"**: Drenar a Alma (+ Espírito d8+, não perícia
+    arcana d10 como no Básico — o Pathfinder muda esse requisito de
+    propósito), Guerreiro Sagrado/Profano (+ Voto — que eu tinha
+    perdido na primeira leitura), Concentração, Pontos de Poder, Arqueiro
+    Arcano (+ Atirar d8+), Cavaleiro Místico (+ Lutar d8+), Discípulo do
+    Dragão (+ Ocultismo d6+), Trapaceiro Arcano (+ Ataque Furtivo,
+    Ladinagem d8+), Agoureiro do Compêndio (+ Ocultismo d6+, Performance
+    d6+). 9 vantagens, não 13.
+  - **NÃO têm "ou PM"** (só Antecedente Arcano puro, eu tinha incluído
+    errado): Artífice, Canalização, Novos Poderes. Essas ganharam o fix
+    simples (`vantagens_previas: ["antecedente_arcano"]`), não o novo
+    mecanismo de alternativas.
+  - **Surto de Poder** também é só AA puro (sem "ou PM") — ganhou o mesmo
+    fix simples, além da perícia arcana genérica já corrigida na Rodada 1.
+  - **Místico Teurgo** é um caso à parte, não "A ou B": o requisito é
+    "dois Antecedentes Arcanos com duas perícias arcanas diferentes" ao
+    mesmo tempo — não implementei (é um terceiro padrão, "N distintos de
+    um grupo dinâmico", mais raro e mais arriscado de encaixar no
+    mecanismo genérico sem um caso especial só pra ele); fica documentado,
+    registro devidamente sinalizado no código se quiser que eu faça depois.
+  - Também achei, no meio da reconferência, que **Irmandade das Seis
+    Chaves** (Cidade do Sol a Vapor) é o único caso de "vantagem OU
+    combinação de perícias" (não "vantagem OU vantagem"): "Magomecânico OU
+    Consertar d10+ e Ciência d10+" (linha ~8649-8651 de
+    `docs/swade_csv_livro_dos_mortais`) — implementado com o mesmo
+    mecanismo, numa alternativa só de perícias.
+
+### Achado extra durante a reconferência: "Poderes Místicos" estava com o livro errado
+
+Ao ir confirmar se a Vantagem `poderes_misticos` existia tageada
+`PATHFINDER` pra poder ser referenciada nas alternativas acima, descobri
+que ela só existia tageada **`FANTASIA`** — mas o texto da vantagem fala
+em "Bárbaro (Força d8+)... Guerreiro (Lutar d8+)... Ladrão... Monge...
+Paladino... Patrulheiro" — exatamente as 6 classes centrais do Pathfinder,
+sem nenhuma relação com o Fantasia (que usa Antecedentes Arcanos por
+arquétipo, não classes). Isso deixava Poderes Místicos invisível pra quem
+realmente devia usá-la (Pathfinder) e presente por engano na lista do
+Fantasia. **Corrigido**: `livros` trocado de `["FANTASIA"]` para
+`["PATHFINDER"]`. Sem essa correção, o "ou Poderes Místicos" que acabei de
+implementar não teria efeito prático nenhum pra ninguém jogando Pathfinder
+— continuo achando que vale a pena registrar como nota pra você: essa
+Vantagem não tem `choiceOptions` preenchido (ao contrário da versão do
+Sci-Fi, que tem `["Guerreiro Estelar", "Telepata"]`) — pode valer a pena
+adicionar `["Bárbaro", "Guerreiro", "Ladrão", "Monge", "Paladino",
+"Patrulheiro"]` depois, se o app usa esse campo pra oferecer a escolha
+numa tela; não mexi porque é outro assunto (falta de escolha interativa),
+não requisito.
+
+### Implementação (código)
+
+Adicionei dois campos novos em `Requisito` (`model/Requisito.kt`), ambos
+opcionais e com default vazio — **nenhuma das ~1900 vantagens existentes
+muda de comportamento só por essa mudança de schema**, só as que eu
+preenchi explicitamente:
+
+- **`grupoMinimo: { opcoes: [ids], minimo: N }`** — "tem que ter pelo
+  menos N destas opções", verificado JUNTO (E) com `vantagens_previas`,
+  nunca no lugar dele.
+- **`gruposAlternativos: [{ vantagens: [ids], pericias: {nome: mínimo} }, ...]`**
+  — "basta UMA alternativa da lista bater por completo (E dentro dela)".
+  Cada alternativa pode ter só vantagens (Antecedente Arcano OU Poderes
+  Místicos), só perícias, ou os dois juntos.
+
+A validação foi implementada nos dois lugares que hoje leem
+`vantagens_previas` (achei que existiam DOIS, não um — `CriadorState.kt`
+tem uma cópia inline da mesma lógica de
+`model/usecase/ValidatePrerequisiteUseCase.kt`, usada em dois pontos
+diferentes: `podeSelecionar` — o portão que decide se dá pra COMPRAR a
+Vantagem — e `atendeRequisitosMantidos` — a revalidação de Vantagens já
+compradas quando algo muda, tipo remover um pré-requisito depois). Extraí
+a checagem "tem esta vantagem ou complicação" (que já existia, cobrindo
+inclusive o caso especial de "Antecedente Arcano — qualquer variante") pra
+uma função só, reaproveitada tanto pela checagem antiga de
+`vantagens_previas` (comportamento 100% preservado) quanto pelas duas
+checagens novas. Testes novos em
+`ValidatePrerequisiteUseCaseTest.kt` cobrindo os dois mecanismos e
+confirmando que uma vantagem sem nenhum dos dois campos novos se comporta
+exatamente como antes.
+
+**Não consegui rodar `./gradlew test`/build neste ambiente** (falha ao
+resolver o Android Gradle Plugin por rede restrita no sandbox) — validei
+manualmente linha por linha e escrevi os testes novos, mas recomendo
+rodar a suíte completa antes de mesclar, especialmente
+`ValidatePrerequisiteUseCaseTest`, `ValidateSelectionUseCaseTest` e
+`RequisitoSerializerTest`.
+
+### Vantagens corrigidas nesta rodada
+
+- **`bando_de_guerra`** (Fantasia): ganhou `grupoMinimo` (7 opções de
+  Liderança, mínimo 2); `observacoes` limpo de "+2 Liderança" (texto que
+  não batia com a descrição real da vantagem).
+- **`ordem_unida`** (Arte da Guerra): ganhou o mesmo `grupoMinimo`.
+- **`irmandade_das_seis_chaves`** (Cidade do Sol a Vapor): ganhou
+  `gruposAlternativos` (Magomecânico OU Consertar d10+/Ciência d10+).
+- **`concentracao`, `drenar_a_alma`, `guerreiro_sagrado_profano`,
+  `pontos_de_poder`, `arqueiro_arcano`, `cavaleiro_mistico`,
+  `discipulo_do_dragao`, `trapaceiro_arcano`, `agoureiro`** (Pathfinder):
+  ganharam `gruposAlternativos` (Antecedente Arcano OU Poderes Místicos);
+  Guerreiro Sagrado/Profano também ganhou `vantagens_previas: ["voto"]`.
+- **`artifice`, `canalizacao`, `novos_poderes`, `surto_de_poder`**
+  (Pathfinder): ganharam `vantagens_previas: ["antecedente_arcano"]` (só
+  precisavam do fix simples, sem alternativa nenhuma).
+- **`poderes_misticos`**: livro corrigido de `FANTASIA` pra `PATHFINDER`.
+
+### Pendente, não implementado
+
+**Místico Teurgo** (Pathfinder) — "dois Antecedentes Arcanos com duas
+perícias arcanas diferentes" — precisaria de um terceiro mecanismo (contar
+Antecedentes Arcanos DISTINTOS, não apenas "tem pelo menos um") ou de um
+caso especial hardcoded (mesmo padrão já usado pro Ameaçador/Tiro Duplo
+Aprimorado). Como é uma vantagem só no catálogo inteiro, não implementei
+pra não introduzir um mecanismo genérico só usado uma vez — me avise se
+quiser que eu resolva esse caso também.
