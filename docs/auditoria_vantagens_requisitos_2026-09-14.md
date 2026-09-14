@@ -352,8 +352,31 @@ Maior, Regeneração Lenta→Regeneração Rápida), os 10 Antecedentes Arcanos
 por arquétipo e as 19 vantagens específicas de arquétipo restantes batem
 exatamente com o texto "REQUISITOS:" do livro.
 
+## SUPERPODERES — 6 vantagens novas
+
+Livro pequeno pro escopo de vantagens (o sistema de Super Poderes em si
+mora em `super_poderes.json`, catálogo separado). As 6 vantagens
+específicas (`superpoderes`, `o_melhor_que_ha`, `aguenta_o_tranco`,
+`lider_de_equipe`, `dupla_dinamica`, `parceiro`) foram conferidas contra
+`docs/swade_superpoderes`.
+
+### Bug confirmado — CORRIGIDO
+
+1. **Parceiro (`parceiro`, tag SUPER) — atributo Espírito d8+ inventado,
+   sem base no livro.** Livro (linha ~1030): "REQUISITOS: Carta Selvagem,
+   Veterano" — só isso, sem menção a nenhum atributo em lugar nenhum do
+   texto ao redor. O JSON tinha `"atributos": {"Espirito": 8}`, travando
+   incorretamente heróis Veteranos com Espírito abaixo de d8 de pegar um
+   parceiro. **Corrigido** removendo o atributo (`atributos: {}`), mantendo
+   só Veterano + Carta Selvagem, que é o que o livro realmente pede.
+
+### Confirmado correto (nada a corrigir)
+
+As outras 5 vantagens (Superpoderes, O Melhor que Há, Aguenta o Tranco,
+Líder de Equipe, Dupla Dinâmica) batem exatamente com o texto do livro.
+
 ## Próximos livros
 
-Ainda faltam: Superpoderes, Pathfinder (Básico + Compêndio), Deadlands
-(Básico + Compêndio), Arte da Guerra (+ Diário do Kui), Crystal Heart (+
-Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).
+Ainda faltam: Pathfinder (Básico + Compêndio), Deadlands (Básico +
+Compêndio), Arte da Guerra (+ Diário do Kui), Crystal Heart (+ Muitos
+Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).

@@ -17932,9 +17932,7 @@
     "categoria": "SOCIAIS",
     "requisitos": {
       "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
       "observacoes": "Carta Selvagem"
