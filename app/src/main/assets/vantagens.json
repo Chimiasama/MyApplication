@@ -21230,26 +21230,6 @@
     "descricaoLite": "Elimina a penalidade por usar a mão não dominante e permite somar os bônus de Aparar de ambas as armas quando empunhadas ao mesmo tempo."
   },
   {
-    "id": "aristocrata",
-    "nome": "ARISTOCRATA",
-    "categoria": "ANTECEDENTE",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário. Aristocratas adicionam +2 em Persuadir quando em uma Rede de Contatos (veja pág. 160) com a elite local, industriais, nobres ou demais aristocratas.\n\nTambém adicionam +2 em rolagens de Conhecimento Geral feitas para conhecer a etiqueta da elite, reconhecer ramos familiares e heráldica ou rumores envolvendo outros de sua posição.",
-    "livros": [
-      "ARTE_DA_GUERRA"
-    ],
-    "descricaoLite": "Soma +2 em Persuadir ao lidar com a elite social por meio de uma Rede de Contatos e +2 em Conhecimento Geral sobre etiqueta, linhagens e brasões da nobreza."
-  },
-  {
     "id": "atraente",
     "nome": "ATRAENTE",
     "categoria": "ANTECEDENTE",

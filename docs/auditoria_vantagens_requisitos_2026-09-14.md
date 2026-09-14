@@ -503,7 +503,41 @@ no índice do livro (com correções já aplicadas onde precisava) — não
 reabri cada uma do zero, mas as amostras que conferi (Fé Verdadeira,
 Pessoa de Mil Faces, Delegado Federal) continuam batendo com o texto.
 
+## ARTE DA GUERRA (+ Diário do Kui) — 35 + 5 vantagens novas
+
+Cenário substituto (mesma regra de `ContentVisibility.kt`: desliga
+`BASICO`). Conferidas as 40 vantagens novas/renomeadas contra
+`docs/swade_adg` e `docs/swade_adg_diario_do_kui`.
+
+### Bug confirmado — CORRIGIDO
+
+1. **Aristocrata (`aristocrata`) duplicado dentro do próprio livro.**
+   Achei DUAS entradas com `id: "aristocrata"` tageadas `ARTE_DA_GUERRA` ao
+   mesmo tempo — não é o padrão são/esperado de reimpressão entre livros
+   diferentes (tipo o `assassino` do Pathfinder, que nunca colide porque
+   `BASICO` é desligado); aqui as duas conviviam na MESMA lista ativa,
+   aparecendo duas vezes pro jogador. Uma tinha a descrição idêntica à
+   Vantagem do livro básico ("Este indivíduo nasceu com privilégios...");
+   a outra tinha a descrição própria do Arte da Guerra ("O Herói vem de
+   uma linhagem nobre de um Clã...", linha ~7392-7401), que é a que
+   realmente bate com o texto do livro. **Corrigido** removendo a cópia
+   errada (a com texto do Básico) — sobrou só a versão com o texto correto
+   do Arte da Guerra. Requisitos (`Novato`, sem outros) eram idênticos nas
+   duas cópias, então isso não muda nenhum cálculo, só some com o card
+   duplicado na lista de Vantagens.
+
+### Confirmado correto (nada a corrigir)
+
+As outras 39 vantagens (Domínio, Ferimento Extra, Legado, Linhagem
+Temível, Mentor, Rico; as 12 Vantagens de Chi; as 9 de Combate; as 7
+Profissionais; as 15 de Tropo, incluindo os requisitos condicionados a
+escolha de Tropo/Ferramentas do Ofício tipo "Vínculo Espiritual"/"Talismãs";
+Danificar a Roupa; e as 5 do Diário do Kui) batem exatamente com o texto.
+Ordem-Unida repete a mesma limitação de schema já registrada no Fantasia
+(Bando de Guerra): "quaisquer duas Vantagens de Liderança" fica só em
+`observacoes`, sem checagem estrutural de "2 de um grupo".
+
 ## Próximos livros
 
-Ainda faltam: Arte da Guerra (+ Diário do Kui), Crystal Heart (+ Muitos
-Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).
+Ainda faltam: Crystal Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a
+Vapor (3 livros).
