@@ -249,9 +249,55 @@ comparação de nome no app passa por `keyify()`/`semAcentos()`, que ignora
 acentuação; é só uma inconsistência cosmética no JSON-fonte, sem efeito no
 app.
 
+## SCI-FI — 26 vantagens novas + 3 de Cibernéticos + 11 Antecedentes Arcanos + 26 vantagens de arquétipo
+
+### Bug confirmado — CORRIGIDO
+
+1. **Poder Favorito (`poder_favorito`, tag SCI_FI) — mesmo bug da "perícia
+   arcana genérica" do Básico.** Livro (linha ~1627-1629): "Experiente,
+   Antecedente Arcano (qualquer um), perícia arcana d8+". O JSON usava
+   `"pericias": {"Perícia Arcana": 8}` — de novo, uma perícia chamada
+   "Perícia Arcana" não existe (o Sci-Fi tem 11 Antecedentes Arcanos, cada
+   um com sua própria perícia arcana: Fé, Foco, Ciência, Psiônicos ou
+   Ciência Estranha), então o requisito nunca era checado de verdade, pelo
+   mesmo motivo já documentado pra Drenar a Alma/Surto de Poder. **Corrigido**
+   trocando por `"periciaMinOpcional": {"Fé": 8, "Foco": 8, "Ciência": 8,
+   "Psiônicos": 8, "Ciência Estranha": 8}` (as 5 perícias arcanas reais que
+   aparecem nos Antecedentes Arcanos deste livro).
+
+### Achados sem correção — limitação de schema, não erro de dado
+
+2. **Sinfonia Celestial (`sinfonia_celestial`) e Drones (`drones`) — tetos
+   de compra não capturados.** O livro diz explicitamente "pode ser
+   adquirida até quatro vezes" pras duas — o JSON já documenta isso em
+   `observacoes`, mas `limite_compra` está como `infinito` (sem teto). O
+   enum de `limite_compra` hoje não tem um valor tipo "até N vezes" — só
+   `uma_vez`/`infinito`/variantes "por sessão/encontro/estágio/característica".
+   Não mexi porque precisaria de um valor novo no enum + suporte no motor de
+   avanço pra realmente travar em 4 compras.
+3. **Equipado (`equipado`) — restrição de "só na criação de personagem" não
+   modelada.** Mesma categoria de limitação já vista antes (timing
+   restrito, sem campo pra isso no schema).
+
+### Confirmado correto (nada a corrigir)
+
+Os outros 25 "novas" (Capitão, Habitante de Gravidade Intensa, Terreno
+Favorito, Gerenciador de Munição, Oportunista, Saque Rápido, Líder de
+Equipe, Poderes Místicos, Adaptação Atmosférica/Gravitacional, Ataque
+Furtivo (+Aprimorado), Controle Fino, Exocientista, Fita Adesiva e
+Chiclete, Manobras Evasivas, Hacker Sob Pressão, Piloto Atirador, Reflexos
+Aprimorados, Tiro Preciso, Enganador, Imortal, Milagreiro, Salvador do
+Universo), as 3 de Cibernéticos (Cibertolerância, Cibersamurai, Ciborgue —
+que nem estavam na lista antiga do índice do livro, mas conferem 100% com
+o texto), os 11 Antecedentes Arcanos por arquétipo e as 26 vantagens
+específicas de arquétipo batem exatamente com "REQUISITOS:" do livro,
+incluindo as exclusões mútuas texto-a-texto (Mago Estelar × Renegado
+Estelar) e o caso "Harmonizado", onde o próprio livro não define um
+Estágio explícito — o JSON já documentava essa ambiguidade em
+`observacoes` antes desta auditoria, sem precisar de mudança.
+
 ## Próximos livros
 
-Ainda faltam: Sci-Fi, Horror, Superpoderes, Pathfinder (Básico +
-Compêndio), Deadlands (Básico + Compêndio), Arte da Guerra (+ Diário do
-Kui), Crystal Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3
-livros).
+Ainda faltam: Horror, Superpoderes, Pathfinder (Básico + Compêndio),
+Deadlands (Básico + Compêndio), Arte da Guerra (+ Diário do Kui), Crystal
+Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).

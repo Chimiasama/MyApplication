@@ -14682,8 +14682,12 @@
       "vantagens_previas": [
         "Antecedente Arcano"
       ],
-      "pericias": {
-        "Perícia Arcana": 8
+      "periciaMinOpcional": {
+        "Fé": 8,
+        "Foco": 8,
+        "Ciência": 8,
+        "Psiônicos": 8,
+        "Ciência Estranha": 8
       }
     },
     "descricao": "Escolha um poder. Ignora até 2 pontos de penalidade (Ações Múltiplas, Ferimentos, Fadiga) ao fazer a rolagem de perícia arcana para ele.",
