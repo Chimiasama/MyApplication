@@ -32,6 +32,11 @@ jobs:
         uses: android-actions/setup-android@v4
         with:
           cmdline-tools-version: 11076708
+          # O Google descontinuou o pacote legado "tools" (sdkmanager não o
+          # encontra mais no repositório remoto); a action instala esse
+          # pacote por padrão junto com platform-tools. Não precisamos dele
+          # pra buildar com Gradle, então pedimos só platform-tools.
+          packages: 'platform-tools'
 
       - name: Build APK (Lite${{ github.event.inputs.buildType }})
         run: |
