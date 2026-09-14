@@ -4497,8 +4497,13 @@
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
-      "pericias": {
-        "Arcana": 10
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 10,
+        "Conjurar": 10,
+        "Foco": 10,
+        "Psiônicos": 10,
+        "Ciência Estranha": 10
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -4707,8 +4712,13 @@
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Arcana": 8
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 8,
+        "Conjurar": 8,
+        "Foco": 8,
+        "Psiônicos": 8,
+        "Ciência Estranha": 8
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -4950,7 +4960,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -5620,7 +5630,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -10098,8 +10110,13 @@
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
-      "pericias": {
-        "Arcana": 10
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 10,
+        "Conjurar": 10,
+        "Foco": 10,
+        "Psiônicos": 10,
+        "Ciência Estranha": 10
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -10331,8 +10348,13 @@
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Arcana": 8
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 8,
+        "Conjurar": 8,
+        "Foco": 8,
+        "Psiônicos": 8,
+        "Ciência Estranha": 8
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -10574,7 +10596,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -11244,7 +11266,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -13195,8 +13219,13 @@
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
-      "pericias": {
-        "Arcana": 10
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 10,
+        "Conjurar": 10,
+        "Foco": 10,
+        "Psiônicos": 10,
+        "Ciência Estranha": 10
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -13428,8 +13457,13 @@
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Arcana": 8
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 8,
+        "Conjurar": 8,
+        "Foco": 8,
+        "Psiônicos": 8,
+        "Ciência Estranha": 8
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -13671,7 +13705,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -14341,7 +14375,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -17102,7 +17138,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -17706,7 +17742,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -19694,7 +19732,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -20318,7 +20356,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -22949,7 +22989,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -23575,7 +23615,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -27086,7 +27128,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -27710,7 +27752,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -30552,8 +30596,13 @@
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Arcana": 8
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 8,
+        "Conjurar": 8,
+        "Foco": 8,
+        "Psiônicos": 8,
+        "Ciência Estranha": 8
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -30795,7 +30844,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -31465,7 +31514,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
@@ -37981,8 +38032,13 @@
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
-      "pericias": {
-        "Arcana": 10
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 10,
+        "Conjurar": 10,
+        "Foco": 10,
+        "Psiônicos": 10,
+        "Ciência Estranha": 10
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -38214,8 +38270,13 @@
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Arcana": 8
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Fé": 8,
+        "Conjurar": 8,
+        "Foco": 8,
+        "Psiônicos": 8,
+        "Ciência Estranha": 8
       },
       "vantagens_previas": [
         "antecedente_arcano"
@@ -38457,7 +38518,7 @@
       "vantagens_previas": [],
       "observacoes": ""
     },
-    "limite_compra": "infinito",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo.",
@@ -39127,7 +39188,9 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "atributos": {},
+      "atributos": {
+        "Vigor": 12
+      },
       "pericias": {},
       "vantagens_previas": [
         "duro_na_queda"
