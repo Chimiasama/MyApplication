@@ -461,8 +461,49 @@ a suspeitar de colisão de id dentro do app, mas confirmei em
 `BASICO` por completo (ver nota no topo desta seção), só uma das duas
 versões de `assassino` fica visível de cada vez. Nenhuma ação necessária.
 
+## DEADLANDS (Básico + Compêndio)
+
+Cenário substituto (mesma regra do Pathfinder: `BASICO` é desligado quando
+Deadlands está ativo — ver `ContentVisibility.kt`). O índice deste livro já
+tinha uma rodada de auditoria bem recente e detalhada
+(`docs/reports/book_index/deadlands.md`, marcas "[OK, resolvido em
+2026-08-31]") que já corrigiu especificamente o Estágio de Fé Verdadeira
+(Novato, não Veterano) e Pessoa de Mil Faces (Experiente, não Heroico) —
+conferi as duas de novo contra o texto e ambas continuam corretas.
+
+Fiz a conferência completa de "REQUISITOS:" pra todas as ~25 vantagens das
+seções que ainda não tinham esse nível de detalhe registrado no índice (De
+Antecedente, De Combate, Profissionais, Sociais, Estranhas, Lendárias — as
+sem nota de "resolvido").
+
+### Bug confirmado — CORRIGIDO
+
+1. **Contador de Histórias (`contador_de_historias`) — faltava a opção
+   "ou Persuadir".** Livro (linha ~1404-1405): "Novato, Performance ou
+   Persuadir d8+". O JSON tinha `"pericias": {"Performance": 8}` — só
+   Performance, travando quem tem Persuadir d8+ mas não Performance
+   (contrariando o "ou" do livro). **Corrigido** trocando por
+   `"periciaMinOpcional": {"Performance": 8, "Persuadir": 8}`.
+
+### Confirmado correto (nada a corrigir)
+
+As outras ~24 vantagens dessas seções (Humor Ácido, Veterano do Oeste
+Estranho, Duelista, Martelar o Cão/Aprimorado, Não Me Irrite!, Saque
+Rápido, Agente, Batedor, Coragem, Nascido na Sela, Patrulheiro Territorial,
+Soldado, Trapaceiro, Delegado Federal, Reputação, Atormentado, Determinação/
+Verdadeira, Talento, Condenado, Eis um Cavalo Amarelo..., Mão Direita do
+Diabo, Rápido como um Raio) batem exatamente com o texto — incluindo casos
+de perícia mínima incomum como Patrulheiro Territorial (Sobrevivência d4+,
+não d6+, conferido e correto).
+
+As ~70 vantagens restantes (Atormentado detalhado, Cientista Louco,
+Mascate, Mestre do Chi, Patrulheiro Territorial avançado, Xamã, Voduísta,
+Bruxa) já tinham passado por uma auditoria específica e recente registrada
+no índice do livro (com correções já aplicadas onde precisava) — não
+reabri cada uma do zero, mas as amostras que conferi (Fé Verdadeira,
+Pessoa de Mil Faces, Delegado Federal) continuam batendo com o texto.
+
 ## Próximos livros
 
-Ainda faltam: Deadlands (Básico + Compêndio), Arte da Guerra (+ Diário do
-Kui), Crystal Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3
-livros).
+Ainda faltam: Arte da Guerra (+ Diário do Kui), Crystal Heart (+ Muitos
+Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).

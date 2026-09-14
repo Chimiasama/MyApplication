@@ -31887,8 +31887,9 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Novato",
-      "pericias": {
-        "Performance": 8
+      "periciaMinOpcional": {
+        "Performance": 8,
+        "Persuadir": 8
       }
     },
     "descricao": "Um bom contador de histórias não só entretém, como também dá esperança e conforto. No Oeste Estranho, Contadores de Histórias são essenciais para salvar o mundo!\nO Xerife tem todos os detalhes na página 95, mas esta Vantagem lhe dá duas regalias. Primeiro, ao fazer uma rolagem de Persuadir ou Performance para reduzir o Nível de Medo local, o seu herói ou heroína adiciona +2 para o seu total. Em segundo lugar, quando você tem sucesso em reduzir o Nível de Medo local e obtém uma ampliação na rolagem de Persuadir ou Performance, o Contador de Histórias e qualquer um que lhe dê Suporte ganham Convicção (veja em Savage Worlds).",
