@@ -2995,13 +2995,6 @@ class CriadorState {
     fun removerComplicacao(comp: Complicacao, onFeedback: (String) -> Unit = {}) {
         val key = comp.id.keyify()
 
-        if (key == "IDOSO") {
-             if (pontosPericia < 5) {
-                 onFeedback("Não é possível remover Idoso pois os pontos de perícia extras já foram gastos. Remova pontos em perícias de Astúcia primeiro.")
-                 return
-             }
-        }
-
         if (key == "POBREZA") {
             val base = getBaseWealth()
             dinheiro += base / 2

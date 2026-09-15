@@ -64,6 +64,7 @@ import com.example.swadebuilder.atributoBaseParaPericia
 import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.RuleConstants
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.AutoSizeText
@@ -387,6 +388,23 @@ fun PericiasContent(
                             text = "Já usando $spViaPc Ponto(s) de Complicação aqui.",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+                    if (!locked && idosoActive) {
+                        val astuciaGasto = state.spCostStackPorPericia
+                            .filterKeys { it.atributo == RuleConstants.ATRIBUTO_ASTUCIA }
+                            .values
+                            .sumOf { it.sum() }
+                        val faltamAstucia = (5 - astuciaGasto).coerceAtLeast(0)
+                        Text(
+                            text = if (faltamAstucia > 0) {
+                                "Idoso: Astúcia $astuciaGasto/5 — gaste esses pontos antes de usar os outros."
+                            } else {
+                                "Idoso: Astúcia $astuciaGasto/5 ✓ — pode usar o resto livremente."
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (faltamAstucia > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
                     }
