@@ -904,16 +904,15 @@ fun ProgressosDialog(
                             val attrVal = state.valoresAtributos[per.atributo]?.intValue ?: 4
                             val cost = if (current >= attrVal) 2 else 1
                             val wasIncreased = state.skillsForCurrentAdvancement.contains(per.nome)
-                            // "Você não pode aumentar a mesma perícia duas vezes com o mesmo
-                            // Progresso" (docs/swade_pathfinder_basico, l.6770-6772) é uma
-                            // frase exclusiva do Pathfinder — o Básico (l.4581-4584) descreve
-                            // a mesma opção ("aumentar duas perícias que são menores...") SEM
-                            // essa proibição, ou seja, no Básico dá pra gastar os 2 SP do
-                            // Progresso na mesma perícia. Só bloqueia repetir a perícia quando
-                            // o Pathfinder está ativo, pra não criar uma regra geral a partir
-                            // de uma restrição que é só dele.
-                            val bloqueiaRepetirPericia = state.compendioPathfinderAtivo && wasIncreased
-                            val canBuy = spRemaining >= cost && current < 12 && !bloqueiaRepetirPericia
+                            // Regra geral (Básico, docs/swade_basico l.4581-4584): um Progresso
+                            // serve pra "aumentar uma perícia que já esteja no nível do atributo
+                            // ou acima" (uma perícia, sozinha) OU "aumentar duas perícias que
+                            // sejam menores que o atributo" (duas perícias DIFERENTES, cada uma
+                            // subindo um passo, até o valor do atributo) — nunca a MESMA perícia
+                            // duas vezes num único Progresso. O Savage Pathfinder (docs/
+                            // swade_pathfinder_basico, l.6770-6772) só deixa essa restrição
+                            // explícita por escrito; não é uma regra exclusiva dele.
+                            val canBuy = spRemaining >= cost && current < 12 && !wasIncreased
                             val nextRaw = if (current == 0 && per.basica) 4 else if (current == 0) 4 else if (current < 12) current + 2 else current + 1
 
                             Column(

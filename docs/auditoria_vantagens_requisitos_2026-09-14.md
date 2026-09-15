@@ -1730,3 +1730,35 @@ confirmando zero referências restantes a `maxComprasPpAteAgora`/
 de JSON (`geral_arcano_info.json`, `vantagens.json`, `poderes.json`) e
 conferência de que nenhuma Vantagem real usa `subtipoArcano:
 "TECNICAS ELEMENTAIS"` (só a nova entrada de Arte da Guerra).
+
+### 3) Correção da correção: "não repetir a mesma perícia" É regra geral, não só do Pathfinder
+
+Na Rodada 7 (item 1) eu tinha restringido o bloqueio de repetir
+perícia (`!wasIncreased` em `ProgressosDialog.kt`) só a
+`compendioPathfinderAtivo`, por ter lido a ausência da frase explícita
+"Você não pode aumentar a mesma perícia duas vezes com o mesmo
+Progresso" no texto do Básico como se a regra não existisse lá. **Isso
+estava errado** — foi apontado que o Básico já implica a mesma
+restrição pela própria redação da opção: "Aumentar **duas perícias**
+que são menores que o seu tipo de dado associado em um dado cada"
+(`docs/swade_basico`, l.4581-4584) — "duas perícias" significa duas
+perícias DIFERENTES, não a mesma perícia duas vezes. O Savage
+Pathfinder só torna essa restrição explícita por escrito; não é uma
+regra exclusiva dele. As duas únicas opções de perícia por Progresso
+continuam sendo:
+
+- Aumentar UMA perícia que já está no nível do atributo ou acima (um
+  passo, sem limite superior de 1 passo — pode passar do atributo).
+- OU aumentar DUAS perícias DIFERENTES que estão abaixo do atributo
+  (um passo cada, até no máximo o valor do atributo).
+
+Revertido: `bloqueiaRepetirPericia`/o guard `compendioPathfinderAtivo
+&&` foi removido; `canBuy` agora usa `!wasIncreased` direto, bloqueando
+repetir a mesma perícia no mesmo Progresso em todos os livros, não só
+no Pathfinder.
+
+**Build/teste automatizado continuam impossíveis neste ambiente** —
+validação manual: releitura do trecho do Básico citado acima e do
+trecho equivalente do Pathfinder, e conferência de que nenhum outro
+lugar do código (`RequirementValidator.kt`, `CriadorState.kt`,
+`CriadorViewModel.kt`) duplicava esse guard condicionado ao Pathfinder.
