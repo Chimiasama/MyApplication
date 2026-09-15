@@ -270,6 +270,12 @@ fun TelaInicial(
                 // Variante); o jogador ainda pode desmarcar na tela de regras.
                 if (optCompendioSciFi) {
                     optVariantesDeRaca = true
+                    // Ficção Científica já trata múltiplos Antecedentes Arcanos como
+                    // prática normal do cenário, igual Fantasia/Pathfinder (a checkbox
+                    // nem aparece mais pra ele, ver mais abaixo) — zera aqui pra não
+                    // herdar um "true" deixado por outro livro que ainda usa a checkbox
+                    // (ex.: Básico).
+                    optMultiAntecedenteArcano = false
                 }
             }
         ),
@@ -322,6 +328,14 @@ fun TelaInicial(
             {
                 optCompendioDeadlands = !optCompendioDeadlands
                 applyRulesPreset(if (optCompendioDeadlands) "deadlands" else "basico")
+                // Deadlands não tem, no livro, uma regra de combinar múltiplos
+                // Antecedentes Arcanos (ao contrário de Fantasia/Ficção Científica/
+                // Pathfinder) — a checkbox nem aparece mais pra ele, ver mais abaixo.
+                // Zera aqui pra não herdar um "true" deixado por outro livro que
+                // ainda usa a checkbox (ex.: Básico).
+                if (optCompendioDeadlands) {
+                    optMultiAntecedenteArcano = false
+                }
             }
         ),
         ModuleItemData(
@@ -658,12 +672,18 @@ fun TelaInicial(
                         )
 
                         if (!optCompendioWiseguys) {
-                            // Pathfinder já trata múltiplos Antecedentes Arcanos como prática
-                            // normal do cenário (várias listas de poder, um único pool de PP
-                            // combinado — ver CriadorState.permiteMultiplosAntecedentesArcanos
-                            // e o sharedTotalPP em PoderesSection.kt), então a opção nunca
-                            // precisou ficar condicionada a esta checkbox aqui.
-                            if (!optCompendioFantasia && !optCompendioHorror && !optCompendioPathfinder) {
+                            // Fantasia/Ficção Científica/Pathfinder já tratam múltiplos
+                            // Antecedentes Arcanos como prática normal do cenário (várias
+                            // listas de poder, um único pool de PP combinado — ver
+                            // CriadorState.permiteMultiplosAntecedentesArcanos e o
+                            // sharedTotalPP em PoderesSection.kt), então a opção nunca
+                            // precisou ficar condicionada a esta checkbox pra eles. Já
+                            // Deadlands não tem essa regra no livro — fica travado em
+                            // "só um Antecedente Arcano" (ver onToggle acima). Sobra só o
+                            // Básico pra oferecer a escolha.
+                            if (!optCompendioFantasia && !optCompendioHorror &&
+                                !optCompendioPathfinder && !optCompendioSciFi && !optCompendioDeadlands
+                            ) {
                                 if (!isCrystalHeart) {
                                     SimpleCheckRow(
                                         "Múltiplos Ant. Arcanos",
