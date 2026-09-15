@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 
 @Composable
 fun SuperAtributosPickerDialog(
@@ -127,7 +128,7 @@ fun SuperAtributosPickerDialog(
                                             horizontalAlignment = Alignment.CenterHorizontally,
                                             verticalArrangement = Arrangement.Center
                                         ) {
-                                            Text(
+                                            AutoSizeText(
                                                 text = projectedRaw.toDiceString(),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,

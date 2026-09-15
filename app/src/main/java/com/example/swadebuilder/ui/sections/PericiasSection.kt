@@ -66,6 +66,7 @@ import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
@@ -210,7 +211,7 @@ fun SkillCarouselPopoverDialog(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
                             ) {
-                                Text(
+                                AutoSizeText(
                                     text = if (targetRaw == 0) "-" else targetRaw.toDiceString(),
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Bold,
@@ -576,7 +577,7 @@ fun PericiasContent(
                                 )
                             }
 
-                            Text(
+                            AutoSizeText(
                                 text = when (regra.displayRaw) {
                                     0 if state.isPericiaBasicaEfetiva(per) -> "d4"
                                     0 -> "-"

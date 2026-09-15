@@ -85,6 +85,7 @@ import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.MarqueeText
@@ -993,7 +994,7 @@ fun ProgressosDialog(
                                                 current == 0 -> "—"
                                                 else -> current.toDiceString()
                                             }
-                                            Text(
+                                            AutoSizeText(
                                                 text = textoAtual,
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold
@@ -1021,7 +1022,7 @@ fun ProgressosDialog(
                                             modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            Text(
+                                            AutoSizeText(
                                                 text = nextRaw.toDiceString(),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold,
