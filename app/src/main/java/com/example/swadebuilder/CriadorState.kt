@@ -2096,6 +2096,20 @@ class CriadorState {
             steps++
         }
 
+        // Guerreiro Marcial ("...dado de dano em um tipo adicional") e Pugilista
+        // ("...dano por punhos/garras em mais um tipo de dado") também aumentam o dado de
+        // dano desarmado, igual a Brigão — mesmo conjunto de fontes usado em
+        // extrairArmasNaturais() (hasBrawler).
+        if (vantagensSelecionadas.any { it.id == "guerreiro_marcial" }) {
+            modifiers.add("Guerreiro Marcial")
+            steps++
+        }
+
+        if (vantagensSelecionadas.any { it.id == Constants.ID_PUGILISTA }) {
+            modifiers.add("Pugilista")
+            steps++
+        }
+
         // Check Claws (Garra)
         val ancestry = currentAncestryDef
         val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true
@@ -2182,9 +2196,13 @@ class CriadorState {
             return ""
         }
 
-        // Check for Martial Artist / Brawler (used for upgrading damage)
+        // Check for Martial Artist / Brawler (used for upgrading damage). Pugilista
+        // ("dano por punhos/garras em mais um tipo de dado") conta igual a Brigão/Guerreiro
+        // Marcial — mesmo conjunto de fontes usado em calculaAtaqueDesarmado().
         val hasMartialArtist = vantagensSelecionadas.any { it.id == "artista_marcial" }
-        val hasBrawler = vantagensSelecionadas.any { it.id == "brigao" || it.id == "guerreiro_marcial" }
+        val hasBrawler = vantagensSelecionadas.any {
+            it.id == "brigao" || it.id == "guerreiro_marcial" || it.id == Constants.ID_PUGILISTA
+        }
 
         // Helper to upgrade die type string (e.g. "For+d4" -> "For+d6")
         fun upgradeDie(dmg: String): String {
