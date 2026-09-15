@@ -158,11 +158,13 @@ object RequirementValidator {
             }
         }
 
-        // 5) Estágio mínimo — respeita Nasce um Herói e o bônus de Liderança do Samurai da
-        // Arte da Guerra (Conhecimento de Batalha d8+ dispensa o Estágio mínimo pra Vantagens
-        // de Liderança); esse bônus do Samurai estava ausente aqui antes, bloqueando essas
+        // 5) Estágio mínimo — respeita Nasce um Herói (exceto no Lendário — a regra opcional
+        // nunca libera esse Estágio) e o bônus de Liderança do Samurai da Arte da Guerra
+        // (Conhecimento de Batalha d8+ dispensa o Estágio mínimo pra Vantagens de
+        // Liderança); esse bônus do Samurai estava ausente aqui antes, bloqueando essas
         // compras por Estágio durante Progresso mesmo quando o personagem já tinha o direito.
-        val ignorarEstagioPorNasce = (state.nasceUmHeroi && !state.emProgresso && state.pvFromXpOutstanding == 0)
+        val ehLendario = listaDeEstagios.lastOrNull()?.nome?.equals(v.requisitos.estagio, ignoreCase = true) == true
+        val ignorarEstagioPorNasce = (state.nasceUmHeroi && !state.emProgresso && state.pvFromXpOutstanding == 0 && !ehLendario)
         val ignorarEstagioPorSamurai = state.compendioArteDaGuerraAtivo &&
             state.tropoSelecionado?.id == "tropo_samurai" &&
             v.categoria == Categoria.LIDERANCA &&

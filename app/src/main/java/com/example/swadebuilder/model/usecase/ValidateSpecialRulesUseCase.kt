@@ -138,8 +138,10 @@ class ValidateSpecialRulesUseCase {
             }
         }
 
-        // 5) Estágio mínimo (respeita Nasce um Herói)
-        val ignorarEstagioPorNasce = (input.nasceUmHeroi && !input.emProgresso && input.pvFromXpOutstanding == 0)
+        // 5) Estágio mínimo (respeita Nasce um Herói, exceto no Lendário — a regra
+        // opcional nunca libera esse Estágio, só Experiente/Veterano/Heroico)
+        val ehLendario = input.listaDeEstagios.lastOrNull()?.nome?.equals(v.requisitos.estagio, ignoreCase = true) == true
+        val ignorarEstagioPorNasce = (input.nasceUmHeroi && !input.emProgresso && input.pvFromXpOutstanding == 0 && !ehLendario)
 
         fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
             if (!input.compendioArteDaGuerraAtivo || input.tropoSelecionadoId != "tropo_samurai") return false

@@ -4411,10 +4411,12 @@ class CriadorState {
     // livros), nada impedia escolher um poder de Estágio mais alto do que o
     // personagem alcançou. Mesma exceção de "Nasce um Herói" que já vale pra
     // Vantagens (ValidateSpecialRulesUseCase): só ignora o Estágio na criação, não
-    // em Progressos nem enquanto há PV de XP pendente.
+    // em Progressos nem enquanto há PV de XP pendente — e nunca no Lendário, que a
+    // regra opcional explicitamente não libera.
     fun poderAtendeEstagio(poderEstagio: String): Boolean {
         if (poderEstagio.isBlank()) return true
-        val ignorarPorNasce = nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0
+        val ehLendario = poderEstagio.equals(listaDeEstagios.last().nome, ignoreCase = true)
+        val ignorarPorNasce = nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0 && !ehLendario
         if (ignorarPorNasce) return true
         return estagioAtinge(poderEstagio)
     }
