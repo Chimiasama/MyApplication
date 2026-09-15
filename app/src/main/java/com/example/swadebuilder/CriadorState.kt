@@ -3757,6 +3757,13 @@ class CriadorState {
         if (linguistaCount <= 0) {
             idiomaSlotsOrdenados().forEach { per ->
                 compIncsPorPericia[per] = 0
+                // Sem os passos grátis do Linguista, um slot que o jogador nunca comprou por
+                // conta própria (baseIncs 0) volta a ficar vazio — inclusive o nome do idioma,
+                // senão a perícia mostrava "Espanhol" com 0 pontos após remover a Vantagem
+                // (bug real relatado pelo usuário).
+                if ((baseIncsPorPericia[per] ?: 0) == 0) {
+                    notasPericia.remove(per.nome)
+                }
             }
             syncIdiomaSlots()
             return
