@@ -4325,11 +4325,17 @@ class CriadorState {
         // já existe em habilidades[] — lido pelo id em vez de comparar o nome
         // da raça, igual a qualquer outro traço racial.
         val racialPenalty = if (currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "CHI_REDUZIDO" } == true) 1 else 0
-        // Pontos de Chi ("aumenta a Reserva Máxima de Chi... em 4 pontos", repetível uma vez
-        // por Estágio) soma +4 por compra, não +1 como as demais Vantagens de categoria CHI
-        // (a maioria são técnicas de uso único que não afetam a reserva máxima).
-        val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI && it.id != "pontos_de_chi" } +
-            4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
+        // Conferi as 15 Vantagens de categoria CHI do catálogo (docs/swade_adg) — só
+        // `pontos_de_chi` aumenta a Reserva Máxima de Chi ("...em 4 pontos", repetível uma
+        // vez por Estágio); as outras 14 são Técnicas que GASTAM Chi já existente (23 Passos,
+        // Absorver, Concentração, Espírito de Ferro, Explosão Exterior, Salto Duplo etc.) ou
+        // não afetam a reserva (Meditação de Chi, Foco de Chi (Chi), Nova Técnica) — nenhuma
+        // delas soma nada à reserva máxima. Não confundir com "Antecedente Arcano (Mestre do
+        // Chi)" (Deadlands, categoria ANTECEDENTE) nem com a Vantagem "Chi" do Básico
+        // (categoria ESTRANHAS, 1 Ponto de Chi por encontro) — mecanismos completamente
+        // diferentes que só compartilham o nome; nenhum dos dois é categoria CHI, então já
+        // ficam de fora desta conta.
+        val bonusFromChiEdges = 4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
         val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
