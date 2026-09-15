@@ -1380,13 +1380,15 @@ class CriadorState {
     }
 
     fun isAttributeRankLimitReached(): Boolean {
-        val stageIndex = currentProgressStageIndex()
-        val lendarioIndex = listaDeEstagios.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
-            .takeIf { it >= 0 } ?: listaDeEstagios.lastIndex
-        val totalAttrPurchases = comprasAttrPorEstagio.values.sum()
-        val baseAllowance = (stageIndex + 1).coerceAtMost(lendarioIndex)
-        val remainingBaseAttrs = (baseAllowance - totalAttrPurchases).coerceAtLeast(0)
-        return remainingBaseAttrs <= 0
+        // "Esta opção só pode ser escolhida uma vez por Estágio" — SEM acumular Estágios
+        // pulados: um Progresso é gasto assim que é concedido, sem guardar pra usar depois
+        // (a única exceção do livro é Complicação, que permite guardar Progressos de
+        // propósito). Se a personagem não usou a opção de atributo no Novato, essa
+        // oportunidade se perde — não vira "2 de uma vez" no Experiente. Por isso a checagem
+        // é só contra o Estágio ATUAL, nunca cumulativa entre Estágios.
+        val stageName = listaDeEstagios.getOrNull(currentProgressStageIndex())?.nome ?: estagioAtual().nome
+        val comprasNesteEstagio = comprasAttrPorEstagio[stageName] ?: 0
+        return comprasNesteEstagio >= 1
     }
 
     fun isAttributeFreeForMonster(attr: String): Boolean {
@@ -1421,6 +1423,11 @@ class CriadorState {
         "DEMONIO" to listOf("disfarce_demoniaco"),
         "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
         "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma"),
+        // Antecedente Arcano (Elementalista) da Fantasia (docs/swade_fantasia, l.6868-6877):
+        // "Poderes Iniciais: Manipulação elemental..., proteção ambiental... e três outros
+        // poderes". Chave exclusiva da Fantasia — o Tropo Elementalista da Arte da Guerra usa
+        // a chave própria "TECNICAS ELEMENTAIS" (ver getSlotsCountForArcano/geral_arcano_info.json),
+        // nunca esta.
         "ELEMENTALISTA" to listOf("manipulacao_elemental", "protecao_ambiental"),
         "ILUSIONISTA" to listOf("ilusao", "iluminar_obscurecer", "som_silencio"),
         "INVOCADOR" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "conjurar_aliado"),
@@ -3793,25 +3800,27 @@ class CriadorState {
     }
 
 
-    fun maxComprasPpAteAgora(): Int {
-        // "Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por
-        // Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário" — o
-        // limite cumulativo de 1-por-Estágio (com direito a compensar Estágios anteriores em
-        // que não foi comprada) só vale até o Heroico; no Lendário deixa de haver teto.
-        if (estagioAtual().nome == "Lendário") return Int.MAX_VALUE
-        return listaDeEstagios.indexOf(estagioAtual()) + 1
-    }
+    // "Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por
+    // Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só
+    // concede 2 pontos adicionais [em vez dos 5 normais]." — SEM acumular Estágios
+    // pulados: um Progresso é gasto (ou não) assim que é concedido, nunca guardado pra
+    // "juntar" mais de uma compra depois (a única exceção do livro pra guardar Progresso é
+    // Complicação). Por isso o teto é sempre 1 por Estágio, olhando só o Estágio ATUAL —
+    // nunca uma soma cumulativa de Estágios anteriores. Fora do Lendário, essa 1ª (e
+    // única) compra do Estágio vale 5; no Lendário, a 1ª também vale 5 (é a mesma
+    // oportunidade normal que todo Estágio tem) e QUALQUER compra extra depois dela,
+    // ilimitada, vale só 2.
+    fun maxComprasPpNesteEstagio(): Int = if (estagioAtual().nome == "Lendário") Int.MAX_VALUE else 1
 
     private fun selecionarPontosDePoder(v: Vantagem) {
         val estagio = estagioAtual().nome
-        val totalFeitas = comprasPpPorEstagio.values.sum()
-
-        if (totalFeitas >= maxComprasPpAteAgora()) return
-
         val feitasNoEstagio = comprasPpPorEstagio[estagio] ?: 0
+
+        if (feitasNoEstagio >= maxComprasPpNesteEstagio()) return
+
         comprasPpPorEstagio[estagio] = feitasNoEstagio + 1
 
-        val ganho = if (totalFeitas < 4) 5 else 2
+        val ganho = if (feitasNoEstagio == 0) 5 else 2
         bonusPoderExtra += ganho
 
         vantagensSelecionadas += v
@@ -3820,38 +3829,27 @@ class CriadorState {
     fun removerPontosDePoder(v: Vantagem, estagioOverride: String? = null) {
         if (!vantagensSelecionadas.remove(v)) return
 
-        val totalAntes = comprasPpPorEstagio.values.sum()
-        if (totalAntes == 0) return
-
         val estagio = estagioOverride ?: estagioAtual().nome
         val feitas = comprasPpPorEstagio[estagio] ?: 0
-        if (feitas > 0) {
-            comprasPpPorEstagio[estagio] = feitas - 1
-        } else {
-            val fallback = comprasPpPorEstagio.entries.lastOrNull { it.value > 0 }
-            fallback?.let {
-                comprasPpPorEstagio[it.key] = it.value - 1
-            }
-        }
+        if (feitas <= 0) return
+        comprasPpPorEstagio[estagio] = feitas - 1
 
-        val ganhoRemovido = if (totalAntes <= 4) 5 else 2
+        val ganhoRemovido = if (feitas == 1) 5 else 2
         bonusPoderExtra = (bonusPoderExtra - ganhoRemovido).coerceAtLeast(0)
     }
 
-    // Rastreamento GENÉRICO de "uma vez por Estágio, com direito a compensar Estágios
-    // pulados" — pra qualquer Vantagem com `limite_compra: "uma_vez_por_estagio"` que NÃO
-    // seja Pontos de Poder (essa continua com sua própria infraestrutura, por ter a exceção
-    // de teto ilimitado no Lendário e de conceder um recurso à parte). Cobre hoje Pontos de
-    // Chi (Arte da Guerra), Presa (Pathfinder), Poder do Sangue e Vontade Sombria (Cidade do
-    // Sol a Vapor) — e qualquer nova Vantagem futura marcada com essa tag, sem precisar de
-    // código dedicado pra cada uma.
+    // Rastreamento GENÉRICO de "uma vez por Estágio" — pra qualquer Vantagem com
+    // `limite_compra: "uma_vez_por_estagio"` que NÃO seja Pontos de Poder (essa continua com
+    // sua própria infraestrutura, por ter a exceção de teto ilimitado no Lendário e de
+    // conceder um recurso à parte). Cobre hoje Pontos de Chi (Arte da Guerra), Presa
+    // (Pathfinder), Poder do Sangue e Vontade Sombria (Cidade do Sol a Vapor) — e qualquer
+    // nova Vantagem futura marcada com essa tag, sem precisar de código dedicado pra cada
+    // uma. SEM acumular Estágios pulados: o teto é sempre 1, olhando só o Estágio atual —
+    // nenhuma delas tem uma exceção de Lendário como Pontos de Poder.
     val comprasEstagioPorVantagem = mutableStateMapOf<String, MutableMap<String, Int>>()
 
-    fun totalComprasEstagioDe(vantagemId: String): Int =
-        comprasEstagioPorVantagem[vantagemId]?.values?.sum() ?: 0
-
-    fun maxComprasEstagioGenericoAteAgora(): Int =
-        listaDeEstagios.indexOf(estagioAtual()) + 1
+    fun comprasNoEstagioAtualDe(vantagemId: String): Int =
+        comprasEstagioPorVantagem[vantagemId]?.get(estagioAtual().nome) ?: 0
 
     private fun registrarCompraEstagioGenerico(vantagemId: String) {
         val estagio = estagioAtual().nome
@@ -4792,15 +4790,13 @@ class CriadorState {
             tipoMonstroSelecionado = tipoMonstroSelecionado,
             cartaSelvagem = cartaSelvagem,
             complicacoesSelecionadas = complicacoesSelecionadas.toMap(),
-            // maxComprasPpAteAgora() é um teto CUMULATIVO (desde o Novato), então o valor
-            // comparado com ele também precisa ser a soma de todos os Estágios, não só o
-            // Estágio atual — do contrário, a cada novo Estágio o teto "reabre" contando de
-            // zero, permitindo comprar bem mais de uma vez por Estágio (bug antigo: comparava
-            // "compras neste Estágio" com "compras cumulativas permitidas").
-            ppPurchasesThisRank = comprasPpPorEstagio.values.sum(),
-            maxPpPurchasesAllowed = maxComprasPpAteAgora(),
-            estagioPurchasesFor = { vantagemId -> totalComprasEstagioDe(vantagemId) },
-            maxEstagioPurchasesGenericoAllowed = maxComprasEstagioGenericoAteAgora(),
+            // "Uma vez por Estágio" sem acumular Estágios pulados: compara só o que já foi
+            // comprado NESTE Estágio contra o teto deste Estágio (1, ou ilimitado no Lendário
+            // pra Pontos de Poder) — nunca uma soma cumulativa de todos os Estágios.
+            ppPurchasesThisRank = comprasPpPorEstagio[estagioAtual().nome] ?: 0,
+            maxPpPurchasesAllowed = maxComprasPpNesteEstagio(),
+            estagioPurchasesFor = { vantagemId -> comprasNoEstagioAtualDe(vantagemId) },
+            maxEstagioPurchasesGenericoAllowed = 1,
             vantagensSelecionadas = vantagensSelecionadas.toList(),
             emProgresso = emProgresso,
             superInvestments = superInvestments.toList(),
@@ -5509,7 +5505,7 @@ class CriadorState {
 
         val activeArcaneKeys = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }.toMutableSet()
         if (ancestralidade.keyify() == "TRANSMORFOS") activeArcaneKeys.add("DOM")
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") activeArcaneKeys.add("ELEMENTALISTA")
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") activeArcaneKeys.add("TECNICAS ELEMENTAIS")
         if (compendioArteDaGuerraAtivo && (tropoSelecionado?.tecnicasIniciais ?: 0) > 0) activeArcaneKeys.add("TECNICAS CHI")
 
         val keysToRemove = poderSlotsPorArcano.keys.filter { it !in activeArcaneKeys }

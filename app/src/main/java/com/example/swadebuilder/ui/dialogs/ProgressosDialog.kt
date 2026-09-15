@@ -168,10 +168,15 @@ fun ProgressosDialog(
 
     val lendarioIndex = stages.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
         .takeIf { it >= 0 } ?: stages.lastIndex
-    val totalAttrPurchases = state.comprasAttrPorEstagio.values.sum()
-    val baseAllowance = (stageIndex + 1).coerceAtMost(lendarioIndex)
-    val remainingBaseAttrs = (baseAllowance - totalAttrPurchases).coerceAtLeast(0)
     val isLendarioStage = stageIndex == lendarioIndex
+    // "Esta opção só pode ser escolhida uma vez por Estágio" — SEM acumular Estágios
+    // pulados: cada Progresso é gasto (ou não) assim que é concedido; se a opção de
+    // atributo não foi usada num Estágio anterior, essa oportunidade se perde, não vira
+    // "2 de uma vez" depois (a única exceção do livro pra guardar Progresso é Complicação).
+    // Por isso a checagem de "já usei minha vez" olha só o Estágio ATUAL, nunca a soma de
+    // todos os Estágios.
+    val raisesNoEstagioAtual = state.comprasAttrPorEstagio[est.nome] ?: 0
+    val remainingBaseAttrs = (1 - raisesNoEstagioAtual).coerceAtLeast(0)
     val canUseReservation = isLendarioStage && state.legendaryAttrReservations > 0
     val needsReservation = isLendarioStage && remainingBaseAttrs <= 0 && !canUseReservation
     val hasReservedProgress = state.xpSlots.getOrNull(slotIndex) == true
@@ -179,18 +184,19 @@ fun ProgressosDialog(
     val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
             (remainingBaseAttrs > 0 || canUseReservation || state.modoMonstroAtivo)
     // Básico (docs/swade_basico, l.4585-4590): "Personagens no Estágio Lendário podem
-    // aumentar um atributo a cada dois Progressos" — a 1ª compra em Lendário fica
-    // disponível de imediato (mesmo padrão dos demais Estágios); a partir da 2ª, o ciclo
-    // reservar+aplicar (1+1 Progresso) já cobre o intervalo de 2 sozinho, então não há
-    // espera extra. Savage Pathfinder (docs/swade_pathfinder_basico, l.6757-6763)
-    // SUBSTITUI essa regra pela própria, mais restritiva: só uma vez a cada QUATRO
-    // Progressos — o intervalo de 4 exige gastar 2 Progressos a mais em outra coisa
-    // (perícia, vantagem etc.) entre uma compra e a próxima.
-    val legendaryRaisesDone = state.comprasAttrPorEstagio[est.nome] ?: 0
+    // aumentar um atributo a cada dois Progressos" — é uma exceção ADICIONAL à 1ª
+    // oportunidade normal (grátis) que o Lendário já tem como qualquer outro Estágio:
+    // depois dela, pode repetir indefinidamente pagando mais Progressos. A 1ª compra extra
+    // no Lendário fica disponível de imediato (o ciclo reservar+aplicar, 1+1 Progresso, já
+    // cobre o intervalo de 2 sozinho); a partir da 2ª compra extra, é exigido gastar aquele
+    // intervalo desde a compra anterior. Savage Pathfinder (docs/swade_pathfinder_basico,
+    // l.6757-6763) SUBSTITUI essa regra pela própria, mais restritiva: intervalo de QUATRO
+    // Progressos em vez de dois.
     val legendaryProgressInterval = if (state.compendioPathfinderAtivo) 4 else 2
-    val legendaryProgressRequired = legendaryProgressInterval * legendaryRaisesDone
+    val legendaryPaidRaisesDone = (raisesNoEstagioAtual - 1).coerceAtLeast(0)
+    val legendaryProgressRequired = legendaryProgressInterval * legendaryPaidRaisesDone
     val canReserveLegendary = isLendarioStage &&
-            totalAttrPurchases >= lendarioIndex && creditsLeft > 0 &&
+            raisesNoEstagioAtual >= 1 && creditsLeft > 0 &&
             hasReservedProgress && state.legendaryAttrReservations == 0 &&
             spentHere >= legendaryProgressRequired
 

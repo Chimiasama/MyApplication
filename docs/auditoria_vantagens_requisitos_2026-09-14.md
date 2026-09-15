@@ -1585,3 +1585,148 @@ também por uma chave própria (ex.: "ELEMENTALISTA ADG").
 validação manual: `grep` exaustivo por toda ocorrência de "MESTRE DO
 CHI" no código antes e depois da mudança pra confirmar que só sobraram
 as do Deadlands, e releitura de cada bloco alterado.
+
+## Rodada 8 — chave própria pro Elementalista da Arte da Guerra, e correção de fundo: "uma vez por Estágio" NÃO acumula Estágios pulados (2026-09-15)
+
+### 1) "ELEMENTALISTA" trocado por chave própria, igual ao Chi na Rodada 7
+
+Aplicado o mesmo tratamento do Mestre do Chi (Rodada 7) ao achado que
+tinha ficado só registrado, sem mexer, no final daquela rodada: o
+sistema de Elementalista por Tropo da Arte da Guerra (sem Vantagem
+correspondente) agora usa a chave própria `"TECNICAS ELEMENTAIS"`,
+nunca mais `"ELEMENTALISTA"` (exclusiva do Antecedente Arcano real de
+Fantasia a partir de agora):
+
+- `ArcaneConfig.kt`: removido o guard
+  `if (arcaneKey == "ELEMENTALISTA" && origem == "FANTASIA") return FANTASIA_ELEMENTALISTA`;
+  o `when` agora tem duas entradas separadas,
+  `"ELEMENTALISTA" -> FANTASIA_ELEMENTALISTA` e
+  `"TECNICAS ELEMENTAIS" -> ARTE_GUERRA_ELEMENTALISTA`.
+- `CriadorState.kt`: `aplicarAncestralidade()` agora adiciona
+  `"TECNICAS ELEMENTAIS"` a `activeArcaneKeys` (não mais
+  `"ELEMENTALISTA"`); comentário acrescentado em
+  `fixedPowersByArcano["ELEMENTALISTA"]` deixando explícito que essa
+  entrada é exclusiva da Fantasia (citando o livro,
+  `docs/swade_fantasia` l.6868-6877).
+- `PoderesSection.kt`: `arcanosAtivos` e o cálculo de `originRaw`/
+  `permittedSet` (nova variável `usaTecnicasElementais`, mesmo padrão
+  de `usaListaChi`).
+- `geral_arcano_info.json`: como (ao contrário do Chi) não havia
+  `usaTecnicasTropo`-equivalente pro Elementalista em
+  `getSlotsCountForArcano()`, o Tropo da Arte da Guerra dependia de
+  colidir com a entrada `"ELEMENTALISTA"` (5 slots, 10 PP, Foco
+  Conjurar) pra ter seu número de slots. Pra não regredir isso ao
+  trocar a chave, acrescentei uma entrada nova e idêntica pra
+  `"TECNICAS ELEMENTAIS"`, em vez de criar um bypass de código dedicado
+  — mantém o comportamento atual do Tropo intacto, só com chave
+  própria.
+
+**Alquimia e Feiticeiro deliberadamente NÃO mexidos**: são um padrão
+diferente do Chi/Elementalista. Nesses dois casos, os DOIS lados da
+colisão são Antecedentes Arcanos DE VERDADE, com Vantagem própria, só
+que de livros diferentes (Alquimia: Fantasia × Horror; Feiticeiro:
+Fantasia × Cidade do Sol a Vapor) — não um "Tropo sem Vantagem"
+reaproveitando o nome de um AA real de outro lado. Trocar a chave de um
+lado mudaria o nome de uma Vantagem real, então a desambiguação por
+`origem` (já existente em `ArcaneConfig.kt`) continua sendo a
+ferramenta certa aqui, não um hack a eliminar.
+
+Confirmado por varredura: `TelaInicial.kt` trata todos os
+Cenários/Compêndios (Fantasia, Horror, Sci-Fi, Supers, Pathfinder,
+Deadlands, Crystal Heart, Arte da Guerra, Cidade do Sol a Vapor,
+Wiseguys) como um único grupo mutuamente exclusivo — então nenhuma
+dessas 4 colisões (Chi, Elementalista, Alquimia, Feiticeiro) é
+alcançável na prática hoje; mesmo assim, valia trocar Chi/Elementalista
+porque o risco era de manutenção futura, não de bug atual. Também
+varri o resto do código (`compendioDeadlandsAtivo`,
+`compendioCrystalHeartAtivo`, `compendioCidadeSolVaporAtivo`,
+`compendioWiseguysAtivo`) atrás de outros sistemas por Tropo
+reaproveitando chave de AA real — não achei nenhum outro além dos dois
+já corrigidos.
+
+### 2) Correção de fundo: "uma vez por Estágio" NÃO acumula Estágios pulados
+
+Eu tinha entendido errado a regra de Progresso ("um Progresso por
+Avanço") e implementado, nas últimas rodadas, um modelo de "catch-up":
+se a personagem não usasse uma opção de "uma vez por Estágio" (aumento
+de atributo, Pontos de Poder, Pontos de Chi/Presa/Poder do
+Sangue/Vontade Sombria) num Estágio, ela podia "compensar" comprando
+mais de uma vez num Estágio seguinte. **Isso está errado.** A regra
+real é "pega agora ou já era": cada Estágio dá exatamente UMA
+oportunidade pra cada opção desse tipo, e se não for usada naquele
+Estágio, a oportunidade se perde — não vira crédito acumulado pra
+depois. A ÚNICA exceção do livro pra guardar Progresso de propósito é
+Complicação (o livro especifica isso explicitamente pra Complicação, e
+só pra ela). É por isso que o Lendário é diferente: não é que ele
+"deixa compensar Estágios perdidos" — é que ele tem sua PRÓPRIA
+exceção, à parte, permitindo repetir a opção indefinidamente (a cada 2
+Progressos extras no Básico, a cada 4 no Savage Pathfinder), o que
+nenhum outro Estágio permite.
+
+Reescrevi as três mecânicas que tinham esse bug, todas com a mesma
+troca estrutural: comparar só "quanto já foi comprado NESTE Estágio"
+contra um teto sempre igual a 1 (em vez de uma soma cumulativa de todos
+os Estágios contra um teto que cresce a cada Estágio novo):
+
+- **Aumento de atributo**: `CriadorState.isAttributeRankLimitReached()`
+  e a seção de atributo/Lendário em `ProgressosDialog.kt` (variável
+  `raisesNoEstagioAtual`, teto fixo em 1; a exceção do Lendário agora
+  usa `legendaryPaidRaisesDone = (raisesNoEstagioAtual - 1).coerceAtLeast(0)`
+  como contador das compras EXTRAS pagas, deixando claro que a 1ª
+  compra no Lendário é a mesma oportunidade grátis de qualquer Estágio,
+  e só a partir da 2ª entra o intervalo de 2/4 Progressos).
+- **Pontos de Poder**: `CriadorState.maxComprasPpAteAgora()` (teto
+  cumulativo `stageIndex + 1`) virou `maxComprasPpNesteEstagio()` (sempre
+  1, exceto Lendário = ilimitado); `selecionarPontosDePoder()`/
+  `removerPontosDePoder()` reescritas pra comparar só o Estágio atual
+  (o ganho de PP — 5 na 1ª compra do Estágio, 2 nas seguintes — também
+  passou a olhar só o Estágio atual, não mais o total histórico).
+- **Genérico "uma vez por Estágio"** (Pontos de Chi/Presa/Poder do
+  Sangue/Vontade Sombria): removidas `totalComprasEstagioDe()` (soma
+  cumulativa) e `maxComprasEstagioGenericoAteAgora()` (teto cumulativo);
+  substituídas por `comprasNoEstagioAtualDe(vantagemId)`, comparada
+  contra um teto fixo de 1 (sem a exceção do Lendário, que só Pontos de
+  Poder tem).
+
+**Achado importante durante a correção**: descobri um TERCEIRO
+validador, `RequirementValidator.kt`, usado exclusivamente pelo fluxo
+de Progressos (`ProgressosDialog.kt`, via `strictRequirementsOk()`) —
+totalmente separado do `ValidateSelectionUseCase`/
+`ValidatePowerPointsLimitUseCase` usado na criação de personagem. Esse
+validador tinha sua PRÓPRIA cópia desatualizada da regra de Pontos de
+Poder (mesmo bug de catch-up cumulativo) e NUNCA tinha recebido a
+correção da Rodada 5 pro mecanismo genérico "uma vez por Estágio" —
+ou seja, Pontos de Chi/Presa/Poder do Sangue/Vontade Sombria
+continuavam limitados a 1 compra na vida inteira quando comprados via
+Progresso (XP), mesmo depois daquela correção ter sido aplicada no
+`CriadorState`/criação de personagem. Corrigido nos mesmos moldes:
+seção "2" agora compara só o Estágio atual e ganhou o ramo genérico que
+faltava; seção "7" (antiga checagem redundante de Pontos de Poder) foi
+simplificada pra só cobrir `limite_compra` comum, já que Pontos de
+Poder e "uma_vez_por_estagio" são resolvidos antes, na seção 2.
+
+Não auditei as ~10 outras regras de `RequirementValidator.kt` (O Melhor
+Que Há, Cavaleiro/Obrigação, Ressuscitado, Antecedente Arcano
+multi-arcano, Profissional/Especialista, Estágio mínimo, vantagens
+prévias/Ameaçador, repetição de escolha, atributos/perícias mínimas,
+Tiro Duplo Aprimorado, conflito de Complicação) contra as versões
+equivalentes em `ValidateSelectionUseCase`/`ValidatePrerequisiteUseCase`
+— é um risco de divergência que passou a existir de forma visível
+agora que sei que esse validador duplicado existe, mas fica como
+próximo passo se você quiser que eu faça essa varredura completa.
+
+**Testes**: reescrevi `ValidatePowerPointsLimitUseCaseTest.kt` — os
+testes que validavam o catch-up cumulativo (`libera compra de catchup
+quando estágios anteriores foram pulados` e equivalentes) foram
+substituídos por testes do modelo correto (1 compra por Estágio, sem
+compensar Estágios perdidos; exceção do Lendário preservada).
+`ClassPrestigeStageLimitTest.kt` já checava só o Estágio consultado
+(nunca cumulativo), então não precisou de mudança.
+
+**Build/teste automatizado continuam impossíveis neste ambiente** —
+validação manual: releitura de cada bloco alterado, `grep` exaustivo
+confirmando zero referências restantes a `maxComprasPpAteAgora`/
+`totalComprasEstagioDe`/`maxComprasEstagioGenericoAteAgora`, validação
+de JSON (`geral_arcano_info.json`, `vantagens.json`, `poderes.json`) e
+conferência de que nenhuma Vantagem real usa `subtipoArcano:
+"TECNICAS ELEMENTAIS"` (só a nova entrada de Arte da Guerra).

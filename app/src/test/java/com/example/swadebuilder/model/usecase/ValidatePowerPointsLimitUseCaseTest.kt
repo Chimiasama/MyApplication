@@ -20,46 +20,30 @@ class ValidatePowerPointsLimitUseCaseTest {
     )
 
     // "Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio"
-    // — o teto (maxPpPurchasesAllowed) é CUMULATIVO desde o Novato, então o valor comparado
-    // com ele precisa ser a soma de compras em TODOS os Estágios, não só o atual. Comparar
-    // com "compras só neste Estágio" (bug antigo) reabre o teto a cada Estágio novo e permite
-    // comprar muito mais que uma vez por Estágio.
+    // — SEM acumular Estágios pulados ("pega agora ou já era"; a única exceção do livro pra
+    // guardar Progressos pra depois é Complicação). O teto (maxPpPurchasesAllowed) é sempre 1
+    // por Estágio (ou ilimitado no Lendário), e o valor comparado com ele é só o que já foi
+    // comprado NO ESTÁGIO ATUAL — nunca uma soma cumulativa de Estágios anteriores.
 
     @Test
-    fun `bloqueia quando o total cumulativo ja bateu no teto do Estagio atual`() {
-        // Novato + Experiente já compradas (2 no total); no Veterano (índice 2) o teto
-        // cumulativo é 3 — ainda cabe 1, mas não 2.
+    fun `bloqueia segunda compra no mesmo Estagio`() {
         val input = ValidatePowerPointsLimitUseCase.Input(
             vantagem = pontosDePoder,
-            ppPurchasesThisRank = 2,
-            maxPpPurchasesAllowed = 3,
-            currentSelectionCount = 2
-        )
-        assertTrue(useCase.execute(input))
-    }
-
-    @Test
-    fun `bloqueia compra extra no mesmo Estagio quando o teto cumulativo ja foi atingido`() {
-        // Sem o fix, comparar só "compras neste Estágio" (0, estágio novo) contra o teto
-        // cumulativo (3) liberaria erroneamente até 3 compras SÓ no Veterano, além das que já
-        // foram feitas em estágios anteriores.
-        val input = ValidatePowerPointsLimitUseCase.Input(
-            vantagem = pontosDePoder,
-            ppPurchasesThisRank = 3,
-            maxPpPurchasesAllowed = 3,
-            currentSelectionCount = 3
+            ppPurchasesThisRank = 1,
+            maxPpPurchasesAllowed = 1,
+            currentSelectionCount = 1
         )
         assertFalse(useCase.execute(input))
     }
 
     @Test
-    fun `libera compra de catchup quando estagios anteriores foram pulados`() {
-        // Chegou no Veterano (teto cumulativo 3) sem nunca ter comprado antes — pode comprar
-        // até 3 vezes de uma vez (catch-up dos Estágios perdidos).
+    fun `libera a primeira compra do Estagio mesmo com Estagios anteriores pulados`() {
+        // Chegou no Veterano sem nunca ter comprado antes — tem direito a exatamente 1 compra
+        // agora, não a um catch-up dos Estágios perdidos (essas oportunidades já eram).
         val input = ValidatePowerPointsLimitUseCase.Input(
             vantagem = pontosDePoder,
             ppPurchasesThisRank = 0,
-            maxPpPurchasesAllowed = 3,
+            maxPpPurchasesAllowed = 1,
             currentSelectionCount = 0
         )
         assertTrue(useCase.execute(input))
@@ -97,9 +81,9 @@ class ValidatePowerPointsLimitUseCaseTest {
     }
 
     // --- "uma vez por Estágio" GENÉRICO (Pontos de Chi, Presa, Poder do Sangue, Vontade
-    // Sombria) — mesma ideia de Pontos de Poder (catch-up cumulativo), mas SEM a exceção de
-    // teto ilimitado no Lendário, e sem passar pela lógica de maxSelections (que travaria em
-    // 1 compra pra sempre, já que nenhuma delas define maxSelections no catálogo).
+    // Sombria) — mesma ideia de Pontos de Poder (sem acumular Estágios pulados), mas SEM a
+    // exceção de teto ilimitado no Lendário, e sem passar pela lógica de maxSelections (que
+    // travaria em 1 compra pra sempre, já que nenhuma delas define maxSelections no catálogo).
 
     private val pontosDeChi = Vantagem(
         id = "pontos_de_chi",
@@ -111,43 +95,43 @@ class ValidatePowerPointsLimitUseCaseTest {
     )
 
     @Test
-    fun `generico bloqueia quando o total cumulativo ja bateu no teto do Estagio atual`() {
+    fun `generico bloqueia segunda compra no mesmo Estagio`() {
         val input = ValidatePowerPointsLimitUseCase.Input(
             vantagem = pontosDeChi,
             ppPurchasesThisRank = 0,
             maxPpPurchasesAllowed = 0,
             currentSelectionCount = 3,
-            estagioPurchasesGenerico = 3,
-            maxEstagioPurchasesGenericoAllowed = 3
+            estagioPurchasesGenerico = 1,
+            maxEstagioPurchasesGenericoAllowed = 1
         )
         assertFalse(useCase.execute(input))
     }
 
     @Test
-    fun `generico libera compra de catchup quando estagios anteriores foram pulados`() {
+    fun `generico libera a primeira compra do Estagio mesmo com Estagios anteriores pulados`() {
         val input = ValidatePowerPointsLimitUseCase.Input(
             vantagem = pontosDeChi,
             ppPurchasesThisRank = 0,
             maxPpPurchasesAllowed = 0,
             currentSelectionCount = 0,
             estagioPurchasesGenerico = 0,
-            maxEstagioPurchasesGenericoAllowed = 3
+            maxEstagioPurchasesGenericoAllowed = 1
         )
         assertTrue(useCase.execute(input))
     }
 
     @Test
     fun `generico nao tem excecao no Lendario, ao contrario de Pontos de Poder`() {
-        // Mesmo teto (5) e mesmo total já comprado (5) que uma Pontos de Poder no Lendário
-        // aceitaria sem limite — mas uma Vantagem "uma_vez_por_estagio" comum continua presa
-        // ao teto cumulativo normal.
+        // Mesmo já tendo 5 compras anteriores registradas (uma por Estágio, ao longo do
+        // tempo), o teto genérico continua sendo 1 por Estágio — sem a exceção ilimitada que
+        // só Pontos de Poder tem no Lendário.
         val input = ValidatePowerPointsLimitUseCase.Input(
             vantagem = pontosDeChi,
             ppPurchasesThisRank = 0,
             maxPpPurchasesAllowed = 0,
             currentSelectionCount = 5,
-            estagioPurchasesGenerico = 5,
-            maxEstagioPurchasesGenericoAllowed = 5
+            estagioPurchasesGenerico = 1,
+            maxEstagioPurchasesGenericoAllowed = 1
         )
         assertFalse(useCase.execute(input))
     }

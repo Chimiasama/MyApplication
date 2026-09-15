@@ -38,11 +38,19 @@ object RequirementValidator {
             if (!hasObligation) return false
         }
 
-        // 2) Pontos de Poder por estágio
+        // 2) "Uma vez por Estágio" (Pontos de Poder, Pontos de Chi, Presa, Poder do Sangue,
+        // Vontade Sombria etc.) — SEM acumular Estágios pulados: teto de 1 por Estágio,
+        // olhando só o Estágio atual (nunca uma soma cumulativa de Estágios anteriores),
+        // exceto Pontos de Poder no Lendário, que não tem teto (mas só vale 2 em vez de 5
+        // a partir da 2ª compra lá — ver CriadorState.selecionarPontosDePoder). Duplicado de
+        // CriadorState/ValidatePowerPointsLimitUseCase aqui porque o fluxo de Progressos
+        // (ProgressosDialog) usa este validador separado do usado na criação.
         if (v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true)) {
-            val totalFeitas = state.comprasPpPorEstagio.values.sum()
-            val maxPermitidas = state.maxComprasPpAteAgora()
-            if (totalFeitas >= maxPermitidas) return false
+            val feitasNoEstagio = state.comprasPpPorEstagio[state.estagioAtual().nome] ?: 0
+            if (feitasNoEstagio >= state.maxComprasPpNesteEstagio()) return false
+        } else if (v.limiteCompra == "uma_vez_por_estagio") {
+            val feitasNoEstagio = state.comprasEstagioPorVantagem[v.id]?.get(state.estagioAtual().nome) ?: 0
+            if (feitasNoEstagio >= 1) return false
         }
 
         // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
@@ -174,13 +182,12 @@ object RequirementValidator {
             }
         }
 
-        // 7) PPs de novo (segurança extra)
-        if (v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true)) {
-            val totalCompras = state.comprasPpPorEstagio.values.sum()
-            val limite = state.maxComprasPpAteAgora()
-            if (totalCompras >= limite) return false
-        }
-        else if (v.limiteCompra != "infinito" && v.maxSelections > 0) {
+        // 7) Limite de Compra genérico (maxSelections) — Pontos de Poder e as demais
+        // "uma vez por Estágio" já foram checadas no item 2 (e teriam retornado false antes
+        // de chegar aqui); esse ramo só cobre o `limite_compra` comum (ex.: "uma_vez").
+        if (v.limiteCompra != "infinito" && v.limiteCompra != "uma_vez_por_estagio" &&
+            !v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true) && v.maxSelections > 0
+        ) {
             val ja = state.vantagensSelecionadas.count { it.id == v.id }
             if (ja >= v.maxSelections) return false
         }

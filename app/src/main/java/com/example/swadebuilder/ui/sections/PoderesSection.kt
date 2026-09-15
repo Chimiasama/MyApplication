@@ -133,7 +133,7 @@ fun PoderesSection(
             ativos.add("DOM")
         }
         if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_elementalista") {
-            ativos.add("ELEMENTALISTA")
+            ativos.add("TECNICAS ELEMENTAIS")
         }
         if (state.compendioArteDaGuerraAtivo && !state.isFeralAdgSelecionado() && (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0) {
             ativos.add("TECNICAS CHI")
@@ -270,16 +270,24 @@ fun PoderesSection(
                 advantage == null &&
                 (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
             val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS CHI"
+            // "TECNICAS ELEMENTAIS" é a chave própria do Tropo Elementalista da Arte da
+            // Guerra (sem Vantagem correspondente) — NUNCA "ELEMENTALISTA" (essa é exclusiva
+            // do Antecedente Arcano de Fantasia, com sua própria lista de poderes; ver
+            // CriadorState.fixedPowersByArcano e ArcaneConfig.FANTASIA_ELEMENTALISTA).
+            val usaTecnicasElementais = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS ELEMENTAIS"
             val originRaw = when {
-                usaListaChi -> "ARTE DA GUERRA"
-                else -> advantage?.origem
-                    ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
+                usaListaChi || usaTecnicasElementais -> "ARTE DA GUERRA"
+                else -> advantage?.origem ?: "BASICO"
             }
             val normalizedOrigin = powerAssetOriginKey(originRaw)
 
-            // `originRaw` desambigua outras colisões de nome entre AAs de livros diferentes
-            // (ex.: ALQUIMIA entre Fantasia/Horror, ELEMENTALISTA entre Fantasia/Arte da
-            // Guerra — esse caso ainda reaproveita a mesma chave; ver nota em ArcaneConfig).
+            // `originRaw` desambigua outras colisões de nome LEGÍTIMAS entre Antecedentes
+            // Arcanos de verdade de livros diferentes (ex.: ALQUIMIA entre Fantasia/Horror,
+            // FEITICEIRO entre Fantasia/Cidade do Sol a Vapor) — casos em que os dois lados
+            // são Vantagens reais com o mesmo nome, então uma chave própria não faz sentido
+            // (mudaria o nome de uma Vantagem real). Diferente do caso de Mestre do
+            // Chi/Elementalista, onde um dos lados era só uma chave interna de Tropo sem
+            // Vantagem nenhuma — esses já usam chave própria, sem precisar de `origem`.
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
                 ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey, originRaw)
             val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)
