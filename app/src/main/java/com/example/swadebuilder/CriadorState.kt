@@ -4349,10 +4349,25 @@ class CriadorState {
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
         val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
-        // Base 2 added as requested
-        val baseChi = if (compendioArteDaGuerraAtivo) 2 else 0
+        // Complicação "Bloqueio Interno" (docs/swade_adg, id bloqueio_interno):
+        // substitui a fórmula padrão "2 + metade do dado de Espírito" da Reserva de
+        // Chi inicial. Menor: só metade do dado de Espírito (perde o +2 base). Maior:
+        // fixa em 2, ignorando o dado de Espírito por completo.
+        val bloqueioInternoLevel = complicacoesSelecionadas.entries
+            .firstOrNull { it.key.id == "bloqueio_interno" || it.key.id.keyify() == "BLOQUEIO_INTERNO" }
+            ?.value
 
-        (baseChi + espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo + bonusFromSign).coerceAtLeast(0)
+        val reservaInicial = if (compendioArteDaGuerraAtivo) {
+            when (bloqueioInternoLevel) {
+                "Maior" -> 2
+                "Menor" -> espiritoRaw / 2
+                else -> 2 + espiritoRaw / 2
+            }
+        } else {
+            espiritoRaw / 2
+        }
+
+        (reservaInicial - racialPenalty + bonusFromChiEdges + bonusFromTropo + bonusFromSign).coerceAtLeast(0)
     }
 
     var nomePersonagem by mutableStateOf("")
