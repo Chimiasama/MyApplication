@@ -246,4 +246,29 @@ class RequirementValidatorTest {
         state.compendioCrystalHeartAtivo = true
         assertFalse(RequirementValidator.canSelect(rico, state))
     }
+
+    @Test
+    fun `nasce um heroi libera vantagem de Estagio acima na criacao, exceto Lendario`() {
+        val vantagemVeterano = Vantagem(
+            id = "teste_veterano",
+            nome = "TESTE VETERANO",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Veterano")
+        )
+        val vantagemLendaria = Vantagem(
+            id = "teste_lendario",
+            nome = "TESTE LENDARIO",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Lendário")
+        )
+
+        val state = CriadorState()
+        // Personagem recém-criado (Novato): sem Nasce um Herói, nenhuma das duas passa.
+        assertFalse(RequirementValidator.canSelect(vantagemVeterano, state))
+        assertFalse(RequirementValidator.canSelect(vantagemLendaria, state))
+
+        state.nasceUmHeroi = true
+        assertTrue(RequirementValidator.canSelect(vantagemVeterano, state))
+        assertFalse(RequirementValidator.canSelect(vantagemLendaria, state))
+    }
 }

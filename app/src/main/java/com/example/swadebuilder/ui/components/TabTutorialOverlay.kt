@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.availableSectionsFor
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.util.AppPreferences
 
@@ -83,7 +82,7 @@ private val tabTutorials: Map<MainSection, TabTutorialContent> = mapOf(
 
 private val configuracoesTutorial = TabTutorialContent(
     title = "Configurações",
-    body = "Aqui você ajusta as preferências do app: estilo e visual das abas, tema, vibração, som e o conteúdo customizado. O interruptor \"Instruções das Abas\", logo no topo, liga um replay completo destas instruções — ele se desliga sozinho quando você termina de ver todas de novo."
+    body = "Aqui você ajusta as preferências do app: estilo e visual das abas, tema, vibração, som e o conteúdo customizado. O interruptor \"Instruções das Abas\", logo no topo, liga e desliga estas instruções — desligando, elas não aparecem mais em nenhuma aba até você ligar de novo."
 )
 
 private val gerenciarConteudoTutorial = TabTutorialContent(
@@ -91,22 +90,13 @@ private val gerenciarConteudoTutorial = TabTutorialContent(
     body = "Aqui você cria e edita vantagens, perícias, complicações, poderes, equipamentos e outros itens personalizados, que passam a ficar disponíveis nas abas de criação junto com o conteúdo oficial."
 )
 
-/**
- * Todas as chaves de tutorial que existem no momento para o personagem atual: as abas do
- * pager disponíveis (ver [availableSectionsFor]) mais as telas que não são abas do pager
- * (Configurações e Gerenciar Conteúdo Customizado, sempre acessíveis). Usado para saber se
- * ainda falta alguma instrução a mostrar — ver o interruptor em SettingsDialog.kt.
- */
-fun tutorialKeysDisponiveis(state: CriadorState): List<String> =
-    availableSectionsFor(state).map { it.name } +
-        listOf(TUTORIAL_KEY_CONFIGURACOES, TUTORIAL_KEY_GERENCIAR_CONTEUDO)
-
 @Composable
 private fun TutorialOverlay(
     state: CriadorState,
     key: String,
     content: TabTutorialContent
 ) {
+    if (state.tutoriaisDesabilitados) return
     if (key in state.abasComInstrucaoVista) return
 
     val context = LocalContext.current
@@ -132,10 +122,11 @@ private fun TutorialOverlay(
         },
         dismissButton = {
             TextButton(onClick = {
-                // Encerra o replay inteiro de uma vez, não só esta tela — ver o
-                // interruptor "Instruções das Abas" em SettingsDialog.kt.
-                state.abasComInstrucaoVista.addAll(tutorialKeysDisponiveis(state))
-                AppPreferences.saveTutorialSeen(context, state.abasComInstrucaoVista.toSet())
+                // Desliga o interruptor mestre — encerra o replay de vez, em qualquer
+                // aba, inclusive as que ainda nem existem pro personagem atual (ex.:
+                // XP, Poderes). Ver comentário em CriadorState.tutoriaisDesabilitados.
+                state.tutoriaisDesabilitados = true
+                AppPreferences.saveTutoriaisDesabilitados(context, true)
                 visible = false
             }) {
                 Text("Não mostrar instruções")
@@ -147,9 +138,10 @@ private fun TutorialOverlay(
 /**
  * Instrução de primeira visita para cada aba do criador. Aparece uma única vez por aba,
  * controlada por [CriadorState.abasComInstrucaoVista] (persistido globalmente via
- * AppPreferences) e pode ser revista a qualquer momento com o interruptor "Instruções das
- * Abas" em Configurações, ou desligada de vez no botão "Não mostrar instruções" do próprio
- * diálogo — pra não obrigar o jogador a fechar uma tela dessas em cada aba se não quiser ver.
+ * AppPreferences), e pode ser desligada de vez — em qualquer aba, mesmo as que ainda não
+ * existem pro personagem atual — via [CriadorState.tutoriaisDesabilitados], seja pelo botão
+ * "Não mostrar instruções" do próprio diálogo, seja pelo interruptor "Instruções das Abas"
+ * em Configurações.
  */
 @Composable
 fun TabTutorialOverlay(

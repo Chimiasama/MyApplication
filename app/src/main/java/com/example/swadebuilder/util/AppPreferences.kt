@@ -18,6 +18,7 @@ object AppPreferences {
     private const val KEY_MODO_PERICIA = "modo_selecao_pericia"
     private const val KEY_CRIACAO_NAS_ABAS = "habilitar_criacao_nas_abas"
     private const val KEY_ABAS_INSTRUCAO_VISTAS = "abas_instrucao_vistas"
+    private const val KEY_TUTORIAIS_DESABILITADOS = "tutoriais_desabilitados"
 
     enum class ModoSelecaoPericia {
         CARROSSEL_POPOVER,
@@ -125,6 +126,23 @@ object AppPreferences {
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
             .edit {
                 putStringSet(KEY_ABAS_INSTRUCAO_VISTAS, seen)
+            }
+    }
+
+    // Interruptor mestre das instruções de aba (ver ui/components/TabTutorialOverlay.kt):
+    // quando true, nenhum TutorialOverlay aparece, independente de qual tela/aba seja —
+    // inclusive abas que ainda não existiam para o personagem no momento em que o jogador
+    // desligou (ex.: XP, Poderes). Separado de KEY_ABAS_INSTRUCAO_VISTAS porque aquele
+    // conjunto só sabe marcar como "visto" as chaves que já existem no momento do desligar.
+    fun loadTutoriaisDesabilitados(context: Context): Boolean =
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .getBoolean(KEY_TUTORIAIS_DESABILITADOS, false)
+
+    fun saveTutoriaisDesabilitados(context: Context, desabilitados: Boolean) {
+        context
+            .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .edit {
+                putBoolean(KEY_TUTORIAIS_DESABILITADOS, desabilitados)
             }
     }
 }

@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -43,6 +41,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -66,7 +65,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.ui.components.ModuleCard
+import com.example.swadebuilder.ui.components.CompendiumListRow
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.launch
 
@@ -106,7 +105,6 @@ fun TelaInicial(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val isFullEdition = EditionConfig.isFullEdition
 
     // --- State Variables ---
 
@@ -212,10 +210,9 @@ fun TelaInicial(
         applyRulesPreset(getActiveBookPresetId())
     }
 
-    // Data for Grid
+    // Data for module list
     data class ModuleItemData(
         val title: String,
-        val description: String,
         val icon: ImageVector,
         val isSelected: Boolean,
         val enabled: Boolean,
@@ -229,7 +226,6 @@ fun TelaInicial(
     val officialModules = listOf(
         ModuleItemData(
             "Livro Básico",
-            "As regras do livro básico.",
             Icons.AutoMirrored.Filled.MenuBook,
             isSelected = !isAnyBookSelected,
             enabled = true,
@@ -250,7 +246,6 @@ fun TelaInicial(
         ),
         ModuleItemData(
             "Compêndio de Fantasia",
-            "Raças, itens mágicos e regras de fantasia.",
             Icons.Default.AutoAwesome,
             optCompendioFantasia,
             !isAnyBookSelected || optCompendioFantasia,
@@ -261,7 +256,6 @@ fun TelaInicial(
         ),
         ModuleItemData(
             "Compêndio de Ficção",
-            "Tecnologia avançada, naves e cibernéticos.",
             Icons.Default.RocketLaunch,
             optCompendioSciFi,
             !isAnyBookSelected || optCompendioSciFi,
@@ -276,12 +270,17 @@ fun TelaInicial(
                 // Variante); o jogador ainda pode desmarcar na tela de regras.
                 if (optCompendioSciFi) {
                     optVariantesDeRaca = true
+                    // Ficção Científica já trata múltiplos Antecedentes Arcanos como
+                    // prática normal do cenário, igual Fantasia/Pathfinder (a checkbox
+                    // nem aparece mais pra ele, ver mais abaixo) — zera aqui pra não
+                    // herdar um "true" deixado por outro livro que ainda usa a checkbox
+                    // (ex.: Básico).
+                    optMultiAntecedenteArcano = false
                 }
             }
         ),
         ModuleItemData(
             "Compêndio de Horror",
-            "Climas sombrios e criaturas aterrorizantes.",
             Icons.Default.MoodBad,
             optCompendioHorror,
             !isAnyBookSelected || optCompendioHorror,
@@ -292,7 +291,6 @@ fun TelaInicial(
         ),
         ModuleItemData(
             "Superpoderes",
-            "Seja um superherói!",
             Icons.Default.Bolt,
             optSuperPoderes,
             !isAnyBookSelected || optSuperPoderes,
@@ -306,29 +304,42 @@ fun TelaInicial(
     val settingModules = listOf(
         ModuleItemData(
             androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
-            if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
             Icons.Default.Map,
             optCompendioPathfinder,
             !isAnyBookSelected || optCompendioPathfinder,
             {
                 optCompendioPathfinder = !optCompendioPathfinder
                 applyRulesPreset(if (optCompendioPathfinder) "pathfinder" else "basico")
+                // Pathfinder já trata múltiplos Antecedentes Arcanos como prática normal do
+                // cenário (a checkbox nem aparece mais pra ele, ver mais abaixo) — zera aqui
+                // pra não herdar um "true" deixado por outro livro que ainda usa a checkbox
+                // (ex.: Ficção Científica), o que esconderia o Antecedente Arcano genérico
+                // (ver ContentVisibility.evaluateVantagemVisibility).
+                if (optCompendioPathfinder) {
+                    optMultiAntecedenteArcano = false
+                }
             }
         ),
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
-            if (isFullEdition) "Pistoleiros, atormentados e o horror do Oeste." else "Pistoleiros, revividos e o horror do Oeste.",
             Icons.Default.Shield,
             optCompendioDeadlands,
             !isAnyBookSelected || optCompendioDeadlands,
             {
                 optCompendioDeadlands = !optCompendioDeadlands
                 applyRulesPreset(if (optCompendioDeadlands) "deadlands" else "basico")
+                // Deadlands não tem, no livro, uma regra de combinar múltiplos
+                // Antecedentes Arcanos (ao contrário de Fantasia/Ficção Científica/
+                // Pathfinder) — a checkbox nem aparece mais pra ele, ver mais abaixo.
+                // Zera aqui pra não herdar um "true" deixado por outro livro que
+                // ainda usa a checkbox (ex.: Básico).
+                if (optCompendioDeadlands) {
+                    optMultiAntecedenteArcano = false
+                }
             }
         ),
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),
-            if (isFullEdition) "Troque seu coração por um cristal mágico." else "Troque seu coração por uma pedra mágica.",
             Icons.Default.Favorite,
             optCompendioCrystalHeart,
             !isAnyBookSelected || optCompendioCrystalHeart,
@@ -339,7 +350,6 @@ fun TelaInicial(
         ),
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
-            "Ativa Chi, Tropos e equipamentos orientais.",
             Icons.Filled.SportsMartialArts,
             optCompendioArteDaGuerra,
             !isAnyBookSelected || optCompendioArteDaGuerra,
@@ -350,7 +360,6 @@ fun TelaInicial(
         ),
         ModuleItemData(
             "A Cidade do Sol a Vapor".toEditionDisplayName(),
-            "Estímulos vitorianos, vapor e tecnomagia.",
             Icons.Default.Build,
             optCompendioCidadeSolVapor,
             !isAnyBookSelected || optCompendioCidadeSolVapor,
@@ -361,7 +370,6 @@ fun TelaInicial(
         ),
         ModuleItemData(
             "Wiseguys".toEditionDisplayName(),
-            "Crime organizado moderno, conexões e esquemas.",
             Icons.Default.Groups,
             optCompendioWiseguys,
             !isAnyBookSelected || optCompendioWiseguys,
@@ -464,17 +472,14 @@ fun TelaInicial(
             )
         }
     ) { innerPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        LazyColumn(
             contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding)
         ) {
             // Header Text
-            item(span = { GridItemSpan(2) }) {
+            item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -495,7 +500,7 @@ fun TelaInicial(
             }
 
             // --- Explicação: como livros e compêndios se combinam ---
-            item(span = { GridItemSpan(2) }) {
+            item {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -555,39 +560,46 @@ fun TelaInicial(
             }
 
             // --- Compêndios Oficiais ---
-            item(span = { GridItemSpan(2) }) { SectionHeader("Compêndios Oficiais") }
+            item { SectionHeader("Compêndios Oficiais") }
 
-            items(officialModules) { module ->
-                ModuleCard(
-                    title = module.title,
-                    description = module.description,
-                    icon = module.icon,
-                    isSelected = module.isSelected,
-                    enabled = module.enabled,
-                    onToggle = module.onToggle,
-                    showDescription = true
-                )
+            itemsIndexed(officialModules) { index, module ->
+                Column {
+                    CompendiumListRow(
+                        title = module.title,
+                        icon = module.icon,
+                        isSelected = module.isSelected,
+                        enabled = module.enabled,
+                        onToggle = module.onToggle
+                    )
+                    if (index < officialModules.lastIndex) {
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    }
+                }
             }
 
             // --- Cenários de Campanha ---
             if (settingModules.isNotEmpty()) {
-                item(span = { GridItemSpan(2) }) { SectionHeader("Cenários de Campanha") }
+                item { Spacer(Modifier.height(20.dp)) }
+                item { SectionHeader("Cenários de Campanha") }
 
-                items(settingModules) { module ->
-                    ModuleCard(
-                        title = module.title,
-                        description = module.description,
-                        icon = module.icon,
-                        isSelected = module.isSelected,
-                        enabled = module.enabled,
-                        onToggle = module.onToggle,
-                        showDescription = true
-                    )
+                itemsIndexed(settingModules) { index, module ->
+                    Column {
+                        CompendiumListRow(
+                            title = module.title,
+                            icon = module.icon,
+                            isSelected = module.isSelected,
+                            enabled = module.enabled,
+                            onToggle = module.onToggle
+                        )
+                        if (index < settingModules.lastIndex) {
+                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                        }
+                    }
                 }
             }
 
             // Spacer for FAB
-            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(80.dp)) }
+            item { Spacer(Modifier.height(80.dp)) }
         }
     }
 
@@ -660,7 +672,18 @@ fun TelaInicial(
                         )
 
                         if (!optCompendioWiseguys) {
-                            if (!optCompendioFantasia && !optCompendioHorror) {
+                            // Fantasia/Ficção Científica/Pathfinder já tratam múltiplos
+                            // Antecedentes Arcanos como prática normal do cenário (várias
+                            // listas de poder, um único pool de PP combinado — ver
+                            // CriadorState.permiteMultiplosAntecedentesArcanos e o
+                            // sharedTotalPP em PoderesSection.kt), então a opção nunca
+                            // precisou ficar condicionada a esta checkbox pra eles. Já
+                            // Deadlands não tem essa regra no livro — fica travado em
+                            // "só um Antecedente Arcano" (ver onToggle acima). Sobra só o
+                            // Básico pra oferecer a escolha.
+                            if (!optCompendioFantasia && !optCompendioHorror &&
+                                !optCompendioPathfinder && !optCompendioSciFi && !optCompendioDeadlands
+                            ) {
                                 if (!isCrystalHeart) {
                                     SimpleCheckRow(
                                         "Múltiplos Ant. Arcanos",
