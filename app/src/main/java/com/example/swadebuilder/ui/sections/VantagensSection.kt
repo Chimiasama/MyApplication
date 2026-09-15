@@ -380,7 +380,7 @@ fun VantagensContent(
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
         val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:attemptPurchase:${vantToBuy.id}") &&
-                (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                state.adaptavelAceitaEstagio(vantToBuy) &&
                 !state.isVantagemAutomatica(vantToBuy)
 
         val needsPoints = !state.modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
@@ -1903,7 +1903,7 @@ private fun VantagemItem(
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
                     val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:itemClick:${vant.id}") &&
-                            (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                            state.adaptavelAceitaEstagio(vant) &&
                             !state.isVantagemAutomatica(vant)
 
                     val hasBP = pcLivres >= 2

@@ -2788,7 +2788,7 @@ class CriadorState {
 
         val adaptavelFreeSlot = hasFreeAdaptavelSlotNow(debugSource = "comprarVantagem:${v.id}")
         val isFreeAdaptavel = adaptavelFreeSlot &&
-            (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+            adaptavelAceitaEstagio(v) &&
             !isVantagemAutomatica(v)
 
         if (!modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
@@ -4655,6 +4655,22 @@ class CriadorState {
             )
         }
         return slotAvailable
+    }
+
+    /**
+     * Se a Vantagem bônus de Adaptável (ou equivalente, ex. Sobrevivente) pode ser gasta
+     * nesta Vantagem `v` sem custar Pontos de Vantagem normais. Sem a Regra de Ambientação
+     * Nasce um Herói, só Vantagens de Estágio Novato (livro: "escolher qualquer Vantagem
+     * em nível Novato"). Com Nasce um Herói ativa na criação, a mesma exceção de Estágio
+     * que já vale pra compra normal de Vantagens (RequirementValidator/poderAtendeEstagio)
+     * também libera o slot de Adaptável pra qualquer Estágio, menos Lendário — a regra
+     * opcional nunca libera esse.
+     */
+    fun adaptavelAceitaEstagio(v: Vantagem): Boolean {
+        val estagio = v.requisitos.estagio
+        if (estagio.isBlank() || estagio.equals("Novato", ignoreCase = true)) return true
+        val ehLendario = listaDeEstagios.lastOrNull()?.nome?.equals(estagio, ignoreCase = true) == true
+        return nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0 && !ehLendario
     }
 
     // controla quais categorias da seção de Vantagens estão expandidas
