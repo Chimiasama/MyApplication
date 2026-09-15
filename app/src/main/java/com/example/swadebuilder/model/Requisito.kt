@@ -225,7 +225,16 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     stageName: String,
     nova: Vantagem,
     vantagensCatalogo: List<Vantagem>,
-    vantagensSelecionadas: List<Vantagem> = emptyList()
+    vantagensSelecionadas: List<Vantagem> = emptyList(),
+    // Savage Pathfinder (docs/swade_pathfinder_basico, l.6783-6788): no Estágio Lendário, a
+    // regra "uma Vantagem central de Classe/Prestígio por Estágio" vira "uma a cada QUATRO
+    // Progressos gastos no Estágio" (em vez de travar de vez após a 1ª). Pra aplicar essa
+    // exceção só quando ela realmente existe (só o Pathfinder tem — os demais livros ficam
+    // travados em uma por Estágio, sem mais nenhuma no Lendário), o chamador passa quanto
+    // progresso já foi gasto no Estágio (mesmo `stageXpSpent` do throttle equivalente de
+    // atributos) e se o Pathfinder está ativo.
+    progressoGastoNoEstagio: Int = 0,
+    pathfinderAtivo: Boolean = false
 ): Boolean {
     if (!nova.isFamiliaClassePathfinder()) return false
 
@@ -239,13 +248,21 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
         .map { it.id }
         .toSet()
 
-    val hasCompraViaXpNoEstagio = any { acao ->
+    val comprasViaXpNoEstagio = count { acao ->
         acao is AdvancementAction.SpendOnAdvantage &&
             acao.stageName.equals(stageName, ignoreCase = true) &&
             acao.advantageId in idsFamiliaClasse
     }
 
-    if (hasCompraViaXpNoEstagio) {
+    if (comprasViaXpNoEstagio > 0) {
+        if (pathfinderAtivo && stageName.equals("Lendário", ignoreCase = true)) {
+            val progressoExigido = 4 * comprasViaXpNoEstagio
+            if (progressoGastoNoEstagio >= progressoExigido) {
+                return false
+            }
+            debug("Bloqueio por intervalo do Lendário: stage=$stageName nova=${nova.id} gasto=$progressoGastoNoEstagio exigido=$progressoExigido")
+            return true
+        }
         debug("Bloqueio por histórico: stage=$stageName nova=${nova.id}")
         return true
     }

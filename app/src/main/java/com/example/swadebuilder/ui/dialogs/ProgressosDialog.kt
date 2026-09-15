@@ -178,12 +178,17 @@ fun ProgressosDialog(
 
     val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
             (remainingBaseAttrs > 0 || canUseReservation || state.modoMonstroAtivo)
-    // Regra de Savage Pathfinder (Lendário): um atributo só pode aumentar uma vez
-    // a cada quatro Progressos. A primeira compra em Lendário fica disponível de
-    // imediato (mesmo padrão usado para os demais Estágios); a partir da segunda,
-    // é exigido um intervalo de 4 Progressos gastos em Lendário desde a compra anterior.
+    // Básico (docs/swade_basico, l.4585-4590): "Personagens no Estágio Lendário podem
+    // aumentar um atributo a cada dois Progressos" — a 1ª compra em Lendário fica
+    // disponível de imediato (mesmo padrão dos demais Estágios); a partir da 2ª, o ciclo
+    // reservar+aplicar (1+1 Progresso) já cobre o intervalo de 2 sozinho, então não há
+    // espera extra. Savage Pathfinder (docs/swade_pathfinder_basico, l.6757-6763)
+    // SUBSTITUI essa regra pela própria, mais restritiva: só uma vez a cada QUATRO
+    // Progressos — o intervalo de 4 exige gastar 2 Progressos a mais em outra coisa
+    // (perícia, vantagem etc.) entre uma compra e a próxima.
     val legendaryRaisesDone = state.comprasAttrPorEstagio[est.nome] ?: 0
-    val legendaryProgressRequired = 4 * legendaryRaisesDone
+    val legendaryProgressInterval = if (state.compendioPathfinderAtivo) 4 else 2
+    val legendaryProgressRequired = legendaryProgressInterval * legendaryRaisesDone
     val canReserveLegendary = isLendarioStage &&
             totalAttrPurchases >= lendarioIndex && creditsLeft > 0 &&
             hasReservedProgress && state.legendaryAttrReservations == 0 &&
@@ -243,7 +248,9 @@ fun ProgressosDialog(
             stageName,
             vant,
             allAdvantages,
-            state.vantagensSelecionadas
+            state.vantagensSelecionadas,
+            progressoGastoNoEstagio = state.stageXpSpent[stageName] ?: 0,
+            pathfinderAtivo = state.compendioPathfinderAtivo
         )
         val vantagemPendente = state.advantageForCurrentAdvancement
             ?.let { pendingId -> allAdvantages.firstOrNull { it.id == pendingId } }
@@ -890,8 +897,13 @@ fun ProgressosDialog(
                             val current = state.rawTotal(per)
                             val attrVal = state.valoresAtributos[per.atributo]?.intValue ?: 4
                             val cost = if (current >= attrVal) 2 else 1
-                            val canBuy = spRemaining >= cost && current < 12
                             val wasIncreased = state.skillsForCurrentAdvancement.contains(per.nome)
+                            // "Você não pode aumentar a mesma perícia duas vezes com o mesmo
+                            // Progresso" — sem o `!wasIncreased`, uma perícia com atributo
+                            // associado alto o suficiente (ex.: d4 abaixo de um atributo d10+)
+                            // podia ser comprada duas vezes no mesmo Progresso gastando 1 SP
+                            // cada vez, subindo dois passos de dado numa única Progressão.
+                            val canBuy = spRemaining >= cost && current < 12 && !wasIncreased
                             val nextRaw = if (current == 0 && per.basica) 4 else if (current == 0) 4 else if (current < 12) current + 2 else current + 1
 
                             Column(
@@ -1141,7 +1153,9 @@ fun ProgressosDialog(
                     requisitos = com.example.swadebuilder.model.Requisito()
                 ),
                 vantagensCatalogo = allAdvantages,
-                vantagensSelecionadas = state.vantagensSelecionadas
+                vantagensSelecionadas = state.vantagensSelecionadas,
+                progressoGastoNoEstagio = state.stageXpSpent[estSel.nome] ?: 0,
+                pathfinderAtivo = state.compendioPathfinderAtivo
             )
             val vantagemPendente = state.advantageForCurrentAdvancement
                 ?.let { pendingId -> allAdvantages.firstOrNull { it.id == pendingId } }
@@ -2026,7 +2040,14 @@ private fun DialogVantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
-    val bloqueioClasse = if (vant.isFamiliaClassePathfinder() && state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
+    val bloqueioClasse = if (vant.isFamiliaClassePathfinder() && state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(
+            stageName,
+            vant,
+            allAdvantages,
+            state.vantagensSelecionadas,
+            progressoGastoNoEstagio = state.stageXpSpent[stageName] ?: 0,
+            pathfinderAtivo = state.compendioPathfinderAtivo
+        )) {
         "Limite por estágio atingido"
     } else null
 
@@ -2053,7 +2074,14 @@ private fun DialogVantagemItem(
 
                     when {
                         // Check class blocking specifically for error message
-                        vant.isFamiliaClassePathfinder() && state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
+                        vant.isFamiliaClassePathfinder() && state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(
+                            stageName,
+                            vant,
+                            allAdvantages,
+                            state.vantagensSelecionadas,
+                            progressoGastoNoEstagio = state.stageXpSpent[stageName] ?: 0,
+                            pathfinderAtivo = state.compendioPathfinderAtivo
+                        ) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
                         conflitoMsg != null -> onError(conflitoMsg)
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()

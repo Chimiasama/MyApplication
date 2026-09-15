@@ -96,4 +96,107 @@ class ClassPrestigeStageLimitTest {
         assertFalse(selecionadas.classeExclusivaBloqueada(combate))
     }
 
+    // --- Savage Pathfinder no Estágio Lendário: "uma por Estágio" vira "uma a cada quatro
+    // Progressos gastos no Estágio" (docs/swade_pathfinder_basico, l.6783-6788) — sem essa
+    // exceção, uma personagem Pathfinder fica travada pra sempre após a 1ª compra no Lendário.
+
+    @Test
+    fun `sem Pathfinder ativo, Lendario continua travado em uma por Estagio pra sempre`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Lendário")
+        )
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
+
+        assertTrue(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Lendário",
+                nova = prestigio,
+                vantagensCatalogo = catalogo,
+                progressoGastoNoEstagio = 100,
+                pathfinderAtivo = false
+            )
+        )
+    }
+
+    @Test
+    fun `com Pathfinder ativo, Lendario bloqueia a 2a compra antes de 4 Progressos gastos`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Lendário")
+        )
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
+
+        assertTrue(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Lendário",
+                nova = prestigio,
+                vantagensCatalogo = catalogo,
+                progressoGastoNoEstagio = 3,
+                pathfinderAtivo = true
+            )
+        )
+    }
+
+    @Test
+    fun `com Pathfinder ativo, Lendario libera a 2a compra apos 4 Progressos gastos`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Lendário")
+        )
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
+
+        assertFalse(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Lendário",
+                nova = prestigio,
+                vantagensCatalogo = catalogo,
+                progressoGastoNoEstagio = 4,
+                pathfinderAtivo = true
+            )
+        )
+    }
+
+    @Test
+    fun `com Pathfinder ativo, a 3a compra no Lendario exige 8 Progressos gastos`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Lendário"),
+            AdvancementAction.SpendOnAdvantage(advantageId = "prestigio_test", stageName = "Lendário")
+        )
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
+
+        assertTrue(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Lendário",
+                nova = vantagemDeClasse,
+                vantagensCatalogo = catalogo,
+                progressoGastoNoEstagio = 7,
+                pathfinderAtivo = true
+            )
+        )
+        assertFalse(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Lendário",
+                nova = vantagemDeClasse,
+                vantagensCatalogo = catalogo,
+                progressoGastoNoEstagio = 8,
+                pathfinderAtivo = true
+            )
+        )
+    }
+
+    @Test
+    fun `Pathfinder ativo nao muda nada fora do Lendario, continua uma por Estagio`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Experiente")
+        )
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
+
+        assertTrue(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Experiente",
+                nova = prestigio,
+                vantagensCatalogo = catalogo,
+                progressoGastoNoEstagio = 100,
+                pathfinderAtivo = true
+            )
+        )
+    }
 }

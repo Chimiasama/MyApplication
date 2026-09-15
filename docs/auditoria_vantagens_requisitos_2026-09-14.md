@@ -1358,3 +1358,156 @@ no Lendário e por conceder um recurso à parte):
 (mesma falha de rede pra resolver o Android Gradle Plugin) — validação
 só manual: releitura linha a linha do código e dos livros citados,
 validação de JSON, e inspeção de cada bloco alterado.
+
+## Rodada 6 — Chi (Reserva Máxima), "Mestre do Chi" × Tropo, e regras exatas do Pathfinder (2026-09-15)
+
+Pedido em duas partes: (1) confirmar que o fix de Pontos de Chi não
+confundiu a Reserva de Chi (Arte da Guerra) com o Antecedente Arcano
+Mestre do Chi (Deadlands) nem com a Vantagem "Chi" do Básico, e (2)
+garantir que o app segue exatamente as regras do Pathfinder pra
+progresso de personagem: atributo Lendário a cada 4 (não 2) Progressos,
+a restrição de compra de perícia (1 igual/acima do atributo OU 2 abaixo
+dele), e Vantagem de Classe/Prestígio limitada a uma por Estágio ou uma
+a cada 4 Progressos no Lendário.
+
+### 1) Reserva de Chi × Mestre do Chi × "Chi" do Básico — confirmado: são 3 mecanismos sem relação, corretamente separados
+
+Levantei TODO uso de "CHI"/"Mestre do Chi" no catálogo e no código:
+
+- **"Chi" do Básico** (categoria `ESTRANHAS`, reimpresso em vários
+  livros): 1 Ponto de Chi por encontro, Vantagem isolada, sem relação
+  com reserva nenhuma.
+- **Antecedente Arcano (Mestre do Chi)**, exclusivo do **Deadlands**
+  (categoria `ANTECEDENTE`): um Antecedente Arcano comum, registrado em
+  `geral_arcano_info.json` com Pontos de Poder normais (15 PP, 3
+  poderes). Conferi o livro (`docs/swade_deadlands`, linha 5105-5122):
+  "**Poderes Iniciais: 3 (deflexão, mais outros dois à escolha do
+  jogador ou jogadora)**" — ou seja, 1 poder fixo (deflexão) + 2 de
+  livre escolha. Isso bate exatamente com
+  `CriadorState.fixedPowersByArcano["MESTRE DO CHI"] = listOf("deflexao")`,
+  que eu suspeitei ser um vazamento da Arte da Guerra mas na verdade é
+  a modelagem CORRETA do próprio Antecedente Arcano de Deadlands.
+- **Pontos de Chi / Reserva de Chi**, exclusivos da **Arte da Guerra**
+  (categoria `CHI`): o mecanismo que corrigi ontem.
+
+Confirmei que os dois primeiros NÃO entram na fórmula de
+`CriadorState.reservaChi` (que filtra por `categoria == CHI` — nem
+`ESTRANHAS` nem `ANTECEDENTE` batem nisso).
+
+Sobre o "Mestre do Chi por Tropo" que citei antes: reconferi
+`app/src/main/assets/adg_tropos.json` — os Tropos da Arte da Guerra são
+Artista Marcial, Bu Xista, Elementalista, Kui, Protagonista, Samurai,
+Shinobi, Youxia, Mon. **Nenhum se chama "Mestre do Chi"** — você está
+certo que Deadlands não tem Tropos e os dois sistemas não têm nada a
+ver um com o outro na origem. O código usa a STRING "MESTRE DO CHI"
+como uma chave interna reaproveitada por conveniência pra dois
+propósitos diferentes: (a) o Antecedente Arcano de Deadlands descrito
+acima, e (b) um sistema interno (sem Vantagem correspondente) que
+empresta essa mesma chave só pra contar slots de Técnicas Chi de
+QUALQUER Tropo da Arte da Guerra (não é uma Vantagem "Mestre do Chi" da
+Arte da Guerra — é só o nome interno da variável/chave de slots).
+Encontrei um comentário já existente no código (`PoderesSection.kt`,
+linha 274-281) documentando exatamente esse cuidado e por que os dois
+caminhos NUNCA usam a mesma lista de poderes.
+
+Verificação de que os dois nunca colidem na prática:
+- **`ensurePowerSlotsFor(v: Vantagem)`** (que aplica
+  `fixedPowersByArcano`) só roda quando existe uma Vantagem de verdade
+  — e a ÚNICA Vantagem com `subtipoArcano: "MESTRE DO CHI"` no catálogo
+  inteiro é o Antecedente Arcano de Deadlands. O caminho da Arte da
+  Guerra ("sem Vantagem correspondente") nunca chama essa função.
+- **Deadlands e Arte da Guerra são mutuamente exclusivos por design**:
+  ambos são "Cenário de Campanha" (`TelaInicial.kt`, linha ~226-227) —
+  o app só deixa UM desses cenários substitutos ativo por vez (a
+  seleção de um desabilita os outros). Então não existe um personagem
+  com os dois compêndios ativos ao mesmo tempo pra sequer cogitar
+  colisão de verdade.
+
+**Conclusão: nenhum vazamento entre livros aqui — nem no meu fix de
+ontem, nem no código pré-existente que reaproveita o nome.**
+
+### 2) Regras exatas de progresso do Pathfinder
+
+#### 2a) Perícias (1 igual/acima do atributo OU 2 abaixo) — confirmado: é a MESMA regra do Básico, e já está implementada certa
+
+Conferi `docs/swade_pathfinder_basico`, linha 6764-6772, contra
+`docs/swade_basico`, linha 4578-4584: **texto idêntico** — não é uma
+restrição adicional exclusiva do Pathfinder, é a regra universal do
+Savage Worlds. Achei a implementação em `ProgressosDialog.kt`
+(diálogo "Aumentar Perícias"): cada Progresso concede 2 SP
+(`spFromProgress += 2`); subir uma perícia que já está igual ou acima
+do atributo custa 2 SP (consome tudo, só dá pra fazer uma vez), subir
+uma que está abaixo custa 1 SP (dá pra fazer duas, cada uma abaixo do
+seu próprio atributo) — uma tradução elegante e correta da regra
+"OU" do livro num sistema de orçamento de pontos.
+
+**Bug encontrado nessa mesma tela, sem relação direta com Pathfinder
+(afeta todos os livros)**: o botão de comprar um passo de perícia não
+verificava se aquela MESMA perícia já tinha sido aumentada neste mesmo
+Progresso. Numa perícia com atributo associado alto o bastante (ex.:
+perícia em d4 associada a um atributo d10+), os dois pontos do
+Progresso podiam ser gastos na MESMA perícia (1 SP + 1 SP, já que ela
+continua abaixo do atributo depois do primeiro aumento), subindo dois
+passos de dado num Progresso só — o livro proíbe isso explicitamente:
+"Você não pode aumentar a mesma perícia duas vezes com o mesmo
+Progresso." **Corrigido**: adicionado `!wasIncreased` ao `canBuy`.
+
+#### 2b) Atributo no Lendário: 4 Progressos, não 2 — bug real encontrado e corrigido
+
+Na Rodada 4 eu tinha checado só `CriadorViewModel.kt`
+(`reserveLegendaryAttribute`/`startAttributeAdvancement`) e concluído
+que o app usava corretamente "2 Progressos por aumento" do Básico. Eu
+estava enganado: não tinha visto que `ProgressosDialog.kt` (onde a
+regra de fato é decidida) **já tinha um comentário dizendo "Regra de
+Savage Pathfinder (Lendário): ... a cada quatro Progressos" — só que
+aplicado incondicionalmente, pra QUALQUER livro, inclusive o Básico**.
+Ou seja, o app tinha a regra do Pathfinder (4 Progressos), mas a usava
+até pra personagens do Básico, que deveriam usar a regra mais simples
+de 2 Progressos.
+
+Mecanismo (pra quem for mexer depois): não é um contador de "quantas
+reservas pendentes"; é um LIMIAR de progresso cumulativo gasto no
+Estágio. A cada aumento de atributo aplicado no Lendário, o próximo só
+libera quando `progresso já gasto no Estágio >= intervalo × quantidade
+de aumentos já feitos`. Com intervalo 2 (Básico), o próprio ciclo de
+reservar (1 Progresso) + aplicar (1 Progresso) já cobre o limiar
+sozinho — nunca há espera extra, batendo com "a cada dois Progressos"
+sem limite de repetições. Com intervalo 4 (Pathfinder), sobra sempre um
+resto de 2 Progressos que precisam ser gastos em outra coisa (perícia,
+Vantagem etc.) antes do próximo aumento liberar — batendo com "não mais
+do que uma vez a cada quatro Progressos".
+
+**Corrigido**: o intervalo agora é `if (state.compendioPathfinderAtivo) 4 else 2`,
+em vez de `4` fixo.
+
+#### 2c) Vantagem de Classe/Prestígio no Lendário: mesma exceção, e ela NÃO existia
+
+Diferente do atributo, aqui não havia nenhuma versão prévia (nem
+errada) dessa exceção — `atingiuLimiteClasseOuPrestigioNoEstagio()`
+(`model/Requisito.kt`) implementava só a trava plana "uma por Estágio",
+sem nenhuma saída pro Lendário. Isso significa que uma personagem
+Pathfinder, ao esgotar sua cota normal de Vantagens de
+Classe/Prestígio (uma por Estágio até o Heroico) e chegar no Lendário,
+ficava **bloqueada pra sempre** de pegar mais alguma — quando o livro
+(`docs/swade_pathfinder_basico`, linha 6783-6788) permite uma a cada 4
+Progressos, exatamente como fez com atributos.
+
+**Implementado**: a função ganhou dois parâmetros novos, opcionais e
+com default que preservam o comportamento antigo pra quem não passar
+nada (`progressoGastoNoEstagio: Int = 0`, `pathfinderAtivo: Boolean =
+false`) — mesmo mecanismo de limiar cumulativo do item 2b, só que
+contando compras de Classe/Prestígio em vez de aumentos de atributo.
+Atualizados os 4 pontos de chamada em `ProgressosDialog.kt` pra passar
+`state.stageXpSpent[stageName]` e `state.compendioPathfinderAtivo`.
+Testes novos em `ClassPrestigeStageLimitTest.kt` cobrindo: sem
+Pathfinder o Lendário continua travado pra sempre (comportamento
+antigo preservado); com Pathfinder, a 2ª compra é bloqueada antes de 4
+Progressos e liberada a partir de 4; a 3ª exige 8; e fora do Lendário
+nada muda mesmo com Pathfinder ativo.
+
+**Build/teste automatizado continuam impossíveis neste ambiente** —
+validação manual: releitura linha a linha do código e dos livros
+citados, e nos casos do item 2b/2c, simulação manual do fluxo
+reservar→aplicar em ambos os intervalos (2 e 4) pra confirmar que o
+limiar cumulativo produz o número certo de Progressos por aumento em
+cada um.
