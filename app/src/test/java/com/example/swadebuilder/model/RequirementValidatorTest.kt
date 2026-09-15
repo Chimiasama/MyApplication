@@ -159,4 +159,91 @@ class RequirementValidatorTest {
         state.vantagensSelecionadas += vantagem("prev_b")
         assertTrue(RequirementValidator.canSelect(vantagemComum, state))
     }
+
+    // --- Rodada 8: auditoria completa do RequirementValidator, usado só pelo fluxo de
+    // Progresso (XP) — encontrou e corrigiu bugs que a IncompatibilityRules/comentários do
+    // arquivo não cobriam ainda.
+
+    @Test
+    fun `vantagem de categoria ATORMENTADO exige a Vantagem base Atormentado, nao Ressuscitado`() {
+        // Bug real: o id verificado aqui era Constants.ID_RESSUSCITADO ("ressuscitado"), que
+        // não corresponde a nenhuma Vantagem do catálogo — bloqueava SEMPRE qualquer
+        // categoria ATORMENTADO durante Progresso, mesmo com a base certa selecionada.
+        val exclusivaAtormentado = Vantagem(
+            id = "teste_atormentado",
+            nome = "TESTE ATORMENTADO",
+            categoria = Categoria.ATORMENTADO,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        val state = CriadorState()
+        assertFalse(RequirementValidator.canSelect(exclusivaAtormentado, state))
+
+        state.vantagensSelecionadas += vantagem("atormentado")
+        assertTrue(RequirementValidator.canSelect(exclusivaAtormentado, state))
+    }
+
+    @Test
+    fun `assassino impiedoso exige Sem Escrupulos Maior`() {
+        // Regra ausente por completo antes (só existia no fluxo de criação).
+        val assassinoImpiedoso = Vantagem(
+            id = "assassino_impiedoso",
+            nome = "ASSASSINO IMPIEDOSO",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        val state = CriadorState()
+        assertFalse(RequirementValidator.canSelect(assassinoImpiedoso, state))
+
+        state.complicacoesSelecionadas[complicacao("sem_escrupulos")] = "Menor"
+        assertFalse(RequirementValidator.canSelect(assassinoImpiedoso, state))
+
+        state.complicacoesSelecionadas[complicacao("sem_escrupulos")] = "Maior"
+        assertTrue(RequirementValidator.canSelect(assassinoImpiedoso, state))
+    }
+
+    @Test
+    fun `grupoMinimo agora e respeitado (ex Bando de Guerra)`() {
+        // Bug real: grupoMinimo ("pelo menos N destas opções") nunca era checado aqui — a
+        // função só reimplementava a lista fixa (E) de vantagensPrevias. Delegar pra
+        // ValidatePrerequisiteUseCase corrige isso.
+        val bandoDeGuerraTeste = Vantagem(
+            id = "teste_bando_de_guerra",
+            nome = "TESTE BANDO DE GUERRA",
+            categoria = Categoria.LIDERANCA,
+            requisitos = Requisito(
+                estagio = "Novato",
+                grupoMinimo = GrupoMinimo(opcoes = listOf("opcao_a", "opcao_b", "opcao_c"), minimo = 2)
+            )
+        )
+
+        val state = CriadorState()
+        assertFalse(RequirementValidator.canSelect(bandoDeGuerraTeste, state))
+
+        state.vantagensSelecionadas += vantagem("opcao_a")
+        assertFalse(RequirementValidator.canSelect(bandoDeGuerraTeste, state))
+
+        state.vantagensSelecionadas += vantagem("opcao_b")
+        assertTrue(RequirementValidator.canSelect(bandoDeGuerraTeste, state))
+    }
+
+    @Test
+    fun `regras de cenario do Crystal Heart agora sao aplicadas`() {
+        // Bug real: só a exclusividade de Antecedente Arcano (só Canalizar Cristal) tinha
+        // checagem própria aqui; a lista de Vantagens proibidas do Crystal Heart
+        // (ValidateScenarioRulesUseCase) nunca era consultada neste validador.
+        val rico = Vantagem(
+            id = "rico",
+            nome = "RICO",
+            categoria = Categoria.SOCIAIS,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        val state = CriadorState()
+        assertTrue(RequirementValidator.canSelect(rico, state))
+
+        state.compendioCrystalHeartAtivo = true
+        assertFalse(RequirementValidator.canSelect(rico, state))
+    }
 }

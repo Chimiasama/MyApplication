@@ -28,7 +28,6 @@ object Constants {
     const val ID_AA_AGENT_SYN = "aa_agente_syn"
     const val ID_AA_PREFIX = "antecedente_arcano"
     const val ID_THE_BEST_THERE_IS = "o_melhor_que_ha"
-    const val ID_RESSUSCITADO = "ressuscitado"
 
     // Advantages (Edges)
     const val EDGE_POWER_POINTS = "PONTOS DE PODER"

@@ -1762,3 +1762,160 @@ validação manual: releitura do trecho do Básico citado acima e do
 trecho equivalente do Pathfinder, e conferência de que nenhum outro
 lugar do código (`RequirementValidator.kt`, `CriadorState.kt`,
 `CriadorViewModel.kt`) duplicava esse guard condicionado ao Pathfinder.
+
+## Rodada 9 — auditoria completa de `RequirementValidator.kt` (2026-09-15)
+
+Pedido explícito: auditar por completo `RequirementValidator.kt` — o
+validador usado só pelo fluxo de Progresso (XP), via
+`ProgressosDialog.strictRequirementsOk()` — contra as classes
+equivalentes usadas na criação de personagem
+(`ValidateScenarioRulesUseCase`, `ValidateRequirementsUseCase`,
+`ValidatePrerequisiteUseCase`, `ValidateSpecialRulesUseCase`,
+`ValidateCustomCategoryPrerequisiteUseCase`, todas orquestradas por
+`ValidateSelectionUseCase`/`CriadorState.podeSelecionar()`), já que a
+Rodada 8 tinha descoberto que esse arquivo existe justamente por ser
+uma cópia separada, e uma cópia já achada desatualizada uma vez é
+sinal de que pode haver mais.
+
+**Achado estrutural importante primeiro**: toda tela de compra de
+Progresso já chama `state.podeSelecionar(vant)` (o validador "oficial"
+da criação) **E** `strictRequirementsOk(vant, ...)` (que usa
+`RequirementValidator.canSelect`) **juntos, com E lógico**
+(`podeAgora && strictOk && ...`, `ProgressosDialog.kt` linha ~1232, e
+o mesmo padrão em todo `if (!state.podeSelecionar(vant) ||
+!strictRequirementsOk(...))`). Isso significa que um bug em
+`RequirementValidator` que o deixasse MAIS PERMISSIVO do que devia
+(uma checagem faltando) não é explorável hoje — `podeSelecionar()`
+ainda bloqueia certo, em paralelo. Mas um bug que o deixasse MAIS
+RESTRITIVO (checagem errada bloqueando algo que devia passar) **é**
+um bug real e visível, porque o E lógico bloqueia se qualquer um dos
+dois lados falhar. A auditoria then teve dois níveis de prioridade:
+bugs restritivos (quebram o app hoje) e lacunas permissivas (não
+quebram nada hoje, mas são o mesmo tipo de risco de divergência
+futura que a Rodada 8 já tinha achado uma vez — corrigidas também,
+por completude).
+
+### Bugs restritivos confirmados (bloqueavam compras válidas durante Progresso)
+
+1. **Vantagens de categoria ATORMENTADO (Ressuscitado) sempre
+   bloqueadas.** O código verificava
+   `vantagensSelecionadas.any { it.id == Constants.ID_RESSUSCITADO }`,
+   e `Constants.ID_RESSUSCITADO = "ressuscitado"` não corresponde a
+   NENHUMA Vantagem do catálogo (a Vantagem-base real chama-se
+   "Atormentado", id `atormentado`, confirmado em `vantagens.json`).
+   Resultado: toda Vantagem de categoria ATORMENTADO (Arame
+   Espiritual, Cavar, Chamado dos Mortos, Fôlego da Sepultura, Rastro
+   de Dentes etc. — mais de 30 no catálogo) ficava permanentemente
+   impossível de comprar via Progresso, mesmo com "Atormentado" já
+   selecionada. Corrigido pra checar `it.id == "atormentado"` (igual
+   ao `ValidateSpecialRulesUseCase`, usado na criação). Constante
+   `Constants.ID_RESSUSCITADO` removida por não corresponder a nada
+   real e não ser usada em mais nenhum lugar.
+
+2. **Especialista/Profissional em "Lutar" (Arte da Guerra) via perícia
+   errada.** O ramo que resolve a perícia escolhida usava
+   `state.mapaPericias[choiceKey]` direto. Isso ignora a substituição
+   de Jutsu da Arte da Guerra (`CriadorState.getBestPericia`: um
+   requisito de "Lutar" pode ser satisfeito pela melhor categoria de
+   Jutsu do personagem, não só pelo slot base "Lutar" —
+   `CriadorState.kt` l.4619-4632). Corrigido pra usar
+   `state.getBestPericia(choiceKey)`, igual à criação.
+
+3. **Bônus de Liderança do Samurai (Arte da Guerra) ausente na
+   checagem de Estágio mínimo.** `ValidateSpecialRulesUseCase` dispensa
+   o Estágio mínimo de Vantagens de categoria LIDERANCA pra um Samurai
+   com Conhecimento de Batalha d8+ (`shouldIgnoreLeadershipStage`);
+   essa exceção não existia em `RequirementValidator`, bloqueando
+   essas compras por Estágio mesmo quando o personagem já tinha o
+   direito. Adicionada a mesma checagem
+   (`ignorarEstagioPorSamurai`).
+
+Os itens 1 e 3 afetam campanhas Deadlands/Ressuscitados e Arte da
+Guerra especificamente; o item 2, qualquer Arte da Guerra usando
+Jutsu. Os três já quebravam o app hoje, independente do E lógico com
+`podeSelecionar()` (a falha vinha do lado `strictRequirementsOk`).
+
+### Lacunas permissivas fechadas por completude (não exploráveis hoje, mas mesmo risco da Rodada 8)
+
+- **`grupoMinimo`** ("pelo menos N destas opções" — Bando de Guerra,
+  Ordem Unida) e **`gruposAlternativos`** ("isto OU aquilo" —
+  Antecedente Arcano OU Poderes Místicos, Pontos de Poder, Drenar a
+  Alma, Concentração, Guerreiro Sagrado/Profano, Arqueiro Arcano,
+  Cavaleiro Místico, Discípulo do Dragão, Trapaceiro Arcano, Agoureiro
+  — 11 Vantagens reais do catálogo usam um dos dois) nunca eram
+  checados aqui — só a lista fixa (E) de `vantagensPrevias`.
+- **Pré-requisito por Categoria Customizada**
+  (`ValidateCustomCategoryPrerequisiteUseCase`, usado por campanhas
+  próprias com categorias tipo "Pacto Menor"/"Pacto Maior") nunca era
+  checado aqui.
+- **Regras de cenário** (`ValidateScenarioRulesUseCase`): lista de
+  Vantagens proibidas do Crystal Heart (Rico, Campeão, Chi, Linguista,
+  Resistência Arcana, Aristocrata, Arma Predileta, Comando, Conexões
+  etc.) e o bloqueio de Vantagens de Poder fora do próprio cenário;
+  exclusividade do Antecedente Arcano (Demônio) da Cidade do Sol a
+  Vapor pra ancestralidade Demônio de sangue puro; bloqueio de "Mago"
+  na Fantasia; substituição de Antecedentes Arcanos do Pathfinder — só
+  a exclusividade de "só Canalizar Cristal" no Crystal Heart tinha
+  checagem própria aqui, o resto nunca era consultado.
+- **Assassino Impiedoso** (Deadlands/Wiseguys, exige Sem Escrúpulos
+  Maior) não tinha checagem aqui (só na criação).
+- **Tags Raciais e Template Monstruoso** (`ValidateRequirementsUseCase`)
+  nunca eram checados aqui.
+- Perícia mínima opcional vinculada a uma escolha específica (ex.:
+  Arma Predileta) usava "qualquer uma bate" em vez de exigir
+  especificamente a perícia da escolha feita — mais permissivo que a
+  criação, mas nunca restritivo (não é bug visível).
+
+### Correção estrutural: delegar em vez de reimplementar
+
+Em vez de corrigir cada item isolado (o que só teria movido o
+problema pra próxima auditoria), `RequirementValidator.canSelect`
+agora **delega** pras mesmas classes usadas na criação sempre que elas
+já cobrem a regra: `ValidateScenarioRulesUseCase` (novo item 0, no
+topo), `ValidatePrerequisiteUseCase` (substitui a reimplementação
+manual da lista fixa de pré-requisitos — item 6),
+`ValidateCustomCategoryPrerequisiteUseCase` (novo item 6b) e
+`ValidateRequirementsUseCase` (substitui a reimplementação manual de
+atributos/perícias mínimas/Carta Selvagem — itens 10-13). Isso segue o
+mesmo precedente já usado no código pra `IncompatibilityRules` (fonte
+única de conflitos Vantagem×Complicação, depois de uma divergência
+real parecida entre os validadores de criação e progressão) — a
+alternativa de só corrigir os bugs achados agora deixaria o próximo
+ajuste de regra em `ValidateRequirementsUseCase`/
+`ValidatePrerequisiteUseCase` sem propagar pra cá de novo.
+
+O que ficou reimplementado localmente (não tem equivalente de criação,
+ou depende de saber qual Estágio está sendo comprado — algo que só
+esta tela sabe): O Melhor Que Há, Cavaleiro, Assassino Impiedoso,
+"uma vez por Estágio" (Pontos de Poder e genérico), Ressuscitado/
+Atormentado (corrigido), Antecedente Arcano/multi-arcano,
+Profissional/Especialista (com o `getBestPericia` corrigido), Estágio
+mínimo (com o bônus de Samurai adicionado), limite de compra genérico,
+repetição de mesma escolha, Estágio alternativo, Tiro Duplo
+Aprimorado, e conflitos com Complicações (via `IncompatibilityRules`,
+já correto antes).
+
+**Testes**: adicionados a `RequirementValidatorTest.kt` cobrindo os
+três bugs restritivos que tinham teste viável sem precisar simular
+perícias dentro de `CriadorState` (Atormentado/Ressuscitado, Assassino
+Impiedoso) e duas lacunas permissivas agora fechadas (`grupoMinimo`
+via um "Bando de Guerra" fictício, e a lista de proibidos do Crystal
+Heart via "Rico"). Confirmado que os 7 testes já existentes no arquivo
+continuam válidos com a nova implementação (rastreados manualmente
+regra por regra, já que build automatizado continua impossível neste
+ambiente). O bônus de Liderança do Samurai não ganhou teste próprio
+por depender de configurar uma perícia ("Conhecimento de Batalha" d8+)
+dentro de `CriadorState`, sem nenhum precedente nos testes existentes
+pra isso com segurança sem poder compilar pra verificar.
+
+**Build/teste automatizado continuam impossíveis neste ambiente** —
+validação manual: releitura completa de `RequirementValidator.kt` e
+de cada classe de validação da criação (`ValidateScenarioRulesUseCase`,
+`ValidateRequirementsUseCase`, `ValidatePrerequisiteUseCase`,
+`ValidateSpecialRulesUseCase`, `ValidateCustomCategoryPrerequisiteUseCase`),
+comparação item a item, conferência de tipos/assinaturas de cada
+campo usado nas nova chamadas contra `CriadorState.kt`, `grep`
+exaustivo por referências à constante removida
+(`Constants.ID_RESSUSCITADO`) e rastreamento manual de cada um dos 7
+testes pré-existentes contra a nova implementação pra confirmar que
+nenhum comportamento coberto por eles mudou.
