@@ -1942,8 +1942,9 @@ class CriadorState {
         val hasLigeiro = vantagensSelecionadas.any { it.id == Constants.ID_LIGEIRO || it.id.keyify() == "LIGEIRO" }
         val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
 
-        val lentoEntry = complicacoesSelecionadas.entries.firstOrNull { it.key.id == Constants.ID_LENTO || it.key.id.keyify() == "LENTO" }
-        val lentoLevel = lentoEntry?.value
+        val hasLento = complicacoesSelecionadas.keys.any {
+            it.id == Constants.ID_LENTO || it.id == Constants.ID_LENTO_CH || it.id.keyify() == "LENTO"
+        }
 
         // Step index: 0 = d4-1, 1 = d4, 2 = d6 (baseline), 3 = d8, 4 = d10, 5 = d12
         var stepIndex = 2
@@ -1956,12 +1957,11 @@ class CriadorState {
             stepIndex = (stepIndex - 1).coerceAtLeast(1)
         }
 
-        if (lentoEntry != null) {
-            if (lentoLevel == "Maior") {
-                stepIndex -= 2
-            } else {
-                stepIndex -= 1
-            }
+        // Lento reduz o dado de corrida em um tipo tanto na versão Menor quanto na Maior
+        // (livro: "reduza... seu dado de corrida em um tipo" nas duas). Só a Movimentação e
+        // a penalidade em Atletismo diferem entre as severidades — ver ModifierEngine (PACE).
+        if (hasLento) {
+            stepIndex -= 1
         }
 
         val stepLabels = mapOf(
