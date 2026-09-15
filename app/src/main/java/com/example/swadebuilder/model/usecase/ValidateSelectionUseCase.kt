@@ -35,6 +35,10 @@ class ValidateSelectionUseCase(
         val complicacoesSelecionadas: Map<Complicacao, String?>,
         val ppPurchasesThisRank: Int,
         val maxPpPurchasesAllowed: Int,
+        // "uma vez por Estágio" genérico (Pontos de Chi, Presa, Poder do Sangue, Vontade
+        // Sombria etc.) — ver ValidatePowerPointsLimitUseCase.Input.
+        val estagioPurchasesFor: (String) -> Int = { 0 },
+        val maxEstagioPurchasesGenericoAllowed: Int = 0,
         val vantagensSelecionadas: List<Vantagem>,
         val emProgresso: Boolean,
         val superInvestments: List<SuperInvestment>,
@@ -85,9 +89,13 @@ class ValidateSelectionUseCase(
         // 3. Prerequisites (Previous Edges)
         if (!validatePrerequisiteUseCase.execute(
                 ValidatePrerequisiteUseCase.Input(
-                    vantagem,
-                    context.vantagensSelecionadas,
-                    context.complicacoesSelecionadas.keys
+                    vantagem = vantagem,
+                    vantagensSelecionadas = context.vantagensSelecionadas,
+                    complicacoesSelecionadas = context.complicacoesSelecionadas.keys,
+                    pericias = context.pericias,
+                    rawTotalPericia = context.rawTotalPericia,
+                    getBestPericia = context.getBestPericia,
+                    valoresAtributos = context.valoresAtributos
                 )
             )) return false
 
@@ -107,10 +115,12 @@ class ValidateSelectionUseCase(
         val currentSelectionCount = context.vantagensSelecionadas.count { it.id.keyify() == vantagem.id.keyify() }
         if (!validatePowerPointsLimitUseCase.execute(
                 ValidatePowerPointsLimitUseCase.Input(
-                    vantagem,
-                    context.ppPurchasesThisRank,
-                    context.maxPpPurchasesAllowed,
-                    currentSelectionCount
+                    vantagem = vantagem,
+                    ppPurchasesThisRank = context.ppPurchasesThisRank,
+                    maxPpPurchasesAllowed = context.maxPpPurchasesAllowed,
+                    currentSelectionCount = currentSelectionCount,
+                    estagioPurchasesGenerico = context.estagioPurchasesFor(vantagem.id),
+                    maxEstagioPurchasesGenericoAllowed = context.maxEstagioPurchasesGenericoAllowed
                 )
             )) return false
 

@@ -72,6 +72,12 @@
     "foco": "Conjurar"
   },
   {
+    "key": "TECNICAS ELEMENTAIS",
+    "slots": 5,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
     "key": "FEITICEIRO",
     "slots": 3,
     "pp": 15,

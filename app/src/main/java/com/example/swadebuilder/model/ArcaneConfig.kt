@@ -558,17 +558,15 @@ object ArcaneConfig {
     // delas usar:
     // - "ALQUIMIA": Fantasia (Alquimista) x Horror (Alquimista) — mesmo nome,
     //   listas de poderes diferentes.
-    // - "ELEMENTALISTA": Fantasia (Antecedente Arcano real) x sistema de
-    //   Elementalista por Tropo da Arte da Guerra (sem Vantagem
-    //   correspondente — chega aqui com origem nula, cai no default/ADG).
-    // - "MESTRE DO CHI": só Deadlands tem Antecedente Arcano com esse nome;
-    //   o Mestre do Chi por Tropo da Arte da Guerra (sem Vantagem, origem
-    //   nula) não deve herdar a lista de Deadlands — por isso exige
-    //   origem == "DEADLANDS" explicitamente em vez de cair no default.
+    // O Antecedente Arcano (Mestre do Chi) de Deadlands e o Antecedente Arcano
+    // (Elementalista) de Fantasia já NÃO precisam de guard de origem aqui: os sistemas de
+    // Técnicas por Tropo da Arte da Guerra que antes reaproveitavam esses mesmos nomes usam
+    // chaves próprias, "TECNICAS CHI" e "TECNICAS ELEMENTAIS" (nunca chegam a este método —
+    // ver `usaTecnicasTropo`/`arcKey == "TECNICAS ELEMENTAIS"` em PoderesSection.kt), então
+    // "MESTRE DO CHI" só pode significar Deadlands e "ELEMENTALISTA" só pode significar
+    // Fantasia.
     fun getPermittedPowers(arcaneKey: String, origem: String? = null): Set<String>? {
         if (arcaneKey == "ALQUIMIA" && origem == "HORROR") return HORROR_ALQUIMISTA
-        if (arcaneKey == "ELEMENTALISTA" && origem == "FANTASIA") return FANTASIA_ELEMENTALISTA
-        if (arcaneKey == "MESTRE DO CHI" && origem != "DEADLANDS") return null
 
         return when (arcaneKey) {
             "ABENCOADO" -> DEADLANDS_ABENCOADO
@@ -601,7 +599,8 @@ object ArcaneConfig {
             // servir, à critério do jogador e do mestre — sem lista fixa, de
             // propósito (subtipoArcano "ABERRACAO", sem entrada aqui).
             "BRUXA" -> DEADLANDS_BRUXA
-            "ELEMENTALISTA" -> ARTE_GUERRA_ELEMENTALISTA
+            "ELEMENTALISTA" -> FANTASIA_ELEMENTALISTA
+            "TECNICAS ELEMENTAIS" -> ARTE_GUERRA_ELEMENTALISTA
             "DEMONIO" -> SOL_VAPOR_DEMONIO_ALLOWED_POWERS
             "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS
             // Crystal Heart (livro, linhas ~4199-4201): o Antecedente Arcano (Canalizar

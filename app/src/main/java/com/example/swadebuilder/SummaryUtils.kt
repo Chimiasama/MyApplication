@@ -273,9 +273,10 @@ fun buildSummaryLines(
 
         val espRaw = personagem.atributos["ESPIRITO"] ?: 0
         val racialPenalty = if (especieIdAtual == "terracota") 1 else 0
-        val chiBonus = allAdvantages
-            .filter { it.id in personagem.vantagens }
-            .count { it.categoria == Categoria.CHI }
+        // Só `pontos_de_chi` aumenta a Reserva Máxima (+4 por compra, ver
+        // CriadorState.reservaChi) — as outras Vantagens de categoria CHI são Técnicas que
+        // GASTAM Chi já existente, não somam nada à reserva.
+        val chiBonus = 4 * personagem.vantagens.count { it == "pontos_de_chi" }
 
         return (espRaw / 2 - racialPenalty + chiBonus).coerceAtLeast(0)
     }

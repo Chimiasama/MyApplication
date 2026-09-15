@@ -1,28 +1,51 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.usecase.ValidateCustomCategoryPrerequisiteUseCase
+import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
+import com.example.swadebuilder.model.usecase.ValidateRequirementsUseCase
+import com.example.swadebuilder.model.usecase.ValidateScenarioRulesUseCase
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.semAcentos
 
 /**
- * Validates prerequisites for selecting Advantages (Edges).
+ * Validates prerequisites for selecting Advantages (Edges) durante o fluxo de Progresso (XP) —
+ * usado só por ProgressosDialog.strictRequirementsOk(). Delega pras mesmas classes de
+ * validação usadas na criação de personagem (ValidateScenarioRulesUseCase/
+ * ValidateRequirementsUseCase/ValidatePrerequisiteUseCase/
+ * ValidateCustomCategoryPrerequisiteUseCase) sempre que a regra já tem uma "fonte única de
+ * verdade" lá, em vez de reimplementá-la aqui de novo — reimplementar já causou divergência
+ * real mais de uma vez (auditoria Rodada 8: Ressuscitado/Atormentado verificado com um id que
+ * não existe em nenhuma Vantagem, sempre bloqueando; Especialista/perícias mínimas ignorando a
+ * substituição de Jutsu da Arte da Guerra; bônus de Liderança do Samurai ausente;
+ * grupoMinimo/gruposAlternativos e as regras de cenário do Crystal Heart nunca checados aqui).
+ * O que sobra abaixo são as regras específicas desta tela (limite "uma vez por Estágio" e
+ * afins, que dependem do Estágio sendo comprado) e os itens sem equivalente de criação.
  */
 object RequirementValidator {
 
-    private val ameacadorComplicacoesBase = setOf(
-        "sanguinario",
-        "desagradavel",
-        "sem_escrupulos",
-        "feio"
-    ).map { it.keyify() }.toSet()
-
-    // Alguns compêndios descrevem que estas complicações também liberam Ameaçador.
-    private val ameacadorComplicacoesExtras = setOf("sombrio", "sinistro").map { it.keyify() }.toSet()
-
-    private val ameacadorId = "ameacador".keyify()
+    private val validateScenarioRulesUseCase = ValidateScenarioRulesUseCase()
+    private val validateRequirementsUseCase = ValidateRequirementsUseCase()
+    private val validatePrerequisiteUseCase = ValidatePrerequisiteUseCase()
+    private val validateCustomCategoryPrerequisiteUseCase = ValidateCustomCategoryPrerequisiteUseCase()
 
     fun canSelect(v: Vantagem, state: CriadorState): Boolean {
         val key = v.nome.keyify()
+
+        // 0) Regras de cenário (Crystal Heart: lista de proibidos + só Antecedente Arcano
+        // Canalizar Cristal + só Vantagens de Poder do próprio cenário; Cidade do Sol a Vapor:
+        // exclusividade do Antecedente Arcano Demônio; Fantasia: bloqueio de "Mago";
+        // Pathfinder: Antecedentes Arcanos substituídos) — mesma fonte da criação. Faltava
+        // por completo aqui; só a parte "só Canalizar Cristal" tinha uma cópia local (removida
+        // abaixo, redundante com esta chamada).
+        if (!validateScenarioRulesUseCase.execute(
+                ValidateScenarioRulesUseCase.Input(
+                    vantagem = v,
+                    ancestralidade = state.ancestralidade,
+                    compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
+                    compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+                    compendioPathfinderAtivo = state.compendioPathfinderAtivo
+                )
+            )) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (v.id == Constants.ID_THE_BEST_THERE_IS) {
@@ -38,29 +61,44 @@ object RequirementValidator {
             if (!hasObligation) return false
         }
 
-        // 2) Pontos de Poder por estágio
-        if (v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true)) {
-            val totalFeitas = state.comprasPpPorEstagio.values.sum()
-            val maxPermitidas = state.maxComprasPpAteAgora()
-            if (totalFeitas >= maxPermitidas) return false
-        }
-
-        // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
-        if (v.categoria == Categoria.ATORMENTADO) {
-            val temRessuscitado = state.vantagensSelecionadas.any { it.id == Constants.ID_RESSUSCITADO }
-            if (!temRessuscitado) return false
-        }
-
-        // 3) Antecedente Arcano e multi-arcano
-        if (key.startsWith(Constants.EDGE_ARCANE_BACKGROUND)) {
-            if (state.compendioCrystalHeartAtivo) {
-                // Em jogos de Crystal Heart, apenas "Antecedente Arcano: Canalizar Cristal" é permitido.
-                if (v.id != Constants.ID_AA_AGENT_SYN) return false
+        // 1b) Regra especial: ASSASSINO IMPIEDOSO (Deadlands/Wiseguys) — exige Sem Escrúpulos
+        // (Maior). Faltava por completo aqui (só existia pro fluxo de criação).
+        if (v.id == "assassino_impiedoso") {
+            val hasSemEscrupulosMaior = state.complicacoesSelecionadas.entries.any { (comp, grau) ->
+                comp.id == "sem_escrupulos" && grau == "Maior"
             }
+            if (!hasSemEscrupulosMaior) return false
+        }
 
-            // CriadorState.permiteMultiplosAntecedentesArcanos: mesma condição usada em
-            // ValidateSpecialRulesUseCase (criação); antes esta checagem (usada em Progressos)
-            // faltava esse bypass, bloqueando na evolução o que era permitido na criação.
+        // 2) "Uma vez por Estágio" (Pontos de Poder, Pontos de Chi, Presa, Poder do Sangue,
+        // Vontade Sombria etc.) — SEM acumular Estágios pulados: teto de 1 por Estágio,
+        // olhando só o Estágio atual (nunca uma soma cumulativa de Estágios anteriores),
+        // exceto Pontos de Poder no Lendário, que não tem teto (mas só vale 2 em vez de 5
+        // a partir da 2ª compra lá — ver CriadorState.selecionarPontosDePoder). Duplicado de
+        // CriadorState/ValidatePowerPointsLimitUseCase aqui porque esta tela é quem sabe qual
+        // Estágio está sendo comprado agora, ao contrário do fluxo de criação.
+        if (v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true)) {
+            val feitasNoEstagio = state.comprasPpPorEstagio[state.estagioAtual().nome] ?: 0
+            if (feitasNoEstagio >= state.maxComprasPpNesteEstagio()) return false
+        } else if (v.limiteCompra == "uma_vez_por_estagio") {
+            val feitasNoEstagio = state.comprasEstagioPorVantagem[v.id]?.get(state.estagioAtual().nome) ?: 0
+            if (feitasNoEstagio >= 1) return false
+        }
+
+        // 2a) Vantagens exclusivas de Ressuscitado (categoria ATORMENTADO) exigem ter a
+        // Vantagem-base "Atormentado" primeiro. O id verificado aqui estava errado
+        // (Constants.ID_RESSUSCITADO = "ressuscitado", que não corresponde a nenhuma
+        // Vantagem do catálogo) — isso fazia esta checagem bloquear SEMPRE qualquer
+        // Vantagem ATORMENTADO durante Progresso, mesmo com "Atormentado" já selecionada.
+        if (v.categoria == Categoria.ATORMENTADO) {
+            val temAtormentado = state.vantagensSelecionadas.any { it.id == "atormentado" }
+            if (!temAtormentado) return false
+        }
+
+        // 3) Antecedente Arcano e multi-arcano (a exclusividade do Crystal Heart pra só
+        // Canalizar Cristal já foi resolvida no item 0, acima — não precisa mais de checagem
+        // própria aqui).
+        if (key.startsWith(Constants.EDGE_ARCANE_BACKGROUND)) {
             if (!state.permiteMultiplosAntecedentesArcanos) {
                 val anyArcano = state.vantagensSelecionadas.any { it.nome.keyify().startsWith(Constants.EDGE_ARCANE_BACKGROUND) }
                 if (anyArcano && state.vantagensSelecionadas.none { it.nome.keyify() == key }) {
@@ -111,14 +149,25 @@ object RequirementValidator {
             return if (state.listaAtributos.contains(choiceKey)) {
                 state.valoresAtributos[choiceKey]!!.intValue == state.atributoMaxRaw(choiceKey)
             } else {
-                val per = state.mapaPericias[choiceKey] ?: return false
+                // getBestPericia, não mapaPericias direto: na Arte da Guerra, um requisito de
+                // "Lutar" pode estar satisfeito pela melhor categoria de Jutsu do personagem,
+                // não só pelo slot base "Lutar" (a versão anterior usava mapaPericias direto e
+                // ignorava isso, bloqueando Especialista/Profissional em Lutar indevidamente).
+                val per = state.getBestPericia(choiceKey) ?: return false
                 state.rawTotal(per) == state.periciaCapRaw(per)
             }
         }
 
-        // 5) Estágio mínimo (respeita Nasce um Herói)
+        // 5) Estágio mínimo — respeita Nasce um Herói e o bônus de Liderança do Samurai da
+        // Arte da Guerra (Conhecimento de Batalha d8+ dispensa o Estágio mínimo pra Vantagens
+        // de Liderança); esse bônus do Samurai estava ausente aqui antes, bloqueando essas
+        // compras por Estágio durante Progresso mesmo quando o personagem já tinha o direito.
         val ignorarEstagioPorNasce = (state.nasceUmHeroi && !state.emProgresso && state.pvFromXpOutstanding == 0)
-        if (!ignorarEstagioPorNasce) {
+        val ignorarEstagioPorSamurai = state.compendioArteDaGuerraAtivo &&
+            state.tropoSelecionado?.id == "tropo_samurai" &&
+            v.categoria == Categoria.LIDERANCA &&
+            state.getBestPericia("Conhecimento de Batalha")?.let { state.rawTotal(it) >= 8 } == true
+        if (!ignorarEstagioPorNasce && !ignorarEstagioPorSamurai) {
             val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
             if (estagioRequerido != null) {
                 val estagioAtual = state.overrideStageForVantagem?.let { stageName ->
@@ -131,56 +180,35 @@ object RequirementValidator {
             }
         }
 
-        // 6) Vantagens prévias
-        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            // Regra especial de Ameaçador: os IDs em `vantagens_previas` representam
-            // complicações alternativas (OR), não uma lista cumulativa (AND).
-            if (v.id.keyify() == ameacadorId) {
-                val complicacoesSelecionadasIds = state.complicacoesSelecionadas.keys
-                    .map { it.id.keyify() }
-                    .toSet()
+        // 6) Pré-requisitos: lista fixa de vantagens/complicações prévias (E), "pelo menos N
+        // destas opções" (grupoMinimo — ex.: Bando de Guerra) e "isto OU aquilo"
+        // (gruposAlternativos — ex.: Antecedente Arcano OU Poderes Místicos; Pontos de Poder;
+        // Drenar a Alma). Delega pra ValidatePrerequisiteUseCase, a mesma classe da criação:
+        // até a Rodada 7 esta função reimplementava só a lista fixa, sem grupoMinimo nem
+        // gruposAlternativos — qualquer Vantagem usando um dos dois nunca tinha esse
+        // pré-requisito checado aqui.
+        if (!validatePrerequisiteUseCase.execute(
+                ValidatePrerequisiteUseCase.Input(
+                    vantagem = v,
+                    vantagensSelecionadas = state.vantagensSelecionadas,
+                    complicacoesSelecionadas = state.complicacoesSelecionadas.keys,
+                    pericias = state.periciasComIdiomas(),
+                    rawTotalPericia = { state.rawTotal(it) },
+                    getBestPericia = { state.getBestPericia(it) },
+                    valoresAtributos = state.valoresAtributos.mapValues { it.value.intValue }
+                )
+            )) return false
 
-                val complicacoesQueLiberam =
-                    (v.requisitos.vantagensPrevias.map { it.keyify() }.toSet() +
-                            ameacadorComplicacoesBase +
-                            ameacadorComplicacoesExtras)
+        // 6b) Pré-requisito por Categoria Customizada (ex.: qualquer Vantagem de "Pacto
+        // Menor" libera "Pacto Maior", pra campanhas próprias) — ausente aqui antes.
+        if (!validateCustomCategoryPrerequisiteUseCase.execute(v, state.vantagensSelecionadas)) return false
 
-                if (complicacoesSelecionadasIds.none { it in complicacoesQueLiberam }) {
-                    return false
-                }
-            } else {
-                val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-                    when (prevId.keyify().replace(" ", "_")) {
-                        Constants.ID_AA_PREFIX.keyify(), "${Constants.ID_AA_PREFIX}:*".keyify() -> {
-                            state.vantagensSelecionadas.none { poss ->
-                                poss.id.startsWith("${Constants.ID_AA_PREFIX}_") ||
-                                        poss.id.startsWith("aa_") ||
-                                        (poss.id == Constants.ID_AA_PREFIX && !poss.choice.isNullOrBlank())
-                            }
-                        }
-                        else -> {
-                            val idNorm = prevId.keyify().replace(" ", "_")
-                            val temVantagem = state.vantagensSelecionadas.any { poss ->
-                                poss.id.keyify().replace(" ", "_") == idNorm
-                            }
-                            val temComplicacao = state.complicacoesSelecionadas.keys.any {
-                                it.id.keyify().replace(" ", "_") == idNorm
-                            }
-                            !temVantagem && !temComplicacao
-                        }
-                    }
-                }
-                if (faltam) return false
-            }
-        }
-
-        // 7) PPs de novo (segurança extra)
-        if (v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true)) {
-            val totalCompras = state.comprasPpPorEstagio.values.sum()
-            val limite = state.maxComprasPpAteAgora()
-            if (totalCompras >= limite) return false
-        }
-        else if (v.limiteCompra != "infinito" && v.maxSelections > 0) {
+        // 7) Limite de Compra genérico (maxSelections) — Pontos de Poder e as demais
+        // "uma vez por Estágio" já foram checadas no item 2 (e teriam retornado false antes
+        // de chegar aqui); esse ramo só cobre o `limite_compra` comum (ex.: "uma_vez").
+        if (v.limiteCompra != "infinito" && v.limiteCompra != "uma_vez_por_estagio" &&
+            !v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true) && v.maxSelections > 0
+        ) {
             val ja = state.vantagensSelecionadas.count { it.id == v.id }
             if (ja >= v.maxSelections) return false
         }
@@ -194,58 +222,38 @@ object RequirementValidator {
             if (repetida) return false
         }
 
-        // 9) Estágio alternativo
+        // 9) Estágio alternativo (tabela nivelParaEstagio) — usa o Progresso do Estágio em
+        // compra retroativa (overrideStageForVantagem) quando presente, senão o Progresso
+        // atual; equivalente a CriadorState.effectiveProgressoParaVantagens() (privada lá).
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
-             // Need access to effectiveProgressoParaVantagens, which is private in CriadorState.
-             // We can simulate it here or expose it.
-             // Simulating for now:
-             val stName = state.overrideStageForVantagem ?: ""
-             val prog = if (stName.isNotEmpty()) {
-                 listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }?.minProgress ?: state.progresso
-             } else state.progresso
+            val stName = state.overrideStageForVantagem ?: ""
+            val prog = if (stName.isNotEmpty()) {
+                listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }?.minProgress ?: state.progresso
+            } else state.progresso
 
             if (estReqObj2.minProgress > prog) return false
         }
 
-        // 10) Atributos mínimos
-        if (v.requisitos.atributoMin.any { (nome, min) ->
-                val chaveNorm = nome.uppercase().semAcentos().trim()
-                val attrKey = state.mapaAtributosDisplay.keys.firstOrNull {
-                    it.equals(chaveNorm, ignoreCase = true)
-                } ?: chaveNorm
-                val atual = state.valoresAtributos[attrKey]?.intValue ?: return false
-                atual < min
-            }) return false
-
-        // 11) Perícias mínimas obrigatórias
-        val periciaMinMap = v.requisitos.periciaMin
-        if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
-            val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = state.mapaPericias[perNome.keyify()]
-                per != null && state.rawTotal(per) >= minRaw
-            }
-            if (!atendeUma) return false
-        } else {
-            if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = state.mapaPericias[perNome.keyify()] ?: return@any false
-                    state.rawTotal(per) < minRaw
-                }) {
-                return false
-            }
-        }
-
-        // 12) Perícias mínimas opcionais (qualquer uma)
-        val periciaMinOpcMap = v.requisitos.periciaMinOpcional
-        if (periciaMinOpcMap.isNotEmpty()) {
-            val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                val per = state.mapaPericias[perNome.keyify()]
-                per != null && state.rawTotal(per) >= minRaw
-            }
-            if (!atendeUmaOpc) return false
-        }
-
-        // 13) Exige Carta Selvagem?
-        if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
+        // 10-13) Atributos mínimos, perícias mínimas (obrigatórias e opcionais — respeitando
+        // qual opção foi de fato escolhida em Vantagens vinculadas, ex.: Arma Predileta/
+        // Atirador/Tiro Mortal), Carta Selvagem, Tags Raciais e Template Monstruoso — delega
+        // pra ValidateRequirementsUseCase, a mesma classe da criação. A versão anterior
+        // reimplementava isso à mão usando mapaPericias direto (ignorando a substituição de
+        // Jutsu da Arte da Guerra — mesmo problema do item 4), sem a checagem de qual opção
+        // foi escolhida em perícia mínima opcional vinculada, e sem checar Tags
+        // Raciais/Template Monstruoso (que nem existiam aqui).
+        if (!validateRequirementsUseCase.execute(
+                ValidateRequirementsUseCase.Input(
+                    vantagem = v,
+                    valoresAtributos = state.valoresAtributos.mapValues { it.value.intValue },
+                    pericias = state.periciasComIdiomas(),
+                    rawTotalPericia = { state.rawTotal(it) },
+                    ancestralidadeDef = state.currentAncestryDef,
+                    tipoMonstroSelecionado = state.tipoMonstroSelecionado,
+                    cartaSelvagem = state.cartaSelvagem,
+                    getBestPericia = { state.getBestPericia(it) }
+                )
+            )) return false
 
         // 13b) Tiro Duplo Aprimorado — exige Tiro Duplo com a perícia associada em d10+
         if (v.id == "tiro_duplo_aprimorado") {

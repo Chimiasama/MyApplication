@@ -32,6 +32,11 @@ jobs:
         uses: android-actions/setup-android@v4
         with:
           cmdline-tools-version: 11076708
+          # O Google descontinuou o pacote legado "tools" (sdkmanager não o
+          # encontra mais no repositório remoto); a action instala esse
+          # pacote por padrão junto com platform-tools. Não precisamos dele
+          # pra buildar com Gradle, então pedimos só platform-tools.
+          packages: 'platform-tools'
 
       - name: Build APK (Lite${{ github.event.inputs.buildType }})
         run: |
@@ -44,7 +49,7 @@ jobs:
         run: |
           echo "### ❌ Erros de Compilação Encontrados" >> $GITHUB_STEP_SUMMARY
           echo '```text' >> $GITHUB_STEP_SUMMARY
-          ./gradlew :app:assembleLite${{ github.event.inputs.buildType }} --console=plain 2>&1 \vert{} grep "e: file://" >> $GITHUB_STEP_SUMMARY || echo "Não foi possível isolar a linha exata. Abra a etapa de build para conferir o log." >> $GITHUB_STEP_SUMMARY
+          ./gradlew :app:assembleLite${{ github.event.inputs.buildType }} --console=plain 2>&1 | grep "e: file://" >> $GITHUB_STEP_SUMMARY || echo "Não foi possível isolar a linha exata. Abra a etapa de build para conferir o log." >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Sanitize artifact name

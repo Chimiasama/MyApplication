@@ -21,6 +21,40 @@ import kotlinx.serialization.json.contentOrNull
 const val MENSAGEM_EXCLUSIVIDADE_CLASSE =
     "Você já adquiriu uma Classe ou Prestígio neste Estágio. Aguarde o próximo Estágio para adquirir outra."
 
+// "Pelo menos N destas opções" — ex.: Bando de Guerra (Fantasia) e Ordem-Unida (Arte da
+// Guerra) exigem Comando + pelo menos 2 outras Vantagens de Liderança. Cada item de `opcoes`
+// é um id de Vantagem OU Complicação (mesma sintaxe de `vantagensPrevias`, incluindo o
+// sentinela "ANTECEDENTE_ARCANO" pra "qualquer Antecedente Arcano específico"). Verificado em
+// conjunto (E) com `vantagensPrevias` — não o substitui.
+@Serializable
+data class GrupoMinimo(
+    @SerialName("opcoes")
+    val opcoes: List<String> = emptyList(),
+    @SerialName("minimo")
+    val minimo: Int = 1
+)
+
+// "Isto OU aquilo" — cada alternativa é um pacote de Vantagens/Complicações (E dentro dela)
+// e/ou perícias mínimas; a Vantagem libera se QUALQUER UMA das alternativas for satisfeita
+// por completo. Ex.: Pathfinder "Antecedente Arcano (qualquer um) OU Poderes Místicos
+// (qualquer um)" vira duas alternativas de 1 vantagem cada; "Magomecânico OU Consertar d10+ e
+// Ciência d10+" (Cidade do Sol a Vapor) vira uma alternativa de vantagem e outra de 2 perícias.
+// `pericias` é E entre si (todas exigidas); `periciaMinOpcional` é OU (basta uma), pro caso de
+// Ciência Ficção "Drenar a Alma" via Poderes Místicos substituir a perícia arcana (Fé/Conjurar/
+// Foco/Psiônicos/Ciência Estranha, qualquer uma) por Espírito — daí o campo `atributos` (E
+// entre si) na mesma alternativa.
+@Serializable
+data class GrupoAlternativo(
+    @SerialName("vantagens")
+    val vantagens: List<String> = emptyList(),
+    @SerialName("pericias")
+    val pericias: Map<String, Int> = emptyMap(),
+    @SerialName("periciaMinOpcional")
+    val periciaMinOpcional: Map<String, Int> = emptyMap(),
+    @SerialName("atributos")
+    val atributos: Map<String, Int> = emptyMap()
+)
+
 @Serializable(with = RequisitoSerializer::class)
 data class Requisito(
     @SerialName("estagio")
@@ -57,7 +91,13 @@ data class Requisito(
     val categoriasCustomizadasRequeridas: List<String> = emptyList(),
 
     @SerialName("template")
-    val template: JsonElement? = null
+    val template: JsonElement? = null,
+
+    @SerialName("grupoMinimo")
+    val grupoMinimo: GrupoMinimo? = null,
+
+    @SerialName("gruposAlternativos")
+    val gruposAlternativos: List<GrupoAlternativo> = emptyList()
 ) {
     val exigeCS: Boolean
         get() = observacoes.contains("Carta Selvagem", ignoreCase = true)
@@ -82,6 +122,8 @@ object RequisitoSerializer : KSerializer<Requisito> {
         element<List<String>>("tags", isOptional = true)
         element<List<String>>("categoriasCustomizadasRequeridas", isOptional = true)
         element<JsonElement?>("template", isOptional = true)
+        element<GrupoMinimo?>("grupoMinimo", isOptional = true)
+        element<List<GrupoAlternativo>>("gruposAlternativos", isOptional = true)
     }
 
     @Serializable
@@ -105,7 +147,11 @@ object RequisitoSerializer : KSerializer<Requisito> {
         @SerialName("categoriasCustomizadasRequeridas")
         val categoriasCustomizadasRequeridas: List<String> = emptyList(),
         @SerialName("template")
-        val template: JsonElement? = null
+        val template: JsonElement? = null,
+        @SerialName("grupoMinimo")
+        val grupoMinimo: GrupoMinimo? = null,
+        @SerialName("gruposAlternativos")
+        val gruposAlternativos: List<GrupoAlternativo> = emptyList()
     ) {
         fun toDomain() = Requisito(
             estagio = estagio,
@@ -117,7 +163,9 @@ object RequisitoSerializer : KSerializer<Requisito> {
             choiceOptions = choiceOptions,
             tags = tags,
             categoriasCustomizadasRequeridas = categoriasCustomizadasRequeridas,
-            template = template
+            template = template,
+            grupoMinimo = grupoMinimo,
+            gruposAlternativos = gruposAlternativos
         )
     }
 
@@ -148,7 +196,9 @@ object RequisitoSerializer : KSerializer<Requisito> {
             choiceOptions = value.choiceOptions,
             tags = value.tags,
             categoriasCustomizadasRequeridas = value.categoriasCustomizadasRequeridas,
-            template = value.template
+            template = value.template,
+            grupoMinimo = value.grupoMinimo,
+            gruposAlternativos = value.gruposAlternativos
         )
         jsonEncoder.encodeJsonElement(jsonEncoder.json.encodeToJsonElement(RequisitoRaw.serializer(), raw))
     }
@@ -175,7 +225,16 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     stageName: String,
     nova: Vantagem,
     vantagensCatalogo: List<Vantagem>,
-    vantagensSelecionadas: List<Vantagem> = emptyList()
+    vantagensSelecionadas: List<Vantagem> = emptyList(),
+    // Savage Pathfinder (docs/swade_pathfinder_basico, l.6783-6788): no Estágio Lendário, a
+    // regra "uma Vantagem central de Classe/Prestígio por Estágio" vira "uma a cada QUATRO
+    // Progressos gastos no Estágio" (em vez de travar de vez após a 1ª). Pra aplicar essa
+    // exceção só quando ela realmente existe (só o Pathfinder tem — os demais livros ficam
+    // travados em uma por Estágio, sem mais nenhuma no Lendário), o chamador passa quanto
+    // progresso já foi gasto no Estágio (mesmo `stageXpSpent` do throttle equivalente de
+    // atributos) e se o Pathfinder está ativo.
+    progressoGastoNoEstagio: Int = 0,
+    pathfinderAtivo: Boolean = false
 ): Boolean {
     if (!nova.isFamiliaClassePathfinder()) return false
 
@@ -189,13 +248,21 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
         .map { it.id }
         .toSet()
 
-    val hasCompraViaXpNoEstagio = any { acao ->
+    val comprasViaXpNoEstagio = count { acao ->
         acao is AdvancementAction.SpendOnAdvantage &&
             acao.stageName.equals(stageName, ignoreCase = true) &&
             acao.advantageId in idsFamiliaClasse
     }
 
-    if (hasCompraViaXpNoEstagio) {
+    if (comprasViaXpNoEstagio > 0) {
+        if (pathfinderAtivo && stageName.equals("Lendário", ignoreCase = true)) {
+            val progressoExigido = 4 * comprasViaXpNoEstagio
+            if (progressoGastoNoEstagio >= progressoExigido) {
+                return false
+            }
+            debug("Bloqueio por intervalo do Lendário: stage=$stageName nova=${nova.id} gasto=$progressoGastoNoEstagio exigido=$progressoExigido")
+            return true
+        }
         debug("Bloqueio por histórico: stage=$stageName nova=${nova.id}")
         return true
     }

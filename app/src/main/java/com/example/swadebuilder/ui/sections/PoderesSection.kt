@@ -133,10 +133,10 @@ fun PoderesSection(
             ativos.add("DOM")
         }
         if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_elementalista") {
-            ativos.add("ELEMENTALISTA")
+            ativos.add("TECNICAS ELEMENTAIS")
         }
         if (state.compendioArteDaGuerraAtivo && !state.isFeralAdgSelecionado() && (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0) {
-            ativos.add("MESTRE DO CHI")
+            ativos.add("TECNICAS CHI")
         }
         ativos.distinct()
     }
@@ -259,26 +259,35 @@ fun PoderesSection(
             val arcKey = arcKeyRaw.normAAKey()
             // Determine origin
             val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+            // "TECNICAS CHI" é a chave própria do sistema de Técnicas de Chi por Tropo da
+            // Arte da Guerra (sem Vantagem correspondente) — NUNCA a mesma chave do
+            // Antecedente Arcano (Mestre do Chi) de Deadlands, que é uma Vantagem de verdade
+            // com sua própria lista de poderes (ver CriadorState.fixedPowersByArcano). Usar
+            // chaves distintas evita depender de um guard de origem pra não vazar a lista de
+            // poderes de um sistema pro outro.
             val usaTecnicasTropo = state.compendioArteDaGuerraAtivo &&
-                arcKey == "MESTRE DO CHI" &&
+                arcKey == "TECNICAS CHI" &&
                 advantage == null &&
                 (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
-            val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "MESTRE DO CHI"
+            val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS CHI"
+            // "TECNICAS ELEMENTAIS" é a chave própria do Tropo Elementalista da Arte da
+            // Guerra (sem Vantagem correspondente) — NUNCA "ELEMENTALISTA" (essa é exclusiva
+            // do Antecedente Arcano de Fantasia, com sua própria lista de poderes; ver
+            // CriadorState.fixedPowersByArcano e ArcaneConfig.FANTASIA_ELEMENTALISTA).
+            val usaTecnicasElementais = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS ELEMENTAIS"
             val originRaw = when {
-                usaListaChi -> "ARTE DA GUERRA"
-                else -> advantage?.origem
-                    ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
+                usaListaChi || usaTecnicasElementais -> "ARTE DA GUERRA"
+                else -> advantage?.origem ?: "BASICO"
             }
             val normalizedOrigin = powerAssetOriginKey(originRaw)
 
-            // "MESTRE DO CHI" é usado tanto pelo Antecedente Arcano de Deadlands (via
-            // `advantage`) quanto pelo sistema de Mestre do Chi por Tropo da Arte da
-            // Guerra (chave literal, sem Vantagem correspondente — `usaTecnicasTropo`).
-            // Os dois têm listas de poderes diferentes; corrigir a chave de Deadlands
-            // em ArcaneConfig sem esse guard vazaria a lista de Deadlands pro Tropo da
-            // Arte da Guerra (ou o inverso), então só consulta ArcaneConfig fora do
-            // caminho por Tropo. `originRaw` desambigua outras colisões (ex.: ALQUIMIA
-            // entre Fantasia/Horror, ELEMENTALISTA entre Fantasia/Arte da Guerra).
+            // `originRaw` desambigua outras colisões de nome LEGÍTIMAS entre Antecedentes
+            // Arcanos de verdade de livros diferentes (ex.: ALQUIMIA entre Fantasia/Horror,
+            // FEITICEIRO entre Fantasia/Cidade do Sol a Vapor) — casos em que os dois lados
+            // são Vantagens reais com o mesmo nome, então uma chave própria não faz sentido
+            // (mudaria o nome de uma Vantagem real). Diferente do caso de Mestre do
+            // Chi/Elementalista, onde um dos lados era só uma chave interna de Tropo sem
+            // Vantagem nenhuma — esses já usam chave própria, sem precisar de `origem`.
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
                 ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey, originRaw)
             val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)

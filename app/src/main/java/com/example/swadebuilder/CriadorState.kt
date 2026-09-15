@@ -32,6 +32,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.GrupoAlternativo
 import com.example.swadebuilder.model.IncompatibilityRules
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.ModificadorCustomizado
@@ -439,33 +440,71 @@ class CriadorState {
         return selecionadas.any { it in liberadoras }
     }
 
-    private fun atendeVantagensPrevias(v: Vantagem): Boolean {
-        if (v.requisitos.vantagensPrevias.isEmpty()) return true
-
-        if (atendePreviasPorComplicacaoParaAmeacador(v)) return true
-
-        val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-            when (prevId.keyify().replace(" ", "_")) {
-                "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
-                    vantagensSelecionadas.none { poss ->
-                        poss.id.startsWith("antecedente_arcano_") ||
-                                poss.id.startsWith("aa_") ||
-                                (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
-                    }
-                }
-                else -> {
-                    val idNorm = prevId.keyify().replace(" ", "_")
-                    val temVantagem = vantagensSelecionadas.any { poss ->
-                        poss.id.keyify().replace(" ", "_") == idNorm
-                    }
-                    val temComplicacao = complicacoesSelecionadas.keys.any {
-                        it.id.keyify().replace(" ", "_") == idNorm
-                    }
-                    !temVantagem && !temComplicacao
+    // Extraído do corpo antigo de `atendeVantagensPrevias` sem mudar comportamento nenhum —
+    // reaproveitado agora também por `grupoMinimo`/`gruposAlternativos` (ver Requisito.kt),
+    // que citam a mesma sintaxe de id ("ANTECEDENTE_ARCANO" pra qualquer variante específica,
+    // ou um id exato de Vantagem/Complicação).
+    private fun temVantagemOuComplicacao(refId: String): Boolean {
+        return when (refId.keyify().replace(" ", "_")) {
+            "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
+                vantagensSelecionadas.any { poss ->
+                    poss.id.startsWith("antecedente_arcano_") ||
+                            poss.id.startsWith("aa_") ||
+                            (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
                 }
             }
+            else -> {
+                val idNorm = refId.keyify().replace(" ", "_")
+                val temVantagem = vantagensSelecionadas.any { poss ->
+                    poss.id.keyify().replace(" ", "_") == idNorm
+                }
+                val temComplicacao = complicacoesSelecionadas.keys.any {
+                    it.id.keyify().replace(" ", "_") == idNorm
+                }
+                temVantagem || temComplicacao
+            }
         }
-        return !faltam
+    }
+
+    private fun satisfazAlternativa(alt: GrupoAlternativo): Boolean {
+        val vantagensOk = alt.vantagens.all { temVantagemOuComplicacao(it) }
+        val periciasOk = alt.pericias.all { (nome, min) ->
+            val per = getBestPericia(nome) ?: return@all false
+            rawTotal(per) >= min
+        }
+        val periciaOpcionalOk = alt.periciaMinOpcional.isEmpty() || alt.periciaMinOpcional.any { (nome, min) ->
+            val per = getBestPericia(nome)
+            per != null && rawTotal(per) >= min
+        }
+        val atributosOk = alt.atributos.all { (nome, min) ->
+            val chaveNorm = nome.uppercase().semAcentos().trim()
+            val attrKey = valoresAtributos.keys.firstOrNull { it.equals(chaveNorm, ignoreCase = true) } ?: chaveNorm
+            atributoRawComSupers(attrKey) >= min
+        }
+        return vantagensOk && periciasOk && periciaOpcionalOk && atributosOk
+    }
+
+    private fun atendeVantagensPrevias(v: Vantagem): Boolean {
+        // 1) Lista fixa de pré-requisitos (E/AND) — comportamento inalterado.
+        if (v.requisitos.vantagensPrevias.isNotEmpty() && !atendePreviasPorComplicacaoParaAmeacador(v)) {
+            val faltam = v.requisitos.vantagensPrevias.any { prevId -> !temVantagemOuComplicacao(prevId) }
+            if (faltam) return false
+        }
+
+        // 2) "Pelo menos N destas opções" (ex.: Bando de Guerra — Comando + pelo menos duas
+        // outras Vantagens de Liderança). Soma-se ao item 1 (E), nunca o substitui.
+        val grupoMinimo = v.requisitos.grupoMinimo
+        if (grupoMinimo != null && grupoMinimo.opcoes.isNotEmpty()) {
+            val quantasTem = grupoMinimo.opcoes.count { temVantagemOuComplicacao(it) }
+            if (quantasTem < grupoMinimo.minimo) return false
+        }
+
+        // 3) "Isto OU aquilo" — basta uma alternativa bater por completo (ex.: Antecedente
+        // Arcano (qualquer um) OU Poderes Místicos (qualquer um)).
+        val alternativas = v.requisitos.gruposAlternativos
+        if (alternativas.isNotEmpty() && alternativas.none { satisfazAlternativa(it) }) return false
+
+        return true
     }
 
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
@@ -1341,13 +1380,15 @@ class CriadorState {
     }
 
     fun isAttributeRankLimitReached(): Boolean {
-        val stageIndex = currentProgressStageIndex()
-        val lendarioIndex = listaDeEstagios.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
-            .takeIf { it >= 0 } ?: listaDeEstagios.lastIndex
-        val totalAttrPurchases = comprasAttrPorEstagio.values.sum()
-        val baseAllowance = (stageIndex + 1).coerceAtMost(lendarioIndex)
-        val remainingBaseAttrs = (baseAllowance - totalAttrPurchases).coerceAtLeast(0)
-        return remainingBaseAttrs <= 0
+        // "Esta opção só pode ser escolhida uma vez por Estágio" — SEM acumular Estágios
+        // pulados: um Progresso é gasto assim que é concedido, sem guardar pra usar depois
+        // (a única exceção do livro é Complicação, que permite guardar Progressos de
+        // propósito). Se a personagem não usou a opção de atributo no Novato, essa
+        // oportunidade se perde — não vira "2 de uma vez" no Experiente. Por isso a checagem
+        // é só contra o Estágio ATUAL, nunca cumulativa entre Estágios.
+        val stageName = listaDeEstagios.getOrNull(currentProgressStageIndex())?.nome ?: estagioAtual().nome
+        val comprasNesteEstagio = comprasAttrPorEstagio[stageName] ?: 0
+        return comprasNesteEstagio >= 1
     }
 
     fun isAttributeFreeForMonster(attr: String): Boolean {
@@ -1371,12 +1412,22 @@ class CriadorState {
 
     val fixedPowersByArcano = mapOf(
         "ABENCOADO" to listOf("simbolo_sagrado"),
+        // Antecedente Arcano (Mestre do Chi) do Deadlands (docs/swade_deadlands, l.5105-5122):
+        // "Poderes Iniciais: 3 (deflexão, mais outros dois à escolha)". Essa chave é exclusiva
+        // do Deadlands — o sistema de Técnicas de Chi por Tropo da Arte da Guerra usa a chave
+        // própria "TECNICAS CHI" (ver CriadorState.getSlotsCountForArcano/syncTecnicasChiSlots
+        // e PoderesSection.kt), nunca esta.
         "MESTRE DO CHI" to listOf("deflexao"),
         "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
         "CLERIGO" to listOf("cura", "santuario"),
         "DEMONIO" to listOf("disfarce_demoniaco"),
         "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
         "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma"),
+        // Antecedente Arcano (Elementalista) da Fantasia (docs/swade_fantasia, l.6868-6877):
+        // "Poderes Iniciais: Manipulação elemental..., proteção ambiental... e três outros
+        // poderes". Chave exclusiva da Fantasia — o Tropo Elementalista da Arte da Guerra usa
+        // a chave própria "TECNICAS ELEMENTAIS" (ver getSlotsCountForArcano/geral_arcano_info.json),
+        // nunca esta.
         "ELEMENTALISTA" to listOf("manipulacao_elemental", "protecao_ambiental"),
         "ILUSIONISTA" to listOf("ilusao", "iluminar_obscurecer", "som_silencio"),
         "INVOCADOR" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "conjurar_aliado"),
@@ -2797,6 +2848,10 @@ class CriadorState {
         vantagensSelecionadas.add(v)
         ensurePowerSlotsFor(v)
 
+        if (v.limiteCompra == "uma_vez_por_estagio" && v.id != "pontos_de_poder") {
+            registrarCompraEstagioGenerico(v.id)
+        }
+
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
             if (inimigo != null) {
@@ -2854,6 +2909,10 @@ class CriadorState {
 
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
+
+        if (v.limiteCompra == "uma_vez_por_estagio" && v.id != "pontos_de_poder") {
+            desfazerCompraEstagioGenerico(v.id)
+        }
 
         // Safety check for Mystic Powers cleanup
         if (v.nome.normAAKey().contains("PODERES MISTICOS")) {
@@ -3741,20 +3800,27 @@ class CriadorState {
     }
 
 
-    fun maxComprasPpAteAgora(): Int {
-        return listaDeEstagios.indexOf(estagioAtual()) + 1
-    }
+    // "Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por
+    // Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só
+    // concede 2 pontos adicionais [em vez dos 5 normais]." — SEM acumular Estágios
+    // pulados: um Progresso é gasto (ou não) assim que é concedido, nunca guardado pra
+    // "juntar" mais de uma compra depois (a única exceção do livro pra guardar Progresso é
+    // Complicação). Por isso o teto é sempre 1 por Estágio, olhando só o Estágio ATUAL —
+    // nunca uma soma cumulativa de Estágios anteriores. Fora do Lendário, essa 1ª (e
+    // única) compra do Estágio vale 5; no Lendário, a 1ª também vale 5 (é a mesma
+    // oportunidade normal que todo Estágio tem) e QUALQUER compra extra depois dela,
+    // ilimitada, vale só 2.
+    fun maxComprasPpNesteEstagio(): Int = if (estagioAtual().nome == "Lendário") Int.MAX_VALUE else 1
 
     private fun selecionarPontosDePoder(v: Vantagem) {
         val estagio = estagioAtual().nome
-        val totalFeitas = comprasPpPorEstagio.values.sum()
-
-        if (totalFeitas >= maxComprasPpAteAgora()) return
-
         val feitasNoEstagio = comprasPpPorEstagio[estagio] ?: 0
+
+        if (feitasNoEstagio >= maxComprasPpNesteEstagio()) return
+
         comprasPpPorEstagio[estagio] = feitasNoEstagio + 1
 
-        val ganho = if (totalFeitas < 4) 5 else 2
+        val ganho = if (feitasNoEstagio == 0) 5 else 2
         bonusPoderExtra += ganho
 
         vantagensSelecionadas += v
@@ -3763,22 +3829,46 @@ class CriadorState {
     fun removerPontosDePoder(v: Vantagem, estagioOverride: String? = null) {
         if (!vantagensSelecionadas.remove(v)) return
 
-        val totalAntes = comprasPpPorEstagio.values.sum()
-        if (totalAntes == 0) return
-
         val estagio = estagioOverride ?: estagioAtual().nome
         val feitas = comprasPpPorEstagio[estagio] ?: 0
-        if (feitas > 0) {
-            comprasPpPorEstagio[estagio] = feitas - 1
-        } else {
-            val fallback = comprasPpPorEstagio.entries.lastOrNull { it.value > 0 }
-            fallback?.let {
-                comprasPpPorEstagio[it.key] = it.value - 1
-            }
-        }
+        if (feitas <= 0) return
+        comprasPpPorEstagio[estagio] = feitas - 1
 
-        val ganhoRemovido = if (totalAntes <= 4) 5 else 2
+        val ganhoRemovido = if (feitas == 1) 5 else 2
         bonusPoderExtra = (bonusPoderExtra - ganhoRemovido).coerceAtLeast(0)
+    }
+
+    // Rastreamento GENÉRICO de "uma vez por Estágio" — pra qualquer Vantagem com
+    // `limite_compra: "uma_vez_por_estagio"` que NÃO seja Pontos de Poder (essa continua com
+    // sua própria infraestrutura, por ter a exceção de teto ilimitado no Lendário e de
+    // conceder um recurso à parte). Cobre hoje Pontos de Chi (Arte da Guerra), Presa
+    // (Pathfinder), Poder do Sangue e Vontade Sombria (Cidade do Sol a Vapor) — e qualquer
+    // nova Vantagem futura marcada com essa tag, sem precisar de código dedicado pra cada
+    // uma. SEM acumular Estágios pulados: o teto é sempre 1, olhando só o Estágio atual —
+    // nenhuma delas tem uma exceção de Lendário como Pontos de Poder.
+    val comprasEstagioPorVantagem = mutableStateMapOf<String, MutableMap<String, Int>>()
+
+    fun comprasNoEstagioAtualDe(vantagemId: String): Int =
+        comprasEstagioPorVantagem[vantagemId]?.get(estagioAtual().nome) ?: 0
+
+    private fun registrarCompraEstagioGenerico(vantagemId: String) {
+        val estagio = estagioAtual().nome
+        val mapa = comprasEstagioPorVantagem.getOrPut(vantagemId) { mutableStateMapOf() }
+        mapa[estagio] = (mapa[estagio] ?: 0) + 1
+    }
+
+    private fun desfazerCompraEstagioGenerico(vantagemId: String, estagioOverride: String? = null) {
+        val mapa = comprasEstagioPorVantagem[vantagemId] ?: return
+        if (mapa.values.sum() == 0) return
+
+        val estagio = estagioOverride ?: estagioAtual().nome
+        val feitas = mapa[estagio] ?: 0
+        if (feitas > 0) {
+            mapa[estagio] = feitas - 1
+        } else {
+            val fallback = mapa.entries.lastOrNull { it.value > 0 }
+            fallback?.let { mapa[it.key] = it.value - 1 }
+        }
     }
 
     private fun removerUltimaVantagemCompradaComPv(): Boolean {
@@ -3807,8 +3897,10 @@ class CriadorState {
 
     fun comprarPontoDePoder(v: Vantagem) {
         if (!podeSelecionar(v)) return
+        // selecionarPontosDePoder() já adiciona `v` a vantagensSelecionadas quando a compra é
+        // aceita (e não adiciona nada se o teto de "uma vez por Estágio" bloquear) — um
+        // segundo `vantagensSelecionadas += v` aqui duplicava a entrada a cada compra válida.
         selecionarPontosDePoder(v)
-        vantagensSelecionadas += v
     }
 
     val comprasAttrPorEstagio = mutableStateMapOf<String, Int>().apply {
@@ -4050,8 +4142,11 @@ class CriadorState {
                 ancestralidade.keyify().contains("DEMONIOS") &&
                 arcKeyNorm == "DEMONIO"
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
+        // "TECNICAS CHI" é a chave própria do sistema de Técnicas de Chi por Tropo da Arte da
+        // Guerra — nunca "MESTRE DO CHI" (essa é exclusiva do Antecedente Arcano de Deadlands,
+        // que tem poderes/regras diferentes; ver o comentário em fixedPowersByArcano).
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
-            arcKeyNorm == "MESTRE DO CHI" &&
+            arcKeyNorm == "TECNICAS CHI" &&
             !hasArcanoVantagem &&
             (tropoSelecionado?.tecnicasIniciais ?: 0) > 0
         // Todos os 45 Antecedentes Arcanos oficiais têm entrada em geral_arcano_info.json,
@@ -4062,6 +4157,12 @@ class CriadorState {
         // escolher.
         val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 3)
         var bonusSlots = 0
+
+        // Grimório (Fantasia, requer Antecedente Arcano Mago): "Sempre que adquire a Vantagem
+        // Novos Poderes, recebe três novos poderes em vez de dois" — só se aplica aos poderes
+        // ligados ao próprio Mago, não a outro Antecedente Arcano que a personagem também tenha.
+        val temGrimorio = arcKeyNorm == "MAGO" && vantagensSelecionadas.any { it.id == "grimorio" }
+        val poderesPorNovosPoderes = if (temGrimorio) 3 else 2
 
         vantagensSelecionadas
             .filter { it.id == "novos_poderes" }
@@ -4074,7 +4175,7 @@ class CriadorState {
                     // To be safe, if blank, we assume it adds +2 if this is the only AB?
                     // Or we let the new logic handle it.
                     // For now, if blank, +2 (Standard behavior)
-                    bonusSlots += 2
+                    bonusSlots += poderesPorNovosPoderes
                 } else {
                     if (choice.contains("&")) {
                         // Split logic: "Key1 & Key2"
@@ -4085,14 +4186,19 @@ class CriadorState {
                     } else {
                         // Single target
                         if (choice.normAAKey() == arcKeyNorm) {
-                            bonusSlots += 2
+                            bonusSlots += poderesPorNovosPoderes
                         }
                     }
                 }
             }
 
-        val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
-        val totalSlots = base + bonusSlots + bonusTecnicas
+        // "Também ganha imediatamente um poder de seu Estágio ou inferior ao adquirir a
+        // Vantagem Grimório" — bônus fixo de +1, independente de qualquer compra de Novos
+        // Poderes.
+        val bonusGrimorio = if (temGrimorio) 1 else 0
+
+        val bonusTecnicas = if (arcKeyNorm == "TECNICAS CHI") tecnicasIniciaisFromTropo else 0
+        val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
         return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
     }
 
@@ -4225,7 +4331,17 @@ class CriadorState {
         // já existe em habilidades[] — lido pelo id em vez de comparar o nome
         // da raça, igual a qualquer outro traço racial.
         val racialPenalty = if (currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "CHI_REDUZIDO" } == true) 1 else 0
-        val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
+        // Conferi as 15 Vantagens de categoria CHI do catálogo (docs/swade_adg) — só
+        // `pontos_de_chi` aumenta a Reserva Máxima de Chi ("...em 4 pontos", repetível uma
+        // vez por Estágio); as outras 14 são Técnicas que GASTAM Chi já existente (23 Passos,
+        // Absorver, Concentração, Espírito de Ferro, Explosão Exterior, Salto Duplo etc.) ou
+        // não afetam a reserva (Meditação de Chi, Foco de Chi (Chi), Nova Técnica) — nenhuma
+        // delas soma nada à reserva máxima. Não confundir com "Antecedente Arcano (Mestre do
+        // Chi)" (Deadlands, categoria ANTECEDENTE) nem com a Vantagem "Chi" do Básico
+        // (categoria ESTRANHAS, 1 Ponto de Chi por encontro) — mecanismos completamente
+        // diferentes que só compartilham o nome; nenhum dos dois é categoria CHI, então já
+        // ficam de fora desta conta.
+        val bonusFromChiEdges = 4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
         val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
@@ -4674,8 +4790,13 @@ class CriadorState {
             tipoMonstroSelecionado = tipoMonstroSelecionado,
             cartaSelvagem = cartaSelvagem,
             complicacoesSelecionadas = complicacoesSelecionadas.toMap(),
+            // "Uma vez por Estágio" sem acumular Estágios pulados: compara só o que já foi
+            // comprado NESTE Estágio contra o teto deste Estágio (1, ou ilimitado no Lendário
+            // pra Pontos de Poder) — nunca uma soma cumulativa de todos os Estágios.
             ppPurchasesThisRank = comprasPpPorEstagio[estagioAtual().nome] ?: 0,
-            maxPpPurchasesAllowed = maxComprasPpAteAgora(),
+            maxPpPurchasesAllowed = maxComprasPpNesteEstagio(),
+            estagioPurchasesFor = { vantagemId -> comprasNoEstagioAtualDe(vantagemId) },
+            maxEstagioPurchasesGenericoAllowed = 1,
             vantagensSelecionadas = vantagensSelecionadas.toList(),
             emProgresso = emProgresso,
             superInvestments = superInvestments.toList(),
@@ -5384,8 +5505,8 @@ class CriadorState {
 
         val activeArcaneKeys = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }.toMutableSet()
         if (ancestralidade.keyify() == "TRANSMORFOS") activeArcaneKeys.add("DOM")
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") activeArcaneKeys.add("ELEMENTALISTA")
-        if (compendioArteDaGuerraAtivo && (tropoSelecionado?.tecnicasIniciais ?: 0) > 0) activeArcaneKeys.add("MESTRE DO CHI")
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") activeArcaneKeys.add("TECNICAS ELEMENTAIS")
+        if (compendioArteDaGuerraAtivo && (tropoSelecionado?.tecnicasIniciais ?: 0) > 0) activeArcaneKeys.add("TECNICAS CHI")
 
         val keysToRemove = poderSlotsPorArcano.keys.filter { it !in activeArcaneKeys }
         keysToRemove.forEach {
@@ -6041,7 +6162,7 @@ class CriadorState {
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
         protagonistaRollTecnicas = value?.coerceIn(1, 4)
-        syncMestreDoChiSlots()
+        syncTecnicasChiSlots()
     }
 
     fun updateProtagonistaRollPericia(value: Int?) {
@@ -6166,10 +6287,10 @@ class CriadorState {
         }
     }
 
-    private fun syncMestreDoChiSlots() {
+    private fun syncTecnicasChiSlots() {
         rebuildAllPericiaStacks()
-        poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
-            val required = getSlotsCountForArcano("MESTRE DO CHI")
+        poderSlotsPorArcano["TECNICAS CHI"]?.let { slots ->
+            val required = getSlotsCountForArcano("TECNICAS CHI")
             while (slots.size < required) slots.add(null)
             while (slots.size > required && slots.lastOrNull() == null) {
                 slots.removeAt(slots.lastIndex)
@@ -6401,7 +6522,7 @@ class CriadorState {
             youxiaHistoricoSelecionado = null
         }
 
-        syncMestreDoChiSlots()
+        syncTecnicasChiSlots()
         recalcularPontosAtributo()
         rebuildAllPericiaStacks(feedbackMessages)
         syncJutsuSlots()
@@ -6958,7 +7079,8 @@ class CriadorState {
                 faseSupersAtiva = faseSupersAtiva,
                 comprasPpPorEstagio = comprasPpPorEstagio.toMap(),
                 comprasAttrPorEstagio = comprasAttrPorEstagio.toMap(),
-                superPontosDisponiveisFlag = superPontosDisponiveis > 0
+                superPontosDisponiveisFlag = superPontosDisponiveis > 0,
+                comprasEstagioPorVantagem = comprasEstagioPorVantagem.mapValues { it.value.toMap() }
             )
         )
     }
@@ -7366,6 +7488,10 @@ class CriadorState {
 
         comprasPpPorEstagio.keys.forEach { comprasPpPorEstagio[it] = snapshot.supers.comprasPpPorEstagio[it] ?: 0 }
         comprasAttrPorEstagio.keys.forEach { comprasAttrPorEstagio[it] = snapshot.supers.comprasAttrPorEstagio[it] ?: 0 }
+        comprasEstagioPorVantagem.clear()
+        snapshot.supers.comprasEstagioPorVantagem.forEach { (vantagemId, porEstagio) ->
+            comprasEstagioPorVantagem[vantagemId] = porEstagio.toMutableMap()
+        }
 
         snapshot.selecoes.coracaoCrystalId?.let { cid ->
             coracaoCrystalSelecionado = listaCoracoesCrystal.find { it.id == cid }
