@@ -251,5 +251,9 @@ data class SnapshotSupers(
     val faseSupersAtiva: Boolean,
     val comprasPpPorEstagio: Map<String, Int>,
     val comprasAttrPorEstagio: Map<String, Int>,
-    val superPontosDisponiveisFlag: Boolean
+    val superPontosDisponiveisFlag: Boolean,
+    // "Uma vez por Estágio" genérico (Pontos de Chi, Presa, Poder do Sangue, Vontade Sombria
+    // etc.) — ver CriadorState.comprasEstagioPorVantagem. Default vazio pra não quebrar saves
+    // salvos antes deste campo existir.
+    val comprasEstagioPorVantagem: Map<String, Map<String, Int>> = emptyMap()
 )

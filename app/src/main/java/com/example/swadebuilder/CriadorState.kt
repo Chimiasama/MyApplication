@@ -2836,6 +2836,10 @@ class CriadorState {
         vantagensSelecionadas.add(v)
         ensurePowerSlotsFor(v)
 
+        if (v.limiteCompra == "uma_vez_por_estagio" && v.id != "pontos_de_poder") {
+            registrarCompraEstagioGenerico(v.id)
+        }
+
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
             if (inimigo != null) {
@@ -2893,6 +2897,10 @@ class CriadorState {
 
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
+
+        if (v.limiteCompra == "uma_vez_por_estagio" && v.id != "pontos_de_poder") {
+            desfazerCompraEstagioGenerico(v.id)
+        }
 
         // Safety check for Mystic Powers cleanup
         if (v.nome.normAAKey().contains("PODERES MISTICOS")) {
@@ -3825,6 +3833,41 @@ class CriadorState {
         bonusPoderExtra = (bonusPoderExtra - ganhoRemovido).coerceAtLeast(0)
     }
 
+    // Rastreamento GENÉRICO de "uma vez por Estágio, com direito a compensar Estágios
+    // pulados" — pra qualquer Vantagem com `limite_compra: "uma_vez_por_estagio"` que NÃO
+    // seja Pontos de Poder (essa continua com sua própria infraestrutura, por ter a exceção
+    // de teto ilimitado no Lendário e de conceder um recurso à parte). Cobre hoje Pontos de
+    // Chi (Arte da Guerra), Presa (Pathfinder), Poder do Sangue e Vontade Sombria (Cidade do
+    // Sol a Vapor) — e qualquer nova Vantagem futura marcada com essa tag, sem precisar de
+    // código dedicado pra cada uma.
+    val comprasEstagioPorVantagem = mutableStateMapOf<String, MutableMap<String, Int>>()
+
+    fun totalComprasEstagioDe(vantagemId: String): Int =
+        comprasEstagioPorVantagem[vantagemId]?.values?.sum() ?: 0
+
+    fun maxComprasEstagioGenericoAteAgora(): Int =
+        listaDeEstagios.indexOf(estagioAtual()) + 1
+
+    private fun registrarCompraEstagioGenerico(vantagemId: String) {
+        val estagio = estagioAtual().nome
+        val mapa = comprasEstagioPorVantagem.getOrPut(vantagemId) { mutableStateMapOf() }
+        mapa[estagio] = (mapa[estagio] ?: 0) + 1
+    }
+
+    private fun desfazerCompraEstagioGenerico(vantagemId: String, estagioOverride: String? = null) {
+        val mapa = comprasEstagioPorVantagem[vantagemId] ?: return
+        if (mapa.values.sum() == 0) return
+
+        val estagio = estagioOverride ?: estagioAtual().nome
+        val feitas = mapa[estagio] ?: 0
+        if (feitas > 0) {
+            mapa[estagio] = feitas - 1
+        } else {
+            val fallback = mapa.entries.lastOrNull { it.value > 0 }
+            fallback?.let { mapa[it.key] = it.value - 1 }
+        }
+    }
+
     private fun removerUltimaVantagemCompradaComPv(): Boolean {
         val autoKeys = (vantagensAutomaticas + vantagensRaciais)
             .map { normalizeAutoKey(it.substringBefore("(").trim()) }
@@ -4282,7 +4325,11 @@ class CriadorState {
         // já existe em habilidades[] — lido pelo id em vez de comparar o nome
         // da raça, igual a qualquer outro traço racial.
         val racialPenalty = if (currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "CHI_REDUZIDO" } == true) 1 else 0
-        val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
+        // Pontos de Chi ("aumenta a Reserva Máxima de Chi... em 4 pontos", repetível uma vez
+        // por Estágio) soma +4 por compra, não +1 como as demais Vantagens de categoria CHI
+        // (a maioria são técnicas de uso único que não afetam a reserva máxima).
+        val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI && it.id != "pontos_de_chi" } +
+            4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
         val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
@@ -4738,6 +4785,8 @@ class CriadorState {
             // "compras neste Estágio" com "compras cumulativas permitidas").
             ppPurchasesThisRank = comprasPpPorEstagio.values.sum(),
             maxPpPurchasesAllowed = maxComprasPpAteAgora(),
+            estagioPurchasesFor = { vantagemId -> totalComprasEstagioDe(vantagemId) },
+            maxEstagioPurchasesGenericoAllowed = maxComprasEstagioGenericoAteAgora(),
             vantagensSelecionadas = vantagensSelecionadas.toList(),
             emProgresso = emProgresso,
             superInvestments = superInvestments.toList(),
@@ -7020,7 +7069,8 @@ class CriadorState {
                 faseSupersAtiva = faseSupersAtiva,
                 comprasPpPorEstagio = comprasPpPorEstagio.toMap(),
                 comprasAttrPorEstagio = comprasAttrPorEstagio.toMap(),
-                superPontosDisponiveisFlag = superPontosDisponiveis > 0
+                superPontosDisponiveisFlag = superPontosDisponiveis > 0,
+                comprasEstagioPorVantagem = comprasEstagioPorVantagem.mapValues { it.value.toMap() }
             )
         )
     }
@@ -7428,6 +7478,10 @@ class CriadorState {
 
         comprasPpPorEstagio.keys.forEach { comprasPpPorEstagio[it] = snapshot.supers.comprasPpPorEstagio[it] ?: 0 }
         comprasAttrPorEstagio.keys.forEach { comprasAttrPorEstagio[it] = snapshot.supers.comprasAttrPorEstagio[it] ?: 0 }
+        comprasEstagioPorVantagem.clear()
+        snapshot.supers.comprasEstagioPorVantagem.forEach { (vantagemId, porEstagio) ->
+            comprasEstagioPorVantagem[vantagemId] = porEstagio.toMutableMap()
+        }
 
         snapshot.selecoes.coracaoCrystalId?.let { cid ->
             coracaoCrystalSelecionado = listaCoracoesCrystal.find { it.id == cid }

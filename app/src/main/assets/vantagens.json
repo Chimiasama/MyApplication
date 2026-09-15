@@ -28113,6 +28113,7 @@
         ],
         "observacoes": ""
       },
+    "limite_compra": "uma_vez_por_estagio",
     "descricao": "Alguns feiticeiros habilidosos têm a oportunidade de usar o sangue de suas vítimas de forma mais eficaz. Cada sacrifício feito durante o ritual dá +5 PP. Esta Vantagem não pode ser escolhida mais de uma vez por Nível.",
     "livros": [
       "CIDADE_SOL_VAPOR"
@@ -28132,6 +28133,7 @@
         ],
         "observacoes": ""
       },
+    "limite_compra": "uma_vez_por_estagio",
     "descricao": "Um feiticeiro habilidoso pode facilmente guardar mais feitiços prontos sem esforço adicional. O número de poderes que o feiticeiro pode manter sem penalidade é aumentado em um. Esta Vantagem não pode ser escolhida mais de uma vez por Estágio.",
     "livros": [
       "CIDADE_SOL_VAPOR"
@@ -34624,7 +34626,7 @@
         "classe_patrulheiro"
       ]
     },
-    "limite_compra": "uma_vez",
+    "limite_compra": "uma_vez_por_estagio",
     "descricao": "A habilidade da personagem aumenta para incluir um inimigo e terreno adicional. Escolhe um inimigo e um tipo de terreno adicionais para suas habilidades Inimigo Predileto e Terreno Predileto. Esta Vantagem pode ser adquirida uma vez por Estágio.",
     "livros": [
       "PATHFINDER"

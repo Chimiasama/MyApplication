@@ -1188,3 +1188,173 @@ Avanços. O fluxo de 2 Avanços por aumento já existe e está certo:
 gasta MAIS 1 Avanço e consome essa reserva pra efetivamente aplicar o
 aumento — total 2 Avanços por 1 tipo de dado a mais, exatamente como o
 livro pede. **Nenhuma mudança necessária aqui.**
+
+## Rodada 5 — implementação de Pontos de Chi e nova varredura por "uma vez por Estágio" (2026-09-15)
+
+Pedido: implementar o fix do Pontos de Chi (Arte da Guerra) que tinha
+ficado pendente na Rodada 4, e refazer a varredura por qualquer outra
+Vantagem "uma vez por Estágio" que eu possa ter deixado passar — dessa
+vez buscando pela frase "por Estágio" tanto no `descricao`/`observacoes`
+já cadastrados quanto diretamente nos livros-fonte (não só no
+`limite_compra` já tageado, que só pega o que já está corretamente
+marcado).
+
+### Achados novos na varredura (3 Vantagens mistageadas, além de Pontos de Chi)
+
+Buscando `"por [Ee]st[aá]gio"` em `descricao`/`descricaoLite`/
+`observacoes` de toda `vantagens.json`, achei mais 3 Vantagens com a
+frase "não pode ser escolhida mais de uma vez por Estágio"/"pode ser
+adquirida uma vez por Estágio" no próprio texto, mas com `limite_compra`
+errado ou ausente:
+
+- **`presa`** (Pathfinder, Vantagem de Patrulheiro): `limite_compra`
+  estava `"uma_vez"` (compra única pra sempre), mas o livro
+  (`docs/swade_pathfinder_basico`, linha 5081-5082) diz "Esta Vantagem
+  pode ser adquirida uma vez por Estágio." **Corrigido** pra
+  `"uma_vez_por_estagio"`.
+- **`poder_do_sangue`** e **`vontade_sombria`** (Cidade do Sol a Vapor,
+  Vantagens de feiticeiro/Magia das Trevas): nenhuma das duas tinha o
+  campo `limite_compra` no JSON (ficava vazio, o que o motor trata como
+  "uma_vez" via `maxSelections` padrão = 1). O livro
+  (`docs/swade_csv_livro_dos_mortais`, linhas 7315-7332) diz
+  "Esta Vantagem não pode ser escolhida mais de uma vez por Nível
+  [Poder do Sangue]"/"...por Estágio [Vontade Sombria]" — tratei "Nível"
+  como sinônimo de "Estágio" aqui (não existe um sistema de "Nível de
+  personagem" separado nesse livro; toda outra ocorrência de "nível" no
+  texto é sobre Fadiga ou tiers de equipamento). **Corrigido**: os dois
+  ganharam `"limite_compra": "uma_vez_por_estagio"`.
+
+Também reconferi de perto 4 outras ocorrências de "por Estágio" que
+achei no meio da varredura e que **não** são bugs de restrição de
+compra (documentando pra não serem confundidas com os casos acima):
+
+- **Capanga** (Wiseguys): o "por Estágio" no texto descreve que o
+  Seguidor que a Vantagem concede é renovado/pode ser promovido a cada
+  Estágio — não que a própria Vantagem Capanga pode ser comprada de
+  novo. É compra única (`docs/swade_wiseguys_jogador`, linha 4786-4809,
+  sem nenhuma frase de "pode ser escolhida X vezes").
+- **Classe Paladino, Punir o Mal** (Pathfinder): "Essa habilidade pode
+  ser usada uma vez por Estágio por encontro" é um limite de USO da
+  habilidade em combate (quantas vezes por encontro, escalando por
+  Estágio), não da compra da Vantagem de Classe (que é sempre única).
+- **Força Sobrenatural, Monstro Heroico** (Horror): o livro diz que
+  monstros heroicos podem subir Agilidade/Força/Vigor em QUALQUER
+  Avanço, sem o limite de uma vez por Estágio que vale pras demais
+  personagens — ou seja, é uma isenção a favor do jogador, não uma
+  restrição. Conferido em `CriadorState.isAttributeFreeForMonster()`:
+  já implementado (achei que foi uma correção de uma rodada anterior a
+  esta auditoria, o comentário no código já explica que foi
+  generalizado do template fixo Lobisomem/Monstro de
+  Retalhos/Múmia/Vampiro pra "qualquer atributo que o template
+  selecionado bonifique", cobrindo também os templates que bonificam
+  Espírito em vez dos 3 físicos). **Nenhuma mudança necessária.**
+- **"Grimório" do Mago do Pathfinder** (`docs/swade_pathfinder_basico`,
+  linhas 4652-4680 e 7280): diferente do Grimório da Fantasia (bônus
+  fixo e incondicional, corrigido na Rodada 4), aqui o texto diz que o
+  Mago do Pathfinder só ganha o 3º poder bônus em Novos Poderes **se**
+  tiver "encontrado qualquer magia (incluindo pergaminhos) através de
+  exploração ou compra" — ou seja, depende de um evento de história que
+  só o Mestre sabe se aconteceu, não é algo que dá pra calcular só a
+  partir da ficha. Por isso não implementei — não é um bug, é uma regra
+  que exige julgamento humano.
+
+### Achados novos que NÃO implementei ainda (exigem retrabalho maior, fora do pedido desta rodada)
+
+Enquanto conferia o custo de Avanços pro aumento de atributo no
+Lendário (item já dado como correto na Rodada 4, mas só contra o livro
+Básico), reli a mesma seção em `docs/swade_pathfinder_basico`
+(linhas 6751-6788) — o Pathfinder **substitui** essa regra do Básico por
+uma própria, e ela usa um número diferente:
+
+> ATRIBUTO: Aumente um atributo em um tipo de dado. Esta opção só poder
+> ser adquirida uma vez por Estágio. Personagens de estágio Lendário
+> podem aumentar um atributo não mais do que uma vez a cada **quatro**
+> Progressos, até o máximo da ancestralidade ou classe.
+>
+> Vantagens centrais de Classe e Vantagens centrais de Prestígio também
+> são limitadas a uma por Estágio. Personagens de Estágio Lendário
+> podem escolher uma Vantagem central de Classe (ou Prestígio) apenas a
+> cada **quatro** Progressos.
+
+Ou seja: sua lembrança de "4 por 1" também estava certa — só que é a
+regra do Pathfinder, não do Básico (que usa 2 por 1, já confirmado
+certo na Rodada 4). O app hoje usa o número do Básico (2 Avanços por
+aumento) **incondicionalmente**, sem checar se o Pathfinder está ativo
+— `CriadorViewModel.reserveLegendaryAttribute()`/
+`startAttributeAdvancement()` não fazem nenhuma checagem de
+`compendioPathfinderAtivo`. Isso é dois bugs relacionados, ainda não
+corrigidos:
+
+1. **Atributo no Lendário custa 2 Avanços mesmo no Pathfinder** (livro
+   pede 4).
+2. **Vantagem de Classe/Prestígio no Lendário não tem exceção nenhuma**:
+   `atingiuLimiteClasseOuPrestigioNoEstagio()`
+   (`model/Requisito.kt`) implementa certinho o "uma por Estágio" base,
+   mas não tem NENHUMA lógica de "a cada 4 Progressos no Lendário" —
+   hoje, uma vez que a personagem Pathfinder esgota sua cota de
+   Vantagens de Classe/Prestígio (uma por Estágio, Novato até Heroico),
+   ela fica **bloqueada permanentemente** de pegar mais alguma no
+   Lendário, quando na verdade o livro permite pegar mais uma a cada 4
+   Avanços.
+
+Não implementei os dois agora porque mexem na mesma peça de UI/estado
+que o `legendaryAttrReservations` de atributo (`ProgressosDialog.kt`,
+`CriadorViewModel.kt`) — hoje ela só sabe contar "1 reserva pendente,
+depois libera" (regra fixa de 2 por 1); pra suportar 4 por 1 no
+Pathfinder ela precisaria contar até 3 reservas pendentes antes de
+liberar, e a Vantagem de Classe/Prestígio precisaria de uma reserva
+equivalente do zero (hoje não existe nenhuma). É um retrabalho real na
+tela de Avanços, não um ajuste pontual como os de hoje, e prefiro
+implementar com sua confirmação antes de mexer nessa tela — me avise se
+quiser que eu faça.
+
+### Implementação desta rodada (Pontos de Chi e mecanismo genérico)
+
+Em vez de repetir a infraestrutura dedicada de Pontos de Poder
+(`comprasPpPorEstagio`/`bonusPoderExtra`/funções só dela) pra cada nova
+Vantagem "uma vez por Estágio" que for aparecendo, criei um mecanismo
+**genérico**, reaproveitável por qualquer Vantagem futura marcada
+`limite_compra: "uma_vez_por_estagio"` (exceto Pontos de Poder, que
+mantém sua própria infraestrutura por ter a exceção de teto ilimitado
+no Lendário e por conceder um recurso à parte):
+
+- `CriadorState.comprasEstagioPorVantagem`: `Map<idDaVantagem,
+  Map<nomeDoEstagio, quantidade>>` — o mesmo padrão de
+  `comprasPpPorEstagio`, só que indexado também pelo id da Vantagem.
+- `maxComprasEstagioGenericoAteAgora()`: mesmo teto cumulativo de
+  Pontos de Poder (`índice do Estágio + 1`), mas SEM a exceção de teto
+  ilimitado no Lendário — nenhuma das 4 Vantagens desta rodada tem essa
+  exceção no livro.
+- Ganchos em `adicionarVantagem()`/`removerVantagem()` (as funções
+  genéricas que TODA Vantagem passa ao ser comprada/vendida, tanto na
+  criação quanto no avanço por XP): registram/desfazem automaticamente
+  a contagem por Estágio sempre que `limite_compra ==
+  "uma_vez_por_estagio"` e a Vantagem não é Pontos de Poder — ou seja,
+  qualquer Vantagem futura só precisa ser tageada certo no JSON pra já
+  funcionar, sem precisar de código dedicado.
+- `ValidatePowerPointsLimitUseCase`/`ValidateSelectionUseCase`: o
+  portão de compra agora tem uma checagem genérica pra
+  `limite_compra == "uma_vez_por_estagio"` (antes de cair no
+  `maxSelections`, que travava essas 4 Vantagens em 1 compra pra
+  sempre).
+- **Valor de Pontos de Chi**: `CriadorState.reservaChi` somava +1 pra
+  CADA Vantagem de categoria CHI que a personagem tivesse (a maioria
+  são técnicas de uso único, como Absorver ou Concentração, que não
+  aumentam a reserva máxima) — Pontos de Chi especificamente devia
+  somar **+4** por compra ("aumenta a Reserva Máxima de Chi... em 4
+  pontos"). Corrigido: Pontos de Chi agora soma 4× sua contagem de
+  compras, separado do +1 genérico das outras Vantagens CHI (que
+  continuam somando +1 cada, comportamento inalterado).
+- **Salvar/carregar personagem**: `comprasEstagioPorVantagem` foi
+  adicionado a `SnapshotSupers` (com valor padrão vazio, pra não
+  quebrar saves salvos antes deste campo existir) e ao
+  save/restore de `CriadorState`.
+- Testes novos em `ValidatePowerPointsLimitUseCaseTest.kt` cobrindo o
+  mecanismo genérico (bloqueio no teto cumulativo, compensação de
+  Estágio pulado, e confirmando que — ao contrário de Pontos de Poder —
+  não existe exceção de teto ilimitado no Lendário aqui).
+
+**Build/teste automatizado continuam impossíveis neste ambiente**
+(mesma falha de rede pra resolver o Android Gradle Plugin) — validação
+só manual: releitura linha a linha do código e dos livros citados,
+validação de JSON, e inspeção de cada bloco alterado.

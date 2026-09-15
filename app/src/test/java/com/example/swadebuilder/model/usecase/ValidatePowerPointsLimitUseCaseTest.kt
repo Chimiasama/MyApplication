@@ -95,4 +95,60 @@ class ValidatePowerPointsLimitUseCaseTest {
         )
         assertFalse(useCase.execute(input))
     }
+
+    // --- "uma vez por Estágio" GENÉRICO (Pontos de Chi, Presa, Poder do Sangue, Vontade
+    // Sombria) — mesma ideia de Pontos de Poder (catch-up cumulativo), mas SEM a exceção de
+    // teto ilimitado no Lendário, e sem passar pela lógica de maxSelections (que travaria em
+    // 1 compra pra sempre, já que nenhuma delas define maxSelections no catálogo).
+
+    private val pontosDeChi = Vantagem(
+        id = "pontos_de_chi",
+        nome = "PONTOS DE CHI",
+        categoria = Categoria.CHI,
+        origem = "ARTE_DA_GUERRA",
+        requisitos = Requisito(),
+        limiteCompra = "uma_vez_por_estagio"
+    )
+
+    @Test
+    fun `generico bloqueia quando o total cumulativo ja bateu no teto do Estagio atual`() {
+        val input = ValidatePowerPointsLimitUseCase.Input(
+            vantagem = pontosDeChi,
+            ppPurchasesThisRank = 0,
+            maxPpPurchasesAllowed = 0,
+            currentSelectionCount = 3,
+            estagioPurchasesGenerico = 3,
+            maxEstagioPurchasesGenericoAllowed = 3
+        )
+        assertFalse(useCase.execute(input))
+    }
+
+    @Test
+    fun `generico libera compra de catchup quando estagios anteriores foram pulados`() {
+        val input = ValidatePowerPointsLimitUseCase.Input(
+            vantagem = pontosDeChi,
+            ppPurchasesThisRank = 0,
+            maxPpPurchasesAllowed = 0,
+            currentSelectionCount = 0,
+            estagioPurchasesGenerico = 0,
+            maxEstagioPurchasesGenericoAllowed = 3
+        )
+        assertTrue(useCase.execute(input))
+    }
+
+    @Test
+    fun `generico nao tem excecao no Lendario, ao contrario de Pontos de Poder`() {
+        // Mesmo teto (5) e mesmo total já comprado (5) que uma Pontos de Poder no Lendário
+        // aceitaria sem limite — mas uma Vantagem "uma_vez_por_estagio" comum continua presa
+        // ao teto cumulativo normal.
+        val input = ValidatePowerPointsLimitUseCase.Input(
+            vantagem = pontosDeChi,
+            ppPurchasesThisRank = 0,
+            maxPpPurchasesAllowed = 0,
+            currentSelectionCount = 5,
+            estagioPurchasesGenerico = 5,
+            maxEstagioPurchasesGenericoAllowed = 5
+        )
+        assertFalse(useCase.execute(input))
+    }
 }
