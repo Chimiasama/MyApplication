@@ -136,7 +136,7 @@ fun PoderesSection(
             ativos.add("ELEMENTALISTA")
         }
         if (state.compendioArteDaGuerraAtivo && !state.isFeralAdgSelecionado() && (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0) {
-            ativos.add("MESTRE DO CHI")
+            ativos.add("TECNICAS CHI")
         }
         ativos.distinct()
     }
@@ -259,11 +259,17 @@ fun PoderesSection(
             val arcKey = arcKeyRaw.normAAKey()
             // Determine origin
             val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+            // "TECNICAS CHI" é a chave própria do sistema de Técnicas de Chi por Tropo da
+            // Arte da Guerra (sem Vantagem correspondente) — NUNCA a mesma chave do
+            // Antecedente Arcano (Mestre do Chi) de Deadlands, que é uma Vantagem de verdade
+            // com sua própria lista de poderes (ver CriadorState.fixedPowersByArcano). Usar
+            // chaves distintas evita depender de um guard de origem pra não vazar a lista de
+            // poderes de um sistema pro outro.
             val usaTecnicasTropo = state.compendioArteDaGuerraAtivo &&
-                arcKey == "MESTRE DO CHI" &&
+                arcKey == "TECNICAS CHI" &&
                 advantage == null &&
                 (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
-            val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "MESTRE DO CHI"
+            val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS CHI"
             val originRaw = when {
                 usaListaChi -> "ARTE DA GUERRA"
                 else -> advantage?.origem
@@ -271,14 +277,9 @@ fun PoderesSection(
             }
             val normalizedOrigin = powerAssetOriginKey(originRaw)
 
-            // "MESTRE DO CHI" é usado tanto pelo Antecedente Arcano de Deadlands (via
-            // `advantage`) quanto pelo sistema de Mestre do Chi por Tropo da Arte da
-            // Guerra (chave literal, sem Vantagem correspondente — `usaTecnicasTropo`).
-            // Os dois têm listas de poderes diferentes; corrigir a chave de Deadlands
-            // em ArcaneConfig sem esse guard vazaria a lista de Deadlands pro Tropo da
-            // Arte da Guerra (ou o inverso), então só consulta ArcaneConfig fora do
-            // caminho por Tropo. `originRaw` desambigua outras colisões (ex.: ALQUIMIA
-            // entre Fantasia/Horror, ELEMENTALISTA entre Fantasia/Arte da Guerra).
+            // `originRaw` desambigua outras colisões de nome entre AAs de livros diferentes
+            // (ex.: ALQUIMIA entre Fantasia/Horror, ELEMENTALISTA entre Fantasia/Arte da
+            // Guerra — esse caso ainda reaproveita a mesma chave; ver nota em ArcaneConfig).
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
                 ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey, originRaw)
             val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)

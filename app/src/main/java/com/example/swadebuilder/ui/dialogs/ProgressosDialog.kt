@@ -899,11 +899,15 @@ fun ProgressosDialog(
                             val cost = if (current >= attrVal) 2 else 1
                             val wasIncreased = state.skillsForCurrentAdvancement.contains(per.nome)
                             // "Você não pode aumentar a mesma perícia duas vezes com o mesmo
-                            // Progresso" — sem o `!wasIncreased`, uma perícia com atributo
-                            // associado alto o suficiente (ex.: d4 abaixo de um atributo d10+)
-                            // podia ser comprada duas vezes no mesmo Progresso gastando 1 SP
-                            // cada vez, subindo dois passos de dado numa única Progressão.
-                            val canBuy = spRemaining >= cost && current < 12 && !wasIncreased
+                            // Progresso" (docs/swade_pathfinder_basico, l.6770-6772) é uma
+                            // frase exclusiva do Pathfinder — o Básico (l.4581-4584) descreve
+                            // a mesma opção ("aumentar duas perícias que são menores...") SEM
+                            // essa proibição, ou seja, no Básico dá pra gastar os 2 SP do
+                            // Progresso na mesma perícia. Só bloqueia repetir a perícia quando
+                            // o Pathfinder está ativo, pra não criar uma regra geral a partir
+                            // de uma restrição que é só dele.
+                            val bloqueiaRepetirPericia = state.compendioPathfinderAtivo && wasIncreased
+                            val canBuy = spRemaining >= cost && current < 12 && !bloqueiaRepetirPericia
                             val nextRaw = if (current == 0 && per.basica) 4 else if (current == 0) 4 else if (current < 12) current + 2 else current + 1
 
                             Column(

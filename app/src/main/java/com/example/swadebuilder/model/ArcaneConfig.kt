@@ -561,14 +561,13 @@ object ArcaneConfig {
     // - "ELEMENTALISTA": Fantasia (Antecedente Arcano real) x sistema de
     //   Elementalista por Tropo da Arte da Guerra (sem Vantagem
     //   correspondente — chega aqui com origem nula, cai no default/ADG).
-    // - "MESTRE DO CHI": só Deadlands tem Antecedente Arcano com esse nome;
-    //   o Mestre do Chi por Tropo da Arte da Guerra (sem Vantagem, origem
-    //   nula) não deve herdar a lista de Deadlands — por isso exige
-    //   origem == "DEADLANDS" explicitamente em vez de cair no default.
+    // O Antecedente Arcano (Mestre do Chi) de Deadlands já NÃO precisa de guard de origem
+    // aqui: o sistema de Técnicas de Chi por Tropo da Arte da Guerra usa a chave própria
+    // "TECNICAS CHI" (nunca chega a este método — ver `usaTecnicasTropo` em
+    // PoderesSection.kt), então "MESTRE DO CHI" só pode significar Deadlands.
     fun getPermittedPowers(arcaneKey: String, origem: String? = null): Set<String>? {
         if (arcaneKey == "ALQUIMIA" && origem == "HORROR") return HORROR_ALQUIMISTA
         if (arcaneKey == "ELEMENTALISTA" && origem == "FANTASIA") return FANTASIA_ELEMENTALISTA
-        if (arcaneKey == "MESTRE DO CHI" && origem != "DEADLANDS") return null
 
         return when (arcaneKey) {
             "ABENCOADO" -> DEADLANDS_ABENCOADO

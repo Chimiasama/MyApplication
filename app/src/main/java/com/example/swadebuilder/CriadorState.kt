@@ -1410,6 +1410,11 @@ class CriadorState {
 
     val fixedPowersByArcano = mapOf(
         "ABENCOADO" to listOf("simbolo_sagrado"),
+        // Antecedente Arcano (Mestre do Chi) do Deadlands (docs/swade_deadlands, l.5105-5122):
+        // "Poderes Iniciais: 3 (deflexão, mais outros dois à escolha)". Essa chave é exclusiva
+        // do Deadlands — o sistema de Técnicas de Chi por Tropo da Arte da Guerra usa a chave
+        // própria "TECNICAS CHI" (ver CriadorState.getSlotsCountForArcano/syncTecnicasChiSlots
+        // e PoderesSection.kt), nunca esta.
         "MESTRE DO CHI" to listOf("deflexao"),
         "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
         "CLERIGO" to listOf("cura", "santuario"),
@@ -4139,8 +4144,11 @@ class CriadorState {
                 ancestralidade.keyify().contains("DEMONIOS") &&
                 arcKeyNorm == "DEMONIO"
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
+        // "TECNICAS CHI" é a chave própria do sistema de Técnicas de Chi por Tropo da Arte da
+        // Guerra — nunca "MESTRE DO CHI" (essa é exclusiva do Antecedente Arcano de Deadlands,
+        // que tem poderes/regras diferentes; ver o comentário em fixedPowersByArcano).
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
-            arcKeyNorm == "MESTRE DO CHI" &&
+            arcKeyNorm == "TECNICAS CHI" &&
             !hasArcanoVantagem &&
             (tropoSelecionado?.tecnicasIniciais ?: 0) > 0
         // Todos os 45 Antecedentes Arcanos oficiais têm entrada em geral_arcano_info.json,
@@ -4191,7 +4199,7 @@ class CriadorState {
         // Poderes.
         val bonusGrimorio = if (temGrimorio) 1 else 0
 
-        val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
+        val bonusTecnicas = if (arcKeyNorm == "TECNICAS CHI") tecnicasIniciaisFromTropo else 0
         val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
         return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
     }
@@ -5502,7 +5510,7 @@ class CriadorState {
         val activeArcaneKeys = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }.toMutableSet()
         if (ancestralidade.keyify() == "TRANSMORFOS") activeArcaneKeys.add("DOM")
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") activeArcaneKeys.add("ELEMENTALISTA")
-        if (compendioArteDaGuerraAtivo && (tropoSelecionado?.tecnicasIniciais ?: 0) > 0) activeArcaneKeys.add("MESTRE DO CHI")
+        if (compendioArteDaGuerraAtivo && (tropoSelecionado?.tecnicasIniciais ?: 0) > 0) activeArcaneKeys.add("TECNICAS CHI")
 
         val keysToRemove = poderSlotsPorArcano.keys.filter { it !in activeArcaneKeys }
         keysToRemove.forEach {
@@ -6158,7 +6166,7 @@ class CriadorState {
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
         protagonistaRollTecnicas = value?.coerceIn(1, 4)
-        syncMestreDoChiSlots()
+        syncTecnicasChiSlots()
     }
 
     fun updateProtagonistaRollPericia(value: Int?) {
@@ -6283,10 +6291,10 @@ class CriadorState {
         }
     }
 
-    private fun syncMestreDoChiSlots() {
+    private fun syncTecnicasChiSlots() {
         rebuildAllPericiaStacks()
-        poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
-            val required = getSlotsCountForArcano("MESTRE DO CHI")
+        poderSlotsPorArcano["TECNICAS CHI"]?.let { slots ->
+            val required = getSlotsCountForArcano("TECNICAS CHI")
             while (slots.size < required) slots.add(null)
             while (slots.size > required && slots.lastOrNull() == null) {
                 slots.removeAt(slots.lastIndex)
@@ -6518,7 +6526,7 @@ class CriadorState {
             youxiaHistoricoSelecionado = null
         }
 
-        syncMestreDoChiSlots()
+        syncTecnicasChiSlots()
         recalcularPontosAtributo()
         rebuildAllPericiaStacks(feedbackMessages)
         syncJutsuSlots()

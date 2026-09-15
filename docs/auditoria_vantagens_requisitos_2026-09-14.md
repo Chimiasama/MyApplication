@@ -1511,3 +1511,77 @@ citados, e nos casos do item 2b/2c, simulação manual do fluxo
 reservar→aplicar em ambos os intervalos (2 e 4) pra confirmar que o
 limiar cumulativo produz o número certo de Progressos por aumento em
 cada um.
+
+## Rodada 7 — correções de escopo (não repetir perícia) e chave interna própria pro Chi da Arte da Guerra (2026-09-15)
+
+Dois ajustes pedidos depois de eu reportar a Rodada 6.
+
+### 1) "Não repetir a mesma perícia" também virou regra geral por engano — corrigido
+
+Ao corrigir o bug de "dava pra gastar os 2 SP do Progresso na mesma
+perícia" (Rodada 6, item 2a), apliquei o bloqueio (`!wasIncreased`)
+incondicionalmente. Foi apontado que essa frase ("Você não pode
+aumentar a mesma perícia duas vezes com o mesmo Progresso") só existe
+no texto do Pathfinder (`docs/swade_pathfinder_basico`, l.6770-6772) —
+reconferi o Básico (l.4581-4584) e de fato ele descreve a mesma opção
+("aumentar duas perícias que são menores...") sem essa frase. **Mesmo
+erro de generalizar uma regra do Pathfinder pro Básico que já tinha
+corrigido no item 2b/2c da Rodada 6 — só que dessa vez na direção
+oposta (eu que introduzi o bug ao corrigir outro).** Corrigido: o
+bloqueio de repetir perícia agora só vale com
+`compendioPathfinderAtivo`; no Básico (e nos demais livros) o
+comportamento anterior — os 2 SP podem ir pra mesma perícia — foi
+restaurado.
+
+### 2) Chave interna "MESTRE DO CHI" reaproveitada pela Arte da Guerra — trocada por chave própria
+
+Meu diagnóstico da Rodada 6 mostrou que Deadlands (Antecedente Arcano
+Mestre do Chi) e o sistema de Técnicas de Chi por Tropo da Arte da
+Guerra nunca colidem na prática hoje — mas os dois reaproveitavam a
+MESMA string `"MESTRE DO CHI"` como chave interna, com guards
+espalhados em 3 arquivos (`ArcaneConfig.kt`, `PoderesSection.kt`,
+`CriadorState.kt`) garantindo que não vazassem um pro outro. Foi pedido
+pra eliminar esse reaproveitamento de vez, em vez de confiar nos
+guards — risco real de regressão futura se alguém mexer em um dos
+lugares sem lembrar do outro.
+
+**Feito**: o sistema de Técnicas por Tropo da Arte da Guerra agora usa
+a chave própria `"TECNICAS CHI"`, nunca mais `"MESTRE DO CHI"`
+(exclusiva do Antecedente Arcano de Deadlands a partir de agora):
+
+- `CriadorState.kt`: `getSlotsCountForArcano()` (variável
+  `usaTecnicasTropo`/`bonusTecnicas`), a função renomeada
+  `syncMestreDoChiSlots()` → `syncTecnicasChiSlots()` (e seus 2 pontos
+  de chamada), e o `activeArcaneKeys.add(...)` dentro de
+  `aplicarAncestralidade()`.
+- `PoderesSection.kt`: `arcanosAtivos` (lista de AAs ativos) e
+  `usaTecnicasTropo`/`usaListaChi` no cálculo de poderes permitidos.
+- `ArcaneConfig.kt`: removido o guard
+  `if (arcaneKey == "MESTRE DO CHI" && origem != "DEADLANDS") return null`
+  — ficou redundante, já que "TECNICAS CHI" nunca é passado pra essa
+  função (o chamador já desvia pelo `usaTecnicasTropo` antes) e
+  "MESTRE DO CHI" agora só pode significar Deadlands.
+
+Não precisei mexer em `geral_arcano_info.json` nem em
+`vantagens.json` — o registro `{"key": "MESTRE DO CHI", "slots": 3,
+"pp": 15}` e a Vantagem com `subtipoArcano: "MESTRE DO CHI"` são
+legitimamente do Antecedente Arcano de Deadlands e continuam corretos
+como estão. Também não achei nenhum texto de UI mostrado ao jogador
+que dependesse do valor literal dessa chave (a seção de Poderes não
+exibe o nome do Antecedente Arcano como título nesse trecho, só
+"PP: X • Foco"), então a troca não muda nada visível pro jogador —
+só a variável interna.
+
+**Achado relacionado, meramente informativo, não mexido**: o mesmo
+padrão de reaproveitamento de chave existe pra "ELEMENTALISTA" (Fantasia
+tem um Antecedente Arcano real com esse nome; a Arte da Guerra também
+tem um sistema de Elementalista por Tropo reaproveitando a mesma chave,
+com o mesmo tipo de guard de origem em `ArcaneConfig.kt`). Não mexi
+porque não foi pedido, mas como é exatamente o mesmo risco que você
+apontou pro Chi, fica registrado aqui caso queira que eu troque essa
+também por uma chave própria (ex.: "ELEMENTALISTA ADG").
+
+**Build/teste automatizado continuam impossíveis neste ambiente** —
+validação manual: `grep` exaustivo por toda ocorrência de "MESTRE DO
+CHI" no código antes e depois da mudança pra confirmar que só sobraram
+as do Deadlands, e releitura de cada bloco alterado.
