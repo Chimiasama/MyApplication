@@ -770,9 +770,25 @@ class CriadorState {
         // entrar no ramo Herança/Adaptável de applyAncestryVariantAdjustments,
         // pensado pra variante Meio-Elfo de outros livros
         // (CriadorStateRacialTraitDrivenAttributesTest).
+        // Meio-Elfos com o traço "Herança" (Básico/Fantasia/Horror/Super) também
+        // precisa passar — é onde "Herança" é trocada por "Ágil" (Agilidade d6)
+        // ou "Adaptável" conforme meioElfoAgil. Sem isso, quando só um livro com
+        // Meio-Elfo está ativo (candidato único), a escolha nunca surtia efeito:
+        // marcar "Agilidade d6" ficava sem aplicar (bug real relatado pelo
+        // usuário — Agilidade continuava em d4 mesmo com a opção marcada).
+        // A checagem é pelo traço "HERANCA" em si (não só pelo nome/!Pathfinder):
+        // o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO" no nome, mas tem
+        // "Flexibilidade" em vez de "Herança" — sem esse traço presente, cai fora
+        // e mantém o curto-circuito original (senão a troca Herança/Adaptável
+        // seria injetada nele também, mesmo sem ele ter Herança pra começar).
+        fun ehMeioElfoComHeranca(candidato: RacialModifier): Boolean =
+            (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) &&
+                !key.contains("PATHFINDER") &&
+                candidato.habilidades.any { it.id?.keyify() == "HERANCA" }
+
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental) {
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental && !ehMeioElfoComHeranca(candidates.first())) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -804,7 +820,7 @@ class CriadorState {
 
         val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("MEIO-DEMONIO")) {
             applyAncestryVariantAdjustments(selected, key)
-        } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
+        } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (canonicalOriginKey(selected.origem) == "FANTASIA" && (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")) {
             applyAncestryVariantAdjustments(selected, key)
