@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -85,6 +83,7 @@ import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.MarqueeText
@@ -993,7 +992,7 @@ fun ProgressosDialog(
                                                 current == 0 -> "—"
                                                 else -> current.toDiceString()
                                             }
-                                            Text(
+                                            AutoSizeText(
                                                 text = textoAtual,
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold
@@ -1021,7 +1020,7 @@ fun ProgressosDialog(
                                             modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            Text(
+                                            AutoSizeText(
                                                 text = nextRaw.toDiceString(),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold,
@@ -2126,22 +2125,6 @@ private fun DialogVantagemItem(
                     style = MaterialTheme.typography.labelMedium,
                     color = statusColor
                 )
-            }
-
-            Spacer(Modifier.size(6.dp))
-
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                if (vant.descricao.isNotBlank() && vant.vinculadoPericia &&
-                    vant.id !in setOf("arma_predileta", "arma_predileta_aprimorada")
-                ) {
-                    AssistChip(
-                        onClick = {},
-                        label = { Text("Opções especiais") }
-                    )
-                }
             }
 
             if (reqList.isNotEmpty()) {

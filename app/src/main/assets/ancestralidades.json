@@ -3970,7 +3970,7 @@
             "nome": "Mordida",
             "dano": "For+d4",
             "pa": 0,
-            "escalavel": true
+            "escalavel": false
           }
         ]
       },

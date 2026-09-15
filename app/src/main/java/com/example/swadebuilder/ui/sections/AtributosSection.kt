@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.atributoBaseParaPericia
 import com.example.swadebuilder.calcularPericiaRules
@@ -183,7 +184,7 @@ fun AttributeCarouselPopoverDialog(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
                             ) {
-                                Text(
+                                AutoSizeText(
                                     text = targetRaw.toDiceString(),
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Bold,
@@ -483,7 +484,7 @@ fun AtributosContent(
                         }
                     }
 
-                    Text(
+                    AutoSizeText(
                         text = efetivoRaw.toDiceString(),
                         modifier = Modifier
                             .width(valorColWidthDp)
@@ -492,8 +493,6 @@ fun AtributosContent(
                             },
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.primary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Clip,
                         textAlign = TextAlign.Center
                     )
 
@@ -743,7 +742,7 @@ fun AtributosContent(
                                             )
                                         }
                                     } else {
-                                        Text(
+                                        AutoSizeText(
                                             text = when {
                                                 reg.displayRaw > 0 -> reg.displayRaw.toDiceString()
                                                 isBasica -> "d4"

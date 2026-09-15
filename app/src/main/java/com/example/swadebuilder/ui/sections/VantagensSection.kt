@@ -380,7 +380,7 @@ fun VantagensContent(
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
         val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:attemptPurchase:${vantToBuy.id}") &&
-                (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                state.adaptavelAceitaEstagio(vantToBuy) &&
                 !state.isVantagemAutomatica(vantToBuy)
 
         val needsPoints = !state.modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
@@ -1678,7 +1678,17 @@ fun VantagensContent(
 
             val currentLocale = LocalConfiguration.current.locales[0]
             val knowledgeOptions = state.periciasComIdiomas()
-                .filter { per -> per.nome.contains("CONHECIMENTO", ignoreCase = true) }
+                .filter { per ->
+                    // Livro: "Escolha Conhecimento Acadêmico, Batalha, Ocultismo, Ciência ou
+                    // outra 'Conhecimento' baseada em Astúcia" — Ocultismo/Ciência não têm
+                    // "Conhecimento" no nome, mas contam; Conhecimento Geral tem "Conhecimento"
+                    // no nome, mas é o catch-all genérico e não é uma opção válida de Erudito.
+                    val ehConhecimentoValido = per.nome.contains("CONHECIMENTO", ignoreCase = true) &&
+                        per.nome.keyify() != "CONHECIMENTO GERAL"
+                    val ehOutraPermitida = per.nome.equals("Ocultismo", ignoreCase = true) ||
+                        per.nome.equals("Ciência", ignoreCase = true)
+                    ehConhecimentoValido || ehOutraPermitida
+                }
                 .map { per ->
                     val base = per.nome.substringBefore("(").trim()
                     base.lowercase(currentLocale).replaceFirstChar {
@@ -1903,7 +1913,7 @@ private fun VantagemItem(
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
                     val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:itemClick:${vant.id}") &&
-                            (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                            state.adaptavelAceitaEstagio(vant) &&
                             !state.isVantagemAutomatica(vant)
 
                     val hasBP = pcLivres >= 2
@@ -1982,14 +1992,6 @@ private fun VantagemItem(
                     AssistChip(
                         onClick = {},
                         label = { Text("Vantagem bônus de Protagonista$slotSuffix") }
-                    )
-                }
-                if (vant.descricao.isNotBlank() && vant.vinculadoPericia &&
-                    vant.id !in setOf("arma_predileta", "arma_predileta_aprimorada")
-                ) {
-                    AssistChip(
-                        onClick = {},
-                        label = { Text("Opções especiais") }
                     )
                 }
             }
