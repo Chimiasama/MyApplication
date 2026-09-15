@@ -152,7 +152,7 @@ fun TelaInicial(
     // Explicação de como livros/compêndios/cenários se combinam — aberta por
     // padrão na primeira vez que a tela aparece, pois é a primeira coisa que o
     // jogador vê antes mesmo de escolher um livro; pode ser recolhida depois.
-    var showBookHelpExpanded by rememberSaveable { mutableStateOf(true) }
+    var showBookHelpExpanded by rememberSaveable { mutableStateOf(false) }
 
     // Reset all rule flags to clean slate. Só reseta o que CreationPreset
     // realmente controla (tem um default*Xxx correspondente) — Múltiplos Ant.
@@ -536,10 +536,16 @@ fun TelaInicial(
                         }
                         if (showBookHelpExpanded) {
                             Spacer(Modifier.height(6.dp))
+                            val pathfinderName = androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)
+                            val deadlandsName = "Deadlands".toEditionDisplayName()
+                            val crystalHeartName = "Crystal Heart".toEditionDisplayName()
+                            val arteDaGuerraName = "Arte da Guerra: Nova Era".toEditionDisplayName()
+                            val cidadeSolVaporName = "A Cidade do Sol a Vapor".toEditionDisplayName()
+                            val wiseguysName = "Wiseguys".toEditionDisplayName()
                             Text(
                                 text = "O Livro Básico traz as regras principais do sistema.\n" +
                                     "Um Compêndio (Fantasia, Ficção, Horror, Superpoderes) ADICIONA conteúdo às regras do Básico — por exemplo, escolhendo Ficção você usa Básico + Ficção.\n" +
-                                    "Já um Cenário de Campanha (Arte da Guerra, Pathfinder, Deadlands, Crystal Heart, A Cidade do Sol a Vapor, Wiseguys) considera SOMENTE as regras daquele mundo — raças, itens, mecânicas próprias — e pode excluir partes do Básico. Por exemplo, em Arte da Guerra: Nova Era você não terá todo o conteúdo do Básico, mas ganha mecânicas exclusivas do cenário, como Tropos e raças específicas.",
+                                    "Já um Cenário de Campanha ($arteDaGuerraName, $pathfinderName, $deadlandsName, $crystalHeartName, $cidadeSolVaporName, $wiseguysName) considera SOMENTE as regras daquele mundo — raças, itens, mecânicas próprias — e pode excluir partes do Básico. Por exemplo, em $arteDaGuerraName você não terá todo o conteúdo do Básico, mas ganha mecânicas exclusivas do cenário, como Tropos e raças específicas.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
