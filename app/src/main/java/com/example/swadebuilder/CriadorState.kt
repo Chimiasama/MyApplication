@@ -522,6 +522,10 @@ class CriadorState {
     // instrução o jogador já fechou, pra não repetir. O interruptor de Configurações liga
     // um replay geral simplesmente esvaziando este conjunto (ver SettingsDialog.kt).
     val abasComInstrucaoVista: SnapshotStateSet<String> = mutableStateSetOf()
+    // Interruptor mestre: quando true, nenhuma instrução de aba aparece, mesmo em abas que
+    // ainda não existiam pro personagem quando o jogador desligou (ex.: XP, Poderes) — ver
+    // comentário em AppPreferences.loadTutoriaisDesabilitados.
+    var tutoriaisDesabilitados by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)

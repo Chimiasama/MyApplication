@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,9 +28,9 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Linha compacta (~60dp) para escolha de compêndio/cenário na tela inicial: ícone
- * pequeno + título + chevron, sem descrição. Substitui o antigo grid de cards por
- * uma lista de 1 coluna estilo tela de configurações; mesma lógica de seleção
- * (borda/tint quando ativo), só que aplicada à linha em vez do card inteiro.
+ * pequeno + título, sem descrição. Substitui o antigo grid de cards por uma lista
+ * de 1 coluna estilo tela de configurações; mesma lógica de seleção (borda/tint
+ * quando ativo), só que aplicada à linha em vez do card inteiro.
  */
 @Composable
 fun CompendiumListRow(
@@ -57,7 +55,6 @@ fun CompendiumListRow(
         else -> scheme.onSurfaceVariant
     }
     val titleColor = if (enabled) scheme.onSurface else scheme.onSurface.copy(alpha = 0.4f)
-    val chevronTint = scheme.onSurfaceVariant.copy(alpha = if (enabled) 1f else 0.4f)
 
     Row(
         modifier = modifier
@@ -93,12 +90,6 @@ fun CompendiumListRow(
             color = titleColor,
             maxLines = 1,
             modifier = Modifier.weight(1f)
-        )
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = chevronTint,
-            modifier = Modifier.size(20.dp)
         )
     }
 }

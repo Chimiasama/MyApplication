@@ -245,6 +245,7 @@ class MainActivity : ComponentActivity() {
                 state.habilitarCriacaoNasAbas = prefs.habilitarCriacaoNasAbas
                 state.abasComInstrucaoVista.clear()
                 state.abasComInstrucaoVista.addAll(AppPreferences.loadTutorialSeen(context))
+                state.tutoriaisDesabilitados = AppPreferences.loadTutoriaisDesabilitados(context)
             }
             val persistPrefs: () -> Unit = remember {
                 {
