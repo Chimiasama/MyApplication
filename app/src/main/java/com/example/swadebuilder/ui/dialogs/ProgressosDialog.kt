@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -2127,22 +2125,6 @@ private fun DialogVantagemItem(
                     style = MaterialTheme.typography.labelMedium,
                     color = statusColor
                 )
-            }
-
-            Spacer(Modifier.size(6.dp))
-
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                if (vant.descricao.isNotBlank() && vant.vinculadoPericia &&
-                    vant.id !in setOf("arma_predileta", "arma_predileta_aprimorada")
-                ) {
-                    AssistChip(
-                        onClick = {},
-                        label = { Text("Opções especiais") }
-                    )
-                }
             }
 
             if (reqList.isNotEmpty()) {
