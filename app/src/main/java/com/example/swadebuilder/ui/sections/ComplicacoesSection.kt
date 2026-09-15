@@ -682,7 +682,10 @@ private fun performRemoval(
     onLogFeedback: (String) -> Unit,
     allComps: List<Complicacao>
 ) {
-    state.removerComplicacao(comp) // Use the new method to handle side effects (e.g. Cego)
+    // removerComplicacao pode abortar sem remover nada (ex.: Cego sem Vantagem pra devolver) —
+    // só roda os efeitos colaterais abaixo e loga "removida" se ela de fato tiver removido.
+    val removida = state.removerComplicacao(comp) { motivo -> onLogFeedback(motivo) }
+    if (!removida) return
 
     when (comp.id) {
         "idoso" -> {

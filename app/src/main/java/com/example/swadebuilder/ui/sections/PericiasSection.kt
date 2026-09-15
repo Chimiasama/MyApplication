@@ -132,6 +132,11 @@ fun SkillCarouselPopoverDialog(
     currentRaw: Int,
     capRaw: Int = 12,
     availableSp: Int? = null,
+    // Motivo pelo qual não dá pra subir esta perícia agora, além do custo em pontos (ex.:
+    // Idoso exigindo 5 pts em Astúcia antes) — quando não nulo, nenhum passo acima do atual
+    // fica clicável, e o motivo aparece no topo do diálogo em vez de simplesmente não reagir
+    // ao toque sem explicação (bug real relatado pelo usuário).
+    bloqueioMensagem: String? = null,
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -171,6 +176,13 @@ fun SkillCarouselPopoverDialog(
                     "Selecione o dado desejado (custos normais até ${attrRaw.toDiceString()}, dobrados acima):",
                     style = MaterialTheme.typography.bodySmall
                 )
+                if (bloqueioMensagem != null) {
+                    Text(
+                        bloqueioMensagem,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -181,7 +193,9 @@ fun SkillCarouselPopoverDialog(
                     steps.forEach { targetRaw ->
                         val cost = calcularCustoAcumuladoPericia(startRaw, attrRaw, targetRaw)
                         val additionalCost = if (targetRaw > currentRaw) calcularCustoAcumuladoPericia(currentRaw, attrRaw, targetRaw) else 0
-                        val canAfford = availableSp == null || targetRaw <= currentRaw || (additionalCost <= availableSp && (capRaw >= 100 || targetRaw <= capRaw))
+                        val bloqueadoPorRestricao = bloqueioMensagem != null && targetRaw > currentRaw
+                        val canAfford = !bloqueadoPorRestricao &&
+                            (availableSp == null || targetRaw <= currentRaw || (additionalCost <= availableSp && (capRaw >= 100 || targetRaw <= capRaw)))
 
                         val isSelected = targetRaw == currentRaw
                         val isAboveAttr = targetRaw > attrRaw
@@ -1055,6 +1069,20 @@ fun PericiasContent(
         val currentRaw = state.rawTotal(per)
         val capRaw = state.periciaCapRaw(per)
 
+        // Mesmo gate de calcularPericiaRules().canIncrease (Idoso exige 5 pts em Astúcia antes
+        // de liberar as demais perícias) — sem isso o carrossel deixava o cartão clicável e
+        // simplesmente não fazia nada ao tocar, sem explicar por quê (bug real relatado pelo
+        // usuário: "só não permitia gastar", sem nenhum aviso).
+        val astuciaGastoPopover = state.spCostStackPorPericia
+            .filterKeys { it.atributo == RuleConstants.ATRIBUTO_ASTUCIA }
+            .values
+            .sumOf { it.sum() }
+        val bloqueioIdoso = if (!state.modoLivre && idosoActive && astuciaGastoPopover < 5 && per.atributo != RuleConstants.ATRIBUTO_ASTUCIA) {
+            "Idoso: gaste ${5 - astuciaGastoPopover} pt(s) em Astúcia antes de subir esta perícia."
+        } else {
+            null
+        }
+
         SkillCarouselPopoverDialog(
             skillName = per.nome,
             startRaw = startRaw,
@@ -1063,6 +1091,7 @@ fun PericiasContent(
             currentRaw = currentRaw,
             capRaw = capRaw,
             availableSp = if (state.modoLivre) null else (state.pontosPericia + pcLivres),
+            bloqueioMensagem = bloqueioIdoso,
             onSelectRaw = { targetRaw ->
                 if (targetRaw > currentRaw) {
                     val stepsToAdd = dieStepsCount(currentRaw, targetRaw)

@@ -2992,7 +2992,14 @@ class CriadorState {
         complicacoesSelecionadas[comp] = nivel
     }
 
-    fun removerComplicacao(comp: Complicacao, onFeedback: (String) -> Unit = {}) {
+    /**
+     * Remove a Complicação, devolvendo `true` se de fato removida. Alguns casos (Cego sem
+     * Vantagem "extra" pra devolver/trocar) podem abortar sem remover nada — quem chama
+     * PRECISA checar o retorno antes de tratar a remoção como concluída (rodar efeitos
+     * colaterais, logar "removida" etc.), senão o personagem fica com a Complicação ainda
+     * selecionada mas a UI relatando sucesso (bug real relatado pelo usuário).
+     */
+    fun removerComplicacao(comp: Complicacao, onFeedback: (String) -> Unit = {}): Boolean {
         val key = comp.id.keyify()
 
         if (key == "POBREZA") {
@@ -3007,12 +3014,13 @@ class CriadorState {
                // Try to remove a purchased advantage to balance
                val removed = removerUltimaVantagemCompradaComPv()
                if (!removed) {
-                   onFeedback("Não é possível remover Cego pois o Ponto de Vantagem extra já foi gasto.")
-                   return
+                   onFeedback("Não é possível remover Cego pois o Ponto de Vantagem extra já foi gasto e não há Vantagem para devolver.")
+                   return false
                }
             }
         }
         complicacoesSelecionadas.remove(comp)
+        return true
     }
 
     fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
