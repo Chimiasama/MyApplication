@@ -304,6 +304,14 @@ fun TelaInicial(
             {
                 optCompendioPathfinder = !optCompendioPathfinder
                 applyRulesPreset(if (optCompendioPathfinder) "pathfinder" else "basico")
+                // Pathfinder já trata múltiplos Antecedentes Arcanos como prática normal do
+                // cenário (a checkbox nem aparece mais pra ele, ver mais abaixo) — zera aqui
+                // pra não herdar um "true" deixado por outro livro que ainda usa a checkbox
+                // (ex.: Ficção Científica), o que esconderia o Antecedente Arcano genérico
+                // (ver ContentVisibility.evaluateVantagemVisibility).
+                if (optCompendioPathfinder) {
+                    optMultiAntecedenteArcano = false
+                }
             }
         ),
         ModuleItemData(
@@ -650,7 +658,12 @@ fun TelaInicial(
                         )
 
                         if (!optCompendioWiseguys) {
-                            if (!optCompendioFantasia && !optCompendioHorror) {
+                            // Pathfinder já trata múltiplos Antecedentes Arcanos como prática
+                            // normal do cenário (várias listas de poder, um único pool de PP
+                            // combinado — ver CriadorState.permiteMultiplosAntecedentesArcanos
+                            // e o sharedTotalPP em PoderesSection.kt), então a opção nunca
+                            // precisou ficar condicionada a esta checkbox aqui.
+                            if (!optCompendioFantasia && !optCompendioHorror && !optCompendioPathfinder) {
                                 if (!isCrystalHeart) {
                                     SimpleCheckRow(
                                         "Múltiplos Ant. Arcanos",
