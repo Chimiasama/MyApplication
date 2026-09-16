@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AssistChip
@@ -240,6 +241,40 @@ fun PoderesSection(
         state.modoSupers
     ) {
         "BASICO" in state.getActiveOrigins()
+    }
+
+    // Livros relevantes pro personagem: união dos livros de cada Antecedente Arcano
+    // mostrado (mesma lógica de origem de powersByArcKey, abaixo) + Básico quando
+    // aplicável. Usado só pras contagens dos chips "Todos"/"Novato"/... — que antes
+    // somavam allPoderes (todo poder de todo livro que o app conhece, ativo ou não no
+    // personagem) — bug real relatado pelo usuário: com só o livro Básico ativo, o chip
+    // mostrava "Todos (225)" em vez de 54. A lista de poderes de fato selecionáveis
+    // (poderesParaEsteArcano, abaixo) já era corretamente restrita ao livro certo; só a
+    // contagem do chip estava errada.
+    val relevantPowerOrigins = remember(
+        displayKeys,
+        state.vantagensSelecionadas,
+        state.compendioArteDaGuerraAtivo,
+        state.tropoSelecionado,
+        includeBasicPowers
+    ) {
+        buildSet {
+            displayKeys.forEach { arcKeyRaw ->
+                val arcKey = arcKeyRaw.normAAKey()
+                val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+                val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS CHI"
+                val usaTecnicasElementais = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS ELEMENTAIS"
+                val originRaw = when {
+                    usaListaChi || usaTecnicasElementais -> "ARTE DA GUERRA"
+                    else -> advantage?.origem ?: "BASICO"
+                }
+                add(powerAssetOriginKey(originRaw))
+            }
+            if (includeBasicPowers) add("BASICO")
+        }
+    }
+    val allPoderesRelevantes = remember(powerCache, relevantPowerOrigins) {
+        relevantPowerOrigins.flatMap { powerCache[it] ?: emptyList() }.distinctBy { it.id }
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
@@ -524,7 +559,7 @@ fun PoderesSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
-                    val count = allPoderes.size
+                    val count = allPoderesRelevantes.size
                     FilterChip(
                         selected = selectedRank == "Todos",
                         onClick = { selectedRank = "Todos" },
@@ -532,8 +567,8 @@ fun PoderesSection(
                     )
                 }
                 items(listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendario")) { rank ->
-                    val count = remember(allPoderes, rank) {
-                        allPoderes.count { it.estagio.semAcentos().equals(rank.semAcentos(), ignoreCase = true) }
+                    val count = remember(allPoderesRelevantes, rank) {
+                        allPoderesRelevantes.count { it.estagio.semAcentos().equals(rank.semAcentos(), ignoreCase = true) }
                     }
                     FilterChip(
                         selected = selectedRank == rank,
@@ -795,6 +830,19 @@ fun PoderesSection(
                                                     style = MaterialTheme.typography.bodySmall
                                                 )
                                             },
+                                            // Sinaliza visualmente que o corpo do chip é tocável pra
+                                            // editar a Manifestação (sem isso, nada no chip indicava
+                                            // que dava pra tocar — usuário relatou não ter achado onde
+                                            // colocar a Manifestação).
+                                            leadingIcon = if (poderId != null) {
+                                                {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Edit,
+                                                        contentDescription = "Editar Manifestação",
+                                                        modifier = Modifier.size(14.dp)
+                                                    )
+                                                }
+                                            } else null,
                                             trailingIcon = if (poderId != null && !isSlotLocked) {
                                                 {
                                                     Icon(
