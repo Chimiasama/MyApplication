@@ -2784,8 +2784,19 @@ class CriadorState {
         val isPowerPoint = v.nome.contains("Pontos de Poder", true) || v.nomeExibicao.contains("Pontos de Poder", true)
 
         if (isPowerPoint) {
+            // Mesma checagem "sem Pontos de Vantagem" do ramo padrão logo abaixo — faltava
+            // aqui, então dava pra comprar Pontos de Poder mesmo com pontosVantagem em 0.
+            if (!modoLivre && pontosVantagem <= 0) return false
             if (!podeSelecionar(v)) return false
             comprarPontoDePoder(v)
+            // BUG real relatado pelo usuário ("ponto fantasma"): faltava este decremento — a
+            // compra nunca custava um Ponto de Vantagem, mas venderVantagem() sempre
+            // reembolsava um ao remover (simétrico ao caminho padrão), então cada compra de
+            // Pontos de Poder vazava um PV de graça, sobrando pontos pra comprar outras
+            // Vantagens além da conta. O fluxo de Progressão (selectAdvantageForAdvancement em
+            // CriadorViewModel.kt) já decrementa corretamente pros dois casos — só a compra em
+            // pontos de bônus na criação (este método) estava sem o decremento.
+            pontosVantagem--
             onFeedback("Vantagem ${v.nome} (Pontos de Poder) adicionada.")
             return true
         }
