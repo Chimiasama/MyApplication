@@ -3973,16 +3973,34 @@ class CriadorState {
             .toSet()
         val autoIds = vantagensAutomaticasDoTropo.toSet()
 
+        // Bug real relatado pelo usuário: esta função (chamada ao devolver uma Complicação
+        // pelo botão "Devolver" de Vantagens em ComplicacoesSection — "você já gastou, devolva
+        // o que comprou") pegava cegamente a última Vantagem não-automática, sem checar se
+        // outra Vantagem dependia dela (ex.: remover o Antecedente Arcano com Novos Poderes/
+        // Pontos de Poder ainda selecionados, deixando as duas órfãs — mesma classe de bug já
+        // corrigida em podeRemoverVantagem(), mas esta função nunca a consultava). Agora pula
+        // candidatas protegidas e tenta a próxima mais recente.
         val candidate = vantagensSelecionadas
             .asReversed()
             .firstOrNull { vant ->
                 val key = normalizeAutoKey(vant.nome.substringBefore("(").trim())
-                key !in autoKeys && vant.id !in autoIds
+                key !in autoKeys && vant.id !in autoIds && podeRemoverVantagem(vant).first
             }
             ?: return false
 
         removeVantagemDinheiro(candidate)
-        removerVantagem(candidate)
+        // Pontos de Poder tem bookkeeping próprio (comprasPpPorEstagio/bonusPoderExtra, ver
+        // selecionarPontosDePoder/removerPontosDePoder) que removerVantagem() genérico nunca
+        // desfaz — chamar a função errada aqui deixava esse bônus e o teto de "uma vez por
+        // Estágio" travados pra sempre, mesmo com a Vantagem já removida da lista (bug real:
+        // depois disso, comprar Pontos de Poder de novo sempre falhava com "Requisitos
+        // pendentes", incluindo depois de recriar o Antecedente Arcano do zero).
+        val isPowerPoint = candidate.nome.contains("Pontos de Poder", true) || candidate.nomeExibicao.contains("Pontos de Poder", true)
+        if (isPowerPoint) {
+            removerPontosDePoder(candidate)
+        } else {
+            removerVantagem(candidate)
+        }
         if (candidate.id == "o_melhor_que_ha") {
             poderFavoritoId = null
         }
