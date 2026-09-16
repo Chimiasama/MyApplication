@@ -287,7 +287,11 @@ fun AtributosContent(
             // acima é a única pista, e ela encolhe/some conforme o jogador gasta, o
             // que mascara o quanto ele já gastou (jogador relatou não perceber que
             // tinha zerado os PC comprando atributos/perícias assim).
-            val paViaPc = state.cpPaStack.size
+            // Cada Atributo via PC custa 2 Pontos de Complicação (ver gastarPcParaAtributo);
+            // cpPaStack.size é a CONTAGEM de compras, não o total de PC gasto — exibir o
+            // size puro mostrava metade do valor real (ex.: 1 Atributo = 2 PC, não 1).
+            // Perícia custa 1 PC cada, então a contagem já bate com o total gasto.
+            val paViaPc = state.cpPaStack.size * 2
             val spViaPc = state.cpSpStack.size
             if (!locked && (paViaPc > 0 || spViaPc > 0)) {
                 Text(

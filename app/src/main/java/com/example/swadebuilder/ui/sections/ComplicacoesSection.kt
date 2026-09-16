@@ -183,8 +183,17 @@ fun ComplicacoesSection(
                         // abas só vê esse número cair por aqui, sem ligar os pontos e sem
                         // perceber que já usou tudo (relato de usuário: jogadores gastando
                         // os PC "sem querer" comprando extras e só notando aqui depois).
+                        // Discrimina por categoria em vez de um texto genérico — usuário
+                        // pediu pra saber exatamente onde cada ponto foi (Atributo e
+                        // Vantagem custam 2 PC cada; Perícia e Dinheiro extra custam 1).
+                        val detalhesPc = listOfNotNull(
+                            "${state.cpPaStack.size * 2} em Atributos".takeIf { state.cpPaStack.isNotEmpty() },
+                            "${state.cpSpStack.size} em Perícias".takeIf { state.cpSpStack.isNotEmpty() },
+                            "${state.cpPvStack.size * 2} em Vantagens".takeIf { state.cpPvStack.isNotEmpty() },
+                            "${state.cpRecursosStack.size} em Dinheiro extra".takeIf { state.cpRecursosStack.isNotEmpty() }
+                        ).joinToString(", ")
                         Text(
-                            text = "$usadosPc já usado(s) comprando Atributos, Perícias, Vantagens ou Dinheiro extra nas outras abas.",
+                            text = "$usadosPc já usado(s): $detalhesPc.",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.padding(horizontal = 8.dp)

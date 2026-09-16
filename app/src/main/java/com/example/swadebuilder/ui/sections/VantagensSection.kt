@@ -423,8 +423,12 @@ fun VantagensContent(
                 )
                 val pvViaPc = state.cpPvStack.size
                 if (!locked && pvViaPc > 0) {
+                    // Cada Vantagem via PC custa 2 Pontos de Complicação (ver
+                    // gastarPcParaVantagem) — cpPvStack.size é a CONTAGEM de Vantagens
+                    // compradas assim, não o total de PC gasto; exibir o size puro mostrava
+                    // metade do valor real (ex.: 1 Vantagem = 2 PC, não 1).
                     Text(
-                        text = "Já usando $pvViaPc Ponto(s) de Complicação aqui.",
+                        text = "Já usando ${pvViaPc * 2} Ponto(s) de Complicação aqui.",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.padding(horizontal = 8.dp)
