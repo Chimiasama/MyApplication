@@ -60,7 +60,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Categoria
@@ -176,28 +175,39 @@ fun ProgressosDialog(
     // todos os Estágios.
     val raisesNoEstagioAtual = state.comprasAttrPorEstagio[est.nome] ?: 0
     val remainingBaseAttrs = (1 - raisesNoEstagioAtual).coerceAtLeast(0)
-    val canUseReservation = isLendarioStage && state.legendaryAttrReservations > 0
-    val needsReservation = isLendarioStage && remainingBaseAttrs <= 0 && !canUseReservation
     val hasReservedProgress = state.xpSlots.getOrNull(slotIndex) == true
 
-    val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
-            (remainingBaseAttrs > 0 || canUseReservation || state.modoMonstroAtivo)
     // Básico (docs/swade_basico, l.4585-4590): "Personagens no Estágio Lendário podem
-    // aumentar um atributo a cada dois Progressos" — é uma exceção ADICIONAL à 1ª
-    // oportunidade normal (grátis) que o Lendário já tem como qualquer outro Estágio:
-    // depois dela, pode repetir indefinidamente pagando mais Progressos. A 1ª compra extra
-    // no Lendário fica disponível de imediato (o ciclo reservar+aplicar, 1+1 Progresso, já
-    // cobre o intervalo de 2 sozinho); a partir da 2ª compra extra, é exigido gastar aquele
-    // intervalo desde a compra anterior. Savage Pathfinder (docs/swade_pathfinder_basico,
-    // l.6757-6763) SUBSTITUI essa regra pela própria, mais restritiva: intervalo de QUATRO
-    // Progressos em vez de dois.
+    // aumentar um atributo a cada dois Progressos" — depois do 1º aumento (grátis, igual
+    // a qualquer Estágio), o livro permite repetir pagando mais Progressos, DESDE QUE
+    // espaçados: não é um custo de N Progressos por aumento, é um intervalo mínimo entre
+    // aumentos — os Progressos do meio podem (e devem poder) ir livremente em
+    // Vantagens/Perícias/etc., não precisam ser "reservados" à parte. Savage Pathfinder
+    // (docs/swade_pathfinder_basico, l.6757-6763) SUBSTITUI essa regra pela própria, mais
+    // restritiva: intervalo de QUATRO Progressos em vez de dois. Calculado direto do
+    // histórico de Progressos já gastos neste Estágio (posição do último aumento de
+    // atributo vs. total gasto agora), sem precisar de uma ação de "reserva" à parte —
+    // uma reserva paga por Progresso inteiro só pra "guardar o direito" de comprar depois
+    // era, na prática, cobrar 2 Progressos por aumento de atributo em vez de 1 (bug real
+    // relatado pelo usuário).
     val legendaryProgressInterval = if (state.compendioPathfinderAtivo) 4 else 2
-    val legendaryPaidRaisesDone = (raisesNoEstagioAtual - 1).coerceAtLeast(0)
-    val legendaryProgressRequired = legendaryProgressInterval * legendaryPaidRaisesDone
-    val canReserveLegendary = isLendarioStage &&
-            raisesNoEstagioAtual >= 1 && creditsLeft > 0 &&
-            hasReservedProgress && state.legendaryAttrReservations == 0 &&
-            spentHere >= legendaryProgressRequired
+    val lastLegendaryAttrRaiseAt = if (isLendarioStage) {
+        var cumulative = 0
+        var lastAt = 0
+        state.advancementHistory.forEach { action ->
+            if (action.stageName == est.nome) {
+                cumulative += action.progressCost
+                if (action is AdvancementAction.IncreaseAttribute) lastAt = cumulative
+            }
+        }
+        lastAt
+    } else 0
+    val canRaiseLegendaryExtra = isLendarioStage && raisesNoEstagioAtual >= 1 &&
+            (spentHere + 1 - lastLegendaryAttrRaiseAt) >= legendaryProgressInterval
+
+    val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
+            (remainingBaseAttrs > 0 || canRaiseLegendaryExtra || state.modoMonstroAtivo)
+    val needsMoreProgressForLegendaryAttr = isLendarioStage && remainingBaseAttrs <= 0 && !canRaiseLegendaryExtra
 
     // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
@@ -314,37 +324,19 @@ fun ProgressosDialog(
                 }
 
                 // ── Atributo via XP ────────────────────────────────────────────────
-                val attrLabel = when {
-                    isLendarioStage && remainingBaseAttrs <= 0 && canUseReservation ->
-                        "Aumentar atributo (usar reserva lendária)"
-
-                    else -> "Aumentar atributo"
-                }
                 ChoiceButtonRow(
-                    label = attrLabel,
+                    label = "Aumentar atributo",
                     selected = (escolheu == "Atributo"),
                     enabled = canBuyAttr
                 ) {
                     when {
                         canBuyAttr -> escolheu = "Atributo"
-                        needsReservation -> showSnack("Reserve um atributo lendário primeiro.")
+                        needsMoreProgressForLegendaryAttr -> showSnack(
+                            "No Estágio Lendário, atributo só pode ser aumentado a cada " +
+                                "$legendaryProgressInterval Progressos. Gaste mais Progressos em outra coisa primeiro."
+                        )
                         else -> showSnack("Sem créditos suficientes para atributo.")
                     }
-                }
-
-                if (canReserveLegendary) {
-                    RadioButtonRow(
-                        "Reservar atributo lendário (custa 1 XP)",
-                        escolheu == "ReservaLendario"
-                    ) {
-                        escolheu = "ReservaLendario"
-                    }
-                    Text(
-                        "Reservas ativas: ${state.legendaryAttrReservations}",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                    Spacer(Modifier.height(8.dp))
                 }
 
                 // ── Histórico de Revisões / Linha do Tempo ────────────────────────
@@ -647,17 +639,11 @@ fun ProgressosDialog(
                         "Atributo" -> {
                             if (canBuyAttr) {
                                 showAttrSelection = true
-                            } else if (needsReservation) {
-                                showSnack("Reserve um atributo lendário primeiro.")
-                                return@TextButton
-                            }
-                        }
-                        "ReservaLendario" -> {
-                            if (canReserveLegendary) {
-                                viewModel.reserveLegendaryAttribute(slotIndex, est.nome)
-                                onDismiss()
-                            } else {
-                                showSnack("Você precisa liberar reservas lendárias primeiro.")
+                            } else if (needsMoreProgressForLegendaryAttr) {
+                                showSnack(
+                                    "No Estágio Lendário, atributo só pode ser aumentado a cada " +
+                                        "$legendaryProgressInterval Progressos. Gaste mais Progressos em outra coisa primeiro."
+                                )
                                 return@TextButton
                             }
                         }
@@ -796,7 +782,6 @@ fun ProgressosDialog(
                 },
                 enabled = when (escolheu) {
                     "Atributo" -> canBuyAttr
-                    "ReservaLendario" -> canReserveLegendary
                     else -> true
                 }
             ) { Text("Confirmar") }
@@ -818,7 +803,7 @@ fun ProgressosDialog(
                         // Logic for Monster Mode: Physical attributes are not limited by rank
                         val isFree = state.isAttributeFreeForMonster(attrKey)
                         val limitReached = remainingBaseAttrs <= 0
-                        val allowedByRule = !limitReached || isFree || canUseReservation
+                        val allowedByRule = !limitReached || isFree || canRaiseLegendaryExtra
 
                         val canIncrease = (currentVal < maxVal) && allowedByRule
 
@@ -827,9 +812,7 @@ fun ProgressosDialog(
                                 .fillMaxWidth()
                                 .alpha(if (canIncrease) 1f else 0.5f)
                                 .clickable(enabled = canIncrease) {
-                                    // Only consume reservation if we are restricted (limit reached & not free)
-                                    val shouldConsumeReservation = limitReached && !isFree
-                                    viewModel.startAttributeAdvancement(slotIndex, est.nome, shouldConsumeReservation)
+                                    viewModel.startAttributeAdvancement(slotIndex, est.nome, consumesLegendaryReservation = false)
                                     viewModel.increaseAttributeForAdvancement(attrKey)
                                     viewModel.finishAttributeAdvancement()
                                     onDismiss()

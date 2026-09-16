@@ -1337,23 +1337,6 @@ class CriadorViewModel(
         }
     }
 
-    fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
-        if (state.xpSlots.getOrNull(slotIndex) == true && state.legendaryAttrReservations == 0) {
-            val stageForSpend = state.stageNameForCurrentAdvancement ?: stageName
-            if (state.xpSlots.getOrNull(slotIndex) != true) {
-                state.progresso++
-                state.xpSlots[slotIndex] = true
-            }
-            state.spendProgressAtStage(stageForSpend, 1)
-            state.legendaryAttrReservations += 1
-            state.advancementHistory.add(
-                AdvancementAction.ReserveLegendaryAttribute(stageName = stageForSpend)
-            )
-            state.recomputeAvailableProgress()
-            state.stageNameForCurrentAdvancement = null
-        }
-    }
-
     fun reserveProgressSlot(slotIndex: Int): Boolean {
         val slotFree = state.xpSlots.getOrNull(slotIndex) == false
         if (!slotFree || state.emProgresso) return false
