@@ -352,15 +352,15 @@ class CriadorState {
     }
 
     fun refundAndRemoveCustomPoder(id: String) {
-        poderSlotsPorArcano.forEach { (_, slots) ->
+        poderSlotsPorArcano.forEach { (arcKey, slots) ->
             for (i in slots.indices) {
                 if (slots[i]?.equals(id, ignoreCase = true) == true) {
                     slots[i] = null
+                    manifestacoesPoderes.remove("$arcKey#$i")
                 }
             }
         }
         syncPoderesSelecionadosFromSlots()
-        manifestacoesPoderes.remove(id)
     }
 
     fun addCustomPericia(pericia: PericiaJson) {
@@ -1740,6 +1740,15 @@ class CriadorState {
 
     var famaManual by mutableIntStateOf(0)
     val poderesSelecionados = mutableStateListOf<String>()
+    // Anotação livre de Manifestação por poder (ex.: "Raio" -> "Gelo"), definida pelo próprio
+    // jogador — as Manifestações do livro (Poder.manifestacoes) são só exemplos de inspiração,
+    // não uma lista fechada pra validar contra. Chave "arcKey#índiceDoSlot" (o índice RAW em
+    // poderSlotsPorArcano[arcKey], estável mesmo quando outro slot é limpo) em vez de só o id
+    // do poder, pra suportar Novos Poderes permitindo repetir um poder já conhecido com uma
+    // Manifestação diferente (duas entradas "Raio" com notas distintas colidiriam numa chave só
+    // por id). MeuPersonagem.manifestacoesPoderes (ver toMeuPersonagem() em
+    // ResumoPdfReferenciador.kt) reindexa essas chaves pra posição na lista já filtrada
+    // (slots.filterNotNull()), que é o formato que MeuPersonagem.poderes usa pro PDF/resumo.
     val manifestacoesPoderes = mutableStateMapOf<String, String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
     private val _maxedTraits = mutableStateListOf<String>()
@@ -4202,14 +4211,31 @@ class CriadorState {
         // fallback razoável em vez de deixar a vantagem customizada sem nenhum poder pra
         // escolher.
         val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 3)
-        var bonusSlots = 0
+        val bonusSlots = getNovosPoderesBonusSlotsForArcano(arcKeyNorm)
 
-        // Grimório (Fantasia, requer Antecedente Arcano Mago): "Sempre que adquire a Vantagem
-        // Novos Poderes, recebe três novos poderes em vez de dois" — só se aplica aos poderes
-        // ligados ao próprio Mago, não a outro Antecedente Arcano que a personagem também tenha.
+        // Grimório (Fantasia, requer Antecedente Arcano Mago): "Também ganha imediatamente um
+        // poder de seu Estágio ou inferior ao adquirir a Vantagem Grimório" — bônus fixo de +1,
+        // independente de qualquer compra de Novos Poderes.
+        val temGrimorio = arcKeyNorm == "MAGO" && vantagensSelecionadas.any { it.id == "grimorio" }
+        val bonusGrimorio = if (temGrimorio) 1 else 0
+
+        val bonusTecnicas = if (arcKeyNorm == "TECNICAS CHI") tecnicasIniciaisFromTropo else 0
+        val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
+        return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
+    }
+
+    /**
+     * Quantos dos slots de poder de [arcKey] vieram só da Vantagem Novos Poderes (não dos
+     * slots iniciais do Antecedente Arcano) — usado pra saber a partir de qual índice um
+     * jogador pode repetir um poder que já tem (ver "Uma personagem pode adicionar uma nova
+     * Manifestação a um poder que já possui em vez de ganhar um novo", livro básico). Extraído
+     * de getSlotsCountForArcano pra não duplicar essa lógica em dois lugares.
+     */
+    fun getNovosPoderesBonusSlotsForArcano(arcKey: String): Int {
+        val arcKeyNorm = arcKey.normAAKey()
         val temGrimorio = arcKeyNorm == "MAGO" && vantagensSelecionadas.any { it.id == "grimorio" }
         val poderesPorNovosPoderes = if (temGrimorio) 3 else 2
-
+        var bonusSlots = 0
         vantagensSelecionadas
             .filter { it.id == "novos_poderes" }
             .forEach { vant ->
@@ -4237,15 +4263,7 @@ class CriadorState {
                     }
                 }
             }
-
-        // "Também ganha imediatamente um poder de seu Estágio ou inferior ao adquirir a
-        // Vantagem Grimório" — bônus fixo de +1, independente de qualquer compra de Novos
-        // Poderes.
-        val bonusGrimorio = if (temGrimorio) 1 else 0
-
-        val bonusTecnicas = if (arcKeyNorm == "TECNICAS CHI") tecnicasIniciaisFromTropo else 0
-        val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
-        return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
+        return bonusSlots
     }
 
     fun getEffectiveSlotsCountForArcano(arcKey: String): Int {

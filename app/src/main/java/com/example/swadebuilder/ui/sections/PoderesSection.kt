@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AssistChip
@@ -749,6 +750,8 @@ fun PoderesSection(
                             state.arcanoSnapshotAntesDaCompra?.size ?: 0
                         else 0
 
+                        var editingSlotIdx by remember(arcKey) { mutableStateOf<Int?>(null) }
+
                         Card(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                             modifier = Modifier
@@ -760,7 +763,13 @@ fun PoderesSection(
                                 Spacer(Modifier.height(4.dp))
                                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     slots.forEachIndexed { idx, poderId ->
-                                        val label = if (poderId == null) "— vazio —" else aspectOnlyPowerDisplayName(idToName[poderId] ?: poderId.toFancyTitleCase(), arcKey)
+                                        // Chave por índice RAW do slot (não pelo id do poder) — Novos
+                                        // Poderes permite repetir um poder já conhecido num slot extra
+                                        // (ver botão "Duplicar" na lista abaixo), então duas cópias do
+                                        // mesmo poder precisam de notas de Manifestação independentes.
+                                        val nota = if (poderId != null) state.manifestacoesPoderes["$arcKey#$idx"]?.trim()?.takeIf { it.isNotBlank() } else null
+                                        val baseLabel = if (poderId == null) "— vazio —" else aspectOnlyPowerDisplayName(idToName[poderId] ?: poderId.toFancyTitleCase(), arcKey)
+                                        val label = if (nota != null) "$baseLabel ($nota)" else baseLabel
                                         val isFixed = state.isFixedPower(arcKey, poderId)
                                         val isSlotLocked = locked || idx < lockedCount || isFixed
                                         AssistChip(
@@ -768,16 +777,11 @@ fun PoderesSection(
                                                 containerColor = if (poderId == null) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
                                             ),
                                             onClick = {
-                                                if (!isSlotLocked && poderId != null) {
-                                                    val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
-                                                    if (!pode) {
-                                                        onShowMessage(msg ?: "Não é possível remover este poder.")
-                                                    } else {
-                                                        slots[idx] = null
-                                                        state.syncPoderesSelecionadosFromSlots()
-                                                        state.manifestacoesPoderes.remove(poderId)
-                                                    }
-                                                }
+                                                // Toque no corpo do chip abre a edição da anotação de
+                                                // Manifestação — não remove mais o poder (ver ícone "x"
+                                                // abaixo), pra reduzir remoção acidental de um slot já
+                                                // pago.
+                                                if (poderId != null) editingSlotIdx = idx
                                             },
                                             label = {
                                                 Text(
@@ -785,9 +789,72 @@ fun PoderesSection(
                                                     style = MaterialTheme.typography.bodySmall
                                                 )
                                             },
-                                            enabled = !isSlotLocked && poderId != null
+                                            trailingIcon = if (poderId != null && !isSlotLocked) {
+                                                {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Close,
+                                                        contentDescription = "Remover poder do slot",
+                                                        modifier = Modifier
+                                                            .size(16.dp)
+                                                            .clickable {
+                                                                val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
+                                                                if (!pode) {
+                                                                    onShowMessage(msg ?: "Não é possível remover este poder.")
+                                                                } else {
+                                                                    slots[idx] = null
+                                                                    state.syncPoderesSelecionadosFromSlots()
+                                                                    state.manifestacoesPoderes.remove("$arcKey#$idx")
+                                                                }
+                                                            }
+                                                    )
+                                                }
+                                            } else null,
+                                            enabled = poderId != null
                                         )
                                     }
+                                }
+
+                                val idxSendoEditado = editingSlotIdx
+                                val poderSendoEditado = idxSendoEditado?.let { slots.getOrNull(it) }
+                                if (idxSendoEditado != null && poderSendoEditado != null) {
+                                    val chaveNota = "$arcKey#$idxSendoEditado"
+                                    var textoManifestacao by remember(arcKey, idxSendoEditado) {
+                                        mutableStateOf(state.manifestacoesPoderes[chaveNota] ?: "")
+                                    }
+                                    AlertDialog(
+                                        onDismissRequest = { editingSlotIdx = null },
+                                        title = { Text("Manifestação") },
+                                        text = {
+                                            Column {
+                                                Text(
+                                                    "Anotação livre pra descrever a Manifestação deste poder (ex.: \"Gelo\" pro poder Raio, criando um Raio de Gelo). As Manifestações listadas no livro são só exemplos de inspiração, não uma lista fechada.",
+                                                    style = MaterialTheme.typography.bodySmall
+                                                )
+                                                Spacer(Modifier.height(8.dp))
+                                                OutlinedTextField(
+                                                    value = textoManifestacao,
+                                                    onValueChange = { textoManifestacao = it },
+                                                    label = { Text("Manifestação") },
+                                                    singleLine = true,
+                                                    modifier = Modifier.fillMaxWidth()
+                                                )
+                                            }
+                                        },
+                                        confirmButton = {
+                                            TextButton(onClick = {
+                                                val trimmed = textoManifestacao.trim()
+                                                if (trimmed.isBlank()) {
+                                                    state.manifestacoesPoderes.remove(chaveNota)
+                                                } else {
+                                                    state.manifestacoesPoderes[chaveNota] = trimmed
+                                                }
+                                                editingSlotIdx = null
+                                            }) { Text("Salvar") }
+                                        },
+                                        dismissButton = {
+                                            TextButton(onClick = { editingSlotIdx = null }) { Text("Cancelar") }
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -855,7 +922,7 @@ fun PoderesSection(
                                             } else {
                                                 slots[idx] = null
                                                 state.syncPoderesSelecionadosFromSlots()
-                                                state.manifestacoesPoderes.remove(poder.id)
+                                                state.manifestacoesPoderes.remove("$arcKey#$idx")
                                             }
                                         }
                                     } else {
@@ -924,6 +991,30 @@ fun PoderesSection(
                                     if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
                                     style = MaterialTheme.typography.bodySmall
                                 )
+                            }
+
+                            // "Uma personagem pode adicionar uma nova Manifestação a um poder
+                            // que já possui em vez de ganhar um novo poder" (livro básico, Vantagem
+                            // Novos Poderes) — só some pra repetir num slot que veio de Novos
+                            // Poderes (não nos slots iniciais do Antecedente Arcano); a Manifestação
+                            // em si é uma anotação livre editável no chip do slot, não uma escolha
+                            // daqui (ver dialog de edição na seção "Slots" acima).
+                            if (!usaPoderesPorEstagioCard && selecionado) {
+                                val boundary = state.getSlotsCountForArcano(arcKey) - state.getNovosPoderesBonusSlotsForArcano(arcKey)
+                                val duplicateIdx = slots.withIndex().firstOrNull { (i, v) -> v == null && i >= boundary && i >= lockedCount }?.index
+                                if (duplicateIdx != null) {
+                                    Text(
+                                        "+ Repetir num slot extra de Novos Poderes",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier
+                                            .padding(top = 2.dp)
+                                            .clickable {
+                                                slots[duplicateIdx] = poder.id
+                                                state.syncPoderesSelecionadosFromSlots()
+                                            }
+                                    )
+                                }
                             }
 
                             if (state.usarSemPontosDePoder) {

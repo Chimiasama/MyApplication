@@ -79,7 +79,23 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         transtornos = this.transtornos.map { it.id },
         equipamentos = this.equipamentosComprados.toList() + this.extrairArmasNaturais(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-        manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
+        // CriadorState.manifestacoesPoderes usa o índice RAW do slot como chave (estável
+        // enquanto o personagem é editado); aqui reindexamos pra posição na lista já filtrada
+        // (sem nulls), que é o mesmo formato de `poderes` acima — o que o PDF/resumo (que só
+        // enxergam a lista filtrada) precisam pra casar cada nota com o poder certo.
+        manifestacoesPoderes = buildMap {
+            this@toMeuPersonagem.poderSlotsPorArcano.forEach { (arcKey, slots) ->
+                var filteredIdx = 0
+                slots.forEachIndexed { rawIdx, poderId ->
+                    if (poderId != null) {
+                        this@toMeuPersonagem.manifestacoesPoderes["$arcKey#$rawIdx"]?.let { nota ->
+                            put("$arcKey#$filteredIdx", nota)
+                        }
+                        filteredIdx++
+                    }
+                }
+            }
+        },
         bonusPoderExtra = this.bonusPoderExtra,
         dinheiro = this.dinheiro,
         requisicao = this.requisicao,
@@ -657,7 +673,10 @@ data class PowerCardSpec(
     val pp: String,
     val distancia: String,
     val duracao: String,
-    val manifestacoes: List<String> = emptyList()
+    // Manifestação escolhida pelo próprio jogador (ex.: "Gelo" pro poder Raio) — nunca a lista
+    // de exemplos do catálogo (Poder.manifestacoes), que é só inspiração e não deve aparecer
+    // na ficha como se fosse o que o personagem tem.
+    val manifestacao: String? = null
 )
 
 internal fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
@@ -687,7 +706,7 @@ internal fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float
 
 /** Até dois cards de poder lado a lado, pra parecer uma grade sem sair do fluxo de coluna única. */
 class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
-    private val cardHeight = if (cards.any { it.manifestacoes.isNotEmpty() }) 78f else 62f
+    private val cardHeight = if (cards.any { !it.manifestacao.isNullOrBlank() }) 78f else 62f
     override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
         val gap = 10f
@@ -698,9 +717,9 @@ class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
                 "Estágio: ${spec.estagio}   •   PP: ${spec.pp}",
                 "Alcance: ${spec.distancia}   •   Duração: ${spec.duracao}"
             )
-            val extraLines = if (spec.manifestacoes.isNotEmpty()) {
-                listOf("Manifestações: " + spec.manifestacoes.joinToString(", "))
-            } else emptyList()
+            val extraLines = spec.manifestacao?.takeIf { it.isNotBlank() }?.let {
+                listOf("Manifestação: $it")
+            } ?: emptyList()
             drawStatCard(canvas, cx, y, cardW, cardHeight - 8f, spec.nome, statLines, extraLines, theme)
         }
     }
@@ -1198,8 +1217,7 @@ private fun buildPoderesBlocks(
                         estagio = "Novato",
                         pp = ppText,
                         distancia = "-",
-                        duracao = "-",
-                        manifestacoes = listOf("Iluminar", "Som", "Telecinese", "Amigo das Feras")
+                        duracao = "Iluminar, Som, Telecinese ou Amigo das Feras"
                     )
                 )
             )
@@ -1228,7 +1246,7 @@ private fun buildPoderesBlocks(
         }
         val arcLabel = "$arcNameLabel$ppSuffix"
         blocks.add(SmallHeaderBlock(arcLabel))
-        val specs = ids.map { id ->
+        val specs = ids.mapIndexed { idx, id ->
             val poder = listaPoderes.firstOrNull { it.id == id }
             var nome = poder?.nome ?: id
             if (!EditionConfig.isFullEdition) nome = GenericNameMapper.map(nome)
@@ -1244,7 +1262,7 @@ private fun buildPoderesBlocks(
                 pp = poder?.pontosDePoder ?: "-",
                 distancia = poder?.distancia ?: "-",
                 duracao = poder?.duracao ?: "-",
-                manifestacoes = poder?.manifestacoes ?: emptyList()
+                manifestacao = personagem.manifestacoesPoderes["$arc#$idx"]
             )
         }
         specs.chunked(2).forEach { pair -> blocks.add(PowerCardRowBlock(pair)) }

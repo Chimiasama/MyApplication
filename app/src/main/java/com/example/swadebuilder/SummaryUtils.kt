@@ -857,7 +857,7 @@ fun buildSummaryLines(
                 lines += if (lista.isEmpty()) {
                     "• $label: – nenhum poder escolhido"
                 } else {
-                    val poderesComManifestacao = lista.map { poderId ->
+                    val poderesComManifestacao = lista.mapIndexed { poderIdx, poderId ->
                         val poderDef = listaPoderes.firstOrNull { it.id == poderId }
                         val baseNome = poderDef?.nome ?: poderId
                         var displayNome = if (!EditionConfig.isFullEdition) GenericNameMapper.map(baseNome) else baseNome
@@ -870,7 +870,10 @@ fun buildSummaryLines(
                                 .replace("Morosidade/Velocidade", "Velocidade")
                         }
 
-                        val manifestacao = personagem.manifestacoesPoderes[poderId]
+                        // Manifestação escrita pelo próprio jogador (ver CriadorState.
+                        // manifestacoesPoderes) — chave por posição na lista, não pelo id do
+                        // poder, porque Novos Poderes permite repetir um poder já conhecido.
+                        val manifestacao = personagem.manifestacoesPoderes["$arcanoKey#$poderIdx"]
                             ?.trim()
                             ?.takeIf { it.isNotBlank() }
                         if (manifestacao != null) "$displayNome (${manifestacao})" else displayNome
