@@ -2899,6 +2899,10 @@ class CriadorState {
             registrarCompraEstagioGenerico(v.id)
         }
 
+        if (v.id == Constants.ID_PROFISSIONAL || v.id == Constants.ID_ESPECIALISTA) {
+            v.choice?.let { aplicarPassoProfissionalEspecialistaEmAtributo(it, subir = true) }
+        }
+
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
             if (inimigo != null) {
@@ -2911,6 +2915,27 @@ class CriadorState {
                 }
             }
 
+        }
+    }
+
+    /**
+     * Profissional/Especialista (Vantagens Lendárias) só podem ser escolhidas numa
+     * Característica que já está no teto (ver identifyMaxedTraits/maxedTraits) e, ao
+     * comprar, "aumentam a Característica e o seu limite em um passo" — no mesmo momento
+     * da compra, sem gastar Progresso à parte. Perícia já é calculada por fórmula
+     * (rawTotal() soma o mesmo passo reativamente via profissionalEspecialistaPassos()),
+     * então essa função só precisa mexer em ATRIBUTO — valor bruto guardado direto em
+     * valoresAtributos[].intValue, lido em dezenas de lugares sem nenhuma camada de fórmula
+     * por cima. Pra uma perícia (que não é chave de valoresAtributos), esta função é no-op.
+     */
+    private fun aplicarPassoProfissionalEspecialistaEmAtributo(escolha: String, subir: Boolean) {
+        val chave = escolha.keyify()
+        val attrState = valoresAtributos.entries.firstOrNull { it.key.keyify() == chave }?.value ?: return
+        val atual = attrState.intValue
+        attrState.intValue = if (subir) {
+            if (atual < 12) atual + 2 else atual + 1
+        } else {
+            if (atual <= 12) atual - 2 else atual - 1
         }
     }
 
@@ -2959,6 +2984,10 @@ class CriadorState {
 
         if (v.limiteCompra == "uma_vez_por_estagio" && v.id != "pontos_de_poder") {
             desfazerCompraEstagioGenerico(v.id)
+        }
+
+        if (v.id == Constants.ID_PROFISSIONAL || v.id == Constants.ID_ESPECIALISTA) {
+            v.choice?.let { aplicarPassoProfissionalEspecialistaEmAtributo(it, subir = false) }
         }
 
         // Safety check for Mystic Powers cleanup
@@ -5184,19 +5213,13 @@ class CriadorState {
         val baseCap = 12 + extras
 
         val chave = a.keyify()
-        val profCount = vantagensSelecionadas.count {
-            it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
-        }
-        val espCount = vantagensSelecionadas.count {
-            it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
-        }
 
         // Profissional e Especialista sobem o teto em UM passo cada (a própria
         // descrição de Especialista diz "um passo adicional" em cima de
         // Profissional — juntos, +2, não +4). `extras` acima já confirma que
         // este teto usa 1 unidade = 1 passo (d6 inicial = +1 unidade = d12+1),
         // então cada Vantagem soma só +1 aqui, não +2.
-        var finalCap = baseCap + (profCount + espCount)
+        var finalCap = baseCap + profissionalEspecialistaPassos(chave)
 
         // Limite de Força por Tamanho (Diminutos/Pequenos)
         // Se Tamanho <= -2 (Pequeno/Muito Pequeno): Força Máxima = d8.
@@ -5252,18 +5275,29 @@ class CriadorState {
 
         val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
 
-        val chave = per.nome.keyify()
+        // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
+        // comentário lá (a descrição de Especialista é "um passo adicional"
+        // em cima de Profissional, +2 juntos, nunca +4).
+        return baseCap + profissionalEspecialistaPassos(per.nome.keyify())
+    }
+
+    /**
+     * Quantos passos de dado Profissional + Especialista somam numa Característica
+     * específica (chave já normalizada por .keyify()) — 1 passo cada, extraído daqui pra
+     * não duplicar entre atributoMaxRaw()/periciaCapRaw() (teto) e rawTotal() (valor real
+     * da perícia, ver abaixo). Não cobre atributo: valoresAtributos[].intValue é um valor
+     * bruto sem camada de fórmula por cima, então o passo de atributo é aplicado uma vez,
+     * de verdade, no momento da compra/remoção da Vantagem — ver
+     * aplicarPassoProfissionalEspecialistaEmAtributo().
+     */
+    private fun profissionalEspecialistaPassos(chave: String): Int {
         val profCount = vantagensSelecionadas.count {
             it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
             it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
-
-        // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
-        // comentário lá (a descrição de Especialista é "um passo adicional"
-        // em cima de Profissional, +2 juntos, nunca +4).
-        return baseCap + (profCount + espCount)
+        return profCount + espCount
     }
 
     fun rawTotal(per: Pericia): Int {
@@ -5272,9 +5306,9 @@ class CriadorState {
         val complicsIncs = compIncsPorPericia[per] ?: 0
         val totalIncs = normalIncs + complicsIncs
 
-        if (modoProgressaoAtivo) {
+        val base = if (modoProgressaoAtivo) {
             val xpArcaneIds = xpArcaneAdvantageIds()
-            if (xpArcaneIds.isNotEmpty()) {
+            val xpArcaneRaw = if (xpArcaneIds.isNotEmpty()) {
                 val startWithoutXpArcane = periciaStartRawInternal(
                     ancestralidade,
                     per,
@@ -5287,12 +5321,19 @@ class CriadorState {
                     val progressionIncs = (normalIncs - frozenIncs).coerceAtLeast(0)
                     val preXpRaw = rawFromStartAndIncrements(startWithoutXpArcane, frozenIncs + complicsIncs)
                     val effectiveStart = maxOf(preXpRaw, xpArcaneStart)
-                    return rawFromStartAndIncrements(effectiveStart, progressionIncs)
-                }
-            }
+                    rawFromStartAndIncrements(effectiveStart, progressionIncs)
+                } else null
+            } else null
+            xpArcaneRaw ?: rawFromStartAndIncrements(startRaw, totalIncs)
+        } else {
+            rawFromStartAndIncrements(startRaw, totalIncs)
         }
 
-        return rawFromStartAndIncrements(startRaw, totalIncs)
+        // Profissional/Especialista (Vantagens Lendárias): "aumenta a Característica e o seu
+        // limite em um passo" — o teto (periciaCapRaw) já soma isso; soma aqui também pra que
+        // o valor real suba junto, sem exigir gastar Progresso à parte (a Vantagem já custou
+        // um Progresso pra ser comprada).
+        return base + profissionalEspecialistaPassos(per.nome.keyify())
     }
 
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
