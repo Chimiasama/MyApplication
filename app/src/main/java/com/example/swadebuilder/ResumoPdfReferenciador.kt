@@ -184,6 +184,10 @@ suspend fun produzirEExibirFichaPdf(
     // Ver gerarFichaEmPdf.
     especieId: String? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
+    // Pontos de Poder base + foco por Antecedente Arcano (GameDataStore.getArcanoInfoMap()) —
+    // usado só pra exibir a reserva total de PP no cabeçalho de cada Antecedente Arcano
+    // (ver buildPoderesBlocks); default vazio não quebra chamadores antigos.
+    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap(),
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -218,7 +222,8 @@ suspend fun produzirEExibirFichaPdf(
                 listaPoderes,
                 listaSuperPoderes,
                 especieId,
-                secoesIncluidas
+                secoesIncluidas,
+                arcanoInfo = arcanoInfo
             )
 
             val uri: Uri = FileProvider.getUriForFile(
@@ -864,7 +869,8 @@ fun gerarFichaEmPdf(
     // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
     // regra oficial por engano) ou quando o chamador não o resolveu.
     especieId: String? = null,
-    secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet()
+    secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
+    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
 ) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -1044,7 +1050,7 @@ fun gerarFichaEmPdf(
     // Páginas dedicadas, separadas por tópico — só entram se o personagem tiver o
     // conteúdo correspondente e a seção estiver marcada no diálogo de exportação.
     if (FichaPdfSecao.PODERES in secoesIncluidas && (personagem.poderes.isNotEmpty() || isPathfinderGnome)) {
-        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay))
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay, arcanoInfo))
     }
     if (FichaPdfSecao.SUPERPODERES in secoesIncluidas && personagem.modoSupers && personagem.superInvestments.isNotEmpty()) {
         renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.SUPERPODERES.titulo, buildSuperPoderesBlocks(personagem))
@@ -1166,7 +1172,8 @@ private fun buildPoderesBlocks(
     personagem: MeuPersonagem,
     listaPoderes: List<Poder>,
     isPathfinderGnome: Boolean,
-    mapaAtributosDisplay: Map<String, String>
+    mapaAtributosDisplay: Map<String, String>,
+    arcanoInfo: Map<String, Triple<Int, Int, String>>
 ): List<PdfBlock> {
     val blocks = mutableListOf<PdfBlock>()
 
@@ -1199,8 +1206,27 @@ private fun buildPoderesBlocks(
         )
     }
 
+    val hasStandardAB = personagem.poderes.keys.any { it.uppercase().trim() != "MISTICO" }
     personagem.poderes.forEach { (arc, ids) ->
-        val arcLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
+        val cleanKey = arc.uppercase().trim()
+        val arcNameLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
+        // Reserva total de PP (base do Antecedente Arcano + Vantagem Pontos de Poder +
+        // bônus de Gnomo do Pathfinder), espelhando a fórmula já usada no resumo em
+        // texto (SummaryUtils.buildSummaryLines) — o PDF antes só mostrava o custo de
+        // cada poder, nunca o total da reserva (bug relatado pelo usuário: comprar
+        // Pontos de Poder não refletia em lugar nenhum do PDF).
+        val ppSuffix = if (cleanKey == "MISTICO") {
+            val gnomeBonus = if (isPathfinderGnome && !hasStandardAB) 1 else 0
+            " (${10 + gnomeBonus} PP)"
+        } else {
+            val info = arcanoInfo[cleanKey]
+            if (info != null) {
+                val (_, pp, _) = info
+                val gnomeBonus = if (isPathfinderGnome) 1 else 0
+                " (${pp + personagem.bonusPoderExtra + gnomeBonus} PP)"
+            } else ""
+        }
+        val arcLabel = "$arcNameLabel$ppSuffix"
         blocks.add(SmallHeaderBlock(arcLabel))
         val specs = ids.map { id ->
             val poder = listaPoderes.firstOrNull { it.id == id }

@@ -405,7 +405,8 @@ class MainActivity : ComponentActivity() {
                                     request.powers,
                                     request.superPowers,
                                     request.especieId,
-                                    secoesIncluidas
+                                    secoesIncluidas,
+                                    arcanoInfo = request.arcanoInfo
                                 ) { msg ->
                                     scope.launch {
                                         snackHost.showSnackbar(msg)
@@ -957,7 +958,8 @@ class MainActivity : ComponentActivity() {
                                                     powers = criadorViewModel.gameDataStore.getPoderes(),
                                                     superPowers = criadorViewModel.gameDataStore.getSuperPoderes(),
                                                     especieId = state.currentAncestryDef?.especieId,
-                                                    availableSections = secoesPdfDisponiveis(personagem)
+                                                    availableSections = secoesPdfDisponiveis(personagem),
+                                                    arcanoInfo = criadorViewModel.gameDataStore.getArcanoInfoMap()
                                                 )
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
@@ -1024,5 +1026,6 @@ private data class PdfExportRequest(
     val powers: List<Poder>,
     val superPowers: List<SuperPoder>,
     val especieId: String?,
-    val availableSections: Set<FichaPdfSecao>
+    val availableSections: Set<FichaPdfSecao>,
+    val arcanoInfo: Map<String, Triple<Int, Int, String>>
 )

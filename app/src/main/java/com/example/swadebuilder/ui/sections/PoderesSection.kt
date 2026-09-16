@@ -588,7 +588,12 @@ fun PoderesSection(
                 } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
                     sharedTotalPP
                 } else {
-                    ppTotal
+                    // Só o livro Básico ativo: sharedTotalPP não entra nessa conta (ver guard
+                    // logo acima, restrito a Fantasia/Horror/Pathfinder/SciFi), então a
+                    // Vantagem Pontos de Poder (bonusPoderExtra) precisa ser somada aqui — sem
+                    // isso a reserva exibida nunca refletia a compra (bug real relatado pelo
+                    // usuário).
+                    ppTotal + state.bonusPoderExtra
                 }
                 "PP: $ppDisplay  •  $foco"
             }
