@@ -1569,7 +1569,13 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
 
     val trackX = rect.left + 10f
     val trackY = if (p.coracaoCrystalSelecionado != null) rect.top + 95f else rect.top + 80f
-    drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
+    // Duro na Queda (+1) e Muito Duro na Queda (+1 adicional, exige Duro na Queda) elevam o
+    // limite de 3 para até 5 Ferimentos antes de Incapacitado (livro básico, Vantagens
+    // Lendárias) — o track antes sempre desenhava 3 caixas, ignorando as duas Vantagens.
+    val ferimentosMax = 3 +
+        (if (p.vantagens.contains("duro_na_queda")) 1 else 0) +
+        (if (p.vantagens.contains("muito_duro_na_queda")) 1 else 0)
+    drawTrack(canvas, trackX, trackY, "Ferimentos", ferimentosMax, -1, theme)
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 
     // Coluna de valores numa posição fixa (calculada a partir do rótulo mais largo da
