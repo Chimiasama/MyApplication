@@ -538,6 +538,21 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
     fun nomeExibido(item: EquipamentoItem): String =
         (if (showOfficialNames) item.originalName else null)?.takeIf { it.isNotBlank() } ?: item.nomeExibicao
 
+    // Vantagem Brutamontes (livro básico, pág. 42): "+1 na Curta Distância de qualquer
+    // item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para
+    // a Longa Distância" — 3/6/12 vira 4/8/16. Faltava aplicar essa conta no PDF (o Resumo
+    // dentro do app já mostrava o valor ajustado, só como nota separada — aqui a tabela
+    // nem tinha a nota, ficava só o alcance de catálogo sem ajuste nenhum, bug real
+    // relatado pelo usuário).
+    val temBrutamontes = p.vantagens.contains(Constants.ID_BRUTAMONTES)
+    fun alcanceExibido(w: EquipamentoItem, distanciaTxt: String, danoTxt: String): String {
+        if (!temBrutamontes || distanciaTxt == "-") return distanciaTxt
+        val ehArremesso = w.usavelCorpoACorpo
+            ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(w.nome, danoTxt)
+        if (!ehArremesso) return distanciaTxt
+        return com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(distanciaTxt) ?: distanciaTxt
+    }
+
     val todasArmas = p.equipamentos.filter { it.dano != null }
     val armasCorpoACorpo = todasArmas.filter { w ->
         val danoTxt = w.campoTexto(w.dano).takeIf { it != "-" } ?: ""
@@ -567,20 +582,23 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         // "Toque" é o alcance-padrão de ataque natural (não é um alcance de verdade) — só
         // interessa mostrar Alcance aqui quando é um valor numérico real, tipo arma de
         // arremesso ("3/6/12"); o resto fica "-".
-        val alcanceMelee = w.campoTexto(w.distancia).takeUnless { it == "Toque" } ?: "-"
+        val danoTxtMelee = w.campoTexto(w.dano)
+        val alcanceMelee = w.campoTexto(w.distancia).takeUnless { it == "Toque" }
+            ?.let { alcanceExibido(w, it, danoTxtMelee) } ?: "-"
         listOf(
             nomeExibido(w),
-            w.campoTexto(w.dano),
+            danoTxtMelee,
             if (isNatural) "-" else w.campoTexto(w.pa),
             alcanceMelee,
             if (isNatural) "-" else w.campoTexto(w.peso)
         )
     }
     val rangedRows = ataquesSuperRanged + armasADistancia.map { w ->
+        val danoTxtRanged = w.campoTexto(w.dano)
         listOf(
             nomeExibido(w),
-            w.campoTexto(w.distancia),
-            w.campoTexto(w.dano),
+            alcanceExibido(w, w.campoTexto(w.distancia), danoTxtRanged),
+            danoTxtRanged,
             w.campoTexto(w.pa),
             w.campoTexto(w.tiros),
             w.campoTexto(w.cdt),

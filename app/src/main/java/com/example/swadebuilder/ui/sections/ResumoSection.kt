@@ -887,7 +887,22 @@ private fun CombatAndEquipmentCard(
                     val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
                     val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
-                    val range = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    val rangeBase = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+
+                    // Vantagem Brutamontes (livro básico, pág. 42): +1 na Curta Distância de
+                    // qualquer item ARREMESSADO (arcos/fundas não contam — ver
+                    // ehArmaDeArremesso), dobrado pra Média e dobrado de novo pra Longa —
+                    // 3/6/12 vira 4/8/16. É um bônus fixo da Vantagem, não situacional, então
+                    // entra direto no Alcance exibido (igual ao PDF), em vez de só uma nota
+                    // separada que o jogador podia não notar.
+                    val ehArremesso = weapon.usavelCorpoACorpo
+                        ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
+                    val range = if (temBrutamontes && rangeBase.isNotBlank() && ehArremesso) {
+                        com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(rangeBase) ?: rangeBase
+                    } else {
+                        rangeBase
+                    }
+
                     val tirosVal = (weapon.tiros as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val tiros = if (!tirosVal.isNullOrBlank()) "Tiros $tirosVal" else ""
                     val cdtVal = (weapon.cdt as? kotlinx.serialization.json.JsonPrimitive)?.content
@@ -901,16 +916,6 @@ private fun CombatAndEquipmentCard(
                     val notasExtras = mutableListOf<String>()
                     if (passos > 0) notasExtras.add("Ataque -$passos (Força abaixo da Força Mínima)")
 
-                    // Vantagem Brutamontes (livro básico, pág. 42): +1 na Curta Distância de
-                    // qualquer item ARREMESSADO (arcos/fundas não contam — ver
-                    // ehArmaDeArremesso), dobrado pra Média e dobrado de novo pra Longa.
-                    val ehArremesso = weapon.usavelCorpoACorpo
-                        ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
-                    if (temBrutamontes && range.isNotBlank() && ehArremesso) {
-                        com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(range)?.let {
-                            notasExtras.add("Alcance com Brutamontes: $it")
-                        }
-                    }
                     val notesBase = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                     val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
                     CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
