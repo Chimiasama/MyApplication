@@ -54,6 +54,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
@@ -385,9 +386,14 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
-                } else if (!state.poderAtendeEstagio(power.estagio)) {
-                    return@filter false
                 }
+                // Fora do sistema "poderes por estágio": não filtra mais por
+                // state.poderAtendeEstagio() aqui — um poder de Estágio acima do atual
+                // continua na lista, só aparece bloqueado no card (ver isStageLocked
+                // abaixo), igual ao que já acontece com Vantagens ("Requisitos
+                // pendentes"). Escondê-lo da lista inteira (comportamento anterior)
+                // deixava a contagem do filtro "Todos" mentindo e o poder parecia não
+                // existir no catálogo — bug real relatado pelo usuário com Banir.
 
                 // Requisito de "precisa ter outra Vantagem antes" (ex.: Disfarce
                 // Demoníaco diluído do Meio-Demônio exige Disfarce Demoníaco
@@ -898,11 +904,20 @@ fun PoderesSection(
                         var expanded by remember { mutableStateOf(false) }
 
                         val isFixed = state.isFixedPower(arcKey, poder.id)
-                        val isCardLocked = locked || isFixed
+                        // Estágio do poder acima do Estágio atual do personagem — mesma regra
+                        // de podeSelecionar pra Vantagens (mostra bloqueado com o motivo, não
+                        // esconde da lista). Não se aplica ao sistema "poderes por estágio"
+                        // (usaPoderesPorEstagioCard), que já tem seu próprio filtro acima.
+                        val isStageLocked = !usaPoderesPorEstagioCard && !state.poderAtendeEstagio(poder.estagio)
+                        val isCardLocked = locked || isFixed || isStageLocked
 
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = if (selecionado) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                                containerColor = when {
+                                    isStageLocked -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                    selecionado -> MaterialTheme.colorScheme.primaryContainer
+                                    else -> MaterialTheme.colorScheme.surfaceVariant
+                                }
                             ),
                             border = if (selecionado) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
                             modifier = Modifier
@@ -988,8 +1003,13 @@ fun PoderesSection(
                                     }
                                 val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
                                 Text(
-                                    if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
-                                    style = MaterialTheme.typography.bodySmall
+                                    when {
+                                        usaPoderesPorEstagioCard && specialStage != null -> "$specialStage • PP: $ppExibicao"
+                                        isStageLocked -> "Requer Estágio ${poder.estagio} • PP: $ppExibicao"
+                                        else -> "PP: $ppExibicao"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (isStageLocked) MaterialTheme.colorScheme.error else Color.Unspecified
                                 )
                             }
 
