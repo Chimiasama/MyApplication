@@ -1974,6 +1974,30 @@ class CriadorState {
             stepIndex -= 1
         }
 
+        // Traços raciais "Movimentação (2)" (livro básico, Criando Raças: "Confere +2 na
+        // Movimentação e aumenta o dado de corrida em um tipo") e "Movimentação Reduzida"
+        // (ex.: Gnomo Pathfinder: "Reduza sua Movimentação em 1 e seu dado de corrida em um
+        // tipo") só ajustavam o valor plano de Movimentação (ModifierEngine/PassoBonus,
+        // ModifierTarget.PACE) — o dado de corrida nunca era tocado aqui, então raças com
+        // esse traço (Centauros, Avianos, Anões, Gnomos, Povo Rato, Golens, Centaux, Povo
+        // Serpente, Elementais, Ferais, Tanukimimi e outras) ficavam sempre em d6 de
+        // corrida, mesmo com Movimentação alterada (bug real relatado pelo usuário com
+        // Centauro: Movimentação +4 = duas compras de "Movimentação (2)", deveria levar
+        // d6 -> d8 -> d10). vezesPorId toma o MAIOR entre as fontes (habilidade da raça e
+        // traço injetado por Variante/Seleção) pro mesmo id, nunca soma — mesma regra do
+        // ModifierEngine, evita contar duas vezes quando os dois lados descrevem o mesmo
+        // traço.
+        val vezesMovimentacaoPorId = mutableMapOf<String, Int>()
+        fun registrarVezesMovimentacao(id: String?, vezes: Int) {
+            val key = id?.keyify() ?: return
+            if (key != "MOVIMENTACAO" && key != "MOVIMENTACAO_REDUZIDA") return
+            vezesMovimentacaoPorId[key] = maxOf(vezesMovimentacaoPorId[key] ?: 0, vezes.coerceAtLeast(1))
+        }
+        currentAncestryDef?.habilidades?.forEach { hab -> registrarVezesMovimentacao(hab.resolvedTraitId(), hab.vezes) }
+        racialTraitIdsFromVariants.forEach { stack -> registrarVezesMovimentacao(stack.id, stack.vezes) }
+        stepIndex += vezesMovimentacaoPorId["MOVIMENTACAO"] ?: 0
+        stepIndex -= vezesMovimentacaoPorId["MOVIMENTACAO_REDUZIDA"] ?: 0
+
         val stepLabels = mapOf(
             0 to "d4-1",
             1 to "d4",
