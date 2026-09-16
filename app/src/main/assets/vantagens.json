@@ -36837,6 +36837,7 @@
         "Espírito": 8
       }
     },
+    "limite_compra": "infinito",
     "descricao": "O “magnetismo animal” do Senhor das Feras é tão grande que também atrai um animal leal de alguma espécie. Geralmente é um animal de Tamanho 0 ou menor, sujeito à aprovação do Mestre. O animal é um Extra e não tem Progresso em Estágio ou habilidades. Se um animal for dispensado ou morto, pode-se ganhar um substituto em 1d4 dias.",
     "livros": [
       "PATHFINDER"
