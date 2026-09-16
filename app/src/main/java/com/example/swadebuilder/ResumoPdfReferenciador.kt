@@ -600,12 +600,18 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
 
     val meleeRows = ataquesSuperMelee + armasCorpoACorpo.map { w ->
         val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
-        // "Toque" é o alcance-padrão de ataque natural (não é um alcance de verdade) — só
-        // interessa mostrar Alcance aqui quando é um valor numérico real, tipo arma de
-        // arremesso ("3/6/12"); o resto fica "-".
         val danoTxtMelee = w.campoTexto(w.dano)
-        val alcanceMelee = w.campoTexto(w.distancia).takeUnless { it == "Toque" }
-            ?.let { alcanceExibido(w, it, danoTxtMelee) } ?: "-"
+        // Alcance aqui é o reach de arma de haste (Lança, Alabarda...), lido de
+        // `observacoes` — NUNCA o campo `distancia` (curta/média/longa de arremesso/tiro,
+        // que só faz sentido na tabela de Armas à Distância) nem o bônus da Vantagem
+        // Brutamontes (alcanceExibido), que só vale pra itens arremessados de verdade, não
+        // pro reach de uma arma de haste empunhada corpo a corpo. Bug real relatado pelo
+        // usuário: uma arma de arremesso (ex.: Adaga/Faca (Arremesso)) reaproveitava aqui o
+        // "3/6/12" (e até o ajuste do Brutamontes) na linha de Corpo a Corpo, quando essa
+        // arma nem tem reach — o certo é "-".
+        val alcanceMelee = com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceCorpoACorpo(
+            w.campoTexto(w.observacoes).takeIf { it != "-" }
+        ) ?: "-"
         listOf(
             nomeExibido(w),
             danoTxtMelee,
