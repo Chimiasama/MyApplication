@@ -218,12 +218,25 @@ fun PoderesSection(
         arcanosAtivos
     }
 
-    val hasStandardAB = arcanosAtivos.any { it.normAAKey() != "MISTICO" }
-
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioSciFiAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
+    // "MÚLTIPLOS ANTECEDENTES ARCANOS" (Fantasia p.69, Horror p.69, Sci-Fi, Pathfinder —
+    // texto idêntico nos quatro livros): "Se já tiver um Antecedente Arcano ou Poderes
+    // Místicos, usa a MAIOR reserva inicial de Pontos de Poder e aplica quaisquer aumentos
+    // de outras fontes a ela. Todos os seus Antecedentes Arcanos e Poderes Místicos
+    // compartilham essa reserva." — Poderes Místicos entra nesse máximo igual a qualquer
+    // outro Antecedente Arcano (10 PP fixos, ver Fantasia p.177/Horror p.14), não uma
+    // reserva separada — antes MISTICO tinha sua própria conta isolada (ppTotal próprio,
+    // sem entrar no maxOf nem levar bonusPoderExtra), então um personagem com Místico E
+    // outro Antecedente Arcano via dois números diferentes em vez de uma reserva só.
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioSciFiAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap) {
         if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo && !state.compendioSciFiAtivo) 0 else {
-            val maxBase = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
-            val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && hasStandardAB) 1 else 0
+            val maxBaseOutros = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
+            val temMistico = arcanosAtivos.any { it.normAAKey() == "MISTICO" }
+            val maxBase = if (temMistico) maxOf(maxBaseOutros, 10) else maxBaseOutros
+            // Magia Gnômica (Pathfinder): "Gnomos com um Antecedente Arcano ou Poder
+            // Místico adicionam seu Ponto de Poder de bônus à sua reserva" — soma uma vez
+            // só, sem depender de ter ou não um Antecedente Arcano "padrão" (Místico já
+            // conta pra essa condição sozinho).
+            val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO")) 1 else 0
             maxBase + state.bonusPoderExtra + gnomeBonus
         }
     }
@@ -624,10 +637,9 @@ fun PoderesSection(
             } else if (usaPoderesPorEstagio) {
                 "Poderes por estágio  •  PP especiais  •  $foco"
             } else {
-                val ppDisplay = if (arcKey == "MISTICO") {
-                    val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && !hasStandardAB) 1 else 0
-                    ppTotal + gnomeBonus
-                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
+                val ppDisplay = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
+                    // Cobre MISTICO e qualquer outro Antecedente Arcano igual — os dois
+                    // compartilham a mesma reserva (ver comentário em sharedTotalPP, acima).
                     sharedTotalPP
                 } else {
                     // Só o livro Básico ativo: sharedTotalPP não entra nessa conta (ver guard

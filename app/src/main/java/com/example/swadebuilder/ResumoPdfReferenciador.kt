@@ -1230,24 +1230,39 @@ private fun buildPoderesBlocks(
         )
     }
 
-    val hasStandardAB = personagem.poderes.keys.any { it.uppercase().trim() != "MISTICO" }
+    // "MÚLTIPLOS ANTECEDENTES ARCANOS" (Fantasia/Horror/Pathfinder/Sci-Fi, texto idêntico
+    // nos quatro livros): usa a MAIOR reserva inicial de Pontos de Poder entre todos os
+    // Antecedentes Arcanos E Poderes Místicos ativos, compartilhada — Místico (10 PP
+    // fixos) entra nesse máximo igual a qualquer outro, não uma conta separada (bug real:
+    // um personagem com Místico E outro Antecedente Arcano via dois números de PP
+    // diferentes em vez de uma reserva só). O livro Básico tem sua PRÓPRIA regra opcional
+    // de múltiplos Antecedentes Arcanos, com pool separado por Antecedente — por isso o
+    // gate abaixo; Místico só existe dentro dos 4 livros, nunca aparece no fallback.
+    val usaReservaCompartilhada = personagem.compendioFantasiaAtivo || personagem.compendioHorrorAtivo ||
+        personagem.compendioPathfinderAtivo || personagem.compendioSciFiAtivo
+    val sharedPP = if (usaReservaCompartilhada) {
+        val chavesArcano = personagem.poderes.keys.map { it.uppercase().trim() }
+        val maxBaseOutros = chavesArcano.filter { it != "MISTICO" }.mapNotNull { arcanoInfo[it]?.second }.maxOrNull() ?: 0
+        val temMistico = chavesArcano.contains("MISTICO")
+        val maxBaseCompartilhado = if (temMistico) maxOf(maxBaseOutros, 10) else maxBaseOutros
+        val gnomeBonusCompartilhado = if (isPathfinderGnome) 1 else 0
+        maxBaseCompartilhado + personagem.bonusPoderExtra + gnomeBonusCompartilhado
+    } else 0
+
     personagem.poderes.forEach { (arc, ids) ->
         val cleanKey = arc.uppercase().trim()
         val arcNameLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
-        // Reserva total de PP (base do Antecedente Arcano + Vantagem Pontos de Poder +
-        // bônus de Gnomo do Pathfinder), espelhando a fórmula já usada no resumo em
-        // texto (SummaryUtils.buildSummaryLines) — o PDF antes só mostrava o custo de
-        // cada poder, nunca o total da reserva (bug relatado pelo usuário: comprar
-        // Pontos de Poder não refletia em lugar nenhum do PDF).
+        // Reserva total de PP exibida no cabeçalho — o PDF antes só mostrava o custo de
+        // cada poder, nunca o total da reserva (bug relatado pelo usuário: comprar Pontos
+        // de Poder não refletia em lugar nenhum do PDF).
         val ppSuffix = if (cleanKey == "MISTICO") {
-            val gnomeBonus = if (isPathfinderGnome && !hasStandardAB) 1 else 0
-            " (${10 + gnomeBonus} PP)"
+            " ($sharedPP PP)"
         } else {
             val info = arcanoInfo[cleanKey]
             if (info != null) {
                 val (_, pp, _) = info
-                val gnomeBonus = if (isPathfinderGnome) 1 else 0
-                " (${pp + personagem.bonusPoderExtra + gnomeBonus} PP)"
+                val ppExibido = if (usaReservaCompartilhada) sharedPP else pp + personagem.bonusPoderExtra
+                " ($ppExibido PP)"
             } else ""
         }
         val arcLabel = "$arcNameLabel$ppSuffix"
