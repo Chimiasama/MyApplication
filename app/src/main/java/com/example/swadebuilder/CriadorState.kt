@@ -83,6 +83,7 @@ import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUs
 import com.example.swadebuilder.model.usecase.ResolveAncestryVariantUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
+import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -4898,11 +4899,36 @@ class CriadorState {
             }
         }
 
-        val idNormalizado = vantagem.id.keyify().replace(" ", "_")
+        // Bug real relatado pelo usuário: o teste antigo só comparava vantagensPrevias por
+        // igualdade exata de id (`it == vantagem.id`). Isso nunca pegava Pontos de Poder
+        // (usa gruposAlternativos, nem passava por aqui) nem Novos Poderes (vantagensPrevias
+        // = "antecedente_arcano", o id GENÉRICO — nunca igual a "antecedente_arcano_dom"),
+        // então dava pra remover o Antecedente Arcano com Novos Poderes/Pontos de Poder
+        // ainda selecionados, deixando as duas "órfãs": continuavam na lista, mas o
+        // pré-requisito que as autorizou não existia mais (aí, ao tentar comprar de novo,
+        // apareciam como "Requisitos pendentes"). Corrigido reusando o mesmo validador de
+        // pré-requisito (cobre vantagensPrevias E gruposAlternativos, com o mesmo
+        // tratamento especial de "antecedente_arcano" genérico) em vez de reimplementar o
+        // casamento de string aqui.
+        val validatePrerequisiteUseCase = ValidatePrerequisiteUseCase()
+        fun atendePrerequisitos(v: Vantagem, semVantagem: Vantagem?): Boolean {
+            val lista = if (semVantagem != null) vantagensSelecionadas.filter { it != semVantagem } else vantagensSelecionadas.toList()
+            return validatePrerequisiteUseCase.execute(
+                ValidatePrerequisiteUseCase.Input(
+                    vantagem = v,
+                    vantagensSelecionadas = lista,
+                    complicacoesSelecionadas = complicacoesSelecionadas.keys,
+                    pericias = periciasComIdiomas(),
+                    rawTotalPericia = { rawTotal(it) },
+                    getBestPericia = { getBestPericia(it) },
+                    valoresAtributos = valoresAtributos.mapValues { it.value.intValue }
+                )
+            )
+        }
         val dependente = vantagensSelecionadas.firstOrNull { other ->
-            other != vantagem && other.requisitos.vantagensPrevias.any {
-                it.keyify().replace(" ", "_") == idNormalizado
-            }
+            other != vantagem &&
+                atendePrerequisitos(other, null) &&
+                !atendePrerequisitos(other, vantagem)
         }
         if (dependente != null) {
             return false to "Remova antes a vantagem ${dependente.nome}, que depende desta."
