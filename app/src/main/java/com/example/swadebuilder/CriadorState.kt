@@ -2674,7 +2674,7 @@ class CriadorState {
     fun isPathfinderEligible(v: Vantagem): Boolean {
         if (!compendioPathfinderAtivo) return false
         return when (v.categoria) {
-            Categoria.CLASSE, Categoria.PROFISSIONAL, Categoria.ANTECEDENTE, Categoria.ANTECEDENTE_ARCANO -> true
+            Categoria.CLASSE, Categoria.PROFISSIONAL, Categoria.ANTECEDENTE -> true
             else -> false
         }
     }
@@ -2765,7 +2765,7 @@ class CriadorState {
         return when (protagonistaRollVantagem) {
             1 -> v.categoria == Categoria.CHI
             2 -> v.categoria == Categoria.ESTRANHAS
-            3 -> v.categoria == Categoria.ANTECEDENTE || v.categoria == Categoria.ANTECEDENTE_ARCANO
+            3 -> v.categoria == Categoria.ANTECEDENTE
             4 -> v.categoria == Categoria.COMBATE
             5 -> v.categoria == Categoria.SOCIAIS
             6 -> true
