@@ -379,6 +379,15 @@ object DataLoader {
 
         val todasVantagens = vantagensRawJson.flatMap { raw ->
             livrosDe(raw).filter { it in advantageVisibleOrigins }.map { livro -> vantagemFromRaw(raw, livro) }
+        }.filter { vant ->
+            // Compêndio de Fantasia (Cap. 1, quadro "A Vantagem Mago"): a Vantagem Mago
+            // (trocar Manifestação por 1 PP extra) do livro básico NÃO é usada no
+            // Compêndio de Fantasia — lá, mudar Manifestação vira algo obtido por
+            // Progressos/tempo de Pausa, não uma Vantagem comprável. Como Fantasia é
+            // livro companheiro (soma ao Básico, não o substitui — não entra em
+            // `replacementBookKeys`), sem este filtro a cópia do Básico vazava pra
+            // qualquer personagem de Fantasia.
+            !("FANTASIA" in keys && vant.id == "mago" && canonicalOriginKey(vant.origem) == "BASICO")
         }
 
         val localListaVantagens = buildList {

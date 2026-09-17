@@ -65,7 +65,7 @@
     "descricaoLite": "Escolha um tipo específico de inimigo; contra ele, ganha rerrolagem gratuita em Sobrevivência para rastrear ou em Atletismo (arremessar), Lutar ou Atirar para atacar. Pode ser adquirida várias vezes para tipos de inimigo diferentes."
   },
   {
-    "id": "resistencia_arcana_fc",
+    "id": "resistencia_arcana",
     "nome": "RESISTÊNCIA ARCANA",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -87,7 +87,7 @@
     "descricaoLite": "Poderes arcanos hostis usados contra a personagem sofrem -2 e o dano mágico recebido é reduzido em 2, incluindo bônus de armas mágicas. Mesmo anulado por essa penalidade, o poder inimigo ainda é ativado, consome Pontos de Poder e pode afetar outros alvos."
   },
   {
-    "id": "resistencia_arcana_aprimorada_fc",
+    "id": "resistencia_arcana_aprimorada",
     "nome": "RESISTÊNCIA ARCANA APRIMORADA",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -95,7 +95,7 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "resistencia_arcana_fc"
+        "resistencia_arcana"
       ],
       "observacoes": ""
     },
@@ -1338,7 +1338,7 @@
   {
     "id": "antecedente_arcano_alquimista",
     "nome": "ANTECEDENTE ARCANO (Alquimista)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1445,7 +1445,7 @@
   {
     "id": "antecedente_arcano_bardo",
     "nome": "ANTECEDENTE ARCANO (Bardo)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1563,7 +1563,7 @@
   {
     "id": "antecedente_arcano_bruxo",
     "nome": "ANTECEDENTE ARCANO (Bruxo)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1692,7 +1692,7 @@
   {
     "id": "antecedente_arcano_clerigo",
     "nome": "ANTECEDENTE ARCANO (Clérigo)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1764,7 +1764,7 @@
   {
     "id": "antecedente_arcano_diabolista",
     "nome": "ANTECEDENTE ARCANO (Diabolista)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1878,7 +1878,7 @@
   {
     "id": "antecedente_arcano_druida",
     "nome": "ANTECEDENTE ARCANO (Druida)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1984,7 +1984,7 @@
   {
     "id": "antecedente_arcano_elementalista",
     "nome": "ANTECEDENTE ARCANO (Elementalista)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2075,7 +2075,7 @@
   {
     "id": "antecedente_arcano_engenhoqueiro",
     "nome": "ANTECEDENTE ARCANO (Engenhoqueiro)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2163,7 +2163,7 @@
   {
     "id": "antecedente_arcano_feiticeiro",
     "nome": "ANTECEDENTE ARCANO (Feiticeiro)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2279,7 +2279,7 @@
   {
     "id": "antecedente_arcano_ilusionista",
     "nome": "ANTECEDENTE ARCANO (Ilusionista)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2363,7 +2363,7 @@
   {
     "id": "antecedente_arcano_invocador",
     "nome": "ANTECEDENTE ARCANO (Invocador)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2473,7 +2473,7 @@
   {
     "id": "antecedente_arcano_mago_fantasia",
     "nome": "ANTECEDENTE ARCANO (Mago)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2601,7 +2601,7 @@
   {
     "id": "antecedente_arcano_necromante",
     "nome": "ANTECEDENTE ARCANO (Necromante)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2716,7 +2716,7 @@
   {
     "id": "antecedente_arcano_xama",
     "nome": "ANTECEDENTE ARCANO (Xamã)",
-    "categoria": "ANTECEDENTE",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
