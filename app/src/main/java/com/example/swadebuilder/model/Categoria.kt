@@ -10,6 +10,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class Categoria {
     @SerialName("ANTECEDENTE")   ANTECEDENTE,
+    // Antecedentes Arcanos do Compêndio de Fantasia (Alquimista, Bardo, Bruxo, etc.)
+    // vêm do livro como Vantagens de Antecedente comuns, mas ficavam misturados na
+    // mesma aba/categoria que Antecedentes genéricos (Escolhido, Sortudo etc.) — essa
+    // categoria só existe pra separá-los na exibição do app.
+    @SerialName("ANTECEDENTE_ARCANO") ANTECEDENTE_ARCANO,
     @SerialName("COMBATE")       COMBATE,
     @SerialName("ESTILO_MARCIAL") ESTILO_MARCIAL,
     @SerialName("LIDERANCA")     LIDERANCA,
@@ -38,6 +43,7 @@ enum class Categoria {
 
 fun Categoria.getDisplayName(): String = when (this) {
     Categoria.ANTECEDENTE -> "Antecedente"
+    Categoria.ANTECEDENTE_ARCANO -> "Antecedentes Arcanos"
     Categoria.COMBATE -> "Combate"
     Categoria.ESTILO_MARCIAL -> "Estilo Martial"
     Categoria.LIDERANCA -> "Liderança"

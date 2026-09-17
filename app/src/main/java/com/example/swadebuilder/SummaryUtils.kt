@@ -827,21 +827,37 @@ fun buildSummaryLines(
                 lines += "• Truques: $focoNome$ppText - Iluminar, Som, Telecinese, Amigo das Feras"
             }
 
-            val hasStandardAB = filteredPowers.keys.any { it.uppercase().trim() != "MISTICO" }
+            // "MÚLTIPLOS ANTECEDENTES ARCANOS" (Fantasia/Horror/Pathfinder/Sci-Fi, texto
+            // idêntico nos quatro livros): usa a MAIOR reserva inicial de Pontos de Poder
+            // entre todos os Antecedentes Arcanos E Poderes Místicos ativos, compartilhada
+            // — Místico (10 PP fixos) entra nesse máximo igual a qualquer outro, não uma
+            // conta separada (bug real: um personagem com Místico E outro Antecedente
+            // Arcano via dois números de PP diferentes em vez de uma reserva só). O livro
+            // Básico tem sua PRÓPRIA regra opcional de múltiplos Antecedentes Arcanos, com
+            // pool separado por Antecedente — não usa esse compartilhamento, então o gate
+            // abaixo cai pra fórmula antiga (independente) fora desses 4 livros; Místico só
+            // existe dentro deles, então nunca aparece no fallback.
+            val usaReservaCompartilhada = personagem.compendioFantasiaAtivo || personagem.compendioHorrorAtivo ||
+                personagem.compendioPathfinderAtivo || personagem.compendioSciFiAtivo
+            val sharedPP = if (usaReservaCompartilhada) {
+                val chavesArcano = filteredPowers.keys.map { it.uppercase().trim() }
+                val maxBaseOutros = chavesArcano.filter { it != "MISTICO" }.mapNotNull { arcanoInfo[it]?.second }.maxOrNull() ?: 0
+                val temMistico = chavesArcano.contains("MISTICO")
+                val maxBaseCompartilhado = if (temMistico) maxOf(maxBaseOutros, 10) else maxBaseOutros
+                val gnomeBonusCompartilhado = if (isPathfinderGnome) 1 else 0
+                maxBaseCompartilhado + personagem.bonusPoderExtra + gnomeBonusCompartilhado
+            } else 0
 
             filteredPowers.forEach { (arcanoKey, lista) ->
                 val cleanKey = arcanoKey.uppercase().trim()
                 val info = arcanoInfo[cleanKey]
 
                 val details = if (cleanKey == "MISTICO") {
-                    val gnomeBonus = if (isPathfinderGnome && !hasStandardAB) 1 else 0
-                    val finalPp = 10 + gnomeBonus
-                    "($finalPp PP)"
+                    "($sharedPP PP)"
                 } else if (info != null) {
                     val (_, pp, foco) = info
-                    val gnomeBonus = if (isPathfinderGnome) 1 else 0
-                    val basePP = pp + personagem.bonusPoderExtra + gnomeBonus
-                    "($basePP PP, $foco)"
+                    val ppExibido = if (usaReservaCompartilhada) sharedPP else pp + personagem.bonusPoderExtra
+                    "($ppExibido PP, $foco)"
                 } else {
                     ""
                 }
@@ -857,7 +873,7 @@ fun buildSummaryLines(
                 lines += if (lista.isEmpty()) {
                     "• $label: – nenhum poder escolhido"
                 } else {
-                    val poderesComManifestacao = lista.map { poderId ->
+                    val poderesComManifestacao = lista.mapIndexed { poderIdx, poderId ->
                         val poderDef = listaPoderes.firstOrNull { it.id == poderId }
                         val baseNome = poderDef?.nome ?: poderId
                         var displayNome = if (!EditionConfig.isFullEdition) GenericNameMapper.map(baseNome) else baseNome
@@ -870,7 +886,10 @@ fun buildSummaryLines(
                                 .replace("Morosidade/Velocidade", "Velocidade")
                         }
 
-                        val manifestacao = personagem.manifestacoesPoderes[poderId]
+                        // Manifestação escrita pelo próprio jogador (ver CriadorState.
+                        // manifestacoesPoderes) — chave por posição na lista, não pelo id do
+                        // poder, porque Novos Poderes permite repetir um poder já conhecido.
+                        val manifestacao = personagem.manifestacoesPoderes["$arcanoKey#$poderIdx"]
                             ?.trim()
                             ?.takeIf { it.isNotBlank() }
                         if (manifestacao != null) "$displayNome (${manifestacao})" else displayNome

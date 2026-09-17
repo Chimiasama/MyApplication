@@ -2471,7 +2471,7 @@ fun CustomContentManageDialog(
                                                     ) {
                                                         Icon(Icons.Default.Remove, contentDescription = "Diminuir")
                                                     }
-                                                    Text(
+                                                    AutoSizeText(
                                                         text = currentDie.toDiceString(),
                                                         style = MaterialTheme.typography.bodyMedium,
                                                         modifier = Modifier.width(48.dp),
@@ -2544,7 +2544,7 @@ fun CustomContentManageDialog(
                                                     ) {
                                                         Icon(Icons.Default.Remove, contentDescription = "Diminuir")
                                                     }
-                                                    Text(
+                                                    AutoSizeText(
                                                         text = currentDie.toDiceString(),
                                                         style = MaterialTheme.typography.bodyMedium,
                                                         modifier = Modifier.width(48.dp),

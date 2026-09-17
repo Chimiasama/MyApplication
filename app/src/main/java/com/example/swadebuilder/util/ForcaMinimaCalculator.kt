@@ -14,6 +14,18 @@ object ForcaMinimaCalculator {
     private val DADO_REGEX = Regex("""d(\d+)(?:\+(\d+))?""", RegexOption.IGNORE_CASE)
     private val DANO_FORCA_REGEX = Regex("""(For|Str|Força)\s*\+\s*d(\d+)""", RegexOption.IGNORE_CASE)
     private val CONTEM_FORCA_REGEX = Regex("(For|Str|Força)", RegexOption.IGNORE_CASE)
+    private val ALCANCE_CORPO_A_CORPO_REGEX = Regex("""Alcance\s*(\d+)""", RegexOption.IGNORE_CASE)
+
+    /**
+     * Alcance (reach) de arma corpo a corpo — traço de armas de haste (Lança, Alabarda,
+     * Pique...) que faz a arma atingir 1+ quadros além do alcance normal de Lutar. É um
+     * conceito TOTALMENTE diferente do "Distância" (curta/média/longa) de armas à distância:
+     * o catálogo não tem um campo estruturado pra reach, só o texto livre de `observacoes`
+     * (ex.: "Alcance 1, duas mãos.") — daqui vem o número exibido na tabela de Armas Corpo a
+     * Corpo. Retorna null quando a arma não tem reach (a maioria: adaga, espada, maça...).
+     */
+    fun alcanceCorpoACorpo(observacoes: String?): String? =
+        observacoes?.let { ALCANCE_CORPO_A_CORPO_REGEX.find(it)?.groupValues?.get(1) }
 
     // Armas cujo dano usa "For" mas que nunca são empunhadas pra golpear — a Força ali
     // representa a "puxada" (arco) ou o giro/arremesso do próprio item (funda,

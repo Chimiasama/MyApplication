@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 import com.example.swadebuilder.util.keyify
 
 /**
@@ -170,7 +171,7 @@ fun SuperPericiasPickerDialog(
                                                 horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
                                                 verticalArrangement = Arrangement.Center
                                             ) {
-                                                Text(
+                                                AutoSizeText(
                                                     text = textoValor,
                                                     style = MaterialTheme.typography.bodyMedium,
                                                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,

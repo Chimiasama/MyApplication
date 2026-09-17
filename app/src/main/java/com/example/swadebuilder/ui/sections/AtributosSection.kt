@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.AutoSizeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.atributoBaseParaPericia
 import com.example.swadebuilder.calcularPericiaRules
@@ -183,7 +184,7 @@ fun AttributeCarouselPopoverDialog(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
                             ) {
-                                Text(
+                                AutoSizeText(
                                     text = targetRaw.toDiceString(),
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Bold,
@@ -286,7 +287,11 @@ fun AtributosContent(
             // acima é a única pista, e ela encolhe/some conforme o jogador gasta, o
             // que mascara o quanto ele já gastou (jogador relatou não perceber que
             // tinha zerado os PC comprando atributos/perícias assim).
-            val paViaPc = state.cpPaStack.size
+            // Cada Atributo via PC custa 2 Pontos de Complicação (ver gastarPcParaAtributo);
+            // cpPaStack.size é a CONTAGEM de compras, não o total de PC gasto — exibir o
+            // size puro mostrava metade do valor real (ex.: 1 Atributo = 2 PC, não 1).
+            // Perícia custa 1 PC cada, então a contagem já bate com o total gasto.
+            val paViaPc = state.cpPaStack.size * 2
             val spViaPc = state.cpSpStack.size
             if (!locked && (paViaPc > 0 || spViaPc > 0)) {
                 Text(
@@ -483,7 +488,7 @@ fun AtributosContent(
                         }
                     }
 
-                    Text(
+                    AutoSizeText(
                         text = efetivoRaw.toDiceString(),
                         modifier = Modifier
                             .width(valorColWidthDp)
@@ -492,8 +497,6 @@ fun AtributosContent(
                             },
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.primary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Clip,
                         textAlign = TextAlign.Center
                     )
 
@@ -743,7 +746,7 @@ fun AtributosContent(
                                             )
                                         }
                                     } else {
-                                        Text(
+                                        AutoSizeText(
                                             text = when {
                                                 reg.displayRaw > 0 -> reg.displayRaw.toDiceString()
                                                 isBasica -> "d4"

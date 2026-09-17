@@ -22,6 +22,11 @@ object IncompatibilityRules {
         "podre_de_rico" to setOf("pobreza"),
         "escolhido" to setOf("inimigo", "inimigo_ch"),
 
+        // Livro Básico: "Personagens Hesitantes não podem escolher as Vantagens
+        // Rápido ou Focado" (complicacoes.json "hesitante").
+        "rapido" to setOf("hesitante"),
+        "focado" to setOf("hesitante"),
+
         // "Antecedente Arcano (Milagres)" tem 3 ids no catálogo (base, Deadlands, Pathfinder) —
         // Alma Penhorada/Alma Vendida (Cidade do Sol a Vapor) conflitam com qualquer um deles.
         "antecedente_arcano_milagres" to setOf("comp_alma_penhorada", "comp_alma_vendida"),

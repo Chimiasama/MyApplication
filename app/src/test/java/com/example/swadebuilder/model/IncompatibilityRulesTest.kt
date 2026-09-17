@@ -66,6 +66,13 @@ class IncompatibilityRulesTest {
     }
 
     @Test
+    fun `rapido e focado conflitam com hesitante nos dois sentidos`() {
+        assertEquals(setOf("hesitante"), IncompatibilityRules.complicacoesIncompativeisCom("rapido"))
+        assertEquals(setOf("hesitante"), IncompatibilityRules.complicacoesIncompativeisCom("focado"))
+        assertEquals(setOf("rapido", "focado"), IncompatibilityRules.vantagensIncompativeisCom("hesitante"))
+    }
+
+    @Test
     fun `ids sem conflito conhecido retornam conjunto vazio`() {
         assertTrue(IncompatibilityRules.complicacoesIncompativeisCom("bloquear").isEmpty())
         assertTrue(IncompatibilityRules.vantagensIncompativeisCom("idoso").isEmpty())

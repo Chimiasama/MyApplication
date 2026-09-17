@@ -83,9 +83,11 @@ import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUs
 import com.example.swadebuilder.model.usecase.ResolveAncestryVariantUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
+import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -352,15 +354,15 @@ class CriadorState {
     }
 
     fun refundAndRemoveCustomPoder(id: String) {
-        poderSlotsPorArcano.forEach { (_, slots) ->
+        poderSlotsPorArcano.forEach { (arcKey, slots) ->
             for (i in slots.indices) {
                 if (slots[i]?.equals(id, ignoreCase = true) == true) {
                     slots[i] = null
+                    manifestacoesPoderes.remove("$arcKey#$i")
                 }
             }
         }
         syncPoderesSelecionadosFromSlots()
-        manifestacoesPoderes.remove(id)
     }
 
     fun addCustomPericia(pericia: PericiaJson) {
@@ -770,9 +772,25 @@ class CriadorState {
         // entrar no ramo Herança/Adaptável de applyAncestryVariantAdjustments,
         // pensado pra variante Meio-Elfo de outros livros
         // (CriadorStateRacialTraitDrivenAttributesTest).
+        // Meio-Elfos com o traço "Herança" (Básico/Fantasia/Horror/Super) também
+        // precisa passar — é onde "Herança" é trocada por "Ágil" (Agilidade d6)
+        // ou "Adaptável" conforme meioElfoAgil. Sem isso, quando só um livro com
+        // Meio-Elfo está ativo (candidato único), a escolha nunca surtia efeito:
+        // marcar "Agilidade d6" ficava sem aplicar (bug real relatado pelo
+        // usuário — Agilidade continuava em d4 mesmo com a opção marcada).
+        // A checagem é pelo traço "HERANCA" em si (não só pelo nome/!Pathfinder):
+        // o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO" no nome, mas tem
+        // "Flexibilidade" em vez de "Herança" — sem esse traço presente, cai fora
+        // e mantém o curto-circuito original (senão a troca Herança/Adaptável
+        // seria injetada nele também, mesmo sem ele ter Herança pra começar).
+        fun ehMeioElfoComHeranca(candidato: RacialModifier): Boolean =
+            (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) &&
+                !key.contains("PATHFINDER") &&
+                candidato.habilidades.any { it.id?.keyify() == "HERANCA" }
+
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental) {
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental && !ehMeioElfoComHeranca(candidates.first())) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -804,7 +822,7 @@ class CriadorState {
 
         val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("MEIO-DEMONIO")) {
             applyAncestryVariantAdjustments(selected, key)
-        } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
+        } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (canonicalOriginKey(selected.origem) == "FANTASIA" && (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")) {
             applyAncestryVariantAdjustments(selected, key)
@@ -1724,6 +1742,15 @@ class CriadorState {
 
     var famaManual by mutableIntStateOf(0)
     val poderesSelecionados = mutableStateListOf<String>()
+    // Anotação livre de Manifestação por poder (ex.: "Raio" -> "Gelo"), definida pelo próprio
+    // jogador — as Manifestações do livro (Poder.manifestacoes) são só exemplos de inspiração,
+    // não uma lista fechada pra validar contra. Chave "arcKey#índiceDoSlot" (o índice RAW em
+    // poderSlotsPorArcano[arcKey], estável mesmo quando outro slot é limpo) em vez de só o id
+    // do poder, pra suportar Novos Poderes permitindo repetir um poder já conhecido com uma
+    // Manifestação diferente (duas entradas "Raio" com notas distintas colidiriam numa chave só
+    // por id). MeuPersonagem.manifestacoesPoderes (ver toMeuPersonagem() em
+    // ResumoPdfReferenciador.kt) reindexa essas chaves pra posição na lista já filtrada
+    // (slots.filterNotNull()), que é o formato que MeuPersonagem.poderes usa pro PDF/resumo.
     val manifestacoesPoderes = mutableStateMapOf<String, String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
     private val _maxedTraits = mutableStateListOf<String>()
@@ -1926,8 +1953,9 @@ class CriadorState {
         val hasLigeiro = vantagensSelecionadas.any { it.id == Constants.ID_LIGEIRO || it.id.keyify() == "LIGEIRO" }
         val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
 
-        val lentoEntry = complicacoesSelecionadas.entries.firstOrNull { it.key.id == Constants.ID_LENTO || it.key.id.keyify() == "LENTO" }
-        val lentoLevel = lentoEntry?.value
+        val hasLento = complicacoesSelecionadas.keys.any {
+            it.id == Constants.ID_LENTO || it.id == Constants.ID_LENTO_CH || it.id.keyify() == "LENTO"
+        }
 
         // Step index: 0 = d4-1, 1 = d4, 2 = d6 (baseline), 3 = d8, 4 = d10, 5 = d12
         var stepIndex = 2
@@ -1940,13 +1968,36 @@ class CriadorState {
             stepIndex = (stepIndex - 1).coerceAtLeast(1)
         }
 
-        if (lentoEntry != null) {
-            if (lentoLevel == "Maior") {
-                stepIndex -= 2
-            } else {
-                stepIndex -= 1
-            }
+        // Lento reduz o dado de corrida em um tipo tanto na versão Menor quanto na Maior
+        // (livro: "reduza... seu dado de corrida em um tipo" nas duas). Só a Movimentação e
+        // a penalidade em Atletismo diferem entre as severidades — ver ModifierEngine (PACE).
+        if (hasLento) {
+            stepIndex -= 1
         }
+
+        // Traços raciais "Movimentação (2)" (livro básico, Criando Raças: "Confere +2 na
+        // Movimentação e aumenta o dado de corrida em um tipo") e "Movimentação Reduzida"
+        // (ex.: Gnomo Pathfinder: "Reduza sua Movimentação em 1 e seu dado de corrida em um
+        // tipo") só ajustavam o valor plano de Movimentação (ModifierEngine/PassoBonus,
+        // ModifierTarget.PACE) — o dado de corrida nunca era tocado aqui, então raças com
+        // esse traço (Centauros, Avianos, Anões, Gnomos, Povo Rato, Golens, Centaux, Povo
+        // Serpente, Elementais, Ferais, Tanukimimi e outras) ficavam sempre em d6 de
+        // corrida, mesmo com Movimentação alterada (bug real relatado pelo usuário com
+        // Centauro: Movimentação +4 = duas compras de "Movimentação (2)", deveria levar
+        // d6 -> d8 -> d10). vezesPorId toma o MAIOR entre as fontes (habilidade da raça e
+        // traço injetado por Variante/Seleção) pro mesmo id, nunca soma — mesma regra do
+        // ModifierEngine, evita contar duas vezes quando os dois lados descrevem o mesmo
+        // traço.
+        val vezesMovimentacaoPorId = mutableMapOf<String, Int>()
+        fun registrarVezesMovimentacao(id: String?, vezes: Int) {
+            val key = id?.keyify() ?: return
+            if (key != "MOVIMENTACAO" && key != "MOVIMENTACAO_REDUZIDA") return
+            vezesMovimentacaoPorId[key] = maxOf(vezesMovimentacaoPorId[key] ?: 0, vezes.coerceAtLeast(1))
+        }
+        currentAncestryDef?.habilidades?.forEach { hab -> registrarVezesMovimentacao(hab.resolvedTraitId(), hab.vezes) }
+        racialTraitIdsFromVariants.forEach { stack -> registrarVezesMovimentacao(stack.id, stack.vezes) }
+        stepIndex += vezesMovimentacaoPorId["MOVIMENTACAO"] ?: 0
+        stepIndex -= vezesMovimentacaoPorId["MOVIMENTACAO_REDUZIDA"] ?: 0
 
         val stepLabels = mapOf(
             0 to "d4-1",
@@ -2080,6 +2131,20 @@ class CriadorState {
             steps++
         }
 
+        // Guerreiro Marcial ("...dado de dano em um tipo adicional") e Pugilista
+        // ("...dano por punhos/garras em mais um tipo de dado") também aumentam o dado de
+        // dano desarmado, igual a Brigão — mesmo conjunto de fontes usado em
+        // extrairArmasNaturais() (hasBrawler).
+        if (vantagensSelecionadas.any { it.id == "guerreiro_marcial" }) {
+            modifiers.add("Guerreiro Marcial")
+            steps++
+        }
+
+        if (vantagensSelecionadas.any { it.id == Constants.ID_PUGILISTA }) {
+            modifiers.add("Pugilista")
+            steps++
+        }
+
         // Check Claws (Garra)
         val ancestry = currentAncestryDef
         val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true
@@ -2166,9 +2231,13 @@ class CriadorState {
             return ""
         }
 
-        // Check for Martial Artist / Brawler (used for upgrading damage)
+        // Check for Martial Artist / Brawler (used for upgrading damage). Pugilista
+        // ("dano por punhos/garras em mais um tipo de dado") conta igual a Brigão/Guerreiro
+        // Marcial — mesmo conjunto de fontes usado em calculaAtaqueDesarmado().
         val hasMartialArtist = vantagensSelecionadas.any { it.id == "artista_marcial" }
-        val hasBrawler = vantagensSelecionadas.any { it.id == "brigao" || it.id == "guerreiro_marcial" }
+        val hasBrawler = vantagensSelecionadas.any {
+            it.id == "brigao" || it.id == "guerreiro_marcial" || it.id == Constants.ID_PUGILISTA
+        }
 
         // Helper to upgrade die type string (e.g. "For+d4" -> "For+d6")
         fun upgradeDie(dmg: String): String {
@@ -2741,8 +2810,19 @@ class CriadorState {
         val isPowerPoint = v.nome.contains("Pontos de Poder", true) || v.nomeExibicao.contains("Pontos de Poder", true)
 
         if (isPowerPoint) {
+            // Mesma checagem "sem Pontos de Vantagem" do ramo padrão logo abaixo — faltava
+            // aqui, então dava pra comprar Pontos de Poder mesmo com pontosVantagem em 0.
+            if (!modoLivre && pontosVantagem <= 0) return false
             if (!podeSelecionar(v)) return false
             comprarPontoDePoder(v)
+            // BUG real relatado pelo usuário ("ponto fantasma"): faltava este decremento — a
+            // compra nunca custava um Ponto de Vantagem, mas venderVantagem() sempre
+            // reembolsava um ao remover (simétrico ao caminho padrão), então cada compra de
+            // Pontos de Poder vazava um PV de graça, sobrando pontos pra comprar outras
+            // Vantagens além da conta. O fluxo de Progressão (selectAdvantageForAdvancement em
+            // CriadorViewModel.kt) já decrementa corretamente pros dois casos — só a compra em
+            // pontos de bônus na criação (este método) estava sem o decremento.
+            pontosVantagem--
             onFeedback("Vantagem ${v.nome} (Pontos de Poder) adicionada.")
             return true
         }
@@ -2754,7 +2834,7 @@ class CriadorState {
 
         val adaptavelFreeSlot = hasFreeAdaptavelSlotNow(debugSource = "comprarVantagem:${v.id}")
         val isFreeAdaptavel = adaptavelFreeSlot &&
-            (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+            adaptavelAceitaEstagio(v) &&
             !isVantagemAutomatica(v)
 
         if (!modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
@@ -2856,6 +2936,10 @@ class CriadorState {
             registrarCompraEstagioGenerico(v.id)
         }
 
+        if (v.id == Constants.ID_PROFISSIONAL || v.id == Constants.ID_ESPECIALISTA) {
+            v.choice?.let { aplicarPassoProfissionalEspecialistaEmAtributo(it, subir = true) }
+        }
+
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
             if (inimigo != null) {
@@ -2868,6 +2952,27 @@ class CriadorState {
                 }
             }
 
+        }
+    }
+
+    /**
+     * Profissional/Especialista (Vantagens Lendárias) só podem ser escolhidas numa
+     * Característica que já está no teto (ver identifyMaxedTraits/maxedTraits) e, ao
+     * comprar, "aumentam a Característica e o seu limite em um passo" — no mesmo momento
+     * da compra, sem gastar Progresso à parte. Perícia já é calculada por fórmula
+     * (rawTotal() soma o mesmo passo reativamente via profissionalEspecialistaPassos()),
+     * então essa função só precisa mexer em ATRIBUTO — valor bruto guardado direto em
+     * valoresAtributos[].intValue, lido em dezenas de lugares sem nenhuma camada de fórmula
+     * por cima. Pra uma perícia (que não é chave de valoresAtributos), esta função é no-op.
+     */
+    private fun aplicarPassoProfissionalEspecialistaEmAtributo(escolha: String, subir: Boolean) {
+        val chave = escolha.keyify()
+        val attrState = valoresAtributos.entries.firstOrNull { it.key.keyify() == chave }?.value ?: return
+        val atual = attrState.intValue
+        attrState.intValue = if (subir) {
+            if (atual < 12) atual + 2 else atual + 1
+        } else {
+            if (atual <= 12) atual - 2 else atual - 1
         }
     }
 
@@ -2918,6 +3023,10 @@ class CriadorState {
             desfazerCompraEstagioGenerico(v.id)
         }
 
+        if (v.id == Constants.ID_PROFISSIONAL || v.id == Constants.ID_ESPECIALISTA) {
+            v.choice?.let { aplicarPassoProfissionalEspecialistaEmAtributo(it, subir = false) }
+        }
+
         // Safety check for Mystic Powers cleanup
         if (v.nome.normAAKey().contains("PODERES MISTICOS")) {
             val anyMystic = vantagensSelecionadas.any { it.nome.normAAKey().contains("PODERES MISTICOS") }
@@ -2940,6 +3049,16 @@ class CriadorState {
 
         if (v.nome.keyify() == "CAVALEIRO") {
             equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
+        }
+
+        // Herança (Compêndio de Fantasia): cada compra é um Slot de 10.000 PO à parte —
+        // ao remover UMA cópia, some só o Slot mais recente (o de índice mais alto, que
+        // ainda não existe mais depois desta remoção) e os itens comprados nele. `v` já
+        // saiu de vantagensSelecionadas (linha 3019), então a contagem abaixo já reflete
+        // o número de cópias restantes = o índice do Slot que precisa sumir.
+        if (v.id == "heranca") {
+            val slotQueSumiu = vantagensSelecionadas.count { it.id == "heranca" }
+            equipamentosComprados.removeAll { it.herancaSlotIndex == slotQueSumiu }
         }
 
         if (v.id == "escolhido") {
@@ -2965,6 +3084,73 @@ class CriadorState {
         vantagensDePoder.remove(v.id)
     }
 
+    // Vantagem Herança (Compêndio de Fantasia): "concede um item mágico (ou um conjunto
+    // temático)... com um valor total de 10.000 PO cada vez que esta Vantagem é
+    // adquirida." Como dá pra comprar mais de uma vez (limite_compra "infinito"), cada
+    // compra vira um Slot independente de até 10.000 PO — nunca dá pra somar dois Slots
+    // pra bancar um item mais caro. Não existe contador dedicado: o número de Slots é
+    // sempre a contagem de "heranca" em vantagensSelecionadas, e o gasto de cada Slot é
+    // sempre a soma dos itens de equipamentosComprados marcados com aquele índice
+    // (herancaSlotIndex) — sem estado extra pra manter sincronizado.
+    private val HERANCA_VALOR_POR_SLOT = 10000
+
+    fun numSlotsHeranca(): Int = vantagensSelecionadas.count { it.id == "heranca" }
+
+    fun itensDoSlotHeranca(slot: Int): List<EquipamentoItem> =
+        equipamentosComprados.filter { it.herancaSlotIndex == slot }
+
+    fun gastoDoSlotHeranca(slot: Int): Int =
+        itensDoSlotHeranca(slot).sumOf { MoneyUtils.parseCostInBaseUnit(it.custo, false) }
+
+    fun saldoDoSlotHeranca(slot: Int): Int =
+        (HERANCA_VALOR_POR_SLOT - gastoDoSlotHeranca(slot)).coerceAtLeast(0)
+
+    // Só itens de "Itens Especiais" do próprio Fantasia com preço numérico de verdade —
+    // Itens Maravilhosos, Poções Mágicas e Joias Mágicas. Pergaminhos e Tomos (custo
+    // "Variável") ficam de fora por não terem valor fixo pra checar contra o teto de
+    // 10.000; Relíquias e Artefatos nem entram aqui, já que saíram de "Itens Especiais"
+    // pra sua própria categoria (não são itens à venda, são únicos e a critério do
+    // Mestre). O filtro por origem evita que Talismãs (Arte da Guerra) ou outros itens
+    // de "Itens Especiais" de OUTRO livro apareçam como elegíveis no Modo Livre.
+    fun itemElegivelParaHeranca(item: EquipamentoItem): Boolean =
+        canonicalOriginKey(item.origem) == "FANTASIA" &&
+            item.categoriaTipo?.trim() == "Itens Especiais" &&
+            MoneyUtils.parseCostInBaseUnit(item.custo, false) > 0
+
+    // Trava a finalização da ficha (salvar/exportar) enquanto algum Slot não tiver
+    // recebido nenhum item — o livro concede um item "cada vez que a Vantagem é
+    // adquirida", então cada compra exige sua própria compra de item, não só uma no total.
+    val herancaSlotsPendentes: Boolean
+        get() = (0 until numSlotsHeranca()).any { itensDoSlotHeranca(it).isEmpty() }
+
+    fun comprarItemComHeranca(item: EquipamentoItem, slot: Int, onFeedback: (String) -> Unit = {}): Boolean {
+        if (slot !in 0 until numSlotsHeranca()) {
+            onFeedback("Slot de Herança inválido.")
+            return false
+        }
+        if (!itemElegivelParaHeranca(item)) {
+            onFeedback("Esse item não pode ser comprado com o saldo de Herança.")
+            return false
+        }
+        val custo = MoneyUtils.parseCostInBaseUnit(item.custo, false)
+        if (custo > saldoDoSlotHeranca(slot)) {
+            onFeedback("Saldo insuficiente no Slot ${slot + 1} de Herança.")
+            return false
+        }
+        equipamentosComprados.add(item.copy(herancaSlotIndex = slot))
+        onFeedback("${item.nome} comprado com o Slot ${slot + 1} de Herança.")
+        return true
+    }
+
+    // Remoção de um item comprado com Herança: some da lista igual a uma venda normal,
+    // mas sem devolver PO ao dinheiro do personagem — esse saldo nunca foi ouro de
+    // verdade, é só o Slot ficando com mais espaço livre de novo.
+    fun removerItemDeHeranca(item: EquipamentoItem, onFeedback: (String) -> Unit = {}) {
+        if (item.herancaSlotIndex == null) return
+        equipamentosComprados.remove(item)
+        onFeedback("${item.nome} removido do Slot ${item.herancaSlotIndex + 1} de Herança.")
+    }
+
     fun adicionarComplicacao(comp: Complicacao, nivel: String) {
         val key = comp.id.keyify()
         if (key == "CEGO") {
@@ -2976,15 +3162,15 @@ class CriadorState {
         complicacoesSelecionadas[comp] = nivel
     }
 
-    fun removerComplicacao(comp: Complicacao, onFeedback: (String) -> Unit = {}) {
+    /**
+     * Remove a Complicação, devolvendo `true` se de fato removida. Alguns casos (Cego sem
+     * Vantagem "extra" pra devolver/trocar) podem abortar sem remover nada — quem chama
+     * PRECISA checar o retorno antes de tratar a remoção como concluída (rodar efeitos
+     * colaterais, logar "removida" etc.), senão o personagem fica com a Complicação ainda
+     * selecionada mas a UI relatando sucesso (bug real relatado pelo usuário).
+     */
+    fun removerComplicacao(comp: Complicacao, onFeedback: (String) -> Unit = {}): Boolean {
         val key = comp.id.keyify()
-
-        if (key == "IDOSO") {
-             if (pontosPericia < 5) {
-                 onFeedback("Não é possível remover Idoso pois os pontos de perícia extras já foram gastos. Remova pontos em perícias de Astúcia primeiro.")
-                 return
-             }
-        }
 
         if (key == "POBREZA") {
             val base = getBaseWealth()
@@ -2998,12 +3184,13 @@ class CriadorState {
                // Try to remove a purchased advantage to balance
                val removed = removerUltimaVantagemCompradaComPv()
                if (!removed) {
-                   onFeedback("Não é possível remover Cego pois o Ponto de Vantagem extra já foi gasto.")
-                   return
+                   onFeedback("Não é possível remover Cego pois o Ponto de Vantagem extra já foi gasto e não há Vantagem para devolver.")
+                   return false
                }
             }
         }
         complicacoesSelecionadas.remove(comp)
+        return true
     }
 
     fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
@@ -3740,6 +3927,13 @@ class CriadorState {
         if (linguistaCount <= 0) {
             idiomaSlotsOrdenados().forEach { per ->
                 compIncsPorPericia[per] = 0
+                // Sem os passos grátis do Linguista, um slot que o jogador nunca comprou por
+                // conta própria (baseIncs 0) volta a ficar vazio — inclusive o nome do idioma,
+                // senão a perícia mostrava "Espanhol" com 0 pontos após remover a Vantagem
+                // (bug real relatado pelo usuário).
+                if ((baseIncsPorPericia[per] ?: 0) == 0) {
+                    notasPericia.remove(per.nome)
+                }
             }
             syncIdiomaSlots()
             return
@@ -3881,16 +4075,34 @@ class CriadorState {
             .toSet()
         val autoIds = vantagensAutomaticasDoTropo.toSet()
 
+        // Bug real relatado pelo usuário: esta função (chamada ao devolver uma Complicação
+        // pelo botão "Devolver" de Vantagens em ComplicacoesSection — "você já gastou, devolva
+        // o que comprou") pegava cegamente a última Vantagem não-automática, sem checar se
+        // outra Vantagem dependia dela (ex.: remover o Antecedente Arcano com Novos Poderes/
+        // Pontos de Poder ainda selecionados, deixando as duas órfãs — mesma classe de bug já
+        // corrigida em podeRemoverVantagem(), mas esta função nunca a consultava). Agora pula
+        // candidatas protegidas e tenta a próxima mais recente.
         val candidate = vantagensSelecionadas
             .asReversed()
             .firstOrNull { vant ->
                 val key = normalizeAutoKey(vant.nome.substringBefore("(").trim())
-                key !in autoKeys && vant.id !in autoIds
+                key !in autoKeys && vant.id !in autoIds && podeRemoverVantagem(vant).first
             }
             ?: return false
 
         removeVantagemDinheiro(candidate)
-        removerVantagem(candidate)
+        // Pontos de Poder tem bookkeeping próprio (comprasPpPorEstagio/bonusPoderExtra, ver
+        // selecionarPontosDePoder/removerPontosDePoder) que removerVantagem() genérico nunca
+        // desfaz — chamar a função errada aqui deixava esse bônus e o teto de "uma vez por
+        // Estágio" travados pra sempre, mesmo com a Vantagem já removida da lista (bug real:
+        // depois disso, comprar Pontos de Poder de novo sempre falhava com "Requisitos
+        // pendentes", incluindo depois de recriar o Antecedente Arcano do zero).
+        val isPowerPoint = candidate.nome.contains("Pontos de Poder", true) || candidate.nomeExibicao.contains("Pontos de Poder", true)
+        if (isPowerPoint) {
+            removerPontosDePoder(candidate)
+        } else {
+            removerVantagem(candidate)
+        }
         if (candidate.id == "o_melhor_que_ha") {
             poderFavoritoId = null
         }
@@ -4160,14 +4372,31 @@ class CriadorState {
         // fallback razoável em vez de deixar a vantagem customizada sem nenhum poder pra
         // escolher.
         val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 3)
-        var bonusSlots = 0
+        val bonusSlots = getNovosPoderesBonusSlotsForArcano(arcKeyNorm)
 
-        // Grimório (Fantasia, requer Antecedente Arcano Mago): "Sempre que adquire a Vantagem
-        // Novos Poderes, recebe três novos poderes em vez de dois" — só se aplica aos poderes
-        // ligados ao próprio Mago, não a outro Antecedente Arcano que a personagem também tenha.
+        // Grimório (Fantasia, requer Antecedente Arcano Mago): "Também ganha imediatamente um
+        // poder de seu Estágio ou inferior ao adquirir a Vantagem Grimório" — bônus fixo de +1,
+        // independente de qualquer compra de Novos Poderes.
+        val temGrimorio = arcKeyNorm == "MAGO" && vantagensSelecionadas.any { it.id == "grimorio" }
+        val bonusGrimorio = if (temGrimorio) 1 else 0
+
+        val bonusTecnicas = if (arcKeyNorm == "TECNICAS CHI") tecnicasIniciaisFromTropo else 0
+        val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
+        return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
+    }
+
+    /**
+     * Quantos dos slots de poder de [arcKey] vieram só da Vantagem Novos Poderes (não dos
+     * slots iniciais do Antecedente Arcano) — usado pra saber a partir de qual índice um
+     * jogador pode repetir um poder que já tem (ver "Uma personagem pode adicionar uma nova
+     * Manifestação a um poder que já possui em vez de ganhar um novo", livro básico). Extraído
+     * de getSlotsCountForArcano pra não duplicar essa lógica em dois lugares.
+     */
+    fun getNovosPoderesBonusSlotsForArcano(arcKey: String): Int {
+        val arcKeyNorm = arcKey.normAAKey()
         val temGrimorio = arcKeyNorm == "MAGO" && vantagensSelecionadas.any { it.id == "grimorio" }
         val poderesPorNovosPoderes = if (temGrimorio) 3 else 2
-
+        var bonusSlots = 0
         vantagensSelecionadas
             .filter { it.id == "novos_poderes" }
             .forEach { vant ->
@@ -4195,15 +4424,7 @@ class CriadorState {
                     }
                 }
             }
-
-        // "Também ganha imediatamente um poder de seu Estágio ou inferior ao adquirir a
-        // Vantagem Grimório" — bônus fixo de +1, independente de qualquer compra de Novos
-        // Poderes.
-        val bonusGrimorio = if (temGrimorio) 1 else 0
-
-        val bonusTecnicas = if (arcKeyNorm == "TECNICAS CHI") tecnicasIniciaisFromTropo else 0
-        val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
-        return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
+        return bonusSlots
     }
 
     fun getEffectiveSlotsCountForArcano(arcKey: String): Int {
@@ -4349,10 +4570,25 @@ class CriadorState {
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
         val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
-        // Base 2 added as requested
-        val baseChi = if (compendioArteDaGuerraAtivo) 2 else 0
+        // Complicação "Bloqueio Interno" (docs/swade_adg, id bloqueio_interno):
+        // substitui a fórmula padrão "2 + metade do dado de Espírito" da Reserva de
+        // Chi inicial. Menor: só metade do dado de Espírito (perde o +2 base). Maior:
+        // fixa em 2, ignorando o dado de Espírito por completo.
+        val bloqueioInternoLevel = complicacoesSelecionadas.entries
+            .firstOrNull { it.key.id == "bloqueio_interno" || it.key.id.keyify() == "BLOQUEIO_INTERNO" }
+            ?.value
 
-        (baseChi + espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo + bonusFromSign).coerceAtLeast(0)
+        val reservaInicial = if (compendioArteDaGuerraAtivo) {
+            when (bloqueioInternoLevel) {
+                "Maior" -> 2
+                "Menor" -> espiritoRaw / 2
+                else -> 2 + espiritoRaw / 2
+            }
+        } else {
+            espiritoRaw / 2
+        }
+
+        (reservaInicial - racialPenalty + bonusFromChiEdges + bonusFromTropo + bonusFromSign).coerceAtLeast(0)
     }
 
     var nomePersonagem by mutableStateOf("")
@@ -4600,6 +4836,22 @@ class CriadorState {
         return slotAvailable
     }
 
+    /**
+     * Se a Vantagem bônus de Adaptável (ou equivalente, ex. Sobrevivente) pode ser gasta
+     * nesta Vantagem `v` sem custar Pontos de Vantagem normais. Sem a Regra de Ambientação
+     * Nasce um Herói, só Vantagens de Estágio Novato (livro: "escolher qualquer Vantagem
+     * em nível Novato"). Com Nasce um Herói ativa na criação, a mesma exceção de Estágio
+     * que já vale pra compra normal de Vantagens (RequirementValidator/poderAtendeEstagio)
+     * também libera o slot de Adaptável pra qualquer Estágio, menos Lendário — a regra
+     * opcional nunca libera esse.
+     */
+    fun adaptavelAceitaEstagio(v: Vantagem): Boolean {
+        val estagio = v.requisitos.estagio
+        if (estagio.isBlank() || estagio.equals("Novato", ignoreCase = true)) return true
+        val ehLendario = listaDeEstagios.lastOrNull()?.nome?.equals(estagio, ignoreCase = true) == true
+        return nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0 && !ehLendario
+    }
+
     // controla quais categorias da seção de Vantagens estão expandidas
     val categoriasVantagensExpandidas: SnapshotStateMap<Categoria, Boolean> =
         mutableStateMapOf<Categoria, Boolean>().apply {
@@ -4767,11 +5019,36 @@ class CriadorState {
             }
         }
 
-        val idNormalizado = vantagem.id.keyify().replace(" ", "_")
+        // Bug real relatado pelo usuário: o teste antigo só comparava vantagensPrevias por
+        // igualdade exata de id (`it == vantagem.id`). Isso nunca pegava Pontos de Poder
+        // (usa gruposAlternativos, nem passava por aqui) nem Novos Poderes (vantagensPrevias
+        // = "antecedente_arcano", o id GENÉRICO — nunca igual a "antecedente_arcano_dom"),
+        // então dava pra remover o Antecedente Arcano com Novos Poderes/Pontos de Poder
+        // ainda selecionados, deixando as duas "órfãs": continuavam na lista, mas o
+        // pré-requisito que as autorizou não existia mais (aí, ao tentar comprar de novo,
+        // apareciam como "Requisitos pendentes"). Corrigido reusando o mesmo validador de
+        // pré-requisito (cobre vantagensPrevias E gruposAlternativos, com o mesmo
+        // tratamento especial de "antecedente_arcano" genérico) em vez de reimplementar o
+        // casamento de string aqui.
+        val validatePrerequisiteUseCase = ValidatePrerequisiteUseCase()
+        fun atendePrerequisitos(v: Vantagem, semVantagem: Vantagem?): Boolean {
+            val lista = if (semVantagem != null) vantagensSelecionadas.filter { it != semVantagem } else vantagensSelecionadas.toList()
+            return validatePrerequisiteUseCase.execute(
+                ValidatePrerequisiteUseCase.Input(
+                    vantagem = v,
+                    vantagensSelecionadas = lista,
+                    complicacoesSelecionadas = complicacoesSelecionadas.keys,
+                    pericias = periciasComIdiomas(),
+                    rawTotalPericia = { rawTotal(it) },
+                    getBestPericia = { getBestPericia(it) },
+                    valoresAtributos = valoresAtributos.mapValues { it.value.intValue }
+                )
+            )
+        }
         val dependente = vantagensSelecionadas.firstOrNull { other ->
-            other != vantagem && other.requisitos.vantagensPrevias.any {
-                it.keyify().replace(" ", "_") == idNormalizado
-            }
+            other != vantagem &&
+                atendePrerequisitos(other, null) &&
+                !atendePrerequisitos(other, vantagem)
         }
         if (dependente != null) {
             return false to "Remova antes a vantagem ${dependente.nome}, que depende desta."
@@ -5093,19 +5370,13 @@ class CriadorState {
         val baseCap = 12 + extras
 
         val chave = a.keyify()
-        val profCount = vantagensSelecionadas.count {
-            it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
-        }
-        val espCount = vantagensSelecionadas.count {
-            it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
-        }
 
         // Profissional e Especialista sobem o teto em UM passo cada (a própria
         // descrição de Especialista diz "um passo adicional" em cima de
         // Profissional — juntos, +2, não +4). `extras` acima já confirma que
         // este teto usa 1 unidade = 1 passo (d6 inicial = +1 unidade = d12+1),
         // então cada Vantagem soma só +1 aqui, não +2.
-        var finalCap = baseCap + (profCount + espCount)
+        var finalCap = baseCap + profissionalEspecialistaPassos(chave)
 
         // Limite de Força por Tamanho (Diminutos/Pequenos)
         // Se Tamanho <= -2 (Pequeno/Muito Pequeno): Força Máxima = d8.
@@ -5161,18 +5432,29 @@ class CriadorState {
 
         val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
 
-        val chave = per.nome.keyify()
+        // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
+        // comentário lá (a descrição de Especialista é "um passo adicional"
+        // em cima de Profissional, +2 juntos, nunca +4).
+        return baseCap + profissionalEspecialistaPassos(per.nome.keyify())
+    }
+
+    /**
+     * Quantos passos de dado Profissional + Especialista somam numa Característica
+     * específica (chave já normalizada por .keyify()) — 1 passo cada, extraído daqui pra
+     * não duplicar entre atributoMaxRaw()/periciaCapRaw() (teto) e rawTotal() (valor real
+     * da perícia, ver abaixo). Não cobre atributo: valoresAtributos[].intValue é um valor
+     * bruto sem camada de fórmula por cima, então o passo de atributo é aplicado uma vez,
+     * de verdade, no momento da compra/remoção da Vantagem — ver
+     * aplicarPassoProfissionalEspecialistaEmAtributo().
+     */
+    private fun profissionalEspecialistaPassos(chave: String): Int {
         val profCount = vantagensSelecionadas.count {
             it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
             it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
-
-        // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
-        // comentário lá (a descrição de Especialista é "um passo adicional"
-        // em cima de Profissional, +2 juntos, nunca +4).
-        return baseCap + (profCount + espCount)
+        return profCount + espCount
     }
 
     fun rawTotal(per: Pericia): Int {
@@ -5181,9 +5463,9 @@ class CriadorState {
         val complicsIncs = compIncsPorPericia[per] ?: 0
         val totalIncs = normalIncs + complicsIncs
 
-        if (modoProgressaoAtivo) {
+        val base = if (modoProgressaoAtivo) {
             val xpArcaneIds = xpArcaneAdvantageIds()
-            if (xpArcaneIds.isNotEmpty()) {
+            val xpArcaneRaw = if (xpArcaneIds.isNotEmpty()) {
                 val startWithoutXpArcane = periciaStartRawInternal(
                     ancestralidade,
                     per,
@@ -5196,12 +5478,19 @@ class CriadorState {
                     val progressionIncs = (normalIncs - frozenIncs).coerceAtLeast(0)
                     val preXpRaw = rawFromStartAndIncrements(startWithoutXpArcane, frozenIncs + complicsIncs)
                     val effectiveStart = maxOf(preXpRaw, xpArcaneStart)
-                    return rawFromStartAndIncrements(effectiveStart, progressionIncs)
-                }
-            }
+                    rawFromStartAndIncrements(effectiveStart, progressionIncs)
+                } else null
+            } else null
+            xpArcaneRaw ?: rawFromStartAndIncrements(startRaw, totalIncs)
+        } else {
+            rawFromStartAndIncrements(startRaw, totalIncs)
         }
 
-        return rawFromStartAndIncrements(startRaw, totalIncs)
+        // Profissional/Especialista (Vantagens Lendárias): "aumenta a Característica e o seu
+        // limite em um passo" — o teto (periciaCapRaw) já soma isso; soma aqui também pra que
+        // o valor real suba junto, sem exigir gastar Progresso à parte (a Vantagem já custou
+        // um Progresso pra ser comprada).
+        return base + profissionalEspecialistaPassos(per.nome.keyify())
     }
 
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {

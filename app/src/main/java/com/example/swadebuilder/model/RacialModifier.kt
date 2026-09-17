@@ -31,11 +31,18 @@ data class RacialAbility(
     /** Retorna o ID mecânico principal — priorizando o novo `traitId` parametrizado, ou o `id` legado. */
     fun resolvedTraitId(): String = traitId ?: id ?: ""
 
-    /** Retorna o valor real de pontos no orçamento racial para este traço. */
-    fun resolvedPontos(): Int {
-        if (pontos != 0) return pontos
-        return RacialTraitPointCatalog.custoDe(resolvedTraitId(), value, severity, pontos)
-    }
+    /**
+     * Retorna o valor real de pontos no orçamento racial para este traço — já multiplicado
+     * por `vezes` (traços empilháveis, ex.: Movimentação (2) comprado 2x = +4 pontos, não
+     * +2). Antes não multiplicava: a aba Ancestralidades mostrava o custo de UMA compra só
+     * mesmo em traços comprados várias vezes (bug relatado pelo usuário com Centauro:
+     * Movimentação +4 aparecia como "+2 pts"). custoDe() já trata `pontos != 0` como
+     * override antes de cair no id — não precisa checar aqui de novo. Mesma fórmula de
+     * ResolveVariantPointBudgetUseCase.habilidadeComoItem (custo do editor de Variante),
+     * que já multiplicava — as duas ficavam divergentes.
+     */
+    fun resolvedPontos(): Int =
+        RacialTraitPointCatalog.custoDe(resolvedTraitId(), value, severity, pontos) * vezes
 }
 
 @Serializable

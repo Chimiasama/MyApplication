@@ -79,7 +79,23 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         transtornos = this.transtornos.map { it.id },
         equipamentos = this.equipamentosComprados.toList() + this.extrairArmasNaturais(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-        manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
+        // CriadorState.manifestacoesPoderes usa o índice RAW do slot como chave (estável
+        // enquanto o personagem é editado); aqui reindexamos pra posição na lista já filtrada
+        // (sem nulls), que é o mesmo formato de `poderes` acima — o que o PDF/resumo (que só
+        // enxergam a lista filtrada) precisam pra casar cada nota com o poder certo.
+        manifestacoesPoderes = buildMap {
+            this@toMeuPersonagem.poderSlotsPorArcano.forEach { (arcKey, slots) ->
+                var filteredIdx = 0
+                slots.forEachIndexed { rawIdx, poderId ->
+                    if (poderId != null) {
+                        this@toMeuPersonagem.manifestacoesPoderes["$arcKey#$rawIdx"]?.let { nota ->
+                            put("$arcKey#$filteredIdx", nota)
+                        }
+                        filteredIdx++
+                    }
+                }
+            }
+        },
         bonusPoderExtra = this.bonusPoderExtra,
         dinheiro = this.dinheiro,
         requisicao = this.requisicao,
@@ -184,6 +200,10 @@ suspend fun produzirEExibirFichaPdf(
     // Ver gerarFichaEmPdf.
     especieId: String? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
+    // Pontos de Poder base + foco por Antecedente Arcano (GameDataStore.getArcanoInfoMap()) —
+    // usado só pra exibir a reserva total de PP no cabeçalho de cada Antecedente Arcano
+    // (ver buildPoderesBlocks); default vazio não quebra chamadores antigos.
+    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap(),
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -218,7 +238,8 @@ suspend fun produzirEExibirFichaPdf(
                 listaPoderes,
                 listaSuperPoderes,
                 especieId,
-                secoesIncluidas
+                secoesIncluidas,
+                arcanoInfo = arcanoInfo
             )
 
             val uri: Uri = FileProvider.getUriForFile(
@@ -538,6 +559,21 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
     fun nomeExibido(item: EquipamentoItem): String =
         (if (showOfficialNames) item.originalName else null)?.takeIf { it.isNotBlank() } ?: item.nomeExibicao
 
+    // Vantagem Brutamontes (livro básico, pág. 42): "+1 na Curta Distância de qualquer
+    // item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para
+    // a Longa Distância" — 3/6/12 vira 4/8/16. Faltava aplicar essa conta no PDF (o Resumo
+    // dentro do app já mostrava o valor ajustado, só como nota separada — aqui a tabela
+    // nem tinha a nota, ficava só o alcance de catálogo sem ajuste nenhum, bug real
+    // relatado pelo usuário).
+    val temBrutamontes = p.vantagens.contains(Constants.ID_BRUTAMONTES)
+    fun alcanceExibido(w: EquipamentoItem, distanciaTxt: String, danoTxt: String): String {
+        if (!temBrutamontes || distanciaTxt == "-") return distanciaTxt
+        val ehArremesso = w.usavelCorpoACorpo
+            ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(w.nome, danoTxt)
+        if (!ehArremesso) return distanciaTxt
+        return com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(distanciaTxt) ?: distanciaTxt
+    }
+
     val todasArmas = p.equipamentos.filter { it.dano != null }
     val armasCorpoACorpo = todasArmas.filter { w ->
         val danoTxt = w.campoTexto(w.dano).takeIf { it != "-" } ?: ""
@@ -564,23 +600,32 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
 
     val meleeRows = ataquesSuperMelee + armasCorpoACorpo.map { w ->
         val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
-        // "Toque" é o alcance-padrão de ataque natural (não é um alcance de verdade) — só
-        // interessa mostrar Alcance aqui quando é um valor numérico real, tipo arma de
-        // arremesso ("3/6/12"); o resto fica "-".
-        val alcanceMelee = w.campoTexto(w.distancia).takeUnless { it == "Toque" } ?: "-"
+        val danoTxtMelee = w.campoTexto(w.dano)
+        // Alcance aqui é o reach de arma de haste (Lança, Alabarda...), lido de
+        // `observacoes` — NUNCA o campo `distancia` (curta/média/longa de arremesso/tiro,
+        // que só faz sentido na tabela de Armas à Distância) nem o bônus da Vantagem
+        // Brutamontes (alcanceExibido), que só vale pra itens arremessados de verdade, não
+        // pro reach de uma arma de haste empunhada corpo a corpo. Bug real relatado pelo
+        // usuário: uma arma de arremesso (ex.: Adaga/Faca (Arremesso)) reaproveitava aqui o
+        // "3/6/12" (e até o ajuste do Brutamontes) na linha de Corpo a Corpo, quando essa
+        // arma nem tem reach — o certo é "-".
+        val alcanceMelee = com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceCorpoACorpo(
+            w.campoTexto(w.observacoes).takeIf { it != "-" }
+        ) ?: "-"
         listOf(
             nomeExibido(w),
-            w.campoTexto(w.dano),
+            danoTxtMelee,
             if (isNatural) "-" else w.campoTexto(w.pa),
             alcanceMelee,
             if (isNatural) "-" else w.campoTexto(w.peso)
         )
     }
     val rangedRows = ataquesSuperRanged + armasADistancia.map { w ->
+        val danoTxtRanged = w.campoTexto(w.dano)
         listOf(
             nomeExibido(w),
-            w.campoTexto(w.distancia),
-            w.campoTexto(w.dano),
+            alcanceExibido(w, w.campoTexto(w.distancia), danoTxtRanged),
+            danoTxtRanged,
             w.campoTexto(w.pa),
             w.campoTexto(w.tiros),
             w.campoTexto(w.cdt),
@@ -634,7 +679,10 @@ data class PowerCardSpec(
     val pp: String,
     val distancia: String,
     val duracao: String,
-    val manifestacoes: List<String> = emptyList()
+    // Manifestação escolhida pelo próprio jogador (ex.: "Gelo" pro poder Raio) — nunca a lista
+    // de exemplos do catálogo (Poder.manifestacoes), que é só inspiração e não deve aparecer
+    // na ficha como se fosse o que o personagem tem.
+    val manifestacao: String? = null
 )
 
 internal fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
@@ -664,7 +712,7 @@ internal fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float
 
 /** Até dois cards de poder lado a lado, pra parecer uma grade sem sair do fluxo de coluna única. */
 class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
-    private val cardHeight = if (cards.any { it.manifestacoes.isNotEmpty() }) 78f else 62f
+    private val cardHeight = if (cards.any { !it.manifestacao.isNullOrBlank() }) 78f else 62f
     override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
         val gap = 10f
@@ -675,9 +723,9 @@ class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
                 "Estágio: ${spec.estagio}   •   PP: ${spec.pp}",
                 "Alcance: ${spec.distancia}   •   Duração: ${spec.duracao}"
             )
-            val extraLines = if (spec.manifestacoes.isNotEmpty()) {
-                listOf("Manifestações: " + spec.manifestacoes.joinToString(", "))
-            } else emptyList()
+            val extraLines = spec.manifestacao?.takeIf { it.isNotBlank() }?.let {
+                listOf("Manifestação: $it")
+            } ?: emptyList()
             drawStatCard(canvas, cx, y, cardW, cardHeight - 8f, spec.nome, statLines, extraLines, theme)
         }
     }
@@ -846,7 +894,8 @@ fun gerarFichaEmPdf(
     // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
     // regra oficial por engano) ou quando o chamador não o resolveu.
     especieId: String? = null,
-    secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet()
+    secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
+    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
 ) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -1026,7 +1075,7 @@ fun gerarFichaEmPdf(
     // Páginas dedicadas, separadas por tópico — só entram se o personagem tiver o
     // conteúdo correspondente e a seção estiver marcada no diálogo de exportação.
     if (FichaPdfSecao.PODERES in secoesIncluidas && (personagem.poderes.isNotEmpty() || isPathfinderGnome)) {
-        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay))
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay, arcanoInfo))
     }
     if (FichaPdfSecao.SUPERPODERES in secoesIncluidas && personagem.modoSupers && personagem.superInvestments.isNotEmpty()) {
         renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.SUPERPODERES.titulo, buildSuperPoderesBlocks(personagem))
@@ -1148,7 +1197,8 @@ private fun buildPoderesBlocks(
     personagem: MeuPersonagem,
     listaPoderes: List<Poder>,
     isPathfinderGnome: Boolean,
-    mapaAtributosDisplay: Map<String, String>
+    mapaAtributosDisplay: Map<String, String>,
+    arcanoInfo: Map<String, Triple<Int, Int, String>>
 ): List<PdfBlock> {
     val blocks = mutableListOf<PdfBlock>()
 
@@ -1173,18 +1223,51 @@ private fun buildPoderesBlocks(
                         estagio = "Novato",
                         pp = ppText,
                         distancia = "-",
-                        duracao = "-",
-                        manifestacoes = listOf("Iluminar", "Som", "Telecinese", "Amigo das Feras")
+                        duracao = "Iluminar, Som, Telecinese ou Amigo das Feras"
                     )
                 )
             )
         )
     }
 
+    // "MÚLTIPLOS ANTECEDENTES ARCANOS" (Fantasia/Horror/Pathfinder/Sci-Fi, texto idêntico
+    // nos quatro livros): usa a MAIOR reserva inicial de Pontos de Poder entre todos os
+    // Antecedentes Arcanos E Poderes Místicos ativos, compartilhada — Místico (10 PP
+    // fixos) entra nesse máximo igual a qualquer outro, não uma conta separada (bug real:
+    // um personagem com Místico E outro Antecedente Arcano via dois números de PP
+    // diferentes em vez de uma reserva só). O livro Básico tem sua PRÓPRIA regra opcional
+    // de múltiplos Antecedentes Arcanos, com pool separado por Antecedente — por isso o
+    // gate abaixo; Místico só existe dentro dos 4 livros, nunca aparece no fallback.
+    val usaReservaCompartilhada = personagem.compendioFantasiaAtivo || personagem.compendioHorrorAtivo ||
+        personagem.compendioPathfinderAtivo || personagem.compendioSciFiAtivo
+    val sharedPP = if (usaReservaCompartilhada) {
+        val chavesArcano = personagem.poderes.keys.map { it.uppercase().trim() }
+        val maxBaseOutros = chavesArcano.filter { it != "MISTICO" }.mapNotNull { arcanoInfo[it]?.second }.maxOrNull() ?: 0
+        val temMistico = chavesArcano.contains("MISTICO")
+        val maxBaseCompartilhado = if (temMistico) maxOf(maxBaseOutros, 10) else maxBaseOutros
+        val gnomeBonusCompartilhado = if (isPathfinderGnome) 1 else 0
+        maxBaseCompartilhado + personagem.bonusPoderExtra + gnomeBonusCompartilhado
+    } else 0
+
     personagem.poderes.forEach { (arc, ids) ->
-        val arcLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
+        val cleanKey = arc.uppercase().trim()
+        val arcNameLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
+        // Reserva total de PP exibida no cabeçalho — o PDF antes só mostrava o custo de
+        // cada poder, nunca o total da reserva (bug relatado pelo usuário: comprar Pontos
+        // de Poder não refletia em lugar nenhum do PDF).
+        val ppSuffix = if (cleanKey == "MISTICO") {
+            " ($sharedPP PP)"
+        } else {
+            val info = arcanoInfo[cleanKey]
+            if (info != null) {
+                val (_, pp, _) = info
+                val ppExibido = if (usaReservaCompartilhada) sharedPP else pp + personagem.bonusPoderExtra
+                " ($ppExibido PP)"
+            } else ""
+        }
+        val arcLabel = "$arcNameLabel$ppSuffix"
         blocks.add(SmallHeaderBlock(arcLabel))
-        val specs = ids.map { id ->
+        val specs = ids.mapIndexed { idx, id ->
             val poder = listaPoderes.firstOrNull { it.id == id }
             var nome = poder?.nome ?: id
             if (!EditionConfig.isFullEdition) nome = GenericNameMapper.map(nome)
@@ -1200,7 +1283,7 @@ private fun buildPoderesBlocks(
                 pp = poder?.pontosDePoder ?: "-",
                 distancia = poder?.distancia ?: "-",
                 duracao = poder?.duracao ?: "-",
-                manifestacoes = poder?.manifestacoes ?: emptyList()
+                manifestacao = personagem.manifestacoesPoderes["$arc#$idx"]
             )
         }
         specs.chunked(2).forEach { pair -> blocks.add(PowerCardRowBlock(pair)) }
@@ -1507,7 +1590,13 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
 
     val trackX = rect.left + 10f
     val trackY = if (p.coracaoCrystalSelecionado != null) rect.top + 95f else rect.top + 80f
-    drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
+    // Duro na Queda (+1) e Muito Duro na Queda (+1 adicional, exige Duro na Queda) elevam o
+    // limite de 3 para até 5 Ferimentos antes de Incapacitado (livro básico, Vantagens
+    // Lendárias) — o track antes sempre desenhava 3 caixas, ignorando as duas Vantagens.
+    val ferimentosMax = 3 +
+        (if (p.vantagens.contains("duro_na_queda")) 1 else 0) +
+        (if (p.vantagens.contains("muito_duro_na_queda")) 1 else 0)
+    drawTrack(canvas, trackX, trackY, "Ferimentos", ferimentosMax, -1, theme)
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 
     // Coluna de valores numa posição fixa (calculada a partir do rótulo mais largo da

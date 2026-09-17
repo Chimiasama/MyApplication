@@ -25,6 +25,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AssistChip
@@ -53,6 +55,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
@@ -215,12 +218,25 @@ fun PoderesSection(
         arcanosAtivos
     }
 
-    val hasStandardAB = arcanosAtivos.any { it.normAAKey() != "MISTICO" }
-
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioSciFiAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
+    // "MÚLTIPLOS ANTECEDENTES ARCANOS" (Fantasia p.69, Horror p.69, Sci-Fi, Pathfinder —
+    // texto idêntico nos quatro livros): "Se já tiver um Antecedente Arcano ou Poderes
+    // Místicos, usa a MAIOR reserva inicial de Pontos de Poder e aplica quaisquer aumentos
+    // de outras fontes a ela. Todos os seus Antecedentes Arcanos e Poderes Místicos
+    // compartilham essa reserva." — Poderes Místicos entra nesse máximo igual a qualquer
+    // outro Antecedente Arcano (10 PP fixos, ver Fantasia p.177/Horror p.14), não uma
+    // reserva separada — antes MISTICO tinha sua própria conta isolada (ppTotal próprio,
+    // sem entrar no maxOf nem levar bonusPoderExtra), então um personagem com Místico E
+    // outro Antecedente Arcano via dois números diferentes em vez de uma reserva só.
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioSciFiAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap) {
         if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo && !state.compendioSciFiAtivo) 0 else {
-            val maxBase = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
-            val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && hasStandardAB) 1 else 0
+            val maxBaseOutros = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
+            val temMistico = arcanosAtivos.any { it.normAAKey() == "MISTICO" }
+            val maxBase = if (temMistico) maxOf(maxBaseOutros, 10) else maxBaseOutros
+            // Magia Gnômica (Pathfinder): "Gnomos com um Antecedente Arcano ou Poder
+            // Místico adicionam seu Ponto de Poder de bônus à sua reserva" — soma uma vez
+            // só, sem depender de ter ou não um Antecedente Arcano "padrão" (Místico já
+            // conta pra essa condição sozinho).
+            val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO")) 1 else 0
             maxBase + state.bonusPoderExtra + gnomeBonus
         }
     }
@@ -238,6 +254,40 @@ fun PoderesSection(
         state.modoSupers
     ) {
         "BASICO" in state.getActiveOrigins()
+    }
+
+    // Livros relevantes pro personagem: união dos livros de cada Antecedente Arcano
+    // mostrado (mesma lógica de origem de powersByArcKey, abaixo) + Básico quando
+    // aplicável. Usado só pras contagens dos chips "Todos"/"Novato"/... — que antes
+    // somavam allPoderes (todo poder de todo livro que o app conhece, ativo ou não no
+    // personagem) — bug real relatado pelo usuário: com só o livro Básico ativo, o chip
+    // mostrava "Todos (225)" em vez de 54. A lista de poderes de fato selecionáveis
+    // (poderesParaEsteArcano, abaixo) já era corretamente restrita ao livro certo; só a
+    // contagem do chip estava errada.
+    val relevantPowerOrigins = remember(
+        displayKeys,
+        state.vantagensSelecionadas,
+        state.compendioArteDaGuerraAtivo,
+        state.tropoSelecionado,
+        includeBasicPowers
+    ) {
+        buildSet {
+            displayKeys.forEach { arcKeyRaw ->
+                val arcKey = arcKeyRaw.normAAKey()
+                val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+                val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS CHI"
+                val usaTecnicasElementais = state.compendioArteDaGuerraAtivo && arcKey == "TECNICAS ELEMENTAIS"
+                val originRaw = when {
+                    usaListaChi || usaTecnicasElementais -> "ARTE DA GUERRA"
+                    else -> advantage?.origem ?: "BASICO"
+                }
+                add(powerAssetOriginKey(originRaw))
+            }
+            if (includeBasicPowers) add("BASICO")
+        }
+    }
+    val allPoderesRelevantes = remember(powerCache, relevantPowerOrigins) {
+        relevantPowerOrigins.flatMap { powerCache[it] ?: emptyList() }.distinctBy { it.id }
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
@@ -384,9 +434,14 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
-                } else if (!state.poderAtendeEstagio(power.estagio)) {
-                    return@filter false
                 }
+                // Fora do sistema "poderes por estágio": não filtra mais por
+                // state.poderAtendeEstagio() aqui — um poder de Estágio acima do atual
+                // continua na lista, só aparece bloqueado no card (ver isStageLocked
+                // abaixo), igual ao que já acontece com Vantagens ("Requisitos
+                // pendentes"). Escondê-lo da lista inteira (comportamento anterior)
+                // deixava a contagem do filtro "Todos" mentindo e o poder parecia não
+                // existir no catálogo — bug real relatado pelo usuário com Banir.
 
                 // Requisito de "precisa ter outra Vantagem antes" (ex.: Disfarce
                 // Demoníaco diluído do Meio-Demônio exige Disfarce Demoníaco
@@ -517,7 +572,7 @@ fun PoderesSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
-                    val count = allPoderes.size
+                    val count = allPoderesRelevantes.size
                     FilterChip(
                         selected = selectedRank == "Todos",
                         onClick = { selectedRank = "Todos" },
@@ -525,8 +580,8 @@ fun PoderesSection(
                     )
                 }
                 items(listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendario")) { rank ->
-                    val count = remember(allPoderes, rank) {
-                        allPoderes.count { it.estagio.semAcentos().equals(rank.semAcentos(), ignoreCase = true) }
+                    val count = remember(allPoderesRelevantes, rank) {
+                        allPoderesRelevantes.count { it.estagio.semAcentos().equals(rank.semAcentos(), ignoreCase = true) }
                     }
                     FilterChip(
                         selected = selectedRank == rank,
@@ -582,13 +637,17 @@ fun PoderesSection(
             } else if (usaPoderesPorEstagio) {
                 "Poderes por estágio  •  PP especiais  •  $foco"
             } else {
-                val ppDisplay = if (arcKey == "MISTICO") {
-                    val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && !hasStandardAB) 1 else 0
-                    ppTotal + gnomeBonus
-                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
+                val ppDisplay = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
+                    // Cobre MISTICO e qualquer outro Antecedente Arcano igual — os dois
+                    // compartilham a mesma reserva (ver comentário em sharedTotalPP, acima).
                     sharedTotalPP
                 } else {
-                    ppTotal
+                    // Só o livro Básico ativo: sharedTotalPP não entra nessa conta (ver guard
+                    // logo acima, restrito a Fantasia/Horror/Pathfinder/SciFi), então a
+                    // Vantagem Pontos de Poder (bonusPoderExtra) precisa ser somada aqui — sem
+                    // isso a reserva exibida nunca refletia a compra (bug real relatado pelo
+                    // usuário).
+                    ppTotal + state.bonusPoderExtra
                 }
                 "PP: $ppDisplay  •  $foco"
             }
@@ -744,6 +803,8 @@ fun PoderesSection(
                             state.arcanoSnapshotAntesDaCompra?.size ?: 0
                         else 0
 
+                        var editingSlotIdx by remember(arcKey) { mutableStateOf<Int?>(null) }
+
                         Card(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                             modifier = Modifier
@@ -755,7 +816,13 @@ fun PoderesSection(
                                 Spacer(Modifier.height(4.dp))
                                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     slots.forEachIndexed { idx, poderId ->
-                                        val label = if (poderId == null) "— vazio —" else aspectOnlyPowerDisplayName(idToName[poderId] ?: poderId.toFancyTitleCase(), arcKey)
+                                        // Chave por índice RAW do slot (não pelo id do poder) — Novos
+                                        // Poderes permite repetir um poder já conhecido num slot extra
+                                        // (ver botão "Duplicar" na lista abaixo), então duas cópias do
+                                        // mesmo poder precisam de notas de Manifestação independentes.
+                                        val nota = if (poderId != null) state.manifestacoesPoderes["$arcKey#$idx"]?.trim()?.takeIf { it.isNotBlank() } else null
+                                        val baseLabel = if (poderId == null) "— vazio —" else aspectOnlyPowerDisplayName(idToName[poderId] ?: poderId.toFancyTitleCase(), arcKey)
+                                        val label = if (nota != null) "$baseLabel ($nota)" else baseLabel
                                         val isFixed = state.isFixedPower(arcKey, poderId)
                                         val isSlotLocked = locked || idx < lockedCount || isFixed
                                         AssistChip(
@@ -763,16 +830,11 @@ fun PoderesSection(
                                                 containerColor = if (poderId == null) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
                                             ),
                                             onClick = {
-                                                if (!isSlotLocked && poderId != null) {
-                                                    val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
-                                                    if (!pode) {
-                                                        onShowMessage(msg ?: "Não é possível remover este poder.")
-                                                    } else {
-                                                        slots[idx] = null
-                                                        state.syncPoderesSelecionadosFromSlots()
-                                                        state.manifestacoesPoderes.remove(poderId)
-                                                    }
-                                                }
+                                                // Toque no corpo do chip abre a edição da anotação de
+                                                // Manifestação — não remove mais o poder (ver ícone "x"
+                                                // abaixo), pra reduzir remoção acidental de um slot já
+                                                // pago.
+                                                if (poderId != null) editingSlotIdx = idx
                                             },
                                             label = {
                                                 Text(
@@ -780,9 +842,85 @@ fun PoderesSection(
                                                     style = MaterialTheme.typography.bodySmall
                                                 )
                                             },
-                                            enabled = !isSlotLocked && poderId != null
+                                            // Sinaliza visualmente que o corpo do chip é tocável pra
+                                            // editar a Manifestação (sem isso, nada no chip indicava
+                                            // que dava pra tocar — usuário relatou não ter achado onde
+                                            // colocar a Manifestação).
+                                            leadingIcon = if (poderId != null) {
+                                                {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Edit,
+                                                        contentDescription = "Editar Manifestação",
+                                                        modifier = Modifier.size(14.dp)
+                                                    )
+                                                }
+                                            } else null,
+                                            trailingIcon = if (poderId != null && !isSlotLocked) {
+                                                {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Close,
+                                                        contentDescription = "Remover poder do slot",
+                                                        modifier = Modifier
+                                                            .size(16.dp)
+                                                            .clickable {
+                                                                val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
+                                                                if (!pode) {
+                                                                    onShowMessage(msg ?: "Não é possível remover este poder.")
+                                                                } else {
+                                                                    slots[idx] = null
+                                                                    state.syncPoderesSelecionadosFromSlots()
+                                                                    state.manifestacoesPoderes.remove("$arcKey#$idx")
+                                                                }
+                                                            }
+                                                    )
+                                                }
+                                            } else null,
+                                            enabled = poderId != null
                                         )
                                     }
+                                }
+
+                                val idxSendoEditado = editingSlotIdx
+                                val poderSendoEditado = idxSendoEditado?.let { slots.getOrNull(it) }
+                                if (idxSendoEditado != null && poderSendoEditado != null) {
+                                    val chaveNota = "$arcKey#$idxSendoEditado"
+                                    var textoManifestacao by remember(arcKey, idxSendoEditado) {
+                                        mutableStateOf(state.manifestacoesPoderes[chaveNota] ?: "")
+                                    }
+                                    AlertDialog(
+                                        onDismissRequest = { editingSlotIdx = null },
+                                        title = { Text("Manifestação") },
+                                        text = {
+                                            Column {
+                                                Text(
+                                                    "Anotação livre pra descrever a Manifestação deste poder (ex.: \"Gelo\" pro poder Raio, criando um Raio de Gelo). As Manifestações listadas no livro são só exemplos de inspiração, não uma lista fechada.",
+                                                    style = MaterialTheme.typography.bodySmall
+                                                )
+                                                Spacer(Modifier.height(8.dp))
+                                                OutlinedTextField(
+                                                    value = textoManifestacao,
+                                                    onValueChange = { textoManifestacao = it },
+                                                    label = { Text("Manifestação") },
+                                                    singleLine = true,
+                                                    modifier = Modifier.fillMaxWidth()
+                                                )
+                                            }
+                                        },
+                                        confirmButton = {
+                                            TextButton(onClick = {
+                                                val trimmed = textoManifestacao.trim()
+                                                if (trimmed.isBlank()) {
+                                                    state.manifestacoesPoderes.remove(chaveNota)
+                                                } else {
+                                                    state.manifestacoesPoderes[chaveNota] = trimmed
+                                                }
+                                                editingSlotIdx = null
+                                            }) { Text("Salvar") }
+                                        },
+                                        dismissButton = {
+                                            TextButton(onClick = { editingSlotIdx = null }) { Text("Cancelar") }
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -826,11 +964,20 @@ fun PoderesSection(
                         var expanded by remember { mutableStateOf(false) }
 
                         val isFixed = state.isFixedPower(arcKey, poder.id)
-                        val isCardLocked = locked || isFixed
+                        // Estágio do poder acima do Estágio atual do personagem — mesma regra
+                        // de podeSelecionar pra Vantagens (mostra bloqueado com o motivo, não
+                        // esconde da lista). Não se aplica ao sistema "poderes por estágio"
+                        // (usaPoderesPorEstagioCard), que já tem seu próprio filtro acima.
+                        val isStageLocked = !usaPoderesPorEstagioCard && !state.poderAtendeEstagio(poder.estagio)
+                        val isCardLocked = locked || isFixed || isStageLocked
 
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = if (selecionado) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                                containerColor = when {
+                                    isStageLocked -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                    selecionado -> MaterialTheme.colorScheme.primaryContainer
+                                    else -> MaterialTheme.colorScheme.surfaceVariant
+                                }
                             ),
                             border = if (selecionado) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
                             modifier = Modifier
@@ -850,7 +997,7 @@ fun PoderesSection(
                                             } else {
                                                 slots[idx] = null
                                                 state.syncPoderesSelecionadosFromSlots()
-                                                state.manifestacoesPoderes.remove(poder.id)
+                                                state.manifestacoesPoderes.remove("$arcKey#$idx")
                                             }
                                         }
                                     } else {
@@ -916,9 +1063,38 @@ fun PoderesSection(
                                     }
                                 val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
                                 Text(
-                                    if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
-                                    style = MaterialTheme.typography.bodySmall
+                                    when {
+                                        usaPoderesPorEstagioCard && specialStage != null -> "$specialStage • PP: $ppExibicao"
+                                        isStageLocked -> "Requer Estágio ${poder.estagio} • PP: $ppExibicao"
+                                        else -> "PP: $ppExibicao"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (isStageLocked) MaterialTheme.colorScheme.error else Color.Unspecified
                                 )
+                            }
+
+                            // "Uma personagem pode adicionar uma nova Manifestação a um poder
+                            // que já possui em vez de ganhar um novo poder" (livro básico, Vantagem
+                            // Novos Poderes) — só some pra repetir num slot que veio de Novos
+                            // Poderes (não nos slots iniciais do Antecedente Arcano); a Manifestação
+                            // em si é uma anotação livre editável no chip do slot, não uma escolha
+                            // daqui (ver dialog de edição na seção "Slots" acima).
+                            if (!usaPoderesPorEstagioCard && selecionado) {
+                                val boundary = state.getSlotsCountForArcano(arcKey) - state.getNovosPoderesBonusSlotsForArcano(arcKey)
+                                val duplicateIdx = slots.withIndex().firstOrNull { (i, v) -> v == null && i >= boundary && i >= lockedCount }?.index
+                                if (duplicateIdx != null) {
+                                    Text(
+                                        "+ Repetir num slot extra de Novos Poderes",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier
+                                            .padding(top = 2.dp)
+                                            .clickable {
+                                                slots[duplicateIdx] = poder.id
+                                                state.syncPoderesSelecionadosFromSlots()
+                                            }
+                                    )
+                                }
                             }
 
                             if (state.usarSemPontosDePoder) {

@@ -65,7 +65,7 @@
     "descricaoLite": "Escolha um tipo específico de inimigo; contra ele, ganha rerrolagem gratuita em Sobrevivência para rastrear ou em Atletismo (arremessar), Lutar ou Atirar para atacar. Pode ser adquirida várias vezes para tipos de inimigo diferentes."
   },
   {
-    "id": "resistencia_arcana_fc",
+    "id": "resistencia_arcana",
     "nome": "RESISTÊNCIA ARCANA",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -87,7 +87,7 @@
     "descricaoLite": "Poderes arcanos hostis usados contra a personagem sofrem -2 e o dano mágico recebido é reduzido em 2, incluindo bônus de armas mágicas. Mesmo anulado por essa penalidade, o poder inimigo ainda é ativado, consome Pontos de Poder e pode afetar outros alvos."
   },
   {
-    "id": "resistencia_arcana_aprimorada_fc",
+    "id": "resistencia_arcana_aprimorada",
     "nome": "RESISTÊNCIA ARCANA APRIMORADA",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -95,7 +95,7 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "resistencia_arcana_fc"
+        "resistencia_arcana"
       ],
       "observacoes": ""
     },
@@ -1397,7 +1397,7 @@
   {
     "id": "mestre_alquimista",
     "nome": "MESTRE ALQUIMISTA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1421,7 +1421,7 @@
   {
     "id": "quimico",
     "nome": "QUÍMICO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1495,7 +1495,7 @@
   {
     "id": "inspirar_heroismo",
     "nome": "INSPIRAR HEROÍSMO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1519,7 +1519,7 @@
   {
     "id": "instrumento",
     "nome": "INSTRUMENTO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1541,7 +1541,7 @@
   {
     "id": "marcha_funebre",
     "nome": "MARCHA FÚNEBRE",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Heroico",
       "atributos": {},
@@ -1649,7 +1649,7 @@
   {
     "id": "a_hora_das_bruxas",
     "nome": "A HORA DAS BRUXAS",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1670,7 +1670,7 @@
   {
     "id": "mau_olhado",
     "nome": "MAU-OLHADO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1718,7 +1718,7 @@
   {
     "id": "destruir_mortos_vivos",
     "nome": "DESTRUIR MORTOS-VIVOS",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1740,7 +1740,7 @@
   {
     "id": "misericordia",
     "nome": "MISERICÓRDIA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1834,7 +1834,7 @@
   {
     "id": "armadura_infernal",
     "nome": "ARMADURA INFERNAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1856,7 +1856,7 @@
   {
     "id": "furia_infernal",
     "nome": "FÚRIA INFERNAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1940,7 +1940,7 @@
   {
     "id": "cajado_do_coracao_da_mata",
     "nome": "CAJADO DO CORAÇÃO DA MATA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1962,7 +1962,7 @@
   {
     "id": "forma_verdadeira",
     "nome": "FORMA VERDADEIRA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2031,7 +2031,7 @@
   {
     "id": "absorcao_elemental",
     "nome": "ABSORÇÃO ELEMENTAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2053,7 +2053,7 @@
   {
     "id": "maestria_elemental",
     "nome": "MAESTRIA ELEMENTAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2119,7 +2119,7 @@
   {
     "id": "armadura_de_engenhoqueiro",
     "nome": "ARMADURA DE ENGENHOQUEIRO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2141,7 +2141,7 @@
   {
     "id": "familiar_construto",
     "nome": "FAMILIAR CONSTRUTO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2235,7 +2235,7 @@
   {
     "id": "grande_poder",
     "nome": "GRANDE PODER",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -2257,7 +2257,7 @@
   {
     "id": "poder_fenomenal",
     "nome": "PODER FENOMENAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Heroico",
       "atributos": {},
@@ -2315,7 +2315,7 @@
   {
     "id": "ilusao_mortal",
     "nome": "ILUSÃO MORTAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2339,7 +2339,7 @@
   {
     "id": "mestre_da_ilusao",
     "nome": "MESTRE DA ILUSÃO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2407,7 +2407,7 @@
   {
     "id": "barda_arcana",
     "nome": "BARDA ARCANA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2429,7 +2429,7 @@
   {
     "id": "grande_invocacao",
     "nome": "GRANDE INVOCAÇÃO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Heroico",
       "atributos": {},
@@ -2451,7 +2451,7 @@
   {
     "id": "invocacao_feroz",
     "nome": "INVOCAÇÃO FEROZ",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2557,7 +2557,7 @@
   {
     "id": "grimorio",
     "nome": "GRIMÓRIO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2579,7 +2579,7 @@
   {
     "id": "inspiracao_arcana",
     "nome": "INSPIRAÇÃO ARCANA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Heroico",
       "atributos": {},
@@ -2670,7 +2670,7 @@
   {
     "id": "familiar_morto_vivo",
     "nome": "FAMILIAR MORTO-VIVO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2692,7 +2692,7 @@
   {
     "id": "recipiente_da_alma",
     "nome": "RECIPIENTE DA ALMA",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2787,7 +2787,7 @@
   {
     "id": "fetiche_sagrado",
     "nome": "FETICHE SAGRADO",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2811,7 +2811,7 @@
   {
     "id": "magia_primordial",
     "nome": "MAGIA PRIMORDIAL",
-    "categoria": "PODER",
+    "categoria": "ANTECEDENTE_ARCANO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -36837,6 +36837,7 @@
         "Espírito": 8
       }
     },
+    "limite_compra": "infinito",
     "descricao": "O “magnetismo animal” do Senhor das Feras é tão grande que também atrai um animal leal de alguma espécie. Geralmente é um animal de Tamanho 0 ou menor, sujeito à aprovação do Mestre. O animal é um Extra e não tem Progresso em Estágio ou habilidades. Se um animal for dispensado ou morto, pode-se ganhar um substituto em 1d4 dias.",
     "livros": [
       "PATHFINDER"
