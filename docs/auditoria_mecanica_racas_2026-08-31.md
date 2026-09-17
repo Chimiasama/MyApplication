@@ -532,3 +532,37 @@ conceito certo pro cálculo de custo.
   caminho de código (`RacialAbility.resolvedTraitId()` →
   `RacialTraitPointCatalog.custoDe()`/`RacialModifier.resolvedDesvantagens()`/
   `desvantagensEfetivas()`).
+
+## Oitava rodada — Pequenos (Goblins) virando Tamanho -1 de verdade
+
+Pedido do dono do projeto: conferir Goblins. "Sobrevivente" (id
+`ADAPTAVEL`) já estava certo (confirmado na rodada anterior — mesmo texto
+de Humanos "Adaptável": "Vantagem de Estágio Novato à escolha"). O achado
+real foi em "Pequenos": tinha `id: "PEQUENOS"` próprio em vez do id
+compartilhado `TAMANHO_MENOS_1` — diferente de Draconianos (rodada 7), aqui
+não era um bug de comportamento (`PEQUENOS` já tinha sua própria entrada em
+`EFEITOS`/`CUSTOS`, com o MESMO efeito — `TamanhoBonus(-1)` — e o MESMO
+custo — -1 — que `TAMANHO_MENOS_1`, e nenhum dos dois tem `LABEL`
+cadastrado, então a exibição já usava o `nome` cru "PEQUENOS" dos dois
+jeitos). Era duplicidade de id pro mesmo conceito — exatamente o tipo de
+coisa que a rodada 3 (mesmo arquivo, acima) já tinha eliminado pro resto do
+catálogo ("Ids já existentes... foram reaproveitados quando o conceito é o
+mesmo").
+
+- **`ancestralidades.json`**: Goblins "PEQUENOS" passou de `id: "PEQUENOS"`
+  pra `id: "TAMANHO_MENOS_1"` (mesmo id já usado por Pequeninos, Gnomos,
+  Povo Ratazana, Povo Rato e Gnomo/Halfling do Pathfinder). `nome`
+  continua `"PEQUENOS"` — é a skin de exibição, sem mudança.
+- **`RacialTraitPointCatalog.kt`**: removidas as entradas `"PEQUENOS"` de
+  `EFEITOS` (linha ~222) e `CUSTOS` (linha ~736), já mortas depois da
+  migração — nenhuma outra raça/Variante/teste referenciava esse id
+  (conferido em `app/src/main/assets`, `app/src/main/java` e
+  `app/src/test`). Comentário de `TAMANHO_MENOS_1` atualizado pra citar
+  Goblins entre as raças que usam o id.
+- **Custo inalterado**: Goblins continua fechando em 2/2 pontos (-1
+  Desagradável, +1 Infravisão, -1 Pequenos/Tamanho -1, +2 Sobrevivente/
+  Adaptável, +1 Sorrateiro).
+- Mesma limitação de sandbox da rodada anterior: sem acesso aos
+  repositórios de plugin do Gradle aqui, não rodei o app/testes JVM —
+  validação por leitura cruzada (`ancestralidades.json` → `EFEITOS`/
+  `CUSTOS`/`LABEL`/`VEZES_MAX` de `RacialTraitPointCatalog.kt`).

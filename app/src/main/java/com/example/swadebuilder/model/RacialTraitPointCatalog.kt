@@ -218,8 +218,7 @@ object RacialTraitPointCatalog {
         // nome/descrição do traço que existiam antes em ModifierEngine.
         // Valores conferidos contra a própria descrição de cada raça em
         // ancestralidades.json.
-        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder) — livro: "Tamanho -1 (1)", não empilha
-        "PEQUENOS" to RacialTraitEffect.TamanhoBonus(-1), // Goblins (mesmo efeito de Tamanho -1, id próprio)
+        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder), Goblins ("Pequenos", skin do livro) — livro: "Tamanho -1 (1)", não empilha
         // Diminuto/Minúsculo: traço de TIER único (não empilhável — o livro
         // marca "(1)" mas com 3 custos internos conforme o tier escolhido:
         // Pequeno/Muito Pequeno/Minúsculo), diferente do empilhável acima.
@@ -734,7 +733,6 @@ object RacialTraitPointCatalog {
         // Iluminada pela Lua (Emanar Luz)" via `nome`, exclusiva da raça.
         "PELE_LUMINOSA" to 1,
         "PENSAMENTOS_POSITIVOS" to 2, // oficial: vantagem_racial
-        "PEQUENOS" to -1, // oficial: tamanho_menos_1
         "PERCEBER_D6" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA) — Umvee "Gatoruja"
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
         "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
