@@ -486,3 +486,49 @@ forma minúscula (conferido em `app/src/main/java` e `app/src/test`).
 **Resultado: as 28 raças já estavam mecanicamente corretas — a única
 mudança de código desta rodada foi o ajuste de capitalização do id do
 Sucateiro (Povo Ratazana), sem efeito no comportamento do app.**
+
+## Sétima rodada — Mal-Humorado (Draconianos) virando a Complicação Arrogante de verdade
+
+Pedido do dono do projeto, depois de ver a rodada anterior: "Mal-Humorado"
+(Draconianos) já tinha `category: "racial_hindrance"` e `severity: "Maior"`
+— já contava como complicação racial de verdade no orçamento de pontos
+(-2). O que faltava: a complicação REALMENTE concedida ao personagem usava
+`hab.nome` como fallback (`RacialModifier.kt` — `resolvedDesvantagens()`/
+`desvantagensEfetivas()`), então o personagem ganhava uma complicação
+chamada literalmente "Mal-Humorado (Maior)" em vez da Complicação real do
+livro, "Arrogante (Maior)" — apesar do `id: "ARROGANTE"` já apontar pro
+conceito certo pro cálculo de custo.
+
+- **Mecanismo usado**: `traitId: "RACIAL_HINDRANCE"` + `targetRef:
+  "Arrogante"`, adicionados à habilidade "MAL-HUMORADO" de Draconianos
+  (`ancestralidades.json`). Não é código novo — é o mesmo padrão já usado
+  por Kitsunemimi "Excessivamente Detalhistas" (id
+  `EXCESSIVAMENTE_DETALHISTAS`, `targetRef: "Cauteloso"`), citado nos
+  próprios comentários de `RacialModifier.kt:206-213`/`226-247` como a forma
+  correta de "nome é só skin do livro, a Vantagem/Complicação de verdade
+  vem do `targetRef`".
+- **Efeito**: `resolvedTraitId()` agora resolve pra `"RACIAL_HINDRANCE"`
+  (traitId tem prioridade sobre `id`), então tanto
+  `RacialModifier.resolvedDesvantagens()` quanto
+  `desvantagensEfetivas()`/`RacialCaracteristicasResolver` passam a conceder
+  "Arrogante (Maior)" em vez de "Mal-Humorado (Maior)" — a "MAL-HUMORADO"
+  continua sendo só o nome de exibição da habilidade (flavor/skin), igual
+  antes.
+- **Custo inalterado**: `custoDe("RACIAL_HINDRANCE", severity="Maior")` cai
+  no mesmo caso especial que já existia pra Forasteiro/Voto/etc. (Maior =
+  -2), idêntico ao valor que vinha antes via `CUSTOS["ARROGANTE"] = -2`
+  (`RacialTraitPointCatalog.kt:500`) — Draconianos continua fechando em 2/2
+  pontos, sem mudança no orçamento racial.
+- Mantive `id: "ARROGANTE"` na habilidade (documentação/consistência com o
+  resto do catálogo), mesmo não sendo mais o que `resolvedTraitId()` usa —
+  não é lido em nenhum outro lugar do código pra esse traço específico
+  (conferido: nenhuma referência hardcoded a `"ARROGANTE"` ou `"DRACONIANOS"`
+  fora deste arquivo e de `RacialTraitPointCatalog.kt:500`; a única outra
+  ocorrência, `SummaryUtils.kt:593`, já era código morto — filtra por
+  `it.keyify() == "ARROGANTE"` numa lista que só contém `nome`s, nunca
+  "Arrogante" de verdade, e nunca filtrou nada mesmo antes desta mudança).
+- Não rodei o app nem os testes JVM nesta rodada (sandbox sem acesso aos
+  repositórios de plugin do Gradle) — validação foi só leitura cruzada do
+  caminho de código (`RacialAbility.resolvedTraitId()` →
+  `RacialTraitPointCatalog.custoDe()`/`RacialModifier.resolvedDesvantagens()`/
+  `desvantagensEfetivas()`).

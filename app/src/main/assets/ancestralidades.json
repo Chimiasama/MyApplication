@@ -714,6 +714,8 @@
         "descricao": "Draconianos têm orgulho dos poderosos dragões dos quais são parentes. Isso lhes dá a Complicação Arrogante. Se os draconianos do seu cenário não tiverem essa característica, escolha dois pontos de penalidades de ancestralidade negativas que melhor se adaptem a sua origem ou sociedade.",
         "id": "ARROGANTE",
         "category": "racial_hindrance",
+        "traitId": "RACIAL_HINDRANCE",
+        "targetRef": "Arrogante",
         "severity": "Maior",
         "descricaoLite": "Carregam a Complicação Arrogante, fruto do orgulho por sua ascendência dracônica; caso o cenário não use essa característica, duas outras complicações negativas equivalentes podem ser escolhidas em seu lugar."
       },
