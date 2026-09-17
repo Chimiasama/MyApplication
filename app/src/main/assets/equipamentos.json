@@ -19026,7 +19026,7 @@
       }
     ]
   },
-    {
+  {
     "tipo": "Armaduras",
     "subtipo": "Medievais",
     "livros": [
@@ -19212,7 +19212,7 @@
       }
     ]
   },
-    {
+  {
     "tipo": "Escudos",
     "subtipo": "Medievais",
     "livros": [
@@ -19254,7 +19254,7 @@
       }
     ]
   },
-    {
+  {
     "tipo": "Armas Medievais",
     "subtipo": "Corpo a Corpo",
     "livros": [
@@ -19647,7 +19647,7 @@
       }
     ]
   },
-    {
+  {
     "tipo": "Armas Medievais",
     "subtipo": "Distância",
     "livros": [
@@ -19843,7 +19843,7 @@
       }
     ]
   },
-    {
+  {
     "tipo": "Armas Especiais",
     "subtipo": "Armas de Cerco",
     "livros": [
@@ -35853,36 +35853,11 @@
   },
   {
     "tipo": "Itens Especiais",
-    "subtipo": "Regras de Criação de Itens Mágicos",
-    "livros": [
-      "FANTASIA"
-    ],
-    "itens": [
-      {
-        "id": "regras_criacao_de_itens_magicos_artifice",
-        "nome": "Regras: Criação de Itens Mágicos (Artífice)",
-        "custo": "—",
-        "peso": "—",
-        "observacoes": "Um Artífice pode criar qualquer item mágico listado neste livro com tempo, a Vantagem Artífice, o item base (normalmente obra-prima; poções, pergaminhos e varinhas não precisam) e recursos suficientes. Componentes: gasta-se metade do custo do item em materiais raros (o Mestre pode exigir também um componente único, obtido em uma aventura). Kit ou Oficina de Artífice: com apenas o kit de Artífice, o artesão trabalha em um item por vez e sofre -2 em Ocultismo sem pelo menos uma Oficina Padrão; uma Oficina Padrão (custo 50 PO/semana, encontrada em cidades) remove a penalidade e permite 2 itens simultâneos; uma Oficina Grande (100 PO/semana, cidades grandes) concede +2 e permite 3 itens simultâneos. Processo: a cada semana de trabalho, o artífice faz uma rolagem de Ocultismo por item; sucesso gera 1.000 PO de progresso (2.000 com ampliação) até atingir o custo total do item; falha não gera progresso; uma Falha Crítica faz perder 500 PO de progresso já acumulado.",
-        "descricaoLite": "Resumo das regras de criação de itens mágicos permanentes: exige Vantagem Artífice, item base, metade do custo em componentes e acesso a um kit/oficina; cada semana de trabalho bem-sucedida gera 1.000-2.000 PO de progresso até completar o item."
-      }
-    ]
-  },
-  {
-    "tipo": "Itens Especiais",
     "subtipo": "Relíquias e Artefatos",
     "livros": [
       "FANTASIA"
     ],
     "itens": [
-      {
-        "id": "reliquias_e_artefatos_regras",
-        "nome": "Relíquias e Artefatos (Regras)",
-        "custo": "—",
-        "peso": "—",
-        "observacoes": "Relíquias lendárias vão muito além dos itens mágicos comuns: podem salvar ou destruir cidades, invocar ou derrotar horrores antigos ou lançar feitiços muito além dos listados no livro. Devem ser encontradas através de missões épicas — pesquisar seu paradeiro, interrogar guardiões do segredo e enfrentar tumbas, masmorras ou cidades em ruínas. Depois de reivindicada, a relíquia normalmente precisa ser energizada pela fé dos fiéis em um local sagrado ou de significado especial, através de um ritual cujo momento crítico é resolvido como uma Tarefa Dramática — exatamente quando vilões ou heróis rivais chegam para interrompê-la. Sucesso na Tarefa Dramática ativa a relíquia; o fracasso costuma ser definitivo (tempo esgotado, componentes destruídos ou fiéis exauridos). Depois de energizada, a relíquia geralmente adormece, se despedaça ou desaparece, à espera de ser encontrada por gerações futuras.",
-        "descricaoLite": "Explica como relíquias lendárias são obtidas (missão épica) e ativadas (ritual resolvido como Tarefa Dramática, sujeito a interrupção)."
-      },
       {
         "id": "cinzas_de_ashur",
         "nome": "Cinzas de Ashur",
@@ -35930,31 +35905,6 @@
         "peso": "—",
         "observacoes": "Tambores antigos e interligados, com peles pintadas com símbolos estranhos. Tocados em um ritual de energização, invocam um poderoso exército de espíritos que pode ser direcionado contra os inimigos do invocador pela próxima hora.",
         "descricaoLite": "Invoca um exército de espíritos que obedece ao invocador por uma hora."
-      }
-    ]
-  },
-  {
-    "tipo": "Itens Especiais",
-    "subtipo": "Geração Aleatória de Tesouro",
-    "livros": [
-      "FANTASIA"
-    ],
-    "itens": [
-      {
-        "id": "tabela_de_tesouro_aleatorio",
-        "nome": "Tabela de Tesouro Aleatório",
-        "custo": "—",
-        "peso": "—",
-        "observacoes": "Ao gerar um tesouro, o Mestre escolhe o Tipo de Tesouro conforme as circunstâncias e rola a recompensa monetária (uma mistura de moedas, pedras preciosas, joias, roupas ou objetos de arte) e o número de itens mágicos: Escasso (grupo de bandidos ou covil de monstro menor) = 1d10×100 PO, d6-4 itens mágicos; Considerável (esconderijo de bandido, saqueador ou criatura mortal) = 1d10×1.000 PO, d6-3 itens; Abastado (tesouro de nobre, esconderijo de invasores/monstros poderosos, cofre de guilda em cidade pequena) = 1d10×5.000 PO, d6-2 itens; Luxoso (cofre de rei, saque de dragão, cofre de guilda em grande cidade) = 1d10×10.000 PO, d6-1 itens. Criaturas inteligentes usam ou guardam os tesouros que encontram; criaturas de inteligência animal geralmente não os acumulam, mas podem ter arrastado vítimas (e seus pertences) para o covil, encontráveis com uma rolagem de Sobrevivência.",
-        "descricaoLite": "Tabela de geração de tesouro por nível de riqueza (Escasso a Luxoso), com recompensa em PO e número de itens mágicos correspondente."
-      },
-      {
-        "id": "tabela_de_itens_magicos_d20_e_uso_de_itens_magicos",
-        "nome": "Tabela de Itens Mágicos (d20) e Uso de Itens Mágicos",
-        "custo": "—",
-        "peso": "—",
-        "observacoes": "Ao rolar quantos itens mágicos um tesouro contém, role 1d20 para cada um: 1 Pedra Explosiva; 2 Pedra da Sorte; 3 Pedra de Poder; 4-5 Armaduras Encantadas; 6 Escudos Encantados; 7-8 Armas Corpo a Corpo Encantadas; 9-10 Armas à Distância Encantadas; 11-12 Flechas e Virotes Encantados; 13 Joias Encantadas; 14-15 Poções; 16-17 Pergaminhos; 18 Tomos; 19-20 Itens Maravilhosos.\nRegras gerais de uso: ativar o poder de um item normalmente é uma ação (uma Falha Crítica causa Fadiga ao usuário e consome uma carga, se houver); vestir um item simples (anel, chapéu) à mão é uma ação livre limitada; itens amaldiçoados só podem ser removidos com uma rolagem bem-sucedida de dissipar (modificador Desencantar) — cada conjurador só tem uma chance por item; se um item concede uma Vantagem/habilidade que o usuário já possui, ele concede a versão Aprimorada, se houver; um poder menor concede o efeito de um sucesso simples e um maior o de uma ampliação, sem poder ser mantido; bônus da mesma Característica vindos de fontes diferentes não se acumulam (usa-se o maior); varinhas gastam seus próprios Pontos de Poder (que não recarregam sozinhos, exceto via Pedra de Poder); só é possível usar um item por local do corpo (cabeça, olhos, ombros, pescoço, peito, cinto, pulsos, mãos, pés), mas dois anéis diferentes (um em cada mão) acumulam normalmente; itens de uso diário recarregam ao amanhecer.",
-        "descricaoLite": "Tabela de sorteio (d20) de que tipo de item mágico aparece num tesouro, mais as regras gerais de uso de itens mágicos (ativação, maldição, acúmulo, varinhas, um item por local do corpo etc.)."
       }
     ]
   },
