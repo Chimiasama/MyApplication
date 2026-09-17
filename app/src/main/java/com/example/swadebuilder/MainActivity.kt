@@ -460,7 +460,8 @@ class MainActivity : ComponentActivity() {
             }
 
             if (showSaveDialog) {
-                val isValid = SecurityUtils.isValidCharacterName(saveName)
+                val isNameValid = SecurityUtils.isValidCharacterName(saveName)
+                val isValid = isNameValid && !state.herancaSlotsPendentes
                 var saveAsNew by rememberSaveable { mutableStateOf(false) }
 
                 AlertDialog(
@@ -473,12 +474,24 @@ class MainActivity : ComponentActivity() {
                                 value = saveName,
                                 onValueChange = { saveName = it },
                                 label = { Text("Nome do personagem") },
-                                isError = !isValid,
-                                supportingText = if (!isValid) {
+                                isError = !isNameValid,
+                                supportingText = if (!isNameValid) {
                                     { Text(if (saveName.isBlank()) "Informe um nome para o personagem." else "Nome muito longo (máximo 60 caracteres).") }
                                 } else null,
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            // Vantagem Herança (Fantasia): cada compra abre um Slot de
+                            // 10.000 PO que exige pelo menos 1 item mágico comprado nele
+                            // antes de a ficha poder ser salva/exportada (ver
+                            // CriadorState.herancaSlotsPendentes).
+                            if (state.herancaSlotsPendentes) {
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    text = "Compre pelo menos 1 item mágico em cada Slot de Herança (aba Equipamento) antes de salvar.",
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
                             if (state.idAtual != null) {
                                 Spacer(Modifier.height(8.dp))
                                 Row(
@@ -544,10 +557,23 @@ class MainActivity : ComponentActivity() {
                         pendingNavigationAction = null
                     },
                     title = { Text("Salvar personagem?") },
-                    text = { Text(dialogMessage) },
+                    text = {
+                        Column {
+                            Text(dialogMessage)
+                            if (state.herancaSlotsPendentes) {
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    text = "Compre pelo menos 1 item mágico em cada Slot de Herança (aba Equipamento) antes de salvar.",
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    },
                     confirmButton = {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            TextButton(onClick = {
+                            TextButton(
+                                onClick = {
                                 triggerFeedback()
                                 scope.launch {
                                     try {
@@ -568,7 +594,9 @@ class MainActivity : ComponentActivity() {
                                         snackHost.showSnackbar("Erro ao salvar personagem: ${e.message}")
                                     }
                                 }
-                            }) {
+                                },
+                                enabled = !state.herancaSlotsPendentes
+                            ) {
                                 Text("Salvar")
                             }
                             TextButton(onClick = {
@@ -948,6 +976,14 @@ class MainActivity : ComponentActivity() {
 
                                             IconButton(onClick = {
                                                 triggerFeedback()
+                                                // Vantagem Herança (Fantasia): trava a exportação também, mesma
+                                                // regra do salvar — ver CriadorState.herancaSlotsPendentes.
+                                                if (state.herancaSlotsPendentes) {
+                                                    scope.launch {
+                                                        snackHost.showSnackbar("Compre pelo menos 1 item mágico em cada Slot de Herança (aba Equipamento) antes de exportar.")
+                                                    }
+                                                    return@IconButton
+                                                }
                                                 val personagem = state.toMeuPersonagem()
                                                 pdfExportRequest = PdfExportRequest(
                                                     personagem = personagem,

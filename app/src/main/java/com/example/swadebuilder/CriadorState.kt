@@ -87,6 +87,7 @@ import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -3050,6 +3051,16 @@ class CriadorState {
             equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
         }
 
+        // Herança (Compêndio de Fantasia): cada compra é um Slot de 10.000 PO à parte —
+        // ao remover UMA cópia, some só o Slot mais recente (o de índice mais alto, que
+        // ainda não existe mais depois desta remoção) e os itens comprados nele. `v` já
+        // saiu de vantagensSelecionadas (linha 3019), então a contagem abaixo já reflete
+        // o número de cópias restantes = o índice do Slot que precisa sumir.
+        if (v.id == "heranca") {
+            val slotQueSumiu = vantagensSelecionadas.count { it.id == "heranca" }
+            equipamentosComprados.removeAll { it.herancaSlotIndex == slotQueSumiu }
+        }
+
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
             if (inimigo != null) {
@@ -3071,6 +3082,73 @@ class CriadorState {
     fun removerVantagemPorSuper(v: Vantagem) {
         vantagensSelecionadas.remove(v)
         vantagensDePoder.remove(v.id)
+    }
+
+    // Vantagem Herança (Compêndio de Fantasia): "concede um item mágico (ou um conjunto
+    // temático)... com um valor total de 10.000 PO cada vez que esta Vantagem é
+    // adquirida." Como dá pra comprar mais de uma vez (limite_compra "infinito"), cada
+    // compra vira um Slot independente de até 10.000 PO — nunca dá pra somar dois Slots
+    // pra bancar um item mais caro. Não existe contador dedicado: o número de Slots é
+    // sempre a contagem de "heranca" em vantagensSelecionadas, e o gasto de cada Slot é
+    // sempre a soma dos itens de equipamentosComprados marcados com aquele índice
+    // (herancaSlotIndex) — sem estado extra pra manter sincronizado.
+    private val HERANCA_VALOR_POR_SLOT = 10000
+
+    fun numSlotsHeranca(): Int = vantagensSelecionadas.count { it.id == "heranca" }
+
+    fun itensDoSlotHeranca(slot: Int): List<EquipamentoItem> =
+        equipamentosComprados.filter { it.herancaSlotIndex == slot }
+
+    fun gastoDoSlotHeranca(slot: Int): Int =
+        itensDoSlotHeranca(slot).sumOf { MoneyUtils.parseCostInBaseUnit(it.custo, false) }
+
+    fun saldoDoSlotHeranca(slot: Int): Int =
+        (HERANCA_VALOR_POR_SLOT - gastoDoSlotHeranca(slot)).coerceAtLeast(0)
+
+    // Só itens de "Itens Especiais" do próprio Fantasia com preço numérico de verdade —
+    // Itens Maravilhosos, Poções Mágicas e Joias Mágicas. Pergaminhos e Tomos (custo
+    // "Variável") ficam de fora por não terem valor fixo pra checar contra o teto de
+    // 10.000; Relíquias e Artefatos nem entram aqui, já que saíram de "Itens Especiais"
+    // pra sua própria categoria (não são itens à venda, são únicos e a critério do
+    // Mestre). O filtro por origem evita que Talismãs (Arte da Guerra) ou outros itens
+    // de "Itens Especiais" de OUTRO livro apareçam como elegíveis no Modo Livre.
+    fun itemElegivelParaHeranca(item: EquipamentoItem): Boolean =
+        canonicalOriginKey(item.origem) == "FANTASIA" &&
+            item.categoriaTipo?.trim() == "Itens Especiais" &&
+            MoneyUtils.parseCostInBaseUnit(item.custo, false) > 0
+
+    // Trava a finalização da ficha (salvar/exportar) enquanto algum Slot não tiver
+    // recebido nenhum item — o livro concede um item "cada vez que a Vantagem é
+    // adquirida", então cada compra exige sua própria compra de item, não só uma no total.
+    val herancaSlotsPendentes: Boolean
+        get() = (0 until numSlotsHeranca()).any { itensDoSlotHeranca(it).isEmpty() }
+
+    fun comprarItemComHeranca(item: EquipamentoItem, slot: Int, onFeedback: (String) -> Unit = {}): Boolean {
+        if (slot !in 0 until numSlotsHeranca()) {
+            onFeedback("Slot de Herança inválido.")
+            return false
+        }
+        if (!itemElegivelParaHeranca(item)) {
+            onFeedback("Esse item não pode ser comprado com o saldo de Herança.")
+            return false
+        }
+        val custo = MoneyUtils.parseCostInBaseUnit(item.custo, false)
+        if (custo > saldoDoSlotHeranca(slot)) {
+            onFeedback("Saldo insuficiente no Slot ${slot + 1} de Herança.")
+            return false
+        }
+        equipamentosComprados.add(item.copy(herancaSlotIndex = slot))
+        onFeedback("${item.nome} comprado com o Slot ${slot + 1} de Herança.")
+        return true
+    }
+
+    // Remoção de um item comprado com Herança: some da lista igual a uma venda normal,
+    // mas sem devolver PO ao dinheiro do personagem — esse saldo nunca foi ouro de
+    // verdade, é só o Slot ficando com mais espaço livre de novo.
+    fun removerItemDeHeranca(item: EquipamentoItem, onFeedback: (String) -> Unit = {}) {
+        if (item.herancaSlotIndex == null) return
+        equipamentosComprados.remove(item)
+        onFeedback("${item.nome} removido do Slot ${item.herancaSlotIndex + 1} de Herança.")
     }
 
     fun adicionarComplicacao(comp: Complicacao, nivel: String) {

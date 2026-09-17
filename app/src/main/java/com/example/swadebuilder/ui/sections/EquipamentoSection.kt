@@ -1,5 +1,6 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -28,6 +29,8 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -257,6 +260,167 @@ fun EquipFilterDialog(
             TextButton(onClick = onDismiss) {
                 Text("OK")
             }
+        }
+    )
+}
+
+// Vantagem Herança (Compêndio de Fantasia): cada compra abre um Slot de até 10.000 PO
+// em itens mágicos, sem somar entre Slots (ver CriadorState.numSlotsHeranca() e
+// vizinhos). Só aparece quando o personagem tem pelo menos uma compra da Vantagem.
+@Composable
+private fun HerancaSection(
+    state: CriadorState,
+    allowLongTexts: Boolean,
+    onUserFeedback: () -> Unit
+) {
+    val numSlots = state.numSlotsHeranca()
+    if (numSlots == 0) return
+
+    var slotParaComprar by remember { mutableStateOf<Int?>(null) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                "Herança — Itens Mágicos",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "Cada compra da Vantagem Herança concede um Slot próprio de até 10.000 PO em itens mágicos. Os Slots não se somam entre si.",
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            for (slot in 0 until numSlots) {
+                val itensDoSlot = state.itensDoSlotHeranca(slot)
+                val saldoSlot = state.saldoDoSlotHeranca(slot)
+
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Slot ${slot + 1}" + if (itensDoSlot.isEmpty()) " — pendente" else "",
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (itensDoSlot.isEmpty()) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        }
+                    )
+                    Text(
+                        text = "Restante: $saldoSlot / 10.000 PO",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
+                itensDoSlot.forEach { item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, top = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("• ${item.nomeExibicao}", style = MaterialTheme.typography.bodySmall)
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Remover item",
+                            modifier = Modifier
+                                .size(18.dp)
+                                .clickable {
+                                    state.removerItemDeHeranca(item)
+                                    onUserFeedback()
+                                }
+                        )
+                    }
+                }
+
+                OutlinedButton(
+                    onClick = { slotParaComprar = slot },
+                    enabled = saldoSlot > 0,
+                    modifier = Modifier
+                        .padding(top = 6.dp)
+                        .height(32.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Comprar item mágico", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        }
+    }
+
+    slotParaComprar?.let { slot ->
+        HerancaItemPickerDialog(
+            state = state,
+            slot = slot,
+            allowLongTexts = allowLongTexts,
+            onDismiss = { slotParaComprar = null },
+            onBought = onUserFeedback
+        )
+    }
+}
+
+@Composable
+private fun HerancaItemPickerDialog(
+    state: CriadorState,
+    slot: Int,
+    allowLongTexts: Boolean,
+    onDismiss: () -> Unit,
+    onBought: () -> Unit
+) {
+    val saldo = state.saldoDoSlotHeranca(slot)
+    val elegiveis = remember(state.listaEquipamentos) {
+        state.listaEquipamentos
+            .filter { state.itemElegivelParaHeranca(it) }
+            .sortedBy { MoneyUtils.parseCostInBaseUnit(it.custo, false) }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Herança — Slot ${slot + 1} (restam $saldo PO)") },
+        text = {
+            if (elegiveis.isEmpty()) {
+                Text("Nenhum item mágico elegível encontrado no catálogo ativo.")
+            } else {
+                LazyColumn(modifier = Modifier.heightIn(max = 420.dp)) {
+                    items(elegiveis) { item ->
+                        val custo = MoneyUtils.parseCostInBaseUnit(item.custo, false)
+                        val cabeNoSlot = custo <= saldo
+                        Column {
+                            StandardEquipamentoItem(
+                                equipamento = item,
+                                allowLongTexts = allowLongTexts,
+                                onClick = {
+                                    if (cabeNoSlot) {
+                                        state.comprarItemComHeranca(item, slot)
+                                        onBought()
+                                        onDismiss()
+                                    }
+                                }
+                            )
+                            if (!cabeNoSlot) {
+                                Text(
+                                    "Não cabe no saldo restante do Slot.",
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    modifier = Modifier.padding(start = 12.dp, bottom = 4.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Fechar") }
         }
     )
 }
@@ -516,6 +680,12 @@ fun EquipamentoSection(
             }
 
             // Legacy PB Buttons Removed Here
+
+            HerancaSection(
+                state = state,
+                allowLongTexts = allowLongTexts,
+                onUserFeedback = onUserFeedback
+            )
 
             // 3. Search & Filter UI
             var isSearchExpanded by rememberSaveable { mutableStateOf(false) }

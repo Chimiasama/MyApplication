@@ -1260,7 +1260,13 @@ private fun EquipamentoSection(
         },
         equipamentosComprados = state.equipamentosComprados,
         onRemoveEquipamentoClick = { equipamento ->
-            if (!state.modoProgressaoAtivo && equipamento.origemGrant != null) {
+            if (equipamento.herancaSlotIndex != null) {
+                // Item comprado com o saldo de Herança: some da lista normalmente, mas
+                // sem devolver PO ao dinheiro do personagem — esse saldo nunca foi ouro
+                // de verdade, é só o Slot de Herança ficando com espaço livre de novo.
+                state.removerItemDeHeranca(equipamento)
+                onUserFeedback()
+            } else if (!state.modoProgressaoAtivo && equipamento.origemGrant != null) {
                 onLogFeedback("Item de vantagem (fixo na criação).")
                 onUserFeedback()
             } else {

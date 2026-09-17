@@ -51,6 +51,13 @@ data class EquipamentoItem(
     @SerialName("mods_slots")
     val modsSlots: JsonElement? = null,
     val origemGrant: String? = null,
+    // Índice do Slot de Herança (Vantagem Herança, Compêndio de Fantasia — 10.000 PO por
+    // compra, um Slot por compra, sem combinar entre Slots) que pagou por este item, se
+    // comprado por ali em vez do dinheiro normal do personagem. Nulo = compra normal.
+    // Diferente de `origemGrant` (que marca item concedido de graça e travado pra remoção):
+    // este item continua removível normalmente, só não devolve PO ao vender — ver
+    // CriadorState.numSlotsHeranca()/comprarItemComHeranca().
+    val herancaSlotIndex: Int? = null,
     // Id estável (slug do nome, gerado a partir de equipamentos.json) — permite endereçar
     // um item por id em vez de comparar nome/texto. Vazio só para instâncias construídas em
     // código (armas naturais, itens sintéticos) que nunca passaram pelo catálogo JSON.
