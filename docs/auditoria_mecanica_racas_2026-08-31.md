@@ -331,3 +331,158 @@ Conferido também:
 **Resultado: a raça já estava 100% correta antes desta rodada — nenhuma
 mudança de código foi necessária.** Auditoria feita só pra conferir e
 documentar, a pedido do dono do projeto.
+
+## Sexta rodada — auditoria completa do livro Fantasia (28 raças restantes)
+
+Pedido do dono do projeto: repetir a mesma auditoria da rodada anterior
+(ids/custo/efeito por habilidade) pras outras 28 raças de `livros:
+["FANTASIA"]` em `ancestralidades.json` (Centauros já tinha sido feita).
+
+**Método**: script Python lendo `RacialTraitPointCatalog.CUSTOS`/`EFEITOS`/
+`VEZES_MAX` do `.kt` e cruzando com cada `habilidades[]` de cada raça,
+reproduzindo a MESMA lógica de `custoDe()` (não só um match direto no mapa):
+normalização por `keyify()` (maiúsculo, sem acento) e o caso especial de
+`FORASTEIRO`/`PACIFISTA`/`SEM_ESCRUPULOS`/`SENSIVEL`/`VOTO`, cujo custo real
+depende do campo `severity` da própria habilidade (Menor -1 / Maior -2,
+default Maior quando o campo falta) em vez do valor fixo do mapa. A primeira
+tentativa, sem considerar `severity`, dava total errado pra Sáurios e outras
+raças com Forasteiro (Menor) — corrigido antes de fechar o resultado.
+
+**Verificado por raça**: soma de custo (`custo × vezes`) de cada habilidade
+comparada com `pontosRaciaisEsperados` (default 2 quando o campo não existe
+no JSON — é o valor padrão de `RacialModifier.pontosRaciaisEsperados` em
+`DataLoader.kt`/`RacialModifier.kt`); todo id presente em `CUSTOS`; todo
+`vezes > 1` coberto por `VEZES_MAX` e dentro do teto; sinal do custo batendo
+com a `category` (`racial_trait_positive` só custo positivo, `_negative` só
+negativo).
+
+**Resultado: as 28 raças fecham exatamente em 2 pontos (padrão do livro,
+igual ao Humano) — nenhuma delas tem `pontosRaciaisEsperados` explícito no
+JSON porque nenhuma precisa (só Centauros foge do padrão, com 4). Nenhum id
+sem custo cadastrado, nenhum `vezes` fora do teto do `VEZES_MAX`, nenhuma
+categoria com sinal trocado.** Tabela completa (formato `Nome (id[,
+severidade][×vezes]) custo`):
+
+- **Anões** (2/2): Movimentação Reduzida (`MOVIMENTACAO_REDUZIDA`) -1;
+  Robusto (`ROBUSTO`) +2; Visão no Escuro (`VISAO_NO_ESCURO`) +1
+- **Aquarianos** (2/2): Aquático (`AQUATICO`) +2; Dependência
+  (`DEPENDENCIA`) -2; Resistência (`RESISTENCIA`) +1; Visão no Escuro
+  (`VISAO_NO_ESCURO`) +1
+- **Avianos** (2/2): Frágil (`FRAGIL`) -1; Movimentação Reduzida
+  (`MOVIMENTACAO_REDUZIDA`) -1; Não Sabe Nadar (`NAO_SABE_NADAR`,Menor) -1;
+  Sentidos Aguçados (`SENTIDOS_AGUCADOS`) +1; Voo (`VOO_MOV_12`) +4
+- **Celestiais** (2/2): Atraente (`ATRAENTE`) +2; Código de Honra
+  (`CODIGO_DE_HONRA`,Maior) -2; Voo (`VOO_MOV_12`) +4; Voto (`VOTO`,Maior) -2
+- **Descendente Elemental** (2/2): Resistência Ambiental
+  (`RESISTENCIA_AMBIENTAL`) +1; Forasteiro (`FORASTEIRO`,Menor) -1; Elemento
+  Ancestral (`ELEMENTO_ANCESTRAL`) +2
+- **Draconianos** (2/2): Arma de Sopro (`ARMA_DE_SOPRO`) +2; Armadura +2
+  (`ARMADURA`) +1; Fraqueza Ambiental/Frio (`FRAQUEZA_AMBIENTAL`) -1;
+  Mal-Humorado (`ARROGANTE`,Maior) -2 (id reaproveitado — o próprio livro
+  chama isso de Complicação Arrogante); Garras (`GARRAS`) +3; Mordida
+  (`MORDIDA`) +1; Resistência Ambiental/Calor (`RESISTENCIA_AMBIENTAL`) +1;
+  Sangue Frio (`SANGUE_FRIO`) -3
+- **Elfos** (2/2): Desastrado (`DESASTRADO`,Menor) -1; Visão no Escuro
+  (`VISAO_NO_ESCURO`) +1; Ágil (`AGIL`) +2
+- **Fadas** (2/2): Boca Grande (`BOCA_GRANDE`,Menor) -1; Curioso
+  (`CURIOSO`,Maior) -2; Desastrado (`DESASTRADO`,Menor) -1; Diminuto/Tamanho
+  -4 (`DIMINUTO_TAMANHO_4`) +6; Impulsivo (`IMPULSIVO`,Maior) -2; Voo
+  (`VOO_MOV_6`) +2
+- **Gnomos** (2/2): Astúcia (`ASTUCIA`) +2; Movimentação Reduzida
+  (`MOVIMENTACAO_REDUZIDA`) -1; Sentidos Aprimorados
+  (`SENTIDOS_APRIMORADOS`) +1; Tamanho -1 (`TAMANHO_MENOS_1`) -1; Visão no
+  Escuro (`VISAO_NO_ESCURO`) +1
+- **Goblins** (2/2): Desagradável (`DESAGRADAVEL`,Menor) -1; Infravisão
+  (`INFRAVISAO`) +1; Pequenos (`PEQUENOS`) -1; Sobrevivente (`ADAPTAVEL`) +2
+  (id reaproveitado — texto do livro: "começam com uma Vantagem de Estágio
+  Novato à escolha", igual ao Adaptável dos Humanos); Sorrateiro
+  (`SORRATEIRO`) +1
+- **Golens** (2/2): Armadura +2 (`ARMADURA`) +1; Construto (`CONSTRUTO`) +8;
+  Desajeitado/Atletismo e Desajeitado/Furtividade
+  (`PENALIDADE_PERICIA_1` ×2, uma entrada por perícia) -1-1; Grande
+  (`VOLUMOSO`) -2; Movimentação Reduzida (`MOVIMENTACAO_REDUZIDA`) -1;
+  Perícias Básicas Reduzidas (`PERICIAS_BASICAS_REDUZIDAS`×3) -3; Sem Noção
+  (`SEM_NOCAO`) -2; Sem Órgãos Vitais (`SEM_ORGAOS_VITAIS`) +1; Tamanho +2
+  (`TAMANHO_MAIS_1`×2) +2
+- **Humanos** (2/2): Adaptável (`ADAPTAVEL`) +2
+- **Infernais** (2/2): Chifres (`CHIFRES`) +1; Forasteiro
+  (`FORASTEIRO`,Menor) -1; Fraqueza Ambiental/Frio (`FRAQUEZA_AMBIENTAL`) -1;
+  Natureza Diabólica (`NATUREZA_DIABOLICA`) +1; Resistência Ambiental/Calor
+  (`RESISTENCIA_AMBIENTAL`) +1; Visão Total no Escuro
+  (`VISAO_TOTAL_NO_ESCURO`) +1
+- **Insetoides** (2/2): Andar nas Paredes (`ANDAR_NAS_PAREDES`) +1; Armadura
+  +2 (`ARMADURA`) +1; Ações Adicionais (`ACAO_ADICIONAL_FISICA`) +4;
+  Forasteiro (`FORASTEIRO`,Menor) -1; Formato Corporal Incomum
+  (`FORMA_ALIENIGENA`) -1 (mesmo id do "Forma Incomum" de Centauros); Mordida
+  ou Garra (`MORDIDA`) +1; Mente de Colmeia maior (`GUIADO`,Maior) -2; Mente
+  de Colmeia menor (`LEAL`) -1
+- **Meio-Elfos** (2/2): Forasteiro (`FORASTEIRO`,Menor) -1; Herança
+  (`HERANCA`) +2; Visão no Escuro (`VISAO_NO_ESCURO`) +1
+- **Meio-Gigantes** (2/2): Analfabeto (`ANALFABETO`,Menor) -1;
+  Cabeças-Duras (`CABECAS_DURAS`) -2; Forasteiro (`FORASTEIRO`,Maior) -2;
+  Grande (`VOLUMOSO`) -2; Muito Forte (`MUITO_FORTE`) +4; Muito Resistente
+  (`MUITO_RESISTENTE`) +4; Sem Noção (`SEM_NOCAO`) -2; Tamanho +3
+  (`TAMANHO_MAIS_1`×3) +3
+- **Meio-Orcs** (2/2): Endurecido (`ENDURECIDO`) +2; Forasteiro
+  (`FORASTEIRO`,Menor) -1; Infravisão (`INFRAVISAO`) +1
+- **Minotauros** (2/2): Chifres (`CHIFRES_MAIORES`) +2; Desagradável
+  (`DESAGRADAVEL`,Menor) -1; Durão (`DURAO`) +2; Grande (`VOLUMOSO`) -2;
+  Muito Forte (`MUITO_FORTE`) +4; Sem Instrução (`SEM_INSTRUCAO`) -2;
+  Sensível (`SENSIVEL`,Maior) -2; Tamanho +1 (`TAMANHO_MAIS_1`) +1
+- **Ogros** (2/2): Arrogante (`ARROGANTE`,Maior) -2; Desajeitado/Atletismo e
+  Desajeitado/Furtividade (`PENALIDADE_PERICIA_1`×2) -1-1; Forasteiro
+  (`FORASTEIRO`,Menor) -1; Grande (`VOLUMOSO`) -2; Muito Forte
+  (`MUITO_FORTE`) +4; Muito Resistente (`MUITO_RESISTENTE`) +4; Robusto
+  (`ROBUSTO`) +2; Sem Noção (`SEM_NOCAO`) -2; Tamanho +1
+  (`TAMANHO_MAIS_1`) +1
+- **Orcs** (2/2): Brutal (`SEM_INSTRUCAO`) -2; Forasteiro
+  (`FORASTEIRO`,Maior) -2; Forte (`FORTE`) +2; Infravisão (`INFRAVISAO`) +1;
+  Resistente (`RESISTENTE`) +2; Tamanho +1 (`TAMANHO_MAIS_1`) +1
+- **Pequeninos** (2/2): Espirituoso (`ESPIRITUOSO`) +2; Movimentação
+  Reduzida (`MOVIMENTACAO_REDUZIDA`) -1; Sorte (`SORTE`) +2; Tamanho -1
+  (`TAMANHO_MENOS_1`) -1
+- **Povo Ratazana** (2/2): Covarde (`COVARDE`,Maior) -2; Forasteiro
+  (`FORASTEIRO`,Maior) -2; Ganancioso (`GANANCIOSO`,Menor) -1; Garras
+  (`GARRAS_SEM_PA`) +2; Mordida (`MORDIDA`) +1; Resistência a Doenças e
+  Resistência a Venenos (`IMUNE_A_DOENCAS_E_VENENOS` ×2, uma entrada por
+  categoria) +1+1; Sucateiro (`SUCATEIRO`) +2; Tamanho -1
+  (`TAMANHO_MENOS_1`) -1; Visão no Escuro (`VISAO_NO_ESCURO`) +1
+- **Povo Rato** (2/2): Diminuto/Tamanho -4 (`DIMINUTO_TAMANHO_4`) +6; Fobia
+  (`FOBIA`,Menor) -1; Forasteiro (`FORASTEIRO`,Maior) -2; Movimentação
+  Reduzida (`MOVIMENTACAO_REDUZIDA`) -1; Visão no Escuro
+  (`VISAO_NO_ESCURO`) +1; Almofadinha (`ALMOFADINHA`) -1
+- **Povo Serpente** (2/2): Forasteiro (`FORASTEIRO`,Menor) -1; Fraqueza
+  Ambiental (`FRAQUEZA_AMBIENTAL`) -1; Infravisão (`INFRAVISAO`) +1; Mordida
+  (`MORDIDA`) +1; Mordida Venenosa (`TOQUE_VENENOSO`) +1; Movimentação
+  (`MOVIMENTACAO`×2) +4; Sangue Frio (`SANGUE_FRIO`) -3
+- **Rakashanos** (2/2): Garras (`GARRAS_SEM_PA`) +2; Inimigo Ancestral
+  (`INIMIGO_ANCESTRAL`) -1; Mordida (`MORDIDA`) +1; Não Sabe Nadar
+  (`NAO_SABE_NADAR`,Menor) -1; Sanguinário (`SANGUINARIO`,Maior) -2; Visão no
+  Escuro (`VISAO_NO_ESCURO`) +1; Ágil (`AGIL`) +2
+- **Renascidos** (2/2): Aversão Animal (`AVERSAO_ANIMAL`) -1; Bebedor de
+  Sangue (`REGENERACAO`) +2 (id reaproveitado — cura ao beber sangue mapeia
+  pro mecanismo genérico de Regeneração); Forasteiro (`FORASTEIRO`,Maior) -2;
+  Força Sobrenatural (`FORCA_SOBRENATURAL`) +2; Mordida (`MORDIDA`) +1;
+  Resistência ao Frio (`RESISTENCIA_AO_FRIO`) +1; Sensibilidade à Luz Solar
+  (`SENSIBILIDADE_A_LUZ_SOLAR`) -2; Visão no Escuro (`VISAO_NO_ESCURO`) +1
+- **Sáurios** (2/2): Armadura +2 (`ARMADURA`) +1; Forasteiro
+  (`FORASTEIRO`,Menor) -1; Fraqueza Ambiental/Frio (`FRAQUEZA_AMBIENTAL`) -1;
+  Mordida (`MORDIDA`) +1; Sentidos Aprimorados (`PRONTIDAO`) +2 (o próprio
+  texto do livro diz "ganhando a Vantagem Prontidão")
+- **Transmorfos** (2/2): Carismático (`CARISMATICO`) +2; Mudar de Forma
+  (`ANTECEDENTE_ARCANO_PODER`) +2 (texto do livro: "Transmorfos têm
+  Antecedente Arcano (Dom)"); Segredo (`SEGREDO`,Maior) -2
+
+**Único achado — corrigido nesta rodada**: Povo Ratazana tinha
+`"id": "SUCATEIRO"` gravado em minúsculo (`"sucateiro"`), único caso em
+todo o livro Fantasia (todos os outros ~150 ids são maiúsculos). Não era um
+bug funcional — `custoDe()` sempre normaliza por `.keyify()` antes de
+comparar com o catálogo, então `sucateiro` já virava `SUCATEIRO` e casava
+certo com `RacialTraitPointCatalog.kt:791` (custo +2) — mas ficava
+inconsistente com o padrão do arquivo. Corrigido pra `"SUCATEIRO"` em
+`ancestralidades.json` só por higiene; nenhum outro arquivo referenciava a
+forma minúscula (conferido em `app/src/main/java` e `app/src/test`).
+
+**Resultado: as 28 raças já estavam mecanicamente corretas — a única
+mudança de código desta rodada foi o ajuste de capitalização do id do
+Sucateiro (Povo Ratazana), sem efeito no comportamento do app.**
