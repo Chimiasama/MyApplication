@@ -1872,6 +1872,18 @@ private fun VantagemItem(
             add("Pré-requisito: $legivel")
         }
 
+        // Sombrio (Complicação exclusiva do Compêndio de Fantasia) também conta como
+        // pré-requisito de Ameaçador ("Sombrio também conta como requisito para a
+        // Vantagem Ameaçador") — a validação em CriadorState/ValidatePrerequisiteUseCase
+        // já aceita isso, mas o cartão não mostrava essa alternativa. Só entra quando
+        // Sombrio existe no catálogo ativo do personagem (ou seja, só com Fantasia
+        // ativo — Sombrio não existe em nenhum outro livro).
+        if (vant.id.keyify() == "ameacador".keyify()) {
+            state.listaComplicacoes.firstOrNull { it.id.keyify() == "sombrio".keyify() }?.let { sombrio ->
+                add("Pré-requisito: ${sombrio.name.toFancyTitleCase()}")
+            }
+        }
+
         if (vant.requisitos.observacoes.isNotBlank()) {
             add(vant.requisitos.observacoes)
         }
