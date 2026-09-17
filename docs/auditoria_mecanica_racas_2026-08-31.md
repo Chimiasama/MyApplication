@@ -288,3 +288,46 @@ resolvido o CÁLCULO de cada traço, mas sempre como compra única).
   `ResolveAncestryRacialPackageUseCaseTest.kt` e
   `ModifierEngineCidadeSolVaporTest.kt` (todos com ids sintéticos removidos
   trocados pelos 7 ids base + `vezes`).
+
+## Quinta rodada — auditoria específica: Centauros (Fantasia)
+
+Pedido do dono do projeto: conferir especificamente a raça Centauros
+(livro Fantasia, `ancestralidades.json:596-651`) — quais ids as habilidades
+usam, se cada id tem custo/efeito de verdade cadastrado no
+`RacialTraitPointCatalog`, e se os valores batem com o texto do livro.
+
+Habilidades cadastradas (5), na ordem do JSON:
+
+| Nome no JSON | id | category | Custo (`CUSTOS`) | Efeito (`EFEITOS`) | Observação |
+|---|---|---|---|---|---|
+| CASCOS | `GARRAS_SEM_PA` | racial_trait_positive | +2 | sem entrada — arma natural lida direto do campo `armasNaturais` (`For+d4`, pa 0, escalável), não pelo `ModifierEngine` | id genérico reaproveitado por outras 7 raças com ataque natural For+d4 sem PA (Sáurios, Draconianos etc.) |
+| DEPENDÊNCIA | `DEPENDENCIA` | racial_trait_negative | -2 | sem entrada — regra de Fadiga é condicional de jogo, não dado de construção | mesmo padrão já confirmado pro RECLUSO (Anjo, primeira rodada): custo/rótulo cadastrados, sem cálculo automático por decisão do dono do projeto |
+| FORMA INCOMUM | `FORMA_ALIENIGENA` | racial_trait_negative | -1 | sem entrada — restrição de uso de equipamento é textual | mesmo id reaproveitado por Insetoides (Fantasia) "Formato Corporal Incomum"; cada raça mantém seu próprio `nome` de exibição no JSON |
+| MOVIMENTAÇÃO +4 | `MOVIMENTACAO` | racial_trait_positive | 2/compra × `vezes: 2` = 4 | `PassoBonus(2)` × vezes → Movimentação 10, dado de corrida d10 | `VEZES_MAX["MOVIMENTACAO"] = 2`; `vezes: 2` no JSON já está no teto do livro |
+| TAMANHO +1 | `TAMANHO_MAIS_1` | racial_trait_positive | 1 | `TamanhoBonus(1)` → emite `SIZE_DISPLAY` e `SIZE_TOUGHNESS` (+1 Tamanho exibido E +1 Resistência) | bate com o texto do livro ("Adicione +1 a sua Resistência") |
+
+Soma de custos: 2 - 2 - 1 + 4 + 1 = **4**, igual ao `pontosRaciaisEsperados: 4`
+já declarado no JSON. Nenhuma divergência.
+
+Conferido também:
+- Nenhum `LABEL` genérico cadastrado pros 3 ids sem efeito numérico
+  (`GARRAS_SEM_PA`, `DEPENDENCIA`, `FORMA_ALIENIGENA`) — cai no fallback do
+  nome cru da própria raça (`CASCOS`, `DEPENDÊNCIA`, `FORMA INCOMUM`), que já
+  é o texto certo pra Centauros. O fallback só seria problema se o rótulo
+  genérico do catálogo fosse mostrado no lugar errado, o que não acontece
+  aqui (mesmo padrão documentado na rodada 1, item "Rótulo cru no editor de
+  Variante").
+- `MOVIMENTACAO` e `TAMANHO_MAIS_1` já constavam na lista de ids cobertos
+  desde a segunda/quarta rodada (mesmo arquivo, acima) — nada novo precisou
+  ser cadastrado.
+- As "Ideias Variantes" do livro pra Centauros (Tamanho +2 e Musculoso pra
+  centauros de guerra; Voo + Movimentação reduzida a 8/corrida d8 pra
+  centauros-pégaso) não têm pacote jogável em `AncestryVariantRegistry.kt` —
+  existem só como texto narrativo no campo `variantes` do JSON. Não é bug
+  (nenhuma outra raça exige que toda Ideia Variante do livro vire Variante
+  jogável no app), só fica registrado caso o dono do projeto queira
+  transformar isso em Variante de verdade depois.
+
+**Resultado: a raça já estava 100% correta antes desta rodada — nenhuma
+mudança de código foi necessária.** Auditoria feita só pra conferir e
+documentar, a pedido do dono do projeto.
