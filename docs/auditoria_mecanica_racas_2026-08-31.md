@@ -1135,3 +1135,95 @@ isso seguro.
 **Ainda pendente**: exibição de Resistência por local no PDF em tabela
 própria; Variante de raça-base de livro diferente das tags fica órfã (ver
 acima — não corrigido, não pedido nesta rodada).
+
+## Décima oitava rodada — CI quebrado + primeiros testes automatizados
+
+Pedido do dono do projeto: (1) corrigir o CI, que ficou vermelho depois do
+commit da rodada anterior; (2) implementar os testes automatizados
+discutidos na conversa anterior sobre "testes exageradamente perfeitos"
+(varredura de invariantes sobre o catálogo inteiro, em vez de só cenários
+roteirizados um por um).
+
+**1) CI quebrado**
+
+O job `Android CI` falhava em `./scripts/phase6_reliability_gate.sh`, no
+check "Uso direto de DataLoader fora do repositório" — esse gate faz um
+grep de texto por `DataLoader.` em todo `app/src/main/java`, fora de
+`GameDataRepository.kt` (regra de arquitetura: todo acesso a `DataLoader`
+tem que passar pelo repositório). O comentário que eu adicionei na rodada
+anterior em `SettingsDialog.kt` citava `DataLoader.kt` como referência de
+onde vem `distinctByOriginPriority` — e essa citação batia no mesmo grep
+ingênuo (é busca de texto, não AST), um falso positivo causado por mim
+mesmo. Corrigido reescrevendo o comentário pra não conter mais o texto
+`DataLoader.` literal. Rodei `scripts/phase6_reliability_gate.sh`
+localmente (esse script não depende de Gradle/rede) pra confirmar que
+passa antes de subir.
+
+**2) Testes automatizados — varredura de catálogo**
+
+Sem acesso de rede neste ambiente sandbox pra rodar `./gradlew test` (Fase
+não resolve o plugin do Android nem em cache), então pra não repetir o
+erro de subir código não verificado, montei um compilador/executor Kotlin
+standalone só com jars já em disco (`kotlin-compiler-embeddable` +
+`kotlin-stdlib` + `kotlinx-serialization` + `junit`/`hamcrest`, todos já
+cacheados dentro da própria distribuição do Gradle em `/opt/gradle-*`) —
+consegui compilar e RODAR de verdade os arquivos de teste novos contra o
+catálogo real antes de commitar, incluindo com JUnit de verdade (não só
+leitura de código).
+
+- **`AncestralidadeCatalogBudgetTest.kt`** (novo): a varredura de
+  invariante proposta na conversa anterior. Lê `ancestralidades.json`
+  direto do disco (sem passar por `DataLoader`/`Context` — não dá pra usar
+  em JVM pura mesmo, e o gate de confiabilidade não deixaria de qualquer
+  jeito) e, pra cada uma das 112 raças, soma o custo de cada traço
+  (`RacialTraitPointCatalog.custoDe(traitId ?: id, value, severity,
+  pontos) * vezes` — a mesma fórmula exata de `RacialAbility
+  .resolvedPontos()`) e confere que bate com `pontosRaciaisEsperados` da
+  própria raça. Rodando pela primeira vez contra o catálogo real, achou **7
+  raças fora do orçamento** — validando a ideia na prática, não só na
+  teoria.
+- **Investigação dos 7 achados**: 6 (Ferais, Florans, Gelatinoides,
+  Insetoides e Mímicos do Sci-Fi, Umvee do Arte da Guerra) são falsos
+  positivos de um teste que só olha o catálogo estático — essas raças
+  têm traços injetados em tempo de execução por `AncestryVariantRegistry`
+  (ex.: Ferais só ganham Diminuto/Tamanho -3 pela Variante "padrão" ativa
+  por default, não pelo `habilidades[]` cru do JSON — confirmado num
+  comentário já existente em `RacialTraitPointCatalog.kt` sobre
+  `DIMINUTO_TAMANHO_3`). Documentado e excluído explicitamente no teste
+  (por par raça+livro, não a raça inteira — a versão Fantasia de Insetoides,
+  por exemplo, continua sendo verificada normalmente).
+- **1 bug real encontrado e corrigido**: Demônios (Cidade do Sol a Vapor)
+  somava 0 pontos (Antecedente Arcano grátis +2, Frágil ×2 = -2) mas
+  `pontosRaciaisEsperados` não estava definido no JSON (caía no default
+  2). Conferido contra `docs/swade_csv_livro_do_criador` (seção
+  "Demônios", p. 42-43): o livro descreve exatamente esses dois traços e
+  mais nenhum — os dados já estavam certos, só faltava registrar que essa
+  raça fecha em 0, não 2. Adicionado `"pontosRaciaisEsperados": 0` no
+  JSON (diff mínimo, só essa raça).
+- **`AncestralidadeCatalogRegressionTest.kt`** (novo): 7 testes, um por
+  bug específico já corrigido nas rodadas anteriores desta auditoria
+  (Draconianos Mal-Humorado→Arrogante por id, Goblins Pequenos→
+  TAMANHO_MENOS_1, Infernais Natureza Diabólica→BONUS_PERICIA_1, Anões
+  Fantasia Robusto→RESISTENTE, Garras PA 2 de Povo Ratazana/Rakashanos
+  *só* na versão Fantasia — as outras versões de Rakashanos mantêm PA 0,
+  conferido explicitamente — e Povo Ratazana Sucateiro em maiúsculas).
+  Trava esses fatos específicos no catálogo real pra nenhum voltar a
+  quebrar silenciosamente.
+- Os dois arquivos foram compilados E executados (não só lidos) contra o
+  `ancestralidades.json` real desta branch, com JUnit de verdade, batendo
+  100% verde antes de commitar — ver metodologia acima.
+- **Não implementado nesta rodada** (deliberado, não esquecido): testes
+  no nível de `CriadorState` (o "abre o app, escolhe a raça, distribui
+  atributos" descrito na conversa anterior). `CriadorState.kt` tem ~7900
+  linhas e depende de Compose runtime — grande demais pra montar um
+  classpath mínimo e compilar isolado como fiz com
+  `RacialTraitPointCatalog.kt`, e eu não tenho como verificar se esse
+  código compila/passa neste ambiente sem rede pro Gradle. Prefiro não
+  entregar teste não verificado (foi exatamente isso que quebrou o CI
+  nesta mesma rodada) a arriscar outro round de correção. Fica como
+  próximo passo natural, num ambiente com CI disponível pra iterar.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria; Variante de raça-base de livro diferente das tags fica órfã;
+testes no nível de CriadorState (fluxo completo de criação de
+personagem) — ver acima.
