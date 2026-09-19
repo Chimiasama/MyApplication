@@ -780,15 +780,15 @@ Resposta direta às instruções da rodada anterior.
   passaram a aplicar `danoLimitadoPelaForca`/`danoComPenalidadeDiminuto`/
   `minimoReduzidoPorDiminuto`, na mesma distinção que o Resumo já fazia
   (cap de dado pela Força só em Corpo a Corpo/Arremesso, nunca à Distância).
-  **Dano de Poderes/Magia Arcana — não implementado, achado real**: diferente
-  de equipamento, poderes (`poderes.json`) não têm um campo `dano`
-  estruturado — "dano" ali é só uma TAG de categoria (`tags: [...,
-  "dano"]`); o valor de dano de cada poder (ex.: "2d6") vive dentro do texto
-  livre da própria descrição/modificador. Aplicar "-N" automaticamente exigiria
-  processar texto solto por poder (arriscado, alto volume) em vez de um
-  cálculo sobre campo estruturado — não fiz essa parte por não ter como
-  fazer com segurança sem reestruturar o catálogo de poderes primeiro. Fica
-  registrado como trabalho futuro maior, a combinar.
+  **Dano de Poderes/Magia Arcana — avaliado, decisão do dono do projeto:
+  não implementar**. Motivo técnico (fica registrado): diferente de
+  equipamento, poderes (`poderes.json`) não têm um campo `dano` estruturado
+  — "dano" ali é só uma TAG de categoria (`tags: [..., "dano"]`); o valor de
+  dano de cada poder (ex.: "2d6") vive dentro do texto livre da própria
+  descrição/modificador. Aplicar "-N" automaticamente exigiria processar
+  texto solto por poder (arriscado, alto volume) em vez de um cálculo sobre
+  campo estruturado. Confirmado com o dono do projeto que não vale a pena
+  — não é mais pendência.
 - **Meio-Orc/Meio-Elfo — não era confusão nem falta de implementação**: a
   rodada anterior errou ao dizer que os dois não tinham NENHUM efeito — só
   não tinham entrada em `RacialTraitPointCatalog.EFEITOS` (o catálogo
@@ -830,9 +830,58 @@ Resposta direta às instruções da rodada anterior.
   anteriores) — validação por leitura cruzada de código.
 
 **Ainda pendente, explicitamente adiado pelo dono do projeto pra depois**:
-Resistência por local do corpo (Armadura separada em Cabeça/Braços/Pernas/
-Tronco, cada uma com sua própria Resistência final, mostrada no PDF) — pedido
-novo desta rodada, mas o catálogo de equipamento não guarda "local" como
-campo estruturado hoje (só texto livre em `observacoes`, às vezes cobrindo
-mais de um local na mesma peça); Mechas com arma customizada de mentirinha no
-PDF; Propulsores sem custo de mods.
+Mechas com arma customizada de mentirinha no PDF; Propulsores sem custo de
+mods.
+
+## Décima terceira rodada — `local` estruturado no catálogo de armadura
+
+Pedido do dono do projeto: implementar o identificador de local do corpo
+(Cabeça/Braços/Pernas/Tronco) como dado estruturado no catálogo — base pra
+Resistência por local aparecer no PDF depois. Confirmado também: dano de
+Poderes/Magia Arcana fica de fora por decisão dele (rodada anterior).
+
+- **`equipamentos.json`**: novo campo `"local": [...]` em toda peça de
+  armadura oficial (297 de 330 entradas — as 33 restantes são casos que não
+  são armadura corporal de verdade: armadura de montaria/"Barda", Escudo
+  Balístico, o add-on "Espinhos", "Manopla Travada" e os 3 chassis de Mecha
+  "Estrutura: Tam N", nenhum deles com local de corpo pra marcar). Valores
+  possíveis: `CABECA`, `TRONCO`, `BRACOS`, `PERNAS` (uma peça pode cobrir
+  mais de um — ex.: "Manto": Tronco+Braços+Pernas) e `CORPO_INTEIRO` (trajes
+  completos/armadura energizada — Traje Espacial, Estruturas Classe I/II
+  etc., conta pros 4 locais ao mesmo tempo).
+  - Inferido por script a partir do texto que já existia (nome entre
+    parênteses quando presente, ex. "Braçadeira lamelar (Braços)" — tem
+    prioridade por ser específico da peça; senão o texto de `observacoes`,
+    ex. "Tronco, braços."). Cuidado real durante a extração: pra itens em
+    "conjunto" (Armadura Espelhada/Lamelar/Superior — 4 peças com a MESMA
+    descrição do conjunto completo repetida em cada uma, "cabeça, tronco,
+    braços e pernas"), ler só `observacoes` cravava as 4 peças com os 4
+    locais ao mesmo tempo; e pras peças do "Cavaleiro Infernal", a frase de
+    referência cruzada ("veja Placa de Peito...") contaminava o local de
+    peças que não são tronco. Os dois casos corrigidos dando prioridade ao
+    nome entre parênteses da própria peça sobre o texto do conjunto/nota.
+  - Cada entrada revisada individualmente antes de gravar (lista completa
+    impressa e conferida) — não foi um "aplica e reza".
+- **`EquipamentoModels.kt`**: `EquipamentoItem` ganhou o campo `local:
+  List<String>? = null`.
+- **`CriadorState.kt`**: nova função `armaduraPorLocal(): Map<String, Int>`
+  — maior valor de Armadura por local (peças no mesmo local não empilham,
+  `CORPO_INTEIRO` conta pros 4), lendo o campo estruturado novo. `armadura`
+  (o valor único que já soma na Resistência da ficha desde a rodada
+  anterior) passou a usar essa função: Tronco por convenção, com fallback
+  pra melhor peça quando não há cobertura de Tronco, e um último fallback
+  por heurística de texto só pra equipamento customizado do Mestre (sem
+  `local`, o catálogo oficial já está 100% migrado). `LOCAIS_CORPO` virou
+  constante top-level do arquivo (`CriadorState` já tinha um `companion
+  object` — evitei duplicar).
+  **Registrado, não implementado**: a UI/PDF de Resistência por local
+  (Cabeça/Braços/Pernas/Tronco cada um com seu próprio valor) ainda não
+  existe — só o dado (`armaduraPorLocal()`) está pronto pra ela consumir
+  quando o dono do projeto quiser essa tela/seção de verdade.
+- Não rodei o app/testes JVM nesta rodada — validação por leitura cruzada
+  de código e conferência da lista completa das 144 peças únicas antes de
+  gravar no catálogo.
+
+**Ainda pendente**: a própria exibição de Resistência por local no PDF
+(consome `armaduraPorLocal()`, ainda não escrita); Mechas com arma
+customizada de mentirinha no PDF; Propulsores sem custo de mods.

@@ -98,6 +98,11 @@ import java.util.UUID
 
 enum class TabStyle { ICONES, TEXTO }
 
+// Os 4 locais de corpo que uma peça de armadura pode cobrir (ver
+// EquipamentoItem.local) — mesma nomenclatura usada no catálogo
+// (equipamentos.json) e em CriadorState.armaduraPorLocal().
+val LOCAIS_CORPO = listOf("CABECA", "TRONCO", "BRACOS", "PERNAS")
+
 class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
     private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
@@ -4741,35 +4746,61 @@ class CriadorState {
 
     var pontosAtributo by mutableIntStateOf(5)
 
+    /**
+     * Maior valor de Armadura equipada em cada local do corpo — peças que cobrem o
+     * MESMO local não empilham (regra oficial, SWADE "Armadura"), vale a de maior
+     * valor ali. Lê o campo estruturado `EquipamentoItem.local` (ver comentário lá);
+     * `CORPO_INTEIRO` (trajes completos) conta pros 4 locais ao mesmo tempo. Item sem
+     * `local` (equipamento customizado feito pelo Mestre — todo o catálogo oficial já
+     * está migrado) não entra aqui; participa só do fallback de `armadura` abaixo.
+     * Registrado pra já existir pronto quando a Resistência por local entrar no PDF —
+     * hoje só `armadura` (Tronco/melhor peça) é usada na ficha.
+     */
+    fun armaduraPorLocal(): Map<String, Int> {
+        val porLocal = mutableMapOf<String, Int>()
+        equipamentosComprados.forEach { item ->
+            val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
+            if (valor == null || valor == 0) return@forEach
+            val locaisItem = item.local ?: return@forEach
+            val locaisResolvidos = if ("CORPO_INTEIRO" in locaisItem) LOCAIS_CORPO else locaisItem
+            locaisResolvidos.forEach { local ->
+                porLocal[local] = maxOf(porLocal[local] ?: 0, valor)
+            }
+        }
+        return porLocal
+    }
+
     // Valor de Armadura que soma na Resistência exibida no Resumo/PDF (ver
     // armorBase/calcResistencia()). Era um `var` manual (mutableIntStateOf) que
     // nenhum lugar do app nunca atualizava — ficava sempre 0, Armadura comprada
     // nunca aparecia na Resistência total, só na lista separada "Armaduras"
     // (bug relatado: comprou Corselete de Bronze, Resistência não mudou).
     //
-    // Regra oficial (SWADE, Armadura): peças que cobrem o MESMO local não
-    // empilham — vale a de maior valor ali. O catálogo não guarda "local"
-    // como campo estruturado (só o texto livre de `observacoes`, ex. "Tronco.",
-    // "Cabeça.", "Tronco, braços."), então, até isso virar dado estruturado
-    // de verdade (ver TODO pra Resistência por local do corpo no PDF), a regra
-    // aqui é a simplificação combinada com o dono do projeto: prioriza a peça
-    // de Tronco/Corpo (a que cobre o torso, "via de regra" o valor que conta
-    // pra Resistência geral do personagem); sem peça de Tronco/Corpo
-    // equipada, cai pro maior valor entre as demais peças (ex.: só um
-    // capacete comprado). Nunca soma duas peças.
+    // Resistência geral do personagem usa o valor de Tronco (por convenção — é
+    // o local que a Resistência "padrão" da ficha representa, sem detalhar por
+    // local do corpo, decisão combinada com o dono do projeto), com fallback
+    // pra melhor peça equipada quando não há nada cobrindo o Tronco (ex.: só um
+    // capacete comprado) e, por fim, pra equipamento customizado sem `local`
+    // estruturado (heurística por texto de `observacoes`, mesmo comportamento
+    // de antes desta peça virar dado estruturado no catálogo oficial).
     val armadura: Int
         get() {
-            val pecas = equipamentosComprados.mapNotNull { item ->
+            val porLocal = armaduraPorLocal()
+            porLocal["TRONCO"]?.let { return it }
+            if (porLocal.isNotEmpty()) return porLocal.values.max()
+
+            val pecasSemLocal = equipamentosComprados.mapNotNull { item ->
+                if (item.local != null) return@mapNotNull null
                 val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
                 if (valor == null || valor == 0) return@mapNotNull null
                 val local = (item.observacoes as? JsonPrimitive)?.content ?: ""
                 valor to local
             }
-            if (pecas.isEmpty()) return 0
-            val doTronco = pecas.filter { (_, local) ->
+            if (pecasSemLocal.isEmpty()) return 0
+            val doTronco = pecasSemLocal.filter { (_, local) ->
                 local.contains("tronco", ignoreCase = true) || local.contains("corpo", ignoreCase = true)
             }
-            return (doTronco.ifEmpty { pecas }).maxOf { it.first }
+            return (doTronco.ifEmpty { pecasSemLocal }).maxOf { it.first }
         }
 
     var nasceUmHeroi by mutableStateOf(false)
