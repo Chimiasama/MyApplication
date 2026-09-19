@@ -1022,3 +1022,57 @@ ocupa slot de Mod ou não — no app era só um checkbox sem custo).
 
 **Ainda pendente**: exibição de Resistência por local no PDF em tabela
 própria (mesma pendência da rodada anterior).
+
+## Décima sexta rodada — aviso de "Ancestralidade desbalanceada"
+
+Pedido do dono do projeto: quando a contagem de pontos raciais de uma raça
+passa do orçamento normal (2 pontos), mostrar um indicador de "raça forte".
+Ressalva do próprio pedido: Pathfinder e Arte da Guerra têm raças
+naturalmente mais fortes por design do livro (orçamento 4 e 3, não 2), então
+a comparação não pode ser contra 2 fixo — tem que ser contra o orçamento
+PRÓPRIO de cada raça. Conclusão do dono do projeto: um indicador sutil nas
+Características da raça, tipo "Ancestralidade desbalanceada", só pra avisar
+o jogador que a contagem não fecha certo.
+
+- **Conferido antes de mexer em código**: `RacialModifier.pontosRaciaisEsperados`
+  já existe (rodadas anteriores) e já está corretamente calibrado por raça —
+  as 7 raças de Pathfinder têm `4`, as 12 de Arte da Guerra têm `3`, as 5 de
+  Crystal Heart têm `4` (design do próprio livro, "+4 pontos em vez do +2
+  habitual" — comentário já existente em `RacialModifier.kt`), Centauros/
+  Povo Ratazana/Rakashanos (Fantasia) têm `3`/`4` de rodadas anteriores desta
+  auditoria. Ou seja, a parte "bota o contador certo" já estava pronta —
+  faltava só USAR esse valor pra comparar contra o total real de pontos da
+  raça e mostrar algo na tela.
+- **`RacialCaracteristicasResolver`/aba Ancestralidades → "Ver detalhes"**
+  (`AncestralidadesSection.kt`): a lista "Características:" já resolvia os
+  traços efetivos da raça (`habilidadesEfetivas`, já considerando uma
+  eventual Variante custom selecionada) só que sem somar os pontos. Agora
+  soma `RacialAbility.resolvedPontos()` de cada traço (mesma fórmula que
+  `ResolveVariantPointBudgetUseCase` e a aba já usam em outro lugar) e
+  compara com o orçamento da própria raça. Quando o total ULTRAPASSA o
+  orçamento, mostra uma linha discreta (cor `tertiary`, `labelSmall`, com
+  ⚠) logo depois da lista de Características: "Ancestralidade desbalanceada
+  (traços somam N pontos raciais, acima do orçamento de M)". Como a
+  comparação usa o orçamento da própria raça (2/3/4 conforme o caso), uma
+  raça de Pathfinder fechando nos 4 pontos dela não aciona o aviso — só
+  aciona se de fato passar do que essa raça específica prevê, cobrindo
+  tanto um bug de raça oficial desbalanceada quanto uma Variante custom que
+  o Mestre montou torta.
+- `RacialModifierLite` (o tipo "leve" usado só nessa tela, sem o resto dos
+  campos de `RacialModifier`) ganhou o campo `pontosRaciaisEsperados`
+  (default 2, igual ao original), preenchido a partir do `RacialModifier`
+  de origem no único ponto que constrói essa lista.
+- Não tentei resolver o cenário hipotético de "jogador reatribui a
+  ancestralidade de Pathfinder pro livro Básico" citado na conversa — não
+  existe hoje nenhum fluxo de UI pra reatribuir o livro/origem de uma raça
+  OFICIAL (isso só existe pra conteúdo Customizado, que é outra tela). O
+  aviso implementado já cobre o caso real de qualquer desequilíbrio de
+  pontos que apareça, incluindo se um dia esse cenário virar possível.
+- Não rodei o app/testes JVM nesta rodada (mesma limitação de rede do
+  ambiente sandbox das rodadas anteriores) — validação por leitura cruzada
+  do código e conferência de que os 7+12+5+3 casos com
+  `pontosRaciaisEsperados` != 2 já cadastrados no catálogo continuam
+  corretos (não precisaram de nenhum ajuste nesta rodada).
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria (mesma pendência das rodadas anteriores).

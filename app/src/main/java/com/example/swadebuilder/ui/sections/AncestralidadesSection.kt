@@ -103,7 +103,10 @@ data class RacialModifierLite(
     val aliases: Set<String> = emptySet(),
     val origens: Set<String> = emptySet(),
     val habilidades: List<RacialAbilityLite> = emptyList(),
-    val opcoes: List<String> = emptyList()
+    val opcoes: List<String> = emptyList(),
+    // Orçamento de pontos raciais desta raça (ver RacialModifier.pontosRaciaisEsperados) — usado
+    // só pro aviso sutil de "Ancestralidade desbalanceada" na tela "Ver detalhes".
+    val pontosRaciaisEsperados: Int = 2
 )
 
 private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
@@ -257,7 +260,8 @@ fun AncestralidadesSection(
                     aliases = aliasKeys,
                     origens = originsInGroup,
                     habilidades = habilidadesLite,
-                    opcoes = representative.opcoes
+                    opcoes = representative.opcoes,
+                    pontosRaciaisEsperados = representative.pontosRaciaisEsperados
                 )
             }.sortedBy { it.nome }
 
@@ -1187,22 +1191,24 @@ fun AncestralidadesSection(
                                             }
                                         }
 
+                                        val habilidadesResolvidas = habilidadesParaCaracteristicas.map {
+                                            RacialAbility(
+                                                nome = it.nome,
+                                                descricao = "",
+                                                id = it.id,
+                                                category = it.category,
+                                                severity = it.severity,
+                                                traitId = it.traitId,
+                                                targetRef = it.targetRef,
+                                                value = it.value,
+                                                pontos = it.pontos,
+                                                invisivel = it.invisivel,
+                                                vezes = it.vezes
+                                            )
+                                        }
+
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                            habilidades = habilidadesParaCaracteristicas.map {
-                                                RacialAbility(
-                                                    nome = it.nome,
-                                                    descricao = "",
-                                                    id = it.id,
-                                                    category = it.category,
-                                                    severity = it.severity,
-                                                    traitId = it.traitId,
-                                                    targetRef = it.targetRef,
-                                                    value = it.value,
-                                                    pontos = it.pontos,
-                                                    invisivel = it.invisivel,
-                                                    vezes = it.vezes
-                                                )
-                                            }
+                                            habilidades = habilidadesResolvidas
                                         )
 
                                         if (caracteristicas.isNotEmpty()) {
@@ -1220,6 +1226,23 @@ fun AncestralidadesSection(
                                                     modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
                                                 )
                                             }
+                                        }
+
+                                        // Aviso sutil de raça acima do orçamento de pontos raciais dela mesma
+                                        // (item.pontosRaciaisEsperados — 2 pra maioria, mas já vem calibrado
+                                        // por raça: 3 pra Arte da Guerra, 4 pra Pathfinder/Crystal Heart, que
+                                        // são naturalmente "mais fortes" por design do próprio livro). Só
+                                        // acende quando os traços da raça somam MAIS pontos do que o
+                                        // orçamento dela mesma prevê — não é sobre comparar com o padrão de
+                                        // 2 pontos do livro básico.
+                                        val pontosRaciaisTotais = habilidadesResolvidas.sumOf { it.resolvedPontos() }
+                                        if (pontosRaciaisTotais > item.pontosRaciaisEsperados) {
+                                            Spacer(Modifier.height(4.dp))
+                                            Text(
+                                                text = "⚠ Ancestralidade desbalanceada (traços somam $pontosRaciaisTotais pontos raciais, acima do orçamento de ${item.pontosRaciaisEsperados})",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.tertiary
+                                            )
                                         }
                                     }
                                 }
