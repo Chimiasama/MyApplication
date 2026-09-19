@@ -566,3 +566,44 @@ mesmo").
   repositórios de plugin do Gradle aqui, não rodei o app/testes JVM —
   validação por leitura cruzada (`ancestralidades.json` → `EFEITOS`/
   `CUSTOS`/`LABEL`/`VEZES_MAX` de `RacialTraitPointCatalog.kt`).
+
+## Nona rodada — Natureza Diabólica (Infernais) virando Bônus de Perícia de verdade
+
+Pedido do dono do projeto: conferir "Natureza Diabólica" (Infernais). O
+texto do livro é literal — "Adiciona +1 às rolagens de Intimidar" — e o
+dono do projeto confirmou que esse +1 é só descritivo (não é um dado
+subindo de tipo, é um bônus fixo numa rolagem, igual ao resto da família
+"Bônus de Perícia"/"Penalidade em Perícia" já cadastrada no catálogo). O
+traço tinha `id: "NATUREZA_DIABOLICA"` próprio, com custo 1 igual ao
+genérico, mas duplicado.
+
+- **Precedente já existente no próprio catálogo**: Usagimimi "Ariscos"
+  (`RacialTraitPointCatalog.kt:493-496`) já faz exatamente isso — `nome:
+  "Ariscos"` no JSON, `id: "PENALIDADE_PERICIA_2"` (o genérico, -2), com um
+  comentário explícito documentando o padrão: "usa id=PENALIDADE_PERICIA_2,
+  skin 'Ariscos' via `nome`". Segui o mesmo padrão, só que na família
+  positiva: `id: "BONUS_PERICIA_1"` (que já existia no catálogo, cadastrado
+  mas sem nenhuma raça oficial usando — comentário antigo dizia "nenhuma
+  raça cadastrada usa isso hoje", agora desatualizado e corrigido).
+- **`ancestralidades.json`**: Infernais "NATUREZA DIABÓLICA" passou de
+  `id: "NATUREZA_DIABOLICA"` pra `id: "BONUS_PERICIA_1"`. `nome`/
+  `descricao`/`descricaoLite` continuam os mesmos — a skin de exibição
+  não muda, só o id mecânico por trás.
+- **`RacialTraitPointCatalog.kt`**: removida a entrada `"NATUREZA_DIABOLICA"`
+  de `CUSTOS` (agora morta — nenhuma outra raça/teste referenciava esse id,
+  conferido em `app/src/main/assets`, `app/src/main/java` e `app/src/test`).
+  Comentário de `BONUS_PERICIA_1` atualizado pra citar o uso real (Infernais)
+  e apontar o precedente do Usagimimi.
+- **Sem efeito mecânico calculado, por decisão confirmada**: nem
+  `BONUS_PERICIA_1` nem `NATUREZA_DIABOLICA` (antes) tinham entrada em
+  `EFEITOS` — o app não soma esse +1 em nenhum teste de Intimidar, só
+  registra custo (1 pt) e mantém o texto explicando o que é. Mesma decisão
+  já tomada pra `bonus_pericia_1`/`penalidade_pericia_1/2` na primeira
+  rodada (RECLUSO/Anjo) e reconfirmada aqui.
+- **Custo inalterado**: Infernais continua fechando em 2/2 pontos (+1
+  Chifres, -1 Forasteiro Menor, -1 Fraqueza Ambiental, +1 Natureza
+  Diabólica/Bônus de Perícia, +1 Resistência Ambiental, +1 Visão Total no
+  Escuro — soma 2).
+- Mesma limitação de sandbox: sem acesso aos repositórios de plugin do
+  Gradle aqui, não rodei o app/testes JVM — validação por leitura cruzada
+  do JSON contra `EFEITOS`/`CUSTOS`/`LABEL`/`VEZES_MAX`.

@@ -1111,7 +1111,7 @@
       {
         "nome": "NATUREZA DIABÓLICA",
         "descricao": "A verdadeira natureza de um infernal está sempre logo abaixo da superfície e ele pode revelá-la quando desejar. Adiciona +1 às rolagens de Intimidar.",
-        "id": "NATUREZA_DIABOLICA",
+        "id": "BONUS_PERICIA_1",
         "category": "racial_trait_positive",
         "descricaoLite": "+1 em testes de Intimidar."
       },

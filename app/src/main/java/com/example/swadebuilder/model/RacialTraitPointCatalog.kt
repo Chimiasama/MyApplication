@@ -512,7 +512,9 @@ object RacialTraitPointCatalog {
         "BOM_CONSELHEIRO" to -1, // oficial: complicacao_racial_menor (Peculiaridade)
         // oficial: "Bônus de Perícia" (Básico) — bônus fixo de +1/+2 na rolagem de
         // uma perícia específica, diferente de "Perícia" (pericia_racial_d4/d6, que
-        // eleva o DADO inicial). Nenhuma raça cadastrada usa isso hoje.
+        // eleva o DADO inicial). Infernais "Natureza Diabólica" (+1 Intimidar) usa
+        // id="BONUS_PERICIA_1", skin "Natureza Diabólica" via `nome` — mesmo padrão
+        // do Usagimimi "Ariscos" (id="PENALIDADE_PERICIA_2") logo abaixo.
         "BONUS_PERICIA_1" to 1,
         "BONUS_PERICIA_2" to 2,
         "BRINCALHAO" to 1, // oficial: pericia_racial_d4 (Provocar d4)
@@ -720,7 +722,6 @@ object RacialTraitPointCatalog {
         "NAO_PODE_CURAR" to -1, // oficial: nao_pode_curar
         "NAO_SABE_NADAR" to -1, // oficial: complicacao_racial_menor
         "NATURALMENTE_SOBRENATURAL" to 1, // oficial: pericia_racial_d4 (Ocultismo d4)
-        "NATUREZA_DIABOLICA" to 1, // oficial: bonus_pericia_1 (+1 Intimidar)
         "NERVOS_DE_ACO" to 2, // oficial: vantagem_racial
         "NOCAO_DO_PERIGO" to 2, // oficial: vantagem_racial
         "OBSESSIVOS" to 1, // oficial: pericia_racial_d4
