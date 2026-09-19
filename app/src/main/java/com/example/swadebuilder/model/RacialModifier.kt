@@ -328,7 +328,12 @@ object RacialCaracteristicasResolver {
             val id = hab.id?.keyify()
             val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
-            val rotulo = id?.let { RacialTraitPointCatalog.LABEL[it] } ?: hab.nome.toFancyTitleCase()
+            // labelComVezes escala o rótulo (ex.: "Tamanho +1" -> "Tamanho +3" pra
+            // Meio-Gigantes, vezes=3) quando o id tem LABEL cadastrado; sem LABEL,
+            // cai no nome cru da habilidade, igual antes (nunca no id em si).
+            val rotulo = id?.takeIf { RacialTraitPointCatalog.LABEL.containsKey(it) }
+                ?.let { RacialTraitPointCatalog.labelComVezes(it, hab.vezes) }
+                ?: hab.nome.toFancyTitleCase()
             val pts = hab.resolvedPontos()
             linhas += "$rotulo${formatPts(pts)}"
         }

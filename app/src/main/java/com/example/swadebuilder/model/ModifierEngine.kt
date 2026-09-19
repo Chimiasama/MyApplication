@@ -74,27 +74,53 @@ object ModifierEngine {
         // stat fixo — por isso só vira nota de texto na ficha (ver ResumoSection.kt),
         // nunca um Modifier aqui.
         val forcaRawParaArmadura = state.valoresAtributos["FORCA"]?.intValue ?: 4
+        // Diminuto (livro Fantasia, pág. 10 — Fadas/Povo Rato/Ferais Menor): armadura
+        // feita sob medida pro corpo pequeno tem Força Mínima reduzida em 2/3/4 tipos de
+        // dado (mínimo d4). racialDiminutoPassos() não chama collect() de novo (ver seu
+        // comentário) — só por isso pode ser chamada daqui de dentro.
+        val passosDiminuto = racialDiminutoPassos(state)
+
+        fun aplicarPenalidadePace(id: String, nomeExibicao: String, forcaMinTexto: String?) {
+            val forcaMinAjustado = ForcaMinimaCalculator.minimoReduzidoPorDiminuto(forcaMinTexto, passosDiminuto)
+            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinAjustado)
+            if (passos > 0) {
+                modifiers.add(
+                    Modifier(
+                        id = "forca_min_pace_$id",
+                        sourceType = SourceType.OUTRO,
+                        sourceName = nomeExibicao,
+                        target = ModifierTarget.PACE,
+                        value = -passos
+                    )
+                )
+            }
+        }
+
+        // Peças com `local` estruturado (catálogo oficial): agrupadas por local do
+        // corpo — `armaduraPorLocal()` já resolve "vestir armadura sobre armadura"
+        // (livro básico, Cap. 2), inclusive a Força Mínima efetiva por local (+1 passo
+        // quando há uma segunda camada), então a penalidade aqui é por LOCAL, não mais
+        // por peça — vestir cota de malha sob placas no Tronco conta uma vez só, com a
+        // Força Mínima já ajustada, em vez de somar a penalidade das duas peças em
+        // separado.
+        state.armaduraPorLocal().forEach { (local, info) ->
+            aplicarPenalidadePace(local, "Armadura ($local)", info.forcaMinima)
+        }
+
+        // Peças SEM `local` (equipamento customizado do Mestre — o catálogo oficial já
+        // está 100% migrado) mantêm o comportamento por peça de antes, já que não dá
+        // pra agrupar por local sem saber qual é.
         state.equipamentosComprados.forEach { item ->
             if (item.armadura == null) return@forEach
+            if (item.local != null) return@forEach
             val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
                 s.contains("VEICULO") || s.contains("VEÍCULO") ||
                         s.contains("CHASSIS") || s.contains("MECHA")
             } == true
             if (isMechaOrVehicle) return@forEach
 
-            val forcaMinTexto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
-            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinTexto)
-            if (passos > 0) {
-                modifiers.add(
-                    Modifier(
-                        id = "forca_min_pace_${item.nome.keyify()}",
-                        sourceType = SourceType.OUTRO,
-                        sourceName = item.nome,
-                        target = ModifierTarget.PACE,
-                        value = -passos
-                    )
-                )
-            }
+            val forcaMinBruto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+            aplicarPenalidadePace(item.nome.keyify(), item.nome, forcaMinBruto)
         }
 
         // 2. Ancestralidade
@@ -460,6 +486,22 @@ object ModifierEngine {
 
     fun sum(state: CriadorState, target: ModifierTarget): Int {
         return collect(state).filter { it.target == target }.sumOf { it.value }
+    }
+
+    /**
+     * Quantos passos de dado o traço Diminuto (livro Fantasia) reduz — Fadas/Povo Rato/
+     * Ferais Menor. Lê direto de `currentAncestryDef.habilidades` (não chama
+     * `sizeRawDisplay()`/`collect()`: usada também DE DENTRO de `collect()`, na seção 1b,
+     * e uma chamada recursiva a `collect()` ali travaria em loop infinito). Só cobre o
+     * traço racial direto — Diminuto nunca é injetado só por Variante/Monstro Heroico
+     * hoje, então não precisa somar `racialTraitIdsFromVariants` aqui.
+     */
+    fun racialDiminutoPassos(state: CriadorState): Int {
+        val efeitoDiminuto = state.currentAncestryDef?.habilidades?.firstNotNullOfOrNull { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            (efeito as? RacialTraitEffect.TamanhoBonus)?.takeIf { it.minusculo }?.let { it.valor * hab.vezes }
+        } ?: 0
+        return ForcaMinimaCalculator.diminutoPassos(efeitoDiminuto)
     }
 
     fun sizeRawDisplay(state: CriadorState): Int {

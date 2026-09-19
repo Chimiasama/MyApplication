@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MechaCustomizacoes(
     val blindagem_extra: Int = 0,
-    val propulsores: Boolean = false,
     val anotacoes: String = ""
 )
 
@@ -77,6 +76,11 @@ data class MechaItem(
     val mods_instalados: List<MechaModItem> = emptyList(),
     val sistemas_instalados: List<String> = emptyList(),
     val armas_equipadas: List<String> = emptyList(),
+    // Armas de Mecha criadas na hora pelo jogador (fora do catálogo oficial do livro), com
+    // Mods cost próprio — ver CreateCustomMechaWeaponDialog em MechasSection.kt. Substituem
+    // o antigo campo de texto livre "Arma Personalizada", que aceitava qualquer string em
+    // armas_equipadas sem nenhum custo em MODs associado (o Mecha "ganhava" armas de graça).
+    val armasCustomizadas: List<MechaWeaponItem> = emptyList(),
     val customizacoes: MechaCustomizacoes = MechaCustomizacoes()
 ) {
     // Livro (Estruturas de Mechas): a Armadura Máxima que o chassi aceita depende só da categoria

@@ -98,6 +98,11 @@ import java.util.UUID
 
 enum class TabStyle { ICONES, TEXTO }
 
+// Os 4 locais de corpo que uma peça de armadura pode cobrir (ver
+// EquipamentoItem.local) — mesma nomenclatura usada no catálogo
+// (equipamentos.json) e em CriadorState.armaduraPorLocal().
+val LOCAIS_CORPO = listOf("CABECA", "TRONCO", "BRACOS", "PERNAS")
+
 class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
     private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
@@ -549,6 +554,14 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    // Wiseguys é um "cenário substituto" (como Pathfinder/Deadlands/Crystal Heart):
+    // sem isso, só a raça própria do livro (Humano) fica disponível — a aba
+    // Ancestralidades nem aparece (ver UnifiedScreen.kt) — porque só ela tem
+    // `livros: ["WISEGUYS"]` no catálogo. Ligar esta opção reabre a aba e
+    // reintroduz o Livro Básico como origem ativa pra escolha de raça (ver
+    // getActiveOrigins() em ContentVisibility.kt), pro Mestre que quiser rodar
+    // Wiseguys com raças variantes em vez de só humanos.
+    var wiseguysHabilitaRacas by mutableStateOf(false)
     var optRegraRiqueza by mutableStateOf(false)
     var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
@@ -995,7 +1008,10 @@ class CriadorState {
             return base
         }
 
-        if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
+        // Escolha por id do traço "HERANCA" (Básico/Fantasia/Horror/Super Meio-Elfos),
+        // não por nome de raça — o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO"
+        // no nome, mas tem "Flexibilidade" em vez de Herança, então nunca entra aqui.
+        if (base.habilidades.any { it.id?.keyify() == "HERANCA" }) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
 
@@ -4730,7 +4746,98 @@ class CriadorState {
 
     var pontosAtributo by mutableIntStateOf(5)
 
-    var armadura by mutableIntStateOf(0)
+    // Valor final de Armadura num local do corpo, já com a regra de "vestir armadura
+    // sobre armadura" aplicada (ver armaduraPorLocal) — e a Força Mínima efetiva pra
+    // esse local (da peça principal, +1 passo de dado quando há uma segunda camada;
+    // ver ForcaMinimaCalculator.minimoComCamadaExtra). `forcaMinima` null = local sem
+    // peça cadastrada com Força Mínima reconhecível.
+    data class ArmorLocalInfo(val valor: Int, val forcaMinima: String?)
+
+    /**
+     * Armadura equipada em cada local do corpo, já resolvendo a regra oficial de
+     * "vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento", regra de
+     * Armadura): duas peças no MESMO local não simplesmente tomam a melhor — a peça
+     * PRINCIPAL (maior valor) soma o valor cheio, a SEGUNDA (a "mais leve") soma
+     * METADE do valor dela arredondado pra baixo, e a Força Mínima efetiva desse local
+     * sobe um passo de dado (a penalidade da peça mais pesada aumenta). Com 3+ peças no
+     * mesmo local (raro/sem regra explícita no livro), só as 2 melhores contam — o
+     * resto é ignorado pra esse cálculo. Lê o campo estruturado `EquipamentoItem.local`
+     * (ver comentário lá); `CORPO_INTEIRO` (trajes completos) conta pros 4 locais ao
+     * mesmo tempo. Item sem `local` (equipamento customizado feito pelo Mestre — todo o
+     * catálogo oficial já está migrado) não entra aqui; participa só do fallback de
+     * `armadura`/da penalidade de Força Mínima em ModifierEngine.
+     * Registrado pra já existir pronto quando a Resistência por local entrar no PDF —
+     * hoje só `armadura` (Tronco/melhor local) é usada na ficha.
+     */
+    fun armaduraPorLocal(): Map<String, ArmorLocalInfo> {
+        val pecasPorLocal = mutableMapOf<String, MutableList<Pair<Int, String?>>>()
+        equipamentosComprados.forEach { item ->
+            val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
+            if (valor == null || valor == 0) return@forEach
+            val locaisItem = item.local ?: return@forEach
+            // Defensivo: nenhuma peça com `local` hoje tem subtipo de Mecha/Veículo
+            // (esses ficaram de fora da migração — ver equipamentos.json), mas se um
+            // catálogo futuro adicionar uma, não deve contar aqui (Mecha usa Armadura
+            // Máx do chassi, não Resistência do piloto).
+            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                        s.contains("CHASSIS") || s.contains("MECHA")
+            } == true
+            if (isMechaOrVehicle) return@forEach
+            val forcaMinItem = (item.forcaMin as? JsonPrimitive)?.content
+            val locaisResolvidos = if ("CORPO_INTEIRO" in locaisItem) LOCAIS_CORPO else locaisItem
+            locaisResolvidos.forEach { local ->
+                pecasPorLocal.getOrPut(local) { mutableListOf() }.add(valor to forcaMinItem)
+            }
+        }
+        return pecasPorLocal.mapValues { (_, pecas) ->
+            val ordenadas = pecas.sortedByDescending { it.first }
+            val principal = ordenadas[0]
+            val temSegundaCamada = ordenadas.size > 1
+            val valorFinal = principal.first + if (temSegundaCamada) ordenadas[1].first / 2 else 0
+            val forcaMinFinal = if (temSegundaCamada) {
+                com.example.swadebuilder.util.ForcaMinimaCalculator.minimoComCamadaExtra(principal.second)
+                    ?: principal.second
+            } else {
+                principal.second
+            }
+            ArmorLocalInfo(valorFinal, forcaMinFinal)
+        }
+    }
+
+    // Valor de Armadura que soma na Resistência exibida no Resumo/PDF (ver
+    // armorBase/calcResistencia()). Era um `var` manual (mutableIntStateOf) que
+    // nenhum lugar do app nunca atualizava — ficava sempre 0, Armadura comprada
+    // nunca aparecia na Resistência total, só na lista separada "Armaduras"
+    // (bug relatado: comprou Corselete de Bronze, Resistência não mudou).
+    //
+    // Resistência geral do personagem usa o valor de Tronco (por convenção — é
+    // o local que a Resistência "padrão" da ficha representa, sem detalhar por
+    // local do corpo, decisão combinada com o dono do projeto), com fallback
+    // pra melhor local equipado quando não há nada cobrindo o Tronco (ex.: só um
+    // capacete comprado) e, por fim, pra equipamento customizado sem `local`
+    // estruturado (heurística por texto de `observacoes`, mesmo comportamento
+    // de antes desta peça virar dado estruturado no catálogo oficial — sem a regra
+    // de camadas, que exige saber o local de cada peça pra agrupar).
+    val armadura: Int
+        get() {
+            val porLocal = armaduraPorLocal()
+            porLocal["TRONCO"]?.let { return it.valor }
+            if (porLocal.isNotEmpty()) return porLocal.values.maxOf { it.valor }
+
+            val pecasSemLocal = equipamentosComprados.mapNotNull { item ->
+                if (item.local != null) return@mapNotNull null
+                val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
+                if (valor == null || valor == 0) return@mapNotNull null
+                val local = (item.observacoes as? JsonPrimitive)?.content ?: ""
+                valor to local
+            }
+            if (pecasSemLocal.isEmpty()) return 0
+            val doTronco = pecasSemLocal.filter { (_, local) ->
+                local.contains("tronco", ignoreCase = true) || local.contains("corpo", ignoreCase = true)
+            }
+            return (doTronco.ifEmpty { pecasSemLocal }).maxOf { it.first }
+        }
 
     var nasceUmHeroi by mutableStateOf(false)
 
@@ -5235,8 +5342,17 @@ class CriadorState {
             // migrar pro mesmo mecanismo de Feral/Minerador).
             // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
             // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
+            val opcoesValidas = if (habilidadeIds.contains("PRIMITIVO")) {
+                setOf("FORCA", "VIGOR", "AGILIDADE")
+            } else {
+                setOf("FORCA", "VIGOR")
+            }
             val defaultChoice = if (habilidadeIds.contains("ENDURECIDO")) "Vigor" else "Força"
-            val chosen = humanoMineradorAtributo ?: defaultChoice
+            // `humanoMineradorAtributo` é compartilhado pelas 3 raças — sem essa
+            // validação, uma escolha "Agilidade" deixada pelo Feral sobrevivia à
+            // troca pro Meio-Orc/Minerador (que não têm essa opção) e cancelava o
+            // bônus por completo (nem Força nem Vigor batiam), silenciosamente.
+            val chosen = humanoMineradorAtributo?.takeIf { it.keyify() in opcoesValidas } ?: defaultChoice
             if (attrKey == chosen.keyify()) {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
@@ -5690,9 +5806,12 @@ class CriadorState {
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
-        if (racialPackage.forceArmorZero) {
-            armadura = 0
-        }
+        // `racialPackage.forceArmorZero` resetava o `armadura` manual (var
+        // mutableIntStateOf) que existia antes daqui — mas nada no app nunca
+        // escrevia outro valor nele (sempre 0), então esse reset já era um
+        // no-op em todas as raças, mesmo nas ~poucas com forceArmorZero=false.
+        // `armadura` virou computado a partir de `equipamentosComprados` (ver
+        // declaração), não sobra estado pra resetar aqui.
 
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {

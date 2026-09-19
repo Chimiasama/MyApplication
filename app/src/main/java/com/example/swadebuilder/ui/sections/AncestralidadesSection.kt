@@ -79,7 +79,19 @@ data class RacialAbilityLite(
     val descricao: String,
     val id: String? = null,
     val category: String? = null,
-    val severity: String? = null
+    val severity: String? = null,
+    // Sem estes campos, um traço empilhável (ex.: Meio-Gigantes Tamanho +1
+    // x3, Povo Serpente Movimentação x2) ou com skin via targetRef (ex.:
+    // Draconianos Mal-Humorado -> Arrogante) virava a versão de 1 compra/
+    // sem targetRef só na tela "Ver detalhes" — RacialCaracteristicasResolver
+    // recebe esses campos zerados e mostra rótulo/pontos errados mesmo com
+    // o dado de origem (RacialAbility) correto.
+    val traitId: String? = null,
+    val targetRef: String? = null,
+    val value: Int = 1,
+    val pontos: Int = 0,
+    val invisivel: Boolean = false,
+    val vezes: Int = 1
 )
 
 @Serializable
@@ -91,7 +103,10 @@ data class RacialModifierLite(
     val aliases: Set<String> = emptySet(),
     val origens: Set<String> = emptySet(),
     val habilidades: List<RacialAbilityLite> = emptyList(),
-    val opcoes: List<String> = emptyList()
+    val opcoes: List<String> = emptyList(),
+    // Orçamento de pontos raciais desta raça (ver RacialModifier.pontosRaciaisEsperados) — usado
+    // só pro aviso sutil de "Ancestralidade desbalanceada" na tela "Ver detalhes".
+    val pontosRaciaisEsperados: Int = 2
 )
 
 private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
@@ -222,7 +237,19 @@ fun AncestralidadesSection(
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
-                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao, it.id, it.category, it.severity)
+                    RacialAbilityLite(
+                        nome = it.nome.toFancyTitleCase(),
+                        descricao = it.descricao,
+                        id = it.id,
+                        category = it.category,
+                        severity = it.severity,
+                        traitId = it.traitId,
+                        targetRef = it.targetRef,
+                        value = it.value,
+                        pontos = it.pontos,
+                        invisivel = it.invisivel,
+                        vezes = it.vezes
+                    )
                 }
 
                 RacialModifierLite(
@@ -233,7 +260,8 @@ fun AncestralidadesSection(
                     aliases = aliasKeys,
                     origens = originsInGroup,
                     habilidades = habilidadesLite,
-                    opcoes = representative.opcoes
+                    opcoes = representative.opcoes,
+                    pontosRaciaisEsperados = representative.pontosRaciaisEsperados
                 )
             }.sortedBy { it.nome }
 
@@ -531,13 +559,16 @@ fun AncestralidadesSection(
                                 // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
                                 // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
                                 val isFeral = item.nome.keyify() == "FERAL"
-                                val isMeioOrc = item.nome.keyify() == "MEIO-ORCS"
-                                // Exato, não .contains(): "MEIO-ELFOS" (Fantasia/outros livros) é uma
-                                // raça diferente de "Meio-Elfo" (Pathfinder, id anc_meio_elfopathfinder),
-                                // que tem "Flexibilidade" (atributo à escolha livre) em vez desta
-                                // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
-                                // comparação exata já as separa sem precisar checar o livro de origem.
-                                val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
+                                // Por id do traço, não por nome de raça: "Endurecido" é o único traço
+                                // oficial com esse id, e só existe nas raças que têm a escolha
+                                // Força/Vigor de verdade (Meio-Orc Fantasia) — o Meio-Orc do Pathfinder
+                                // também casa com o nome, mas tem "Forte" (fixo, sem escolha) em vez
+                                // de "Endurecido".
+                                val isMeioOrc = item.habilidades.any { it.id?.keyify() == "ENDURECIDO" }
+                                // Por id do traço "HERANCA", não por nome de raça: "Meio-Elfo" do
+                                // Pathfinder também casa com o nome, mas tem "Flexibilidade" (atributo
+                                // à escolha livre) em vez desta Herança Élfica/Humana.
+                                val isMeioElfo = item.habilidades.any { it.id?.keyify() == "HERANCA" }
                                 val isMeioDemonio = item.nome.keyify() == "MEIO-DEMONIO"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
@@ -1117,7 +1148,19 @@ fun AncestralidadesSection(
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
-                                            RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
+                                            RacialAbilityLite(
+                                                nome = it.nome,
+                                                descricao = it.descricao,
+                                                id = it.id,
+                                                category = it.category,
+                                                severity = it.severity,
+                                                traitId = it.traitId,
+                                                targetRef = it.targetRef,
+                                                value = it.value,
+                                                pontos = it.pontos,
+                                                invisivel = it.invisivel,
+                                                vezes = it.vezes
+                                            )
                                         } ?: item.habilidades
 
                                         // Description
@@ -1148,10 +1191,24 @@ fun AncestralidadesSection(
                                             }
                                         }
 
+                                        val habilidadesResolvidas = habilidadesParaCaracteristicas.map {
+                                            RacialAbility(
+                                                nome = it.nome,
+                                                descricao = "",
+                                                id = it.id,
+                                                category = it.category,
+                                                severity = it.severity,
+                                                traitId = it.traitId,
+                                                targetRef = it.targetRef,
+                                                value = it.value,
+                                                pontos = it.pontos,
+                                                invisivel = it.invisivel,
+                                                vezes = it.vezes
+                                            )
+                                        }
+
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                            habilidades = habilidadesParaCaracteristicas.map {
-                                                RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
-                                            }
+                                            habilidades = habilidadesResolvidas
                                         )
 
                                         if (caracteristicas.isNotEmpty()) {
@@ -1169,6 +1226,23 @@ fun AncestralidadesSection(
                                                     modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
                                                 )
                                             }
+                                        }
+
+                                        // Aviso sutil de raça acima do orçamento de pontos raciais dela mesma
+                                        // (item.pontosRaciaisEsperados — 2 pra maioria, mas já vem calibrado
+                                        // por raça: 3 pra Arte da Guerra, 4 pra Pathfinder/Crystal Heart, que
+                                        // são naturalmente "mais fortes" por design do próprio livro). Só
+                                        // acende quando os traços da raça somam MAIS pontos do que o
+                                        // orçamento dela mesma prevê — não é sobre comparar com o padrão de
+                                        // 2 pontos do livro básico.
+                                        val pontosRaciaisTotais = habilidadesResolvidas.sumOf { it.resolvedPontos() }
+                                        if (pontosRaciaisTotais > item.pontosRaciaisEsperados) {
+                                            Spacer(Modifier.height(4.dp))
+                                            Text(
+                                                text = "⚠ Ancestralidade desbalanceada (traços somam $pontosRaciaisTotais pontos raciais, acima do orçamento de ${item.pontosRaciaisEsperados})",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.tertiary
+                                            )
                                         }
                                     }
                                 }

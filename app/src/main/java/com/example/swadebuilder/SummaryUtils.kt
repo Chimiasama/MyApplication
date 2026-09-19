@@ -389,7 +389,6 @@ fun buildSummaryLines(
         personagem.mechasSelecionados.forEach { m ->
             val extras = mutableListOf<String>()
             if (m.customizacoes.blindagem_extra > 0) extras += "Blindagem +${m.customizacoes.blindagem_extra}"
-            if (m.customizacoes.propulsores) extras += "Propulsores"
             if (m.mods_instalados.isNotEmpty()) {
                 extras += "Mods: " + m.mods_instalados.joinToString { it.nome }
             }

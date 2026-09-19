@@ -137,8 +137,13 @@ object RacialTraitPointCatalog {
         "MUITO_AGIL" to RacialTraitEffect.AtributoStep("Agilidade", passos = 2), // sintético, usado pelo Template de Monstro Heroico Lobisomem (Horror)
         "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
         "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
+        // Anões (Fantasia) "ROBUSTO" (nome) é a MESMA habilidade "Resistente" do
+        // Anão Básico (Vigor d6, mesmo texto quase palavra por palavra) — usa
+        // id="RESISTENTE" compartilhado, skin "Robusto" via `nome`. Isso deixa o
+        // id "ROBUSTO" livre pro conceito oficial de verdade (Ogros, catálogo
+        // genérico "Robusto (1)": 2º Abalado não vira Ferimento — ver CUSTOS
+        // abaixo, sem entrada aqui porque não é aumento de atributo).
         "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),
-        "ROBUSTO" to RacialTraitEffect.AtributoStep("Vigor"),
         "SOLIDO_COMO_ROCHA" to RacialTraitEffect.AtributoStep("Vigor"),
         "VIGOROSO" to RacialTraitEffect.AtributoStep("Vigor"),
 
@@ -218,8 +223,7 @@ object RacialTraitPointCatalog {
         // nome/descrição do traço que existiam antes em ModifierEngine.
         // Valores conferidos contra a própria descrição de cada raça em
         // ancestralidades.json.
-        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder) — livro: "Tamanho -1 (1)", não empilha
-        "PEQUENOS" to RacialTraitEffect.TamanhoBonus(-1), // Goblins (mesmo efeito de Tamanho -1, id próprio)
+        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder), Goblins ("Pequenos", skin do livro) — livro: "Tamanho -1 (1)", não empilha
         // Diminuto/Minúsculo: traço de TIER único (não empilhável — o livro
         // marca "(1)" mas com 3 custos internos conforme o tier escolhido:
         // Pequeno/Muito Pequeno/Minúsculo), diferente do empilhável acima.
@@ -513,7 +517,9 @@ object RacialTraitPointCatalog {
         "BOM_CONSELHEIRO" to -1, // oficial: complicacao_racial_menor (Peculiaridade)
         // oficial: "Bônus de Perícia" (Básico) — bônus fixo de +1/+2 na rolagem de
         // uma perícia específica, diferente de "Perícia" (pericia_racial_d4/d6, que
-        // eleva o DADO inicial). Nenhuma raça cadastrada usa isso hoje.
+        // eleva o DADO inicial). Infernais "Natureza Diabólica" (+1 Intimidar) usa
+        // id="BONUS_PERICIA_1", skin "Natureza Diabólica" via `nome` — mesmo padrão
+        // do Usagimimi "Ariscos" (id="PENALIDADE_PERICIA_2") logo abaixo.
         "BONUS_PERICIA_1" to 1,
         "BONUS_PERICIA_2" to 2,
         "BRINCALHAO" to 1, // oficial: pericia_racial_d4 (Provocar d4)
@@ -721,7 +727,6 @@ object RacialTraitPointCatalog {
         "NAO_PODE_CURAR" to -1, // oficial: nao_pode_curar
         "NAO_SABE_NADAR" to -1, // oficial: complicacao_racial_menor
         "NATURALMENTE_SOBRENATURAL" to 1, // oficial: pericia_racial_d4 (Ocultismo d4)
-        "NATUREZA_DIABOLICA" to 1, // oficial: bonus_pericia_1 (+1 Intimidar)
         "NERVOS_DE_ACO" to 2, // oficial: vantagem_racial
         "NOCAO_DO_PERIGO" to 2, // oficial: vantagem_racial
         "OBSESSIVOS" to 1, // oficial: pericia_racial_d4
@@ -734,7 +739,6 @@ object RacialTraitPointCatalog {
         // Iluminada pela Lua (Emanar Luz)" via `nome`, exclusiva da raça.
         "PELE_LUMINOSA" to 1,
         "PENSAMENTOS_POSITIVOS" to 2, // oficial: vantagem_racial
-        "PEQUENOS" to -1, // oficial: tamanho_menos_1
         "PERCEBER_D6" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA) — Umvee "Gatoruja"
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
         "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
@@ -758,7 +762,7 @@ object RacialTraitPointCatalog {
         "RESISTENCIA_NATURAL" to 1, // oficial: imune_doencas_venenos
         "RESISTENTE" to 2, // oficial: aumento_atributo
         "ROBO" to 6, // oficial: robo
-        "ROBUSTO" to 2, // oficial: robusto (id igual, mesmo conceito)
+        "ROBUSTO" to 2, // oficial: "Robusto (1)" — 2º Abalado não vira Ferimento (Ogros); sem entrada em EFEITOS, não é cálculo automático
         "RUDE" to -2, // oficial: penalidade_pericia_2 (-2 Persuadir, perícia)
         "SANGUE_FRIO" to -3, // oficial: sangue_frio (id igual, mesmo conceito)
         "SANGUINARIO" to -2, // oficial: complicacao_racial_maior

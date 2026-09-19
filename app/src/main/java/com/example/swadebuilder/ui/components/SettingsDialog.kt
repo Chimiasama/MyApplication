@@ -59,6 +59,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toIdSlug
@@ -88,6 +90,16 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
         ?.replace('–', '-')
         ?.toIntOrNull()
         ?: 1
+
+// "Elfos (Fantasia)", "Elfo (Pathfinder)" etc. — usado no seletor de Raça Base de uma
+// Variante custom (ver "Variante de Raça" abaixo). `state.listaAncestralidadesJson` já
+// chega deduplicada por nome (DataLoader.kt, distinctByOriginPriority: livro de cenário/
+// companheiro vence o Básico quando os dois estão ativos), então nunca existem duas raças
+// com o mesmo nome pra escolher aqui — mas sem esse rótulo o Mestre não tinha como saber
+// DE QUAL LIVRO veio a versão que venceu (pode ser Horror, Fantasia, Básico... dependendo
+// de quais estão ativos), e montava a Variante sem essa informação.
+private fun RacialModifier.nomeComLivro(): String =
+    "$nome (${canonicalOriginKey(origem).toEditionDisplayName()})"
 
 /**
  * Rótulo + fileira de chips com scroll horizontal — o padrão único de "Chip Row" do
@@ -1667,7 +1679,7 @@ fun CustomContentManageDialog(
                                                         onClick = { showVarianteBaseRacaDialog = true },
                                                         modifier = Modifier.fillMaxWidth()
                                                     ) {
-                                                        Text(varianteBaseRaca?.nome ?: "Selecionar Raça Base")
+                                                        Text(varianteBaseRaca?.nomeComLivro() ?: "Selecionar Raça Base")
                                                     }
 
                                                     if (varianteBaseRaca == null) {
@@ -2885,7 +2897,7 @@ fun CustomContentManageDialog(
                                                 }.padding(vertical = 6.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Text(raca.nome, style = MaterialTheme.typography.bodyMedium)
+                                                Text(raca.nomeComLivro(), style = MaterialTheme.typography.bodyMedium)
                                             }
                                         }
                                     }

@@ -668,6 +668,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -679,6 +683,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -690,6 +699,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -701,6 +713,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -712,6 +727,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -723,6 +742,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -734,6 +756,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -754,6 +779,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -765,6 +794,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -776,6 +808,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -787,6 +822,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -798,6 +836,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -809,6 +850,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -820,6 +864,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -840,6 +887,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -851,6 +901,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -862,6 +915,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -873,6 +929,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -884,6 +943,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -913,6 +975,10 @@
         "id": "casaco_grosso_jaqueta_couro",
         "nome": "Casaco Grosso/Jaqueta Couro",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 100,
@@ -924,6 +990,10 @@
         "id": "jaqueta_motociclista_kevlar",
         "nome": "Jaqueta Motociclista Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 350,
@@ -935,6 +1005,9 @@
         "id": "capacete_de_bicicleta",
         "nome": "Capacete de Bicicleta",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 50,
@@ -946,6 +1019,9 @@
         "id": "capacete_de_motociclista",
         "nome": "Capacete de Motociclista",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 1.5,
         "custo": 100,
@@ -957,6 +1033,9 @@
         "id": "jaqueta_a_prova_de_balas",
         "nome": "Jaqueta à Prova de Balas",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 40,
@@ -968,6 +1047,9 @@
         "id": "colete_de_kevlar",
         "nome": "Colete de Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 2.5,
         "custo": 200,
@@ -979,6 +1061,9 @@
         "id": "colete_kevlar_c_ceramica",
         "nome": "Colete Kevlar c/ Cerâmica",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 8.5,
         "custo": 500,
@@ -990,6 +1075,9 @@
         "id": "capacete_de_kevlar",
         "nome": "Capacete de Kevlar",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 80,
@@ -1001,6 +1089,9 @@
         "id": "traje_antibombas",
         "nome": "Traje Antibombas",
         "armadura": "+10",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d12",
         "peso": 40,
         "custo": 25000,
@@ -1012,6 +1103,9 @@
         "id": "armadura_corporal_sci_fi",
         "nome": "Armadura Corporal (Sci-Fi)",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 200,
@@ -1023,6 +1117,9 @@
         "id": "traje_de_batalha_infantaria_sci_fi",
         "nome": "Traje de Batalha Infantaria (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d6",
         "peso": 6,
         "custo": 800,
@@ -1034,6 +1131,9 @@
         "id": "capacete_de_batalha_sci_fi",
         "nome": "Capacete de Batalha (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 1,
         "custo": 100,
@@ -4959,6 +5059,10 @@
         "id": "manto_com_capuz",
         "nome": "Manto com capuz",
         "armadura": "+1",
+        "local": [
+          "CABECA",
+          "TRONCO"
+        ],
         "forcaMin": "d4",
         "peso": "2,5",
         "custo": 5,
@@ -4969,6 +5073,9 @@
         "id": "perneiras_acolchoadas",
         "nome": "Perneiras acolchoadas",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": "2,5",
         "custo": 5,
@@ -4979,6 +5086,10 @@
         "id": "tunica_acolchoada",
         "nome": "Túnica acolchoada",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": "2,5",
         "custo": 10,
@@ -4989,6 +5100,11 @@
         "id": "robe_com_capuz",
         "nome": "Robe com capuz",
         "armadura": "+1",
+        "local": [
+          "CABECA",
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": "4",
         "custo": 10,
@@ -4999,6 +5115,10 @@
         "id": "tunica_jaqueta_de_couro",
         "nome": "Túnica/Jaqueta de Couro",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": "5,5",
         "custo": 20,
@@ -5009,6 +5129,9 @@
         "id": "calcas_de_couro",
         "nome": "Calças de Couro",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": "4",
         "custo": 20,
@@ -5019,6 +5142,9 @@
         "id": "capuz_de_couro",
         "nome": "Capuz de Couro",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": "0,5",
         "custo": 10,
@@ -5029,6 +5155,10 @@
         "id": "camisao_de_couro",
         "nome": "Camisão de Couro",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": "5",
         "custo": 20,
@@ -5039,6 +5169,10 @@
         "id": "camisao_de_cota_malha",
         "nome": "Camisão de Cota (Malha)",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": "11",
         "custo": 100,
@@ -5049,6 +5183,9 @@
         "id": "calcas_de_cota_malha",
         "nome": "Calças de Cota (Malha)",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": "5",
         "custo": 100,
@@ -5059,6 +5196,9 @@
         "id": "capuz_de_cota_elmo",
         "nome": "Capuz de Cota/Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": "1,5",
         "custo": 50,
@@ -5069,6 +5209,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": "6,5",
         "custo": 200,
@@ -5079,6 +5222,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": "3",
         "custo": 200,
@@ -5089,6 +5235,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": "2,5",
         "custo": 100,
@@ -5099,6 +5248,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": "3",
         "custo": 120,
@@ -5109,6 +5261,9 @@
         "id": "placa_de_peito",
         "nome": "Placa de Peito",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": "15",
         "custo": 500,
@@ -5119,6 +5274,9 @@
         "id": "grevas_placas",
         "nome": "Grevas (Placas)",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": "5",
         "custo": 500,
@@ -5129,6 +5287,9 @@
         "id": "bracadeiras_manoplas_placas",
         "nome": "Braçadeiras/Manoplas (Placas)",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": "5",
         "custo": 250,
@@ -5139,6 +5300,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": "2",
         "custo": 250,
@@ -5149,6 +5313,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": "4",
         "custo": 300,
@@ -6298,6 +6465,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -6309,6 +6480,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -6320,6 +6496,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -6331,6 +6510,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -6342,6 +6524,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -6353,6 +6539,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -6364,6 +6553,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -6384,6 +6576,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -6395,6 +6591,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -6406,6 +6605,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -6417,6 +6619,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -6428,6 +6633,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -6439,6 +6647,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -6450,6 +6661,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -6470,6 +6684,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -6481,6 +6698,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -6492,6 +6712,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -6503,6 +6726,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -6514,6 +6740,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -6543,6 +6772,10 @@
         "id": "casaco_grosso_jaqueta_couro",
         "nome": "Casaco Grosso/Jaqueta Couro",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 100,
@@ -6554,6 +6787,10 @@
         "id": "jaqueta_motociclista_kevlar",
         "nome": "Jaqueta Motociclista Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 350,
@@ -6565,6 +6802,9 @@
         "id": "capacete_de_bicicleta",
         "nome": "Capacete de Bicicleta",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 50,
@@ -6576,6 +6816,9 @@
         "id": "capacete_de_motociclista",
         "nome": "Capacete de Motociclista",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 1.5,
         "custo": 100,
@@ -6587,6 +6830,9 @@
         "id": "jaqueta_a_prova_de_balas",
         "nome": "Jaqueta à Prova de Balas",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 40,
@@ -6598,6 +6844,9 @@
         "id": "colete_de_kevlar",
         "nome": "Colete de Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 2.5,
         "custo": 200,
@@ -6609,6 +6858,9 @@
         "id": "colete_kevlar_c_ceramica",
         "nome": "Colete Kevlar c/ Cerâmica",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 8.5,
         "custo": 500,
@@ -6620,6 +6872,9 @@
         "id": "capacete_de_kevlar",
         "nome": "Capacete de Kevlar",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 80,
@@ -6631,6 +6886,9 @@
         "id": "traje_antibombas",
         "nome": "Traje Antibombas",
         "armadura": "+10",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d12",
         "peso": 40,
         "custo": 25000,
@@ -6642,6 +6900,9 @@
         "id": "armadura_corporal_sci_fi",
         "nome": "Armadura Corporal (Sci-Fi)",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 200,
@@ -6653,6 +6914,9 @@
         "id": "traje_de_batalha_infantaria_sci_fi",
         "nome": "Traje de Batalha Infantaria (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d6",
         "peso": 6,
         "custo": 800,
@@ -6664,6 +6928,9 @@
         "id": "capacete_de_batalha_sci_fi",
         "nome": "Capacete de Batalha (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 1,
         "custo": 100,
@@ -9473,6 +9740,9 @@
         "nome": "Traje de Ataque (Classe II)",
         "tamanho": 2,
         "armadura": 16,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 6,
         "forca": "d12+1",
         "mods_slots": 0,
@@ -9486,6 +9756,9 @@
         "nome": "Carregador de Carga (Classe I)",
         "tamanho": 2,
         "armadura": 10,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 6,
         "forca": "d12+4",
         "mods_slots": 2,
@@ -9499,6 +9772,9 @@
         "nome": "Traje de Exploração de Águas Profundas (Classe II)",
         "tamanho": 3,
         "armadura": 12,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "resistencia": 2,
         "movimentacao": 4,
         "forca": "d12+2",
@@ -9513,6 +9789,9 @@
         "nome": "Traje de Resgate (Classe I)",
         "tamanho": 2,
         "armadura": 10,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 6,
         "forca": "d12+1",
         "mods_slots": 4,
@@ -9526,6 +9805,9 @@
         "nome": "Traje de Comando (Classe II)",
         "tamanho": 2,
         "armadura": 14,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 6,
         "forca": "d12+1",
         "mods_slots": 0,
@@ -9539,6 +9821,9 @@
         "nome": "Traje de Suporte de Ataque (Classe II)",
         "tamanho": 3,
         "armadura": 18,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 4,
         "forca": "d12+2",
         "mods_slots": 0,
@@ -9552,6 +9837,9 @@
         "nome": "Traje de Voo (Classe I)",
         "tamanho": 1,
         "armadura": 10,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 12,
         "forca": "d12",
         "mods_slots": 0,
@@ -9565,6 +9853,9 @@
         "nome": "Traje Passolargo (Classe I)",
         "tamanho": 1,
         "armadura": 10,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 18,
         "forca": "d12",
         "mods_slots": 1,
@@ -9578,6 +9869,9 @@
         "nome": "Traje de Batedor (Classe I)",
         "tamanho": 1,
         "armadura": 10,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 14,
         "forca": "d12",
         "mods_slots": 0,
@@ -9591,6 +9885,9 @@
         "nome": "Traje Zero-G (Classe II)",
         "tamanho": 2,
         "armadura": 14,
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "movimentacao": 4,
         "forca": "d12+1",
         "mods_slots": 1,
@@ -10679,6 +10976,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -10691,6 +10992,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -10703,6 +11009,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -10715,6 +11024,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -10727,6 +11039,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -10739,6 +11055,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -10751,6 +11070,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -10772,6 +11094,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -10784,6 +11110,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -10796,6 +11125,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -10808,6 +11140,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -10820,6 +11155,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -10832,6 +11170,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -10844,6 +11185,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -10866,6 +11210,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -10878,6 +11225,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -10890,6 +11240,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -10902,6 +11255,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -10914,6 +11270,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -10945,6 +11304,10 @@
         "id": "casaco_grosso_jaqueta_couro",
         "nome": "Casaco Grosso/Jaqueta Couro",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 100,
@@ -10957,6 +11320,10 @@
         "id": "jaqueta_motociclista_kevlar",
         "nome": "Jaqueta Motociclista Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 350,
@@ -10969,6 +11336,9 @@
         "id": "capacete_de_bicicleta",
         "nome": "Capacete de Bicicleta",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 50,
@@ -10981,6 +11351,9 @@
         "id": "capacete_de_motociclista",
         "nome": "Capacete de Motociclista",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 1.5,
         "custo": 100,
@@ -10993,6 +11366,9 @@
         "id": "jaqueta_a_prova_de_balas",
         "nome": "Jaqueta à Prova de Balas",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 40,
@@ -11005,6 +11381,9 @@
         "id": "colete_de_kevlar",
         "nome": "Colete de Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 2.5,
         "custo": 200,
@@ -11017,6 +11396,9 @@
         "id": "colete_kevlar_c_ceramica",
         "nome": "Colete Kevlar c/ Cerâmica",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 8.5,
         "custo": 500,
@@ -11029,6 +11411,9 @@
         "id": "capacete_de_kevlar",
         "nome": "Capacete de Kevlar",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 80,
@@ -11041,6 +11426,9 @@
         "id": "traje_antibombas",
         "nome": "Traje Antibombas",
         "armadura": "+10",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d12",
         "peso": 40,
         "custo": 25000,
@@ -11053,6 +11441,9 @@
         "id": "armadura_corporal_sci_fi",
         "nome": "Armadura Corporal (Sci-Fi)",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 200,
@@ -11065,6 +11456,9 @@
         "id": "traje_de_batalha_infantaria_sci_fi",
         "nome": "Traje de Batalha Infantaria (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d6",
         "peso": 6,
         "custo": 800,
@@ -11077,6 +11471,9 @@
         "id": "capacete_de_batalha_sci_fi",
         "nome": "Capacete de Batalha (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 1,
         "custo": 100,
@@ -14230,6 +14627,11 @@
         "id": "armadura_corporal",
         "nome": "Armadura Corporal",
         "armadura": "+4",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "resistencia": 0,
         "forca_min": "d4",
         "peso": 2,
@@ -14242,6 +14644,9 @@
         "id": "elmo_de_batalha_de_infantaria",
         "nome": "Elmo de Batalha de Infantaria",
         "armadura": "+6",
+        "local": [
+          "CABECA"
+        ],
         "resistencia": 0,
         "forca_min": "d6",
         "peso": 1,
@@ -14254,6 +14659,11 @@
         "id": "pele_inteligente",
         "nome": "Pele Inteligente",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "resistencia": 0,
         "forca_min": "d4",
         "peso": 1,
@@ -14266,6 +14676,11 @@
         "id": "traje_de_batalha_de_infantaria",
         "nome": "Traje de Batalha de Infantaria",
         "armadura": "+6",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "resistencia": 0,
         "forca_min": "d6",
         "peso": 6,
@@ -14278,6 +14693,9 @@
         "id": "traje_de_contencao",
         "nome": "Traje de Contenção",
         "armadura": "+0",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "resistencia": 2,
         "forca_min": "d4",
         "peso": 2.5,
@@ -14290,6 +14708,11 @@
         "id": "traje_de_malha_sintetica",
         "nome": "Traje de Malha Sintética",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "resistencia": 0,
         "forca_min": "-",
         "peso": 0.5,
@@ -14311,6 +14734,9 @@
         "id": "campo_de_forca_pessoal",
         "nome": "Campo de Força Pessoal",
         "armadura": "-",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "resistencia": 4,
         "forca_min": "-",
         "peso": 0.1,
@@ -14332,6 +14758,9 @@
         "id": "traje_espacial",
         "nome": "Traje Espacial",
         "armadura": "+1",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "resistencia": 0,
         "forca_min": "-",
         "peso": 9,
@@ -14344,6 +14773,9 @@
         "id": "traje_espacial_blindado",
         "nome": "Traje Espacial Blindado",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "resistencia": 0,
         "forca_min": "d6",
         "peso": 13,
@@ -14356,6 +14788,9 @@
         "id": "traje_espacial_de_combate",
         "nome": "Traje Espacial de Combate",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "resistencia": 2,
         "forca_min": "d6",
         "peso": 10,
@@ -16973,6 +17408,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -16984,6 +17423,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -16995,6 +17439,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -17006,6 +17453,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -17017,6 +17467,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -17028,6 +17482,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -17039,6 +17496,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -17059,6 +17519,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -17070,6 +17534,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -17081,6 +17548,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -17092,6 +17562,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -17103,6 +17576,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -17114,6 +17590,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -17125,6 +17604,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -17145,6 +17627,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -17156,6 +17641,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -17167,6 +17655,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -17178,6 +17669,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -17189,6 +17683,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -18019,6 +18516,11 @@
         "id": "traje_syn",
         "nome": "Traje Syn",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 8,
         "custo": 0,
@@ -18030,6 +18532,11 @@
         "id": "traje_reforcado",
         "nome": "Traje Reforçado",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 20,
         "custo": -2,
@@ -18041,6 +18548,12 @@
         "id": "armadura_de_combate",
         "nome": "Armadura de Combate",
         "armadura": "+4",
+        "local": [
+          "CABECA",
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 25,
         "custo": -4,
@@ -18052,6 +18565,9 @@
         "id": "capacete_tatico",
         "nome": "Capacete Tático",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 3,
         "custo": 0,
@@ -18063,6 +18579,9 @@
         "id": "traje_ambiental",
         "nome": "Traje Ambiental",
         "armadura": "+2",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d6",
         "peso": 30,
         "custo": -3,
@@ -19039,6 +19558,10 @@
         "custo": "20 po",
         "peso": "5,5",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6"
       },
       {
@@ -19047,6 +19570,9 @@
         "custo": "20 po",
         "peso": "4",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6"
       },
       {
@@ -19055,6 +19581,9 @@
         "custo": "10 po",
         "peso": "0,5",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6"
       },
       {
@@ -19063,6 +19592,10 @@
         "custo": "100 po",
         "peso": "11",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8"
       },
       {
@@ -19071,6 +19604,9 @@
         "custo": "100 po",
         "peso": "5",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8"
       },
       {
@@ -19079,6 +19615,9 @@
         "custo": "50 po",
         "peso": "1,5",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8"
       },
       {
@@ -19087,6 +19626,9 @@
         "custo": "500 po",
         "peso": "15",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10"
       },
       {
@@ -19095,6 +19637,9 @@
         "custo": "250 po",
         "peso": "5",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10"
       },
       {
@@ -19103,6 +19648,9 @@
         "custo": "500 po",
         "peso": "5",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10"
       },
       {
@@ -19111,6 +19659,9 @@
         "custo": "250 po",
         "peso": "2",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10"
       },
       {
@@ -19119,6 +19670,9 @@
         "custo": "300 po",
         "peso": "4",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "observacoes": "-1 em rolagens de Perceber baseadas em visão."
       },
@@ -19167,6 +19721,9 @@
         "peso": "15",
         "forcaMin": "d10",
         "armadura": 4,
+        "local": [
+          "TRONCO"
+        ],
         "observacoes": "Parte da armadura do Cavaleiro Infernal. Usada em conjunto por um personagem com a Vantagem de Prestígio Cavaleiro Infernal, concede Temor (+2 em Intimidar), Visão Infernal (ignora penalidades de Iluminação) e Vigilância (-4 de dano de ácido, frio e fogo).",
         "descricaoLite": "Peça de tronco da armadura de placas do Cavaleiro Infernal (+4 de Armadura); concede benefícios especiais a quem tem a Vantagem Cavaleiro Infernal."
       },
@@ -19177,6 +19734,9 @@
         "peso": "5",
         "forcaMin": "d10",
         "armadura": 4,
+        "local": [
+          "BRACOS"
+        ],
         "observacoes": "Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
         "descricaoLite": "Peça de braços da armadura de placas do Cavaleiro Infernal (+4 de Armadura)."
       },
@@ -19187,6 +19747,9 @@
         "peso": "5",
         "forcaMin": "d10",
         "armadura": 4,
+        "local": [
+          "PERNAS"
+        ],
         "observacoes": "Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
         "descricaoLite": "Peça de pernas da armadura de placas do Cavaleiro Infernal (+4 de Armadura)."
       },
@@ -19197,6 +19760,9 @@
         "peso": "2",
         "forcaMin": "d10",
         "armadura": 4,
+        "local": [
+          "CABECA"
+        ],
         "observacoes": "Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
         "descricaoLite": "Elmo pesado da armadura do Cavaleiro Infernal (+4 de Armadura)."
       },
@@ -19207,6 +19773,9 @@
         "peso": "4",
         "forcaMin": "d10",
         "armadura": 4,
+        "local": [
+          "CABECA"
+        ],
         "observacoes": "-1 em rolagens de Perceber baseadas em visão. Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
         "descricaoLite": "Elmo fechado da armadura do Cavaleiro Infernal (+4 de Armadura; -1 em Perceber por visão)."
       }
@@ -20839,6 +21408,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -20850,6 +21423,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -20861,6 +21439,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -20872,6 +21453,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -20883,6 +21467,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -20894,6 +21482,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -20905,6 +21496,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -20925,6 +21519,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -20936,6 +21534,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -20947,6 +21548,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -20958,6 +21562,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -20969,6 +21576,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -20980,6 +21590,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -20991,6 +21604,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -21011,6 +21627,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -21022,6 +21641,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -21033,6 +21655,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -21044,6 +21669,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -21055,6 +21683,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -21084,6 +21715,10 @@
         "id": "casaco_grosso_jaqueta_couro",
         "nome": "Casaco Grosso/Jaqueta Couro",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 100,
@@ -21095,6 +21730,10 @@
         "id": "jaqueta_motociclista_kevlar",
         "nome": "Jaqueta Motociclista Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 350,
@@ -21106,6 +21745,9 @@
         "id": "capacete_de_bicicleta",
         "nome": "Capacete de Bicicleta",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 50,
@@ -21117,6 +21759,9 @@
         "id": "capacete_de_motociclista",
         "nome": "Capacete de Motociclista",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 1.5,
         "custo": 100,
@@ -21128,6 +21773,9 @@
         "id": "jaqueta_a_prova_de_balas",
         "nome": "Jaqueta à Prova de Balas",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 40,
@@ -21139,6 +21787,9 @@
         "id": "colete_de_kevlar",
         "nome": "Colete de Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 2.5,
         "custo": 200,
@@ -21150,6 +21801,9 @@
         "id": "colete_kevlar_c_ceramica",
         "nome": "Colete Kevlar c/ Cerâmica",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 8.5,
         "custo": 500,
@@ -21161,6 +21815,9 @@
         "id": "capacete_de_kevlar",
         "nome": "Capacete de Kevlar",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 80,
@@ -21172,6 +21829,9 @@
         "id": "traje_antibombas",
         "nome": "Traje Antibombas",
         "armadura": "+10",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d12",
         "peso": 40,
         "custo": 25000,
@@ -21183,6 +21843,9 @@
         "id": "armadura_corporal_sci_fi",
         "nome": "Armadura Corporal (Sci-Fi)",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 200,
@@ -21194,6 +21857,9 @@
         "id": "traje_de_batalha_infantaria_sci_fi",
         "nome": "Traje de Batalha Infantaria (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d6",
         "peso": 6,
         "custo": 800,
@@ -21205,6 +21871,9 @@
         "id": "capacete_de_batalha_sci_fi",
         "nome": "Capacete de Batalha (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 1,
         "custo": 100,
@@ -23622,6 +24291,9 @@
         "peso": 3,
         "custo": 40,
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "observacoes": "Armadura +4 nas mãos. Impede manipulação fina.",
         "origem": "SUPER",
         "descricaoLite": "Armadura +4 nas mãos. Impede manipulação fina."
@@ -23704,6 +24376,11 @@
         "id": "armadura_corporal",
         "nome": "Armadura Corporal",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 200,
@@ -23715,6 +24392,9 @@
         "id": "armadura_corporal_pesada",
         "nome": "Armadura Corporal Pesada",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 17,
         "custo": 400,
@@ -23726,6 +24406,12 @@
         "id": "armadura_de_combate",
         "nome": "Armadura de Combate",
         "armadura": "+2",
+        "local": [
+          "CABECA",
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 12,
         "custo": 600,
@@ -23737,6 +24423,11 @@
         "id": "armadura_de_combate_pesada",
         "nome": "Armadura de Combate Pesada",
         "armadura": "+4",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 30,
         "custo": 1200,
@@ -23748,6 +24439,9 @@
         "id": "elmo_balistico",
         "nome": "Elmo Balístico",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 5,
         "custo": 80,
@@ -23759,6 +24453,11 @@
         "id": "collant",
         "nome": "Collant",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 8,
         "custo": 200,
@@ -24749,6 +25448,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -24760,6 +25463,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -24771,6 +25479,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -24782,6 +25493,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -24793,6 +25507,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -24804,6 +25522,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -24815,6 +25536,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -24835,6 +25559,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -24846,6 +25574,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -24857,6 +25588,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -24868,6 +25602,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -24879,6 +25616,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -24890,6 +25630,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -24901,6 +25644,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -24921,6 +25667,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -24932,6 +25681,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -24943,6 +25695,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -24954,6 +25709,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -24965,6 +25723,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -24994,6 +25755,10 @@
         "id": "casaco_grosso_jaqueta_couro",
         "nome": "Casaco Grosso/Jaqueta Couro",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 100,
@@ -25005,6 +25770,10 @@
         "id": "jaqueta_motociclista_kevlar",
         "nome": "Jaqueta Motociclista Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 350,
@@ -25016,6 +25785,9 @@
         "id": "capacete_de_bicicleta",
         "nome": "Capacete de Bicicleta",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 50,
@@ -25027,6 +25799,9 @@
         "id": "capacete_de_motociclista",
         "nome": "Capacete de Motociclista",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 1.5,
         "custo": 100,
@@ -25038,6 +25813,9 @@
         "id": "jaqueta_a_prova_de_balas",
         "nome": "Jaqueta à Prova de Balas",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 40,
@@ -25049,6 +25827,9 @@
         "id": "colete_de_kevlar",
         "nome": "Colete de Kevlar",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 2.5,
         "custo": 200,
@@ -25060,6 +25841,9 @@
         "id": "colete_kevlar_c_ceramica",
         "nome": "Colete Kevlar c/ Cerâmica",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 8.5,
         "custo": 500,
@@ -25071,6 +25855,9 @@
         "id": "capacete_de_kevlar",
         "nome": "Capacete de Kevlar",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 80,
@@ -25082,6 +25869,9 @@
         "id": "traje_antibombas",
         "nome": "Traje Antibombas",
         "armadura": "+10",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d12",
         "peso": 40,
         "custo": 25000,
@@ -25093,6 +25883,9 @@
         "id": "armadura_corporal_sci_fi",
         "nome": "Armadura Corporal (Sci-Fi)",
         "armadura": "+4",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 200,
@@ -25104,6 +25897,9 @@
         "id": "traje_de_batalha_infantaria_sci_fi",
         "nome": "Traje de Batalha Infantaria (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "forcaMin": "d6",
         "peso": 6,
         "custo": 800,
@@ -25115,6 +25911,9 @@
         "id": "capacete_de_batalha_sci_fi",
         "nome": "Capacete de Batalha (Sci-Fi)",
         "armadura": "+6",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 1,
         "custo": 100,
@@ -28047,6 +28846,9 @@
         "peso": "40",
         "forcaMin": "d12",
         "armadura": "+10",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "aparar": null,
         "observacoes": "Agilidade e perícias relacionadas que requerem mais do que apenas destreza manual não podem ultrapassar d6 enquanto se usa o traje, Movimentação - 2.",
         "subsubtipo": "Armadura Corporal",
@@ -29019,6 +29821,11 @@
         "id": "roupas_acolchoadas",
         "nome": "Roupas Acolchoadas",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": "2,5",
         "custo": 20,
@@ -29030,6 +29837,9 @@
         "id": "pele_de_naga_tronco",
         "nome": "Pele de Naga (Tronco)",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": "10",
         "custo": 70,
@@ -29041,6 +29851,9 @@
         "id": "bracadeira_espelhada_bracos",
         "nome": "Braçadeira espelhada (Braços)",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": "1",
         "custo": 40,
@@ -29052,6 +29865,9 @@
         "id": "couraca_espelhada_tronco",
         "nome": "Couraça espelhada (Tronco)",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": "5",
         "custo": 80,
@@ -29063,6 +29879,9 @@
         "id": "grevas_espelhadas_pernas",
         "nome": "Grevas espelhadas (pernas)",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": "3",
         "custo": 70,
@@ -29074,6 +29893,9 @@
         "id": "elmo_espelhado_cabeca",
         "nome": "Elmo espelhado (cabeça)",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": "2",
         "custo": 30,
@@ -29085,6 +29907,9 @@
         "id": "bracadeira_lamelar_bracos",
         "nome": "Braçadeira lamelar (Braços)",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": "2",
         "custo": 100,
@@ -29096,6 +29921,9 @@
         "id": "couraca_lamelar_tronco",
         "nome": "Couraça lamelar (tronco)",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": "12,5",
         "custo": 200,
@@ -29107,6 +29935,9 @@
         "id": "grevas_lamelares_pernas",
         "nome": "Grevas lamelares (pernas)",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": "5",
         "custo": 150,
@@ -29118,6 +29949,9 @@
         "id": "elmo_lamelar_cabeca",
         "nome": "Elmo lamelar (cabeça)",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": "2",
         "custo": 25,
@@ -29129,6 +29963,9 @@
         "id": "bracadeira_lamelar_pesada_bracos",
         "nome": "Braçadeira lamelar pesada (Braços)",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": "5",
         "custo": 200,
@@ -29140,6 +29977,9 @@
         "id": "couraca_lamelar_pesada_tranco",
         "nome": "Couraça lamelar pesada (tranco)",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": "15",
         "custo": 500,
@@ -29151,6 +29991,9 @@
         "id": "grevas_lamelar_pesada_pernas",
         "nome": "Grevas lamelar pesada (pernas)",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": "5",
         "custo": 200,
@@ -29162,6 +30005,9 @@
         "id": "elmo_lamelar_pesado_cabeca",
         "nome": "Elmo lamelar pesado (cabeça)",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": "2",
         "custo": 100,
@@ -29173,6 +30019,9 @@
         "id": "bracadeira_superior_bracos",
         "nome": "Braçadeira superior (Braços)",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": "5",
         "custo": 250,
@@ -29184,6 +30033,9 @@
         "id": "couraca_superior_tronco",
         "nome": "Couraça superior (tronco)",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": "15",
         "custo": 600,
@@ -29195,6 +30047,9 @@
         "id": "grevas_superiores_pernas",
         "nome": "Grevas superiores (pernas)",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": "5",
         "custo": 250,
@@ -29206,6 +30061,9 @@
         "id": "elmo_superior_cabeca",
         "nome": "Elmo superior (cabeça)",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": "2",
         "custo": 150,
@@ -30376,6 +31234,10 @@
         "id": "jaqueta",
         "nome": "Jaqueta",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -30387,6 +31249,11 @@
         "id": "manto",
         "nome": "Manto",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 4,
         "custo": 30,
@@ -30398,6 +31265,9 @@
         "id": "calcas_tecido",
         "nome": "Calças (Tecido)",
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 20,
@@ -30409,6 +31279,9 @@
         "id": "capuz_tecido",
         "nome": "Capuz (Tecido)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 0.5,
         "custo": 5,
@@ -30420,6 +31293,10 @@
         "id": "jaqueta_couro_fervido",
         "nome": "Jaqueta (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d6",
         "peso": 4,
         "custo": 80,
@@ -30431,6 +31308,9 @@
         "id": "calcas_couro_fervido",
         "nome": "Calças (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 3.5,
         "custo": 40,
@@ -30442,6 +31322,9 @@
         "id": "capuz_couro_fervido",
         "nome": "Capuz (Couro Fervido)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d6",
         "peso": 0.5,
         "custo": 20,
@@ -30462,6 +31345,10 @@
         "id": "camisa_de_cota_de_malha",
         "nome": "Camisa de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "TRONCO",
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 12.5,
         "custo": 300,
@@ -30473,6 +31360,9 @@
         "id": "calcas_de_cota_de_malha",
         "nome": "Calças de Cota de Malha",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 5,
         "custo": 150,
@@ -30484,6 +31374,9 @@
         "id": "capuz_de_cota_ou_elmo",
         "nome": "Capuz de Cota ou Elmo",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 2,
         "custo": 25,
@@ -30495,6 +31388,9 @@
         "id": "corselete_de_bronze",
         "nome": "Corselete de Bronze",
         "armadura": "+3",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d8",
         "peso": 6.5,
         "custo": 80,
@@ -30506,6 +31402,9 @@
         "id": "bracadeiras_de_bronze",
         "nome": "Braçadeiras de Bronze",
         "armadura": "+3",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d8",
         "peso": 2.5,
         "custo": 40,
@@ -30517,6 +31416,9 @@
         "id": "grevas_de_bronze",
         "nome": "Grevas de Bronze",
         "armadura": "+3",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 50,
@@ -30528,6 +31430,9 @@
         "id": "elmo_de_bronze",
         "nome": "Elmo de Bronze",
         "armadura": "+3",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d8",
         "peso": 3,
         "custo": 25,
@@ -30548,6 +31453,9 @@
         "id": "corselete_de_placas",
         "nome": "Corselete de Placas",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d10",
         "peso": 15,
         "custo": 500,
@@ -30559,6 +31467,9 @@
         "id": "bracadeiras_de_placas",
         "nome": "Braçadeiras de Placas",
         "armadura": "+4",
+        "local": [
+          "BRACOS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -30570,6 +31481,9 @@
         "id": "grevas_de_placas",
         "nome": "Grevas de Placas",
         "armadura": "+4",
+        "local": [
+          "PERNAS"
+        ],
         "forcaMin": "d10",
         "peso": 5,
         "custo": 200,
@@ -30581,6 +31495,9 @@
         "id": "elmo_pesado",
         "nome": "Elmo Pesado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 2,
         "custo": 100,
@@ -30592,6 +31509,9 @@
         "id": "elmo_pesado_fechado",
         "nome": "Elmo Pesado Fechado",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d10",
         "peso": 4,
         "custo": 200,
@@ -31995,6 +32915,11 @@
         "id": "sobretudo_de_la_pesada",
         "nome": "Sobretudo de lã pesada",
         "armadura": "+1",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "peso": 4,
         "forcaMin": "d4",
         "custo": 150,
@@ -32006,6 +32931,11 @@
         "id": "sobretudo_de_la_pesada_com_listras_de_aco_vermelho",
         "nome": "Sobretudo de lã pesada com listras de aço vermelho",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "peso": 8,
         "forcaMin": "d6",
         "custo": 500,
@@ -32017,6 +32947,9 @@
         "id": "peitoral_de_aco_vermelho",
         "nome": "Peitoral de aço vermelho",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "peso": 10,
         "forcaMin": "d8",
         "custo": "5000*",
@@ -32028,6 +32961,9 @@
         "id": "pickelhaube_de_aco_vermelho",
         "nome": "Pickelhaube de aço vermelho",
         "armadura": "+4",
+        "local": [
+          "CABECA"
+        ],
         "peso": 2.5,
         "forcaMin": "d6",
         "custo": "2000*",
@@ -32039,6 +32975,9 @@
         "id": "armadura_a_vapor",
         "nome": "Armadura a vapor",
         "armadura": "+6",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "peso": 100,
         "custo": "20000*",
         "observacoes": "Cobre todo o corpo. Sem combustível, Força mínima d10. Não disponível para venda comum (mercado negro).",
@@ -32049,6 +32988,9 @@
         "id": "mascara_protetora",
         "nome": "Máscara protetora",
         "armadura": "+0",
+        "local": [
+          "CABECA"
+        ],
         "peso": 1,
         "forcaMin": "d4",
         "custo": 400,
@@ -32060,6 +33002,9 @@
         "id": "conjunto_completo_de_protecao",
         "nome": "Conjunto completo de proteção",
         "armadura": "+2",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "peso": 7.5,
         "forcaMin": "d6",
         "custo": 1200,
@@ -32071,6 +33016,9 @@
         "id": "armadura_da_forca_expedicionaria",
         "nome": "Armadura da Força Expedicionária",
         "armadura": "+3",
+        "local": [
+          "CORPO_INTEIRO"
+        ],
         "peso": 10,
         "forcaMin": "d8",
         "custo": "5000*",
@@ -32328,6 +33276,9 @@
         "peso": 1.5,
         "forcaMin": "d4",
         "armadura": "+1",
+        "local": [
+          "TRONCO"
+        ],
         "observacoes": "Inclui peles, couro macio, peitorais entrelaçados, etc.",
         "origem": "DEADLANDS",
         "descricaoLite": "Inclui peles, couro macio, peitorais entrelaçados, entre outros materiais."
@@ -32409,6 +33360,9 @@
         "custo": 4,
         "peso": 3,
         "armadura": "+1",
+        "local": [
+          "PERNAS"
+        ],
         "observacoes": "Couro Grosso, calças sem fundos para proteger as calças e as pernas de quem cavalga. Elas concedem Armadura +1 (pernas) e +1 em rolagens de Cavalgar contra Fadiga.",
         "origem": "DEADLANDS",
         "descricaoLite": "Calças de couro grosso sem fundo, usadas para proteger pernas e roupas de quem cavalga; concedem Armadura +1 (pernas) e +1 em rolagens de Cavalgar contra Fadiga."
@@ -34454,6 +35408,10 @@
         "id": "avental_de_inventor",
         "nome": "Avental de inventor",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "PERNAS"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 40,
@@ -34465,6 +35423,9 @@
         "id": "chapeu_blindado_leve",
         "nome": "Chapéu blindado (leve)",
         "armadura": "+1",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 1,
         "custo": 40,
@@ -34476,6 +35437,9 @@
         "id": "chapeu_blindado_pesado",
         "nome": "Chapéu blindado (pesado)",
         "armadura": "+2",
+        "local": [
+          "CABECA"
+        ],
         "forcaMin": "d4",
         "peso": 2,
         "custo": 80,
@@ -34487,6 +35451,9 @@
         "id": "colete_espartilho_blindado_leve",
         "nome": "Colete/espartilho blindado (leve)",
         "armadura": "+2",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d4",
         "peso": 2.5,
         "custo": 100,
@@ -34498,6 +35465,9 @@
         "id": "colete_espartilho_blindado_pesado",
         "nome": "Colete/espartilho blindado (pesado)",
         "armadura": "+4",
+        "local": [
+          "TRONCO"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 500,
@@ -34509,6 +35479,11 @@
         "id": "sobretudo_reforcado_leve",
         "nome": "Sobretudo reforçado (leve)",
         "armadura": "+2",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d6",
         "peso": 5,
         "custo": 200,
@@ -34520,6 +35495,11 @@
         "id": "sobretudo_reforcado_pesado",
         "nome": "Sobretudo reforçado (pesado)",
         "armadura": "+4",
+        "local": [
+          "TRONCO",
+          "BRACOS",
+          "PERNAS"
+        ],
         "forcaMin": "d8",
         "peso": 10,
         "custo": 400,

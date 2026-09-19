@@ -25,6 +25,13 @@ data class EquipamentoItem(
     @JsonNames("forca_min", "for_min")
     val forcaMin: JsonElement? = null,
     val armadura: JsonElement? = null,
+    // Local(is) do corpo que a peça de armadura cobre — CABECA/TRONCO/BRACOS/PERNAS
+    // (uma ou mais) ou CORPO_INTEIRO (trajes completos, armadura energizada). Ausente
+    // pra item sem `armadura` e pros poucos casos que não são armadura corporal de
+    // verdade (armadura de montaria, escudo, add-on tipo "Espinhos"). Usado pra decidir
+    // qual peça conta pra Resistência de cada local (ver CriadorState.armadura) e, no
+    // futuro, pra exibir Resistência por local no PDF.
+    val local: List<String>? = null,
     val aparar: JsonElement? = null,
     // Penalidade de Ataque Chamado ao usar o escudo pra se defender (ex.: "-2", "-4") —
     // regra de Escudos do livro básico, separada do bônus de Aparar.
