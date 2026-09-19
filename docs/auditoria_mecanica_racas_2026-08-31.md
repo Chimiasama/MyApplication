@@ -1076,3 +1076,62 @@ o jogador que a contagem não fecha certo.
 
 **Ainda pendente**: exibição de Resistência por local no PDF em tabela
 própria (mesma pendência das rodadas anteriores).
+
+## Décima sétima rodada — Variante de raça baseada em raça de outro livro
+
+Pergunta do dono do projeto, revisitando o cenário da rodada anterior: e se
+o jogador pega o Elfo do Pathfinder e cria uma Variante dele, mas na hora
+de escolher o(s) livro(s) pra salvar essa Variante marca só "Básico" (não
+marca Pathfinder)? Ele suspeitava que isso pudesse gerar confusão — a
+Variante "vazar" e ser tratada como se fosse do Elfo do Básico — mas também
+já desconfiava que talvez fossem "ideias completamente diferentes" e por
+isso seguro.
+
+- **Conferido em `CustomAncestryVariant.kt`/`SettingsDialog.kt`**: a
+  suspeita do dono do projeto está certa. `CustomAncestryVariant` guarda
+  `ancestralidadeId` (a raça-base MECÂNICA, de onde vêm os traços
+  removíveis e o orçamento de pontos) separado das `tags` (só controla em
+  quais livros essa Variante fica arquivada/visível). Na aplicação
+  (`CriadorState.applyCustomAncestryVariantIfSelected`), já existe uma
+  trava (`if (variant.ancestralidadeId != base.nome.keyify()) return base`)
+  que impede uma Variante vazar pra raça errada — impossível a Variante do
+  Elfo do Pathfinder ser tratada como Variante do Elfo do Básico, porque
+  `nome` de um é "Elfo" e do outro é "ELFOS" (chaves diferentes).
+- **Risco real encontrado (efeito colateral, não o que foi perguntado)**:
+  nesse cenário (Variante baseada em raça de um livro, tags marcadas só
+  pra outro), a Variante fica ÓRFÃ — salva, mas nunca aparece selecionável,
+  porque ela só é oferecida junto da raça-base quando essa raça-base está
+  sendo exibida na aba Ancestralidades (`AncestralidadesSection.kt`:
+  `listaVariantesRaciaisCustom.filter { it.ancestralidadeId ==
+  item.nome.keyify() }`), e isso exige o livro DA RAÇA-BASE ativo (aqui,
+  Pathfinder), não o(s) livro(s) marcado(s) nas tags. Não implementado
+  (não pedido nesta rodada) — decisão do dono do projeto foi só corrigir o
+  item abaixo.
+- **Investigação inicial equivocada, corrigida antes de mexer em código**:
+  cheguei a reportar um suposto bug de "o seletor de Raça Base esconde
+  raças duplicadas do mesmo nome entre livros diferentes, pegando uma
+  arbitrariamente". Falso — `state.listaAncestralidadesJson`
+  (`DataLoader.kt`) já chega deduplicada por nome ANTES do seletor, via
+  `distinctByOriginPriority` (mesmo mecanismo usado no resto do app pra
+  decidir qual versão prevalece quando dois livros ativos compartilham
+  nome — livro de cenário/companheiro vence o Básico). Ou seja, nunca
+  existem duas entradas com o mesmo nome pra esconder; o `distinctBy`
+  redundante do seletor nunca tem o que fazer.
+- **Fix aplicado** (o que sobrou de real depois da correção acima): o
+  seletor "Raça Base da Variante" mostrava só o nome cru ("Elfos"), sem
+  dizer de qual livro veio a versão que o `distinctByOriginPriority`
+  escolheu — o Mestre montava a Variante sem saber se estava trabalhando
+  em cima do Elfo do Horror, da Fantasia ou do Básico (dependendo de quais
+  livros estão ativos ao mesmo tempo). Adicionado
+  `RacialModifier.nomeComLivro()` ("Elfos (Fantasia)", "Elfo
+  (Pathfinder)") e usado tanto nas linhas do seletor quanto no botão/rótulo
+  que mostra a raça-base já escolhida.
+- Não rodei o app/testes JVM nesta rodada (mesma limitação de rede do
+  ambiente sandbox) — validação por leitura cruzada do código, seguindo a
+  cadeia completa `ancestralidades.json` → `DataLoader.kt`
+  (`distinctByOriginPriority`) → `state.listaAncestralidadesJson` →
+  seletor, pra confirmar que a dedupe já acontecia antes do seletor.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria; Variante de raça-base de livro diferente das tags fica órfã (ver
+acima — não corrigido, não pedido nesta rodada).
