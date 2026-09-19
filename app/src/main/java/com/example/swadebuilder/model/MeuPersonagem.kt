@@ -42,6 +42,13 @@ data class MeuPersonagem(
     // MeuPersonagem (snapshot pro Resumo/PDF) não carrega as habilidades[] da raça
     // pra recalcular isso a partir do zero.
     val passosDiminuto: Int = 0,
+    // Força Mínima EFETIVA por local do corpo (CABECA/TRONCO/BRACOS/PERNAS), já com a
+    // regra de "vestir armadura sobre armadura" resolvida (+1 passo de dado quando há
+    // 2 camadas no mesmo local) — ver CriadorState.armaduraPorLocal(). Pré-calculado
+    // aqui pelo mesmo motivo do `passosDiminuto` acima (o snapshot não recalcula do
+    // zero); ainda sem a redução de Diminuto (aplicada em cima disso na hora de usar,
+    // igual ao Resumo dentro do app).
+    val armaduraForcaMinimaPorLocal: Map<String, String?> = emptyMap(),
     val advantageChoices: Map<String, List<String>> = emptyMap(),
     val vantagensRaciais: List<String> = emptyList(),
     val tecnicasIniciaisTropo: Int = 0,

@@ -81,6 +81,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.LOCAIS_CORPO
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ataquesCorpoACorpoDeSuperPoderes
 import com.example.swadebuilder.model.ataquesADistanciaDeSuperPoderes
@@ -958,21 +959,33 @@ private fun CombatAndEquipmentCard(
             } else {
                 // Livro básico, "Força Mínima > Armadura/Equipamento Vestidos": -1 Movimentação
                 // (já aplicado de verdade em ModifierEngine, soma ARMOR/PACE) e -1 Agilidade e
-                // perícias de Agilidade por passo abaixo do mínimo, cumulativo entre peças
-                // vestidas. A parte de Agilidade é uma penalidade de ROLAGEM situacional, sem
-                // stat fixo correspondente na ficha — por isso só aparece como nota aqui.
+                // perícias de Agilidade por passo abaixo do mínimo. A parte de Agilidade é uma
+                // penalidade de ROLAGEM situacional, sem stat fixo correspondente na ficha —
+                // por isso só aparece como nota aqui.
                 // Diminuto (livro Fantasia): reduz a Força Mínima da ARMADURA em si — ver
                 // ForcaMinimaCalculator.minimoReduzidoPorDiminuto e
                 // ModifierEngine.racialDiminutoPassos (mesma fonte usada pro Modifier de
                 // Movimentação, pra não divergir do valor "já aplicado acima").
                 val passosDiminuto = ModifierEngine.racialDiminutoPassos(state)
-                val passosArmaduraTotal = armors.sumOf { item ->
-                    val forcaMinTxt = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
-                        (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content,
-                        passosDiminuto
+                fun passosDaPeca(forcaMinTxt: String?): Int {
+                    val ajustado = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
+                        forcaMinTxt, passosDiminuto
                     )
-                    com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
+                    return com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, ajustado)
                 }
+                // "Vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento"): duas
+                // peças no mesmo local não tomam só a melhor — a principal soma cheio, a
+                // segunda ("mais leve") soma metade arredondado pra baixo, e a Força Mínima
+                // efetiva desse local sobe um passo de dado. Já resolvido em
+                // CriadorState.armaduraPorLocal(); a penalidade de Movimentação/Agilidade
+                // abaixo passa a ser por LOCAL (não mais por peça) pros itens com `local`
+                // estruturado — equipamento customizado sem `local` continua por peça.
+                val porLocalArmor = state.armaduraPorLocal()
+                val passosPorLocal = porLocalArmor.mapValues { (_, info) -> passosDaPeca(info.forcaMinima) }
+                val passosItensSemLocal = armors.filter { it.local == null }.sumOf { item ->
+                    passosDaPeca((item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content)
+                }
+                val passosArmaduraTotal = passosPorLocal.values.sum() + passosItensSemLocal
                 if (passosArmaduraTotal > 0) {
                     Text(
                         "Força abaixo da Força Mínima: -$passosArmaduraTotal Movimentação (já aplicado acima) e -$passosArmaduraTotal Agilidade/perícias de Agilidade (aplique ao rolar)",
@@ -981,6 +994,29 @@ private fun CombatAndEquipmentCard(
                     )
                     Spacer(Modifier.height(4.dp))
                 }
+                // Local com 2+ peças: mostra o resultado da camada extra (valor combinado e
+                // Força Mínima efetiva), já que os itens individuais abaixo só mostram o
+                // próprio valor cheio — sem essa linha, a soma exibida por peça não bateria
+                // com a Resistência real da ficha.
+                val contagemPorLocal = mutableMapOf<String, Int>()
+                armors.forEach { item ->
+                    if ((item.armadura as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull() in listOf(null, 0)) return@forEach
+                    val locaisItem = item.local ?: return@forEach
+                    val resolvidos = if ("CORPO_INTEIRO" in locaisItem) LOCAIS_CORPO else locaisItem
+                    resolvidos.forEach { local -> contagemPorLocal[local] = (contagemPorLocal[local] ?: 0) + 1 }
+                }
+                val locaisComCamadaExtra = porLocalArmor.entries.filter { (local, _) ->
+                    (contagemPorLocal[local] ?: 0) > 1
+                }
+                locaisComCamadaExtra.forEach { (local, info) ->
+                    val forcaMinTxt = info.forcaMinima?.let { " • Força Mínima efetiva $it" } ?: ""
+                    Text(
+                        "$local (camadas): Armadura +${info.valor}$forcaMinTxt",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                if (locaisComCamadaExtra.isNotEmpty()) Spacer(Modifier.height(4.dp))
                 armors.forEach { item ->
                     val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
                     val parryVal = (item.aparar as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
@@ -991,12 +1027,16 @@ private fun CombatAndEquipmentCard(
                     if (parryVal != null && parryVal != 0) parts.add("Aparar +$parryVal")
                     if (!coberturaVal.isNullOrBlank() && coberturaVal != "-") parts.add("Cobertura $coberturaVal")
 
-                    val forcaMinTxt = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
-                        (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content,
-                        passosDiminuto
-                    )
-                    val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
-                    val notasExtras = if (passos > 0) listOf("Força abaixo da Força Mínima desta peça (-$passos)") else emptyList()
+                    // Peça sem `local`: só dá pra avaliar a Força Mínima dela sozinha (não tem
+                    // como saber com quem ela empilha). Peça com `local`: a penalidade já foi
+                    // resolvida por local acima — nota por peça aqui seria redundante ou, pior,
+                    // errada (mostraria a Força Mínima crua da peça, não a efetiva do local).
+                    val notasExtras = if (item.local == null) {
+                        val passos = passosDaPeca((item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content)
+                        if (passos > 0) listOf("Força abaixo da Força Mínima desta peça (-$passos)") else emptyList()
+                    } else {
+                        emptyList()
+                    }
                     val notesBase = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                     val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
                     CombatRow(name = item.nome.toFancyTitleCase(), stats = parts.joinToString(", "), notes = notes)

@@ -882,6 +882,59 @@ Poderes/Magia Arcana fica de fora por decisão dele (rodada anterior).
   de código e conferência da lista completa das 144 peças únicas antes de
   gravar no catálogo.
 
-**Ainda pendente**: a própria exibição de Resistência por local no PDF
-(consome `armaduraPorLocal()`, ainda não escrita); Mechas com arma
-customizada de mentirinha no PDF; Propulsores sem custo de mods.
+**Ainda pendente**: Mechas com arma customizada de mentirinha no PDF;
+Propulsores sem custo de mods.
+
+## Décima quarta rodada — "vestir armadura sobre armadura"
+
+Pedido do dono do projeto: as peças que cobrem mais de um local (ex.:
+"Manto": Tronco+Braços+Pernas) já ocupam esses locais — confirmado, é
+exatamente o que `armaduraPorLocal()` da rodada anterior já fazia. O pedido
+de verdade era conferir a regra de empilhar duas peças no MESMO local, que
+até agora só pegava a melhor e descartava a outra.
+
+- **Regra oficial, confirmada em `docs/swade_basico` (Cap. 2 "Equipamento",
+  seção "Armadura")**: "Armadura vestida também se soma com outra camada. A
+  armadura mais leve adiciona metade do seu valor (arredondado para baixo)
+  ao total e aumenta em um tipo de dado a penalidade por Força Mínima da
+  armadura mais pesada." — exemplo do próprio livro: cota de malha (+3) por
+  baixo de armadura de placas (+4) vira +5 total (4 + metade de 3,
+  arredondado pra baixo) e a Força Mínima sobe um passo de dado (ex.: d10
+  vira d12).
+- **`ForcaMinimaCalculator.minimoComCamadaExtra()`**: novo, sobe a Força
+  Mínima recebida em um passo de dado (reaproveita `paraRaw`/`passo`/
+  `stepParaRaw` já existentes).
+- **`CriadorState.armaduraPorLocal()`**: agora retorna `Map<String,
+  ArmorLocalInfo>` (`valor` + `forcaMinima`) em vez de só `Map<String,
+  Int>`. Com 2+ peças no mesmo local, ordena por valor de Armadura
+  (peça de maior valor = "principal"/mais pesada), soma valor cheio da
+  principal + metade arredondada pra baixo da segunda, e aplica
+  `minimoComCamadaExtra` na Força Mínima da principal. Com 3+ peças no
+  mesmo local (sem regra explícita no livro pra isso), só as 2 melhores
+  contam. `armadura` (Resistência da ficha) não mudou de comportamento —
+  continua pegando o valor de Tronco já resolvido.
+- **`ModifierEngine` (penalidade de Movimentação por Força Mínima)**: antes
+  somava a penalidade de CADA peça independente — com a regra de camada,
+  isso contava a penalidade da cota de malha E da armadura de placas
+  separadas, errado. Agora itera por LOCAL (usando a Força Mínima efetiva
+  já ajustada por `armaduraPorLocal()`), uma penalidade por local, não por
+  peça. Equipamento customizado sem `local` (Mestre) continua por peça,
+  já que não dá pra saber com o que ele empilha.
+- **`ResumoSection.kt`**: mesma correção pro total exibido, mais uma linha
+  nova "TRONCO (camadas): Armadura +5 • Força Mínima efetiva d12" quando um
+  local tem 2+ peças — sem isso, a soma dos valores individuais mostrados
+  em cada peça não bateria com a Resistência real da ficha. Nota de "Força
+  abaixo da Força Mínima desta peça" por item removida pra peças com
+  `local` (a informação mora na linha de local agora, atribuí-la a "esta
+  peça" especificamente ficaria ambíguo/errado com duas peças empilhadas).
+- **PDF**: `MeuPersonagem` ganhou `armaduraForcaMinimaPorLocal` (mapa
+  pré-calculado, mesmo motivo do `passosDiminuto`) — a coluna Força Mínima
+  da tabela de Armaduras agora mostra o valor efetivo por local pra peças
+  com `local`, em vez do valor cru da peça isolada.
+- Não rodei o app/testes JVM nesta rodada — validação por leitura cruzada
+  de código e conferência da regra contra o texto exato do livro.
+
+**Ainda pendente**: exibição de Resistência por local (não só a Força
+Mínima) no PDF em tabela própria — o dado (`armaduraPorLocal()`) já cobre
+isso, só falta a tela/seção; Mechas com arma customizada de mentirinha no
+PDF; Propulsores sem custo de mods.

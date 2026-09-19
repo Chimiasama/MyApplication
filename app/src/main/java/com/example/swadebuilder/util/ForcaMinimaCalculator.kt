@@ -151,4 +151,17 @@ object ForcaMinimaCalculator {
         if (!DADO_REGEX.containsMatchIn(dano)) return dano
         return "$dano-$passosReducao"
     }
+
+    /**
+     * "Vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento", regra de
+     * Armadura): "A armadura mais leve adiciona metade do seu valor (arredondado para
+     * baixo) ao total e aumenta em UM TIPO DE DADO a penalidade por Força Mínima da
+     * armadura mais pesada." — a peça mais pesada (`minimo` = Força Mínima dela) sobe
+     * um passo de dado quando há uma segunda camada por baixo. Sem `minimo`
+     * reconhecível, devolve null (nada pra somar).
+     */
+    fun minimoComCamadaExtra(minimo: String?): String? {
+        val raw = minimo?.let { paraRaw(it) } ?: return null
+        return stepParaRaw(passo(raw) + 1).toDiceString()
+    }
 }

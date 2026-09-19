@@ -79,8 +79,40 @@ object ModifierEngine {
         // dado (mínimo d4). racialDiminutoPassos() não chama collect() de novo (ver seu
         // comentário) — só por isso pode ser chamada daqui de dentro.
         val passosDiminuto = racialDiminutoPassos(state)
+
+        fun aplicarPenalidadePace(id: String, nomeExibicao: String, forcaMinTexto: String?) {
+            val forcaMinAjustado = ForcaMinimaCalculator.minimoReduzidoPorDiminuto(forcaMinTexto, passosDiminuto)
+            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinAjustado)
+            if (passos > 0) {
+                modifiers.add(
+                    Modifier(
+                        id = "forca_min_pace_$id",
+                        sourceType = SourceType.OUTRO,
+                        sourceName = nomeExibicao,
+                        target = ModifierTarget.PACE,
+                        value = -passos
+                    )
+                )
+            }
+        }
+
+        // Peças com `local` estruturado (catálogo oficial): agrupadas por local do
+        // corpo — `armaduraPorLocal()` já resolve "vestir armadura sobre armadura"
+        // (livro básico, Cap. 2), inclusive a Força Mínima efetiva por local (+1 passo
+        // quando há uma segunda camada), então a penalidade aqui é por LOCAL, não mais
+        // por peça — vestir cota de malha sob placas no Tronco conta uma vez só, com a
+        // Força Mínima já ajustada, em vez de somar a penalidade das duas peças em
+        // separado.
+        state.armaduraPorLocal().forEach { (local, info) ->
+            aplicarPenalidadePace(local, "Armadura ($local)", info.forcaMinima)
+        }
+
+        // Peças SEM `local` (equipamento customizado do Mestre — o catálogo oficial já
+        // está 100% migrado) mantêm o comportamento por peça de antes, já que não dá
+        // pra agrupar por local sem saber qual é.
         state.equipamentosComprados.forEach { item ->
             if (item.armadura == null) return@forEach
+            if (item.local != null) return@forEach
             val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
                 s.contains("VEICULO") || s.contains("VEÍCULO") ||
                         s.contains("CHASSIS") || s.contains("MECHA")
@@ -88,19 +120,7 @@ object ModifierEngine {
             if (isMechaOrVehicle) return@forEach
 
             val forcaMinBruto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
-            val forcaMinTexto = ForcaMinimaCalculator.minimoReduzidoPorDiminuto(forcaMinBruto, passosDiminuto)
-            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinTexto)
-            if (passos > 0) {
-                modifiers.add(
-                    Modifier(
-                        id = "forca_min_pace_${item.nome.keyify()}",
-                        sourceType = SourceType.OUTRO,
-                        sourceName = item.nome,
-                        target = ModifierTarget.PACE,
-                        value = -passos
-                    )
-                )
-            }
+            aplicarPenalidadePace(item.nome.keyify(), item.nome, forcaMinBruto)
         }
 
         // 2. Ancestralidade

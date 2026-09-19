@@ -4746,28 +4746,63 @@ class CriadorState {
 
     var pontosAtributo by mutableIntStateOf(5)
 
+    // Valor final de Armadura num local do corpo, já com a regra de "vestir armadura
+    // sobre armadura" aplicada (ver armaduraPorLocal) — e a Força Mínima efetiva pra
+    // esse local (da peça principal, +1 passo de dado quando há uma segunda camada;
+    // ver ForcaMinimaCalculator.minimoComCamadaExtra). `forcaMinima` null = local sem
+    // peça cadastrada com Força Mínima reconhecível.
+    data class ArmorLocalInfo(val valor: Int, val forcaMinima: String?)
+
     /**
-     * Maior valor de Armadura equipada em cada local do corpo — peças que cobrem o
-     * MESMO local não empilham (regra oficial, SWADE "Armadura"), vale a de maior
-     * valor ali. Lê o campo estruturado `EquipamentoItem.local` (ver comentário lá);
-     * `CORPO_INTEIRO` (trajes completos) conta pros 4 locais ao mesmo tempo. Item sem
-     * `local` (equipamento customizado feito pelo Mestre — todo o catálogo oficial já
-     * está migrado) não entra aqui; participa só do fallback de `armadura` abaixo.
+     * Armadura equipada em cada local do corpo, já resolvendo a regra oficial de
+     * "vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento", regra de
+     * Armadura): duas peças no MESMO local não simplesmente tomam a melhor — a peça
+     * PRINCIPAL (maior valor) soma o valor cheio, a SEGUNDA (a "mais leve") soma
+     * METADE do valor dela arredondado pra baixo, e a Força Mínima efetiva desse local
+     * sobe um passo de dado (a penalidade da peça mais pesada aumenta). Com 3+ peças no
+     * mesmo local (raro/sem regra explícita no livro), só as 2 melhores contam — o
+     * resto é ignorado pra esse cálculo. Lê o campo estruturado `EquipamentoItem.local`
+     * (ver comentário lá); `CORPO_INTEIRO` (trajes completos) conta pros 4 locais ao
+     * mesmo tempo. Item sem `local` (equipamento customizado feito pelo Mestre — todo o
+     * catálogo oficial já está migrado) não entra aqui; participa só do fallback de
+     * `armadura`/da penalidade de Força Mínima em ModifierEngine.
      * Registrado pra já existir pronto quando a Resistência por local entrar no PDF —
-     * hoje só `armadura` (Tronco/melhor peça) é usada na ficha.
+     * hoje só `armadura` (Tronco/melhor local) é usada na ficha.
      */
-    fun armaduraPorLocal(): Map<String, Int> {
-        val porLocal = mutableMapOf<String, Int>()
+    fun armaduraPorLocal(): Map<String, ArmorLocalInfo> {
+        val pecasPorLocal = mutableMapOf<String, MutableList<Pair<Int, String?>>>()
         equipamentosComprados.forEach { item ->
             val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
             if (valor == null || valor == 0) return@forEach
             val locaisItem = item.local ?: return@forEach
+            // Defensivo: nenhuma peça com `local` hoje tem subtipo de Mecha/Veículo
+            // (esses ficaram de fora da migração — ver equipamentos.json), mas se um
+            // catálogo futuro adicionar uma, não deve contar aqui (Mecha usa Armadura
+            // Máx do chassi, não Resistência do piloto).
+            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                        s.contains("CHASSIS") || s.contains("MECHA")
+            } == true
+            if (isMechaOrVehicle) return@forEach
+            val forcaMinItem = (item.forcaMin as? JsonPrimitive)?.content
             val locaisResolvidos = if ("CORPO_INTEIRO" in locaisItem) LOCAIS_CORPO else locaisItem
             locaisResolvidos.forEach { local ->
-                porLocal[local] = maxOf(porLocal[local] ?: 0, valor)
+                pecasPorLocal.getOrPut(local) { mutableListOf() }.add(valor to forcaMinItem)
             }
         }
-        return porLocal
+        return pecasPorLocal.mapValues { (_, pecas) ->
+            val ordenadas = pecas.sortedByDescending { it.first }
+            val principal = ordenadas[0]
+            val temSegundaCamada = ordenadas.size > 1
+            val valorFinal = principal.first + if (temSegundaCamada) ordenadas[1].first / 2 else 0
+            val forcaMinFinal = if (temSegundaCamada) {
+                com.example.swadebuilder.util.ForcaMinimaCalculator.minimoComCamadaExtra(principal.second)
+                    ?: principal.second
+            } else {
+                principal.second
+            }
+            ArmorLocalInfo(valorFinal, forcaMinFinal)
+        }
     }
 
     // Valor de Armadura que soma na Resistência exibida no Resumo/PDF (ver
@@ -4779,15 +4814,16 @@ class CriadorState {
     // Resistência geral do personagem usa o valor de Tronco (por convenção — é
     // o local que a Resistência "padrão" da ficha representa, sem detalhar por
     // local do corpo, decisão combinada com o dono do projeto), com fallback
-    // pra melhor peça equipada quando não há nada cobrindo o Tronco (ex.: só um
+    // pra melhor local equipado quando não há nada cobrindo o Tronco (ex.: só um
     // capacete comprado) e, por fim, pra equipamento customizado sem `local`
     // estruturado (heurística por texto de `observacoes`, mesmo comportamento
-    // de antes desta peça virar dado estruturado no catálogo oficial).
+    // de antes desta peça virar dado estruturado no catálogo oficial — sem a regra
+    // de camadas, que exige saber o local de cada peça pra agrupar).
     val armadura: Int
         get() {
             val porLocal = armaduraPorLocal()
-            porLocal["TRONCO"]?.let { return it }
-            if (porLocal.isNotEmpty()) return porLocal.values.max()
+            porLocal["TRONCO"]?.let { return it.valor }
+            if (porLocal.isNotEmpty()) return porLocal.values.maxOf { it.valor }
 
             val pecasSemLocal = equipamentosComprados.mapNotNull { item ->
                 if (item.local != null) return@mapNotNull null

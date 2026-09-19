@@ -104,6 +104,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         naturalArmorFromRace = this.naturalArmorFromRace,
         armorBase = this.armadura,
         passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(this),
+        armaduraForcaMinimaPorLocal = this.armaduraPorLocal().mapValues { it.value.forcaMinima },
         modoSupers = this.modoSupers,
         modoMonstroAtivo = this.modoMonstroAtivo,
         tipoMonstroSelecionado = this.tipoMonstroSelecionado,
@@ -651,10 +652,16 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         )
     }
     val armorRows = armaduras.map { item ->
-        // Diminuto (livro Fantasia): armadura feita sob medida pro corpo pequeno tem
-        // Força Mínima reduzida — mesma conta do Resumo dentro do app, faltava aqui.
+        // "Vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento"): peça com
+        // `local` estruturado usa a Força Mínima EFETIVA do local dela (já com o +1 passo
+        // de dado quando há uma segunda camada — ver CriadorState.armaduraPorLocal() /
+        // p.armaduraForcaMinimaPorLocal); sem `local` (equipamento customizado), cai na
+        // Força Mínima crua da própria peça. Diminuto (livro Fantasia) reduz por cima
+        // disso, mesma conta do Resumo dentro do app.
+        val forcaMinBase = item.local?.firstOrNull()?.let { p.armaduraForcaMinimaPorLocal[it] }
+            ?: item.campoTexto(item.forcaMin).takeIf { it != "-" }
         val forcaMinExibida = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
-            item.campoTexto(item.forcaMin).takeIf { it != "-" }, p.passosDiminuto
+            forcaMinBase, p.passosDiminuto
         ) ?: item.campoTexto(item.forcaMin)
         listOf(
             nomeExibido(item),
