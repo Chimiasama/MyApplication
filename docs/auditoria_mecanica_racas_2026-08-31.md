@@ -763,3 +763,76 @@ arma customizada de verdade ao PDF (hoje é só anotação de texto); Propulsore
 sem custo de mods (precisa ler `docs/swade_scifi`); sugestão de UI "Wiseguys"
 (habilitar troca de raça na criação de personagem desse livro, hoje sempre
 Humano).
+
+## Décima segunda rodada — Diminuto no PDF, Meio-Orc/Meio-Elfo por id de verdade, Wiseguys
+
+Resposta direta às instruções da rodada anterior.
+
+- **Diminuto no PDF**: as duas regras implementadas na rodada anterior só
+  valiam pro Resumo dentro do app — o PDF (`ResumoPdfReferenciador.kt`) lê
+  `dano`/`forcaMin` direto do catálogo, numa função separada
+  (`buildWeaponAndArmorBlocks`) que nunca passava pelo `ForcaMinimaCalculator`
+  (nem o cap de dado por Força do livro básico, que já era uma lacuna antes
+  desta auditoria). Corrigido: `MeuPersonagem` ganhou o campo
+  `passosDiminuto` (calculado uma vez em `toMeuPersonagem()`, já que o
+  snapshot usado pelo PDF não carrega `habilidades[]` da raça pra recalcular
+  do zero), e as 3 tabelas do PDF (Corpo a Corpo, à Distância, Armaduras)
+  passaram a aplicar `danoLimitadoPelaForca`/`danoComPenalidadeDiminuto`/
+  `minimoReduzidoPorDiminuto`, na mesma distinção que o Resumo já fazia
+  (cap de dado pela Força só em Corpo a Corpo/Arremesso, nunca à Distância).
+  **Dano de Poderes/Magia Arcana — não implementado, achado real**: diferente
+  de equipamento, poderes (`poderes.json`) não têm um campo `dano`
+  estruturado — "dano" ali é só uma TAG de categoria (`tags: [...,
+  "dano"]`); o valor de dano de cada poder (ex.: "2d6") vive dentro do texto
+  livre da própria descrição/modificador. Aplicar "-N" automaticamente exigiria
+  processar texto solto por poder (arriscado, alto volume) em vez de um
+  cálculo sobre campo estruturado — não fiz essa parte por não ter como
+  fazer com segurança sem reestruturar o catálogo de poderes primeiro. Fica
+  registrado como trabalho futuro maior, a combinar.
+- **Meio-Orc/Meio-Elfo — não era confusão nem falta de implementação**: a
+  rodada anterior errou ao dizer que os dois não tinham NENHUM efeito — só
+  não tinham entrada em `RacialTraitPointCatalog.EFEITOS` (o catálogo
+  genérico); existe, de fato, um segundo mecanismo próprio (picker de
+  Força/Vigor/Agilidade em `AncestralidadesSection.kt`, ligado ao state
+  `humanoMineradorAtributo`, lido dentro de `atributoBaseRacial()`) que já
+  funciona hoje — o "sobe" que o dono do projeto lembrava de ter testado
+  estava certo. O que ERA sujeira de verdade, como o dono do projeto
+  suspeitou:
+  1. `getAncestralidadeDef()` decidia trocar "Herança" por "Ágil"/"Adaptável"
+     checando `key.contains("MEIO-ELFOS")` (nome da raça) em vez do traço
+     "HERANCA" presente em `habilidades[]`. Corrigido pra checar só o id.
+  2. As duas telas de escolha (picker "Endurecido" do Meio-Orc, radio
+     "Herança" do Meio-Elfo) só apareciam quando `item.nome.keyify() ==
+     "MEIO-ORCS"`/`"MEIO-ELFOS"` — também nome, não id. Corrigido pra
+     `item.habilidades.any { it.id == "ENDURECIDO"/"HERANCA" }`.
+  3. **Achado incidental, bug de verdade**: `humanoMineradorAtributo` é uma
+     ÚNICA variável compartilhada pelas 3 raças com esse tipo de escolha
+     (Meio-Orc, Feral, Humano Minerador Sci-Fi) — sem validação, uma escolha
+     "Agilidade" feita num personagem Feral sobrevivia à troca pra Meio-Orc
+     (que só tem Força/Vigor como opção) e cancelava o bônus racial por
+     completo, silenciosamente (nem Força nem Vigor batiam contra
+     "Agilidade"). Corrigido validando a escolha contra as opções válidas de
+     cada raça antes de usar, caindo no padrão do livro quando inválida.
+- **Wiseguys — checkbox "Habilitar Raças"**: adicionado na tela inicial
+  (mesmo grupo de opções de "A Cosa Nostra"), controlando um novo campo
+  `CriadorState.wiseguysHabilitaRacas`. Ligado, ele: (1) reabre a aba
+  Ancestralidades (`UnifiedScreen.kt` — antes sempre escondida quando
+  `compendioWiseguysAtivo`, mesma raiz do problema pro Deadlands, que não
+  mexi por não ter sido pedido); (2) reintroduz o Livro Básico como origem
+  de raça ativa (`getActiveOrigins()` em `ContentVisibility.kt` — Wiseguys é
+  tratado como "cenário substituto" que normalmente exclui o Básico, só
+  raça `HUMANOS` tem `livros: ["WISEGUYS"]` no catálogo). O checkbox
+  "Variantes de Raça" (já existia, mas ficava visível sem ter nada pra
+  mostrar) agora fica desabilitado (cinza, sem clique) enquanto Wiseguys
+  estiver ativo e esta opção não estiver marcada — `SimpleCheckRow` ganhou
+  um parâmetro `enabled` novo pra isso.
+- Não rodei o app/testes JVM nesta rodada (mesma limitação de sandbox das
+  anteriores) — validação por leitura cruzada de código.
+
+**Ainda pendente, explicitamente adiado pelo dono do projeto pra depois**:
+Resistência por local do corpo (Armadura separada em Cabeça/Braços/Pernas/
+Tronco, cada uma com sua própria Resistência final, mostrada no PDF) — pedido
+novo desta rodada, mas o catálogo de equipamento não guarda "local" como
+campo estruturado hoje (só texto livre em `observacoes`, às vezes cobrindo
+mais de um local na mesma peça); Mechas com arma customizada de mentirinha no
+PDF; Propulsores sem custo de mods.

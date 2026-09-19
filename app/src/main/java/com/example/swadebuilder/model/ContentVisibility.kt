@@ -50,13 +50,15 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
 
     // 2. Determine if "BASICO" should be included
     // Standalone replacement settings replace the basic book, whereas Companions (Fantasia, Horror, Sci-Fi, Supers) extend BÁSICO.
+    // Wiseguys com `wiseguysHabilitaRacas` ligado é a exceção: o Mestre pediu pra
+    // reabrir o Básico como origem de raça só pra esse cenário (ver o campo).
     val replacementSettingsActive =
         compendioPathfinderAtivo ||
         compendioDeadlandsAtivo ||
         compendioCrystalHeartAtivo ||
         compendioArteDaGuerraAtivo ||
         compendioCidadeSolVaporAtivo ||
-        compendioWiseguysAtivo
+        (compendioWiseguysAtivo && !wiseguysHabilitaRacas)
 
     if (!replacementSettingsActive) {
         add("BASICO")

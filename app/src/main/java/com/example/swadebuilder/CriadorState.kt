@@ -549,6 +549,14 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    // Wiseguys é um "cenário substituto" (como Pathfinder/Deadlands/Crystal Heart):
+    // sem isso, só a raça própria do livro (Humano) fica disponível — a aba
+    // Ancestralidades nem aparece (ver UnifiedScreen.kt) — porque só ela tem
+    // `livros: ["WISEGUYS"]` no catálogo. Ligar esta opção reabre a aba e
+    // reintroduz o Livro Básico como origem ativa pra escolha de raça (ver
+    // getActiveOrigins() em ContentVisibility.kt), pro Mestre que quiser rodar
+    // Wiseguys com raças variantes em vez de só humanos.
+    var wiseguysHabilitaRacas by mutableStateOf(false)
     var optRegraRiqueza by mutableStateOf(false)
     var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
@@ -995,7 +1003,10 @@ class CriadorState {
             return base
         }
 
-        if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
+        // Escolha por id do traço "HERANCA" (Básico/Fantasia/Horror/Super Meio-Elfos),
+        // não por nome de raça — o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO"
+        // no nome, mas tem "Flexibilidade" em vez de Herança, então nunca entra aqui.
+        if (base.habilidades.any { it.id?.keyify() == "HERANCA" }) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
 
@@ -5264,8 +5275,17 @@ class CriadorState {
             // migrar pro mesmo mecanismo de Feral/Minerador).
             // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
             // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
+            val opcoesValidas = if (habilidadeIds.contains("PRIMITIVO")) {
+                setOf("FORCA", "VIGOR", "AGILIDADE")
+            } else {
+                setOf("FORCA", "VIGOR")
+            }
             val defaultChoice = if (habilidadeIds.contains("ENDURECIDO")) "Vigor" else "Força"
-            val chosen = humanoMineradorAtributo ?: defaultChoice
+            // `humanoMineradorAtributo` é compartilhado pelas 3 raças — sem essa
+            // validação, uma escolha "Agilidade" deixada pelo Feral sobrevivia à
+            // troca pro Meio-Orc/Minerador (que não têm essa opção) e cancelava o
+            // bônus por completo (nem Força nem Vigor batiam), silenciosamente.
+            val chosen = humanoMineradorAtributo?.takeIf { it.keyify() in opcoesValidas } ?: defaultChoice
             if (attrKey == chosen.keyify()) {
                 modifiedBase = maxOf(modifiedBase, 6)
             }

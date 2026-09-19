@@ -37,6 +37,11 @@ data class MeuPersonagem(
 
     val naturalArmorFromRace: Int = 0,
     val armorBase: Int = 0,
+    // Diminuto (livro Fantasia): passos de dado que o Tamanho racial do personagem
+    // reduz — ver ModifierEngine.racialDiminutoPassos(). Pré-calculado aqui porque
+    // MeuPersonagem (snapshot pro Resumo/PDF) não carrega as habilidades[] da raça
+    // pra recalcular isso a partir do zero.
+    val passosDiminuto: Int = 0,
     val advantageChoices: Map<String, List<String>> = emptyMap(),
     val vantagensRaciais: List<String> = emptyList(),
     val tecnicasIniciaisTropo: Int = 0,

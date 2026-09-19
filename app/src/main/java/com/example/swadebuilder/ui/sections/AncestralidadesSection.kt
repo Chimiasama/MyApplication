@@ -555,13 +555,16 @@ fun AncestralidadesSection(
                                 // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
                                 // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
                                 val isFeral = item.nome.keyify() == "FERAL"
-                                val isMeioOrc = item.nome.keyify() == "MEIO-ORCS"
-                                // Exato, não .contains(): "MEIO-ELFOS" (Fantasia/outros livros) é uma
-                                // raça diferente de "Meio-Elfo" (Pathfinder, id anc_meio_elfopathfinder),
-                                // que tem "Flexibilidade" (atributo à escolha livre) em vez desta
-                                // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
-                                // comparação exata já as separa sem precisar checar o livro de origem.
-                                val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
+                                // Por id do traço, não por nome de raça: "Endurecido" é o único traço
+                                // oficial com esse id, e só existe nas raças que têm a escolha
+                                // Força/Vigor de verdade (Meio-Orc Fantasia) — o Meio-Orc do Pathfinder
+                                // também casa com o nome, mas tem "Forte" (fixo, sem escolha) em vez
+                                // de "Endurecido".
+                                val isMeioOrc = item.habilidades.any { it.id?.keyify() == "ENDURECIDO" }
+                                // Por id do traço "HERANCA", não por nome de raça: "Meio-Elfo" do
+                                // Pathfinder também casa com o nome, mas tem "Flexibilidade" (atributo
+                                // à escolha livre) em vez desta Herança Élfica/Humana.
+                                val isMeioElfo = item.habilidades.any { it.id?.keyify() == "HERANCA" }
                                 val isMeioDemonio = item.nome.keyify() == "MEIO-DEMONIO"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já

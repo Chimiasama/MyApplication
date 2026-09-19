@@ -103,6 +103,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         pontosRestantes = this.pontosVantagem,
         naturalArmorFromRace = this.naturalArmorFromRace,
         armorBase = this.armadura,
+        passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(this),
         modoSupers = this.modoSupers,
         modoMonstroAtivo = this.modoMonstroAtivo,
         tipoMonstroSelecionado = this.tipoMonstroSelecionado,
@@ -598,9 +599,20 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         listOf(a.nome, a.alcance, a.dano, a.pa, "-", a.cdt, "-")
     }
 
+    // Força Mínima > Armas: o dado próprio da arma nunca passa do dado de Força de
+    // quem usa (livro básico), e Diminuto (livro Fantasia) soma -N fixo em cima disso
+    // — as duas contas o Resumo dentro do app já fazia (ResumoSection.kt), mas
+    // faltavam por completo no PDF (bug real relatado pelo usuário).
+    val forcaRawPdf = p.atributos["FORCA"] ?: 4
+    fun danoExibidoPdf(danoBruto: String): String {
+        val capado = com.example.swadebuilder.util.ForcaMinimaCalculator.danoLimitadoPelaForca(danoBruto, forcaRawPdf)
+            ?: danoBruto
+        return com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(capado, p.passosDiminuto)
+    }
+
     val meleeRows = ataquesSuperMelee + armasCorpoACorpo.map { w ->
         val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
-        val danoTxtMelee = w.campoTexto(w.dano)
+        val danoTxtMelee = danoExibidoPdf(w.campoTexto(w.dano))
         // Alcance aqui é o reach de arma de haste (Lança, Alabarda...), lido de
         // `observacoes` — NUNCA o campo `distancia` (curta/média/longa de arremesso/tiro,
         // que só faz sentido na tabela de Armas à Distância) nem o bônus da Vantagem
@@ -622,10 +634,16 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
     }
     val rangedRows = ataquesSuperRanged + armasADistancia.map { w ->
         val danoTxtRanged = w.campoTexto(w.dano)
+        // Só Diminuto aqui, sem o cap de dado pela Força — esse cap (danoLimitadoPelaForca)
+        // é regra só de "Armas de Combate Corpo a Corpo/Arremesso" (livro básico), não de
+        // Armas à Distância; mesma distinção que o Resumo dentro do app já faz.
+        val danoExibidoRanged = com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(
+            danoTxtRanged, p.passosDiminuto
+        )
         listOf(
             nomeExibido(w),
             alcanceExibido(w, w.campoTexto(w.distancia), danoTxtRanged),
-            danoTxtRanged,
+            danoExibidoRanged,
             w.campoTexto(w.pa),
             w.campoTexto(w.tiros),
             w.campoTexto(w.cdt),
@@ -633,12 +651,17 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         )
     }
     val armorRows = armaduras.map { item ->
+        // Diminuto (livro Fantasia): armadura feita sob medida pro corpo pequeno tem
+        // Força Mínima reduzida — mesma conta do Resumo dentro do app, faltava aqui.
+        val forcaMinExibida = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
+            item.campoTexto(item.forcaMin).takeIf { it != "-" }, p.passosDiminuto
+        ) ?: item.campoTexto(item.forcaMin)
         listOf(
             nomeExibido(item),
             item.campoTexto(item.armadura),
             item.campoTexto(item.aparar),
             item.campoTexto(item.cobertura),
-            item.campoTexto(item.forcaMin),
+            forcaMinExibida,
             item.campoTexto(item.peso)
         )
     }

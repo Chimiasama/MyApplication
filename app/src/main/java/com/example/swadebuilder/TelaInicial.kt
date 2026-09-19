@@ -58,6 +58,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -134,6 +135,7 @@ fun TelaInicial(
     var optRegraFama by rememberSaveable { mutableStateOf(false) }
     var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
     var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
+    var optWiseguysHabilitaRacas by rememberSaveable { mutableStateOf(false) }
     var optRegraRiqueza by rememberSaveable { mutableStateOf(false) }
     var optRegraCosaNostra by rememberSaveable { mutableStateOf(false) }
     var optVariantesDeRaca by rememberSaveable { mutableStateOf(false) }
@@ -170,6 +172,7 @@ fun TelaInicial(
         optRegraFama = false
         optRegraRiqueza = false
         optRegraCosaNostra = false
+        optWiseguysHabilitaRacas = false
         optRegraMechas = false
         optRegraCiberneticos = false
     }
@@ -427,6 +430,7 @@ fun TelaInicial(
             viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
             viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
             viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+            viewModel.state.wiseguysHabilitaRacas = optWiseguysHabilitaRacas
             viewModel.state.optRegraRiqueza = optRegraRiqueza
             viewModel.state.optRegraCosaNostra = optRegraCosaNostra
             viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
@@ -664,10 +668,23 @@ fun TelaInicial(
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        if (optCompendioWiseguys) {
+                            // Wiseguys é um cenário substituto (só "Humano" tem
+                            // `livros: WISEGUYS` no catálogo) — sem isso ligado, a aba
+                            // Ancestralidades nem aparece e Variantes de Raça não tem
+                            // nada pra mostrar (fica desabilitado até aqui ser marcado).
+                            SimpleCheckRow(
+                                title = "Habilitar Raças",
+                                description = "Reabre a aba de Ancestralidades com as raças do Livro Básico, pra fugir do padrão \"todo mundo é humano\" do cenário.",
+                                checked = optWiseguysHabilitaRacas,
+                                onCheckedChange = { optWiseguysHabilitaRacas = it }
+                            )
+                        }
                         SimpleCheckRow(
                             title = "Variantes de Raça",
                             description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber, Sáurios Cuspidor).",
                             checked = optVariantesDeRaca,
+                            enabled = !optCompendioWiseguys || optWiseguysHabilitaRacas,
                             onCheckedChange = { optVariantesDeRaca = it }
                         )
 
@@ -801,16 +818,19 @@ fun SimpleCheckRow(
     title: String,
     description: String,
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    val alpha = if (enabled) 1f else 0.5f
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 4.dp),
+            .clickable(enabled = enabled) { onCheckedChange(!checked) }
+            .padding(vertical = 4.dp)
+            .alpha(alpha),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = checked, onCheckedChange = null)
+        Checkbox(checked = checked, onCheckedChange = null, enabled = enabled)
         Spacer(Modifier.width(8.dp))
         Column {
             Text(text = title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
