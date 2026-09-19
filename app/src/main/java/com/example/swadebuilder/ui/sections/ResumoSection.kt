@@ -88,6 +88,7 @@ import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.toMeuPersonagem
@@ -778,10 +779,20 @@ private fun CombatAndEquipmentCard(
             Text(text = "Ataques", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
 
+            // Diminuto (livro Fantasia, pág. 10 — Fadas/Povo Rato/Ferais Menor): "-2/3/4
+            // em rolagens de dano (corpo a corpo, à distância, magia etc.)" — penalidade
+            // FIXA em toda rolagem de dano baseada em dado, além (não em vez) do cap do
+            // dado da arma pela Força (danoLimitadoPelaForca, mais abaixo). Calculado uma
+            // vez aqui, aplicado nos ataques naturais/corpo a corpo/à distância.
+            val passosDiminuto = ModifierEngine.racialDiminutoPassos(state)
+
             // Natural Attack
             val naturalWeapons = state.extrairArmasNaturais()
             naturalWeapons.forEach { w ->
-                val dmg = (w.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                val dmg = com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(
+                    (w.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-",
+                    passosDiminuto
+                )
                 // Extract notes/modifiers from observacoes
                 val notes = (w.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
 
@@ -835,15 +846,22 @@ private fun CombatAndEquipmentCard(
                     CombatRow(name = ataque.nome, stats = stats.ifBlank { ataque.dano }, notes = ataque.notas)
                 }
                 armasCorpoACorpo.forEach { weapon ->
-                    val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                    val dmgBase = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
                     val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
-                    val stats = listOf(dmg, ap).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
 
                     // Regra incondicional (livro básico, "Força Mínima > Armas de Combate
                     // Corpo a Corpo/Arremesso"): o dado próprio da arma nunca passa do dado
                     // de Força de quem usa — independe de a arma ter Força Mínima cadastrada.
-                    val danoEfetivo = com.example.swadebuilder.util.ForcaMinimaCalculator.danoLimitadoPelaForca(dmg, forcaRaw)
+                    val danoEfetivoBase = com.example.swadebuilder.util.ForcaMinimaCalculator.danoLimitadoPelaForca(dmgBase, forcaRaw)
+                    // Diminuto: -N fixo em cima do dano já capado pela Força (ver comentário
+                    // acima de `passosDiminuto`).
+                    val dmg = com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(dmgBase, passosDiminuto)
+                    val danoEfetivo = danoEfetivoBase?.let {
+                        com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(it, passosDiminuto)
+                    }
+                    val stats = listOf(dmg, ap).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
+
                     val forcaMinTxt = (weapon.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
 
@@ -884,7 +902,10 @@ private fun CombatAndEquipmentCard(
                     CombatRow(name = ataque.nome, stats = stats.ifBlank { ataque.dano }, notes = ataque.notas)
                 }
                 armasADistancia.forEach { weapon ->
-                    val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                    val dmgBase = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                    // Diminuto (livro Fantasia): -N fixo em rolagens de dano à distância
+                    // também (ver comentário de `passosDiminuto` mais acima).
+                    val dmg = com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(dmgBase, passosDiminuto)
                     val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
                     val rangeBase = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
@@ -896,7 +917,7 @@ private fun CombatAndEquipmentCard(
                     // entra direto no Alcance exibido (igual ao PDF), em vez de só uma nota
                     // separada que o jogador podia não notar.
                     val ehArremesso = weapon.usavelCorpoACorpo
-                        ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
+                        ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmgBase)
                     val range = if (temBrutamontes && rangeBase.isNotBlank() && ehArremesso) {
                         com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(rangeBase) ?: rangeBase
                     } else {
@@ -940,8 +961,16 @@ private fun CombatAndEquipmentCard(
                 // perícias de Agilidade por passo abaixo do mínimo, cumulativo entre peças
                 // vestidas. A parte de Agilidade é uma penalidade de ROLAGEM situacional, sem
                 // stat fixo correspondente na ficha — por isso só aparece como nota aqui.
+                // Diminuto (livro Fantasia): reduz a Força Mínima da ARMADURA em si — ver
+                // ForcaMinimaCalculator.minimoReduzidoPorDiminuto e
+                // ModifierEngine.racialDiminutoPassos (mesma fonte usada pro Modifier de
+                // Movimentação, pra não divergir do valor "já aplicado acima").
+                val passosDiminuto = ModifierEngine.racialDiminutoPassos(state)
                 val passosArmaduraTotal = armors.sumOf { item ->
-                    val forcaMinTxt = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val forcaMinTxt = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
+                        (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content,
+                        passosDiminuto
+                    )
                     com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
                 }
                 if (passosArmaduraTotal > 0) {
@@ -962,7 +991,10 @@ private fun CombatAndEquipmentCard(
                     if (parryVal != null && parryVal != 0) parts.add("Aparar +$parryVal")
                     if (!coberturaVal.isNullOrBlank() && coberturaVal != "-") parts.add("Cobertura $coberturaVal")
 
-                    val forcaMinTxt = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val forcaMinTxt = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
+                        (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content,
+                        passosDiminuto
+                    )
                     val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
                     val notasExtras = if (passos > 0) listOf("Força abaixo da Força Mínima desta peça (-$passos)") else emptyList()
                     val notesBase = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""

@@ -691,9 +691,75 @@ corrigido nesta rodada (exceto os marcados como pendente de confirmação):
   anteriores) — validação por leitura cruzada de código e conferência
   direta contra `docs/swade_basico`/`docs/swade_fantasia`.
 
-**Itens da lista do dono do projeto ainda pendentes de investigação/confirmação
-antes de mexer** (na dúvida, perguntei em vez de arriscar um fix errado):
-Traço Diminuto mexendo em "força de equipamentos"/dano; mecanismo de escolha
-de atributo (Meio-Orc Força/Vigor, Meio-Elfo etc.); Mechas (Sci-Fi) não
-adicionando armas customizadas ao PDF; Propulsores sem custo de mods; sugestão
-de UI "Wiseguys" (regras de raça na tela inicial).
+## Décima primeira rodada — Armadura (regra real), Diminuto (Força Mínima + dano), Meio-Orc/Meio-Elfo
+
+Resposta às dúvidas levantadas na rodada anterior, depois de mais contexto do
+dono do projeto e conferência direta do livro Fantasia.
+
+- **Armadura na Resistência não deve SOMAR peças, só pegar a melhor**:
+  correção da rodada anterior (armadura comprada nunca somava na
+  Resistência) estava certa na causa, mas a solução usava `sumOf` — errado
+  pra regra oficial (peças no mesmo local do corpo não empilham). Corrigido
+  pra pegar o maior valor entre as peças que cobrem Tronco/Corpo (lido do
+  texto livre de `observacoes`, ex. "Tronco.") e, sem nenhuma peça de
+  Tronco/Corpo, o maior valor entre as demais. Nunca soma duas peças.
+  **Registrado, não implementado**: Resistência por local do corpo
+  separado no PDF (braço/peitoral com valores próprios) — o catálogo não
+  tem "local" como campo estruturado hoje (só texto livre, às vezes
+  cobrindo vários locais na mesma peça, ex. "Tronco, braços."); vira
+  estrutura de dado de verdade num pedido à parte.
+- **Traço Diminuto (livro Fantasia, pág. 10) — duas regras que faltavam por
+  completo**, confirmadas na íntegra em `docs/swade_fantasia` (linhas
+  637-661): além do teto de Força por Tamanho (já implementado antes,
+  `CriadorState.atributoMaxRaw`), o livro também manda:
+  1. **"Reduza a Força Mínima de armaduras de Tamanho [X] em [2/3/4] tipos
+     de dado (mínimo d4)"** — armadura feita sob medida pro corpo pequeno.
+     Não existia nenhuma implementação. Adicionado
+     `ForcaMinimaCalculator.minimoReduzidoPorDiminuto()`, usado tanto no
+     `ModifierEngine` (penalidade de Movimentação) quanto no Resumo
+     (penalidade/nota de Agilidade) antes de comparar com a Força do
+     personagem.
+  2. **"Subtraem [2/3/4] de... rolagens de dano (corpo a corpo, à
+     distância, magia etc.)"** — penalidade FIXA em toda rolagem de dano,
+     além do cap do dado da arma pela Força que já existia
+     (`danoLimitadoPelaForca`). Também não existia. Adicionado
+     `ForcaMinimaCalculator.danoComPenalidadeDiminuto()`, aplicado em
+     ataques naturais, armas corpo a corpo e armas à distância no Resumo
+     (ex.: Fada com Espada Longa For+d8 e Força d4 vira "For+d4-4").
+  - Nova função `ModifierEngine.racialDiminutoPassos(state)` — lê direto
+    `currentAncestryDef.habilidades` por um efeito `TamanhoBonus(minusculo
+    = true)`, sem chamar `sizeRawDisplay()/collect()` (chamada de dentro
+    do próprio `collect()`, na seção 1b — recursão infinita se usasse o
+    caminho normal). Mesma função reutilizada no Resumo pra não divergir.
+  - **Pendente, não coberto nesta rodada**: PDF (`ResumoPdfReferenciador.kt`)
+    não tem NENHUMA das duas regras de Força Mínima (nem o cap antigo por
+    Força, nem os dois novos de Diminuto) — ele lê `dano`/`forcaMin` direto
+    do catálogo, sem passar por `ForcaMinimaCalculator`. Gap pré-existente,
+    não introduzido nesta rodada; fica registrado pra outra rodada. Dano de
+    Poderes/Magia (arcano) também não foi conferido — só armas/ataques
+    naturais.
+- **Meio-Orc (Endurecido) e Meio-Elfo (Herança) — não é confusão, é bug
+  de verdade**: os dois têm texto de escolha ("d6 em Força OU Vigor";
+  "Vantagem grátis OU d6 em Agilidade") e custo cadastrado (2 pts cada),
+  mas **nenhum dos dois tem entrada em `EFEITOS`** — `efeitoDe("ENDURECIDO"
+  ou "HERANCA", ...)` sempre devolve `RacialTraitEffect.Nenhum`. Ou seja,
+  hoje essas duas raças NÃO recebem NENHUM benefício mecânico desses
+  traços (nem o atributo sobe, nem a Vantagem grátis é concedida, nem
+  existe escolha nenhuma na UI) — só gastam 2 pontos raciais à toa. O
+  mecanismo "escolha de atributo/perícia" que já existe no app (picker de
+  `SettingsDialog.kt`, usado hoje só pro construtor de raça customizada, e
+  o sistema `traitId="ATTRIBUTE_BOOST"` + `targetRef` já cadastrado em
+  `RacialAbility`/`RacialTraitPointCatalog.efeitoDe`) nunca foi ligado a
+  essas duas raças oficiais. **Não corrigido nesta rodada** — precisa de
+  UI nova (picker "Força ou Vigor?"/"Vantagem grátis ou Agilidade?" na
+  tela de Ancestralidade, não só no construtor de raça customizada), fica
+  pra próxima rodada, a combinar com o dono do projeto.
+- Não rodei o app/testes JVM nesta rodada (mesma limitação de sandbox das
+  anteriores).
+
+**Itens da lista do dono do projeto ainda pendentes** (fora do escopo desta
+rodada, Sci-Fi/UI — vão ficar pra rodadas seguintes): Mechas não adicionando
+arma customizada de verdade ao PDF (hoje é só anotação de texto); Propulsores
+sem custo de mods (precisa ler `docs/swade_scifi`); sugestão de UI "Wiseguys"
+(habilitar troca de raça na criação de personagem desse livro, hoje sempre
+Humano).

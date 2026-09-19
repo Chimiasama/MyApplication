@@ -4730,18 +4730,35 @@ class CriadorState {
 
     var pontosAtributo by mutableIntStateOf(5)
 
-    // Soma o valor de Armadura de toda peça de equipamento comprada (ex.: Corselete
-    // de Bronze +3) — usado por armorBase/calcResistencia() pra somar ao total de
-    // Resistência exibido no Resumo e no PDF. Era um `var` manual (mutableIntStateOf)
-    // que nenhum lugar do app nunca atualizava — ficava sempre 0, então a Armadura
-    // comprada nunca aparecia como bônus na Resistência total, só na lista separada
-    // "Armaduras" (bug relatado pelo usuário: comprou Corselete de Bronze, Resistência
-    // não mudou). Virou computado direto de `equipamentosComprados`, mesma leitura
-    // já usada pra montar essa lista — soma simples, sem modelar empilhamento por
-    // local do corpo (o catálogo não guarda essa informação estruturada hoje).
+    // Valor de Armadura que soma na Resistência exibida no Resumo/PDF (ver
+    // armorBase/calcResistencia()). Era um `var` manual (mutableIntStateOf) que
+    // nenhum lugar do app nunca atualizava — ficava sempre 0, Armadura comprada
+    // nunca aparecia na Resistência total, só na lista separada "Armaduras"
+    // (bug relatado: comprou Corselete de Bronze, Resistência não mudou).
+    //
+    // Regra oficial (SWADE, Armadura): peças que cobrem o MESMO local não
+    // empilham — vale a de maior valor ali. O catálogo não guarda "local"
+    // como campo estruturado (só o texto livre de `observacoes`, ex. "Tronco.",
+    // "Cabeça.", "Tronco, braços."), então, até isso virar dado estruturado
+    // de verdade (ver TODO pra Resistência por local do corpo no PDF), a regra
+    // aqui é a simplificação combinada com o dono do projeto: prioriza a peça
+    // de Tronco/Corpo (a que cobre o torso, "via de regra" o valor que conta
+    // pra Resistência geral do personagem); sem peça de Tronco/Corpo
+    // equipada, cai pro maior valor entre as demais peças (ex.: só um
+    // capacete comprado). Nunca soma duas peças.
     val armadura: Int
-        get() = equipamentosComprados.sumOf { item ->
-            (item.armadura as? JsonPrimitive)?.content?.toIntOrNull() ?: 0
+        get() {
+            val pecas = equipamentosComprados.mapNotNull { item ->
+                val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
+                if (valor == null || valor == 0) return@mapNotNull null
+                val local = (item.observacoes as? JsonPrimitive)?.content ?: ""
+                valor to local
+            }
+            if (pecas.isEmpty()) return 0
+            val doTronco = pecas.filter { (_, local) ->
+                local.contains("tronco", ignoreCase = true) || local.contains("corpo", ignoreCase = true)
+            }
+            return (doTronco.ifEmpty { pecas }).maxOf { it.first }
         }
 
     var nasceUmHeroi by mutableStateOf(false)
