@@ -4730,7 +4730,19 @@ class CriadorState {
 
     var pontosAtributo by mutableIntStateOf(5)
 
-    var armadura by mutableIntStateOf(0)
+    // Soma o valor de Armadura de toda peça de equipamento comprada (ex.: Corselete
+    // de Bronze +3) — usado por armorBase/calcResistencia() pra somar ao total de
+    // Resistência exibido no Resumo e no PDF. Era um `var` manual (mutableIntStateOf)
+    // que nenhum lugar do app nunca atualizava — ficava sempre 0, então a Armadura
+    // comprada nunca aparecia como bônus na Resistência total, só na lista separada
+    // "Armaduras" (bug relatado pelo usuário: comprou Corselete de Bronze, Resistência
+    // não mudou). Virou computado direto de `equipamentosComprados`, mesma leitura
+    // já usada pra montar essa lista — soma simples, sem modelar empilhamento por
+    // local do corpo (o catálogo não guarda essa informação estruturada hoje).
+    val armadura: Int
+        get() = equipamentosComprados.sumOf { item ->
+            (item.armadura as? JsonPrimitive)?.content?.toIntOrNull() ?: 0
+        }
 
     var nasceUmHeroi by mutableStateOf(false)
 
@@ -5690,9 +5702,12 @@ class CriadorState {
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
-        if (racialPackage.forceArmorZero) {
-            armadura = 0
-        }
+        // `racialPackage.forceArmorZero` resetava o `armadura` manual (var
+        // mutableIntStateOf) que existia antes daqui — mas nada no app nunca
+        // escrevia outro valor nele (sempre 0), então esse reset já era um
+        // no-op em todas as raças, mesmo nas ~poucas com forceArmorZero=false.
+        // `armadura` virou computado a partir de `equipamentosComprados` (ver
+        // declaração), não sobra estado pra resetar aqui.
 
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {

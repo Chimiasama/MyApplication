@@ -439,7 +439,7 @@
       {
         "nome": "ROBUSTO",
         "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
-        "id": "ROBUSTO",
+        "id": "RESISTENTE",
         "category": "racial_trait_positive",
         "descricaoLite": "Vigor começa em d6 em vez de d4, com máximo em d12+1."
       },
@@ -1635,15 +1635,15 @@
       },
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano e adicionam +2 às jogadas de Atletismo (escalar).",
-        "id": "GARRAS_SEM_PA",
+        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (escalar).",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, além de +2 em Atletismo para escalar.",
+        "descricaoLite": "Garras causam For+d4 de dano com PA 2, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
+            "pa": 2,
             "escalavel": true
           }
         ]
@@ -1702,6 +1702,7 @@
     "livros": [
       "FANTASIA"
     ],
+    "pontosRaciaisEsperados": 3,
     "descricaoLite": "Adaptados a viver à margem, com corpo peludo e curvado, rosto de roedor e cauda sem pelos; costumam ocupar esgotos e áreas abandonadas, em grupos que se desfazem facilmente diante de perigo ou vantagem."
   },
   {
@@ -1847,15 +1848,15 @@
     "habilidades": [
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano e adicionam +2 às jogadas de Atletismo (Escalar).",
-        "id": "GARRAS_SEM_PA",
+        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (Escalar).",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, além de +2 em Atletismo para escalar.",
+        "descricaoLite": "Garras causam For+d4 de dano com PA 2, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
+            "pa": 2,
             "escalavel": true
           }
         ]
@@ -1916,6 +1917,7 @@
     "livros": [
       "FANTASIA"
     ],
+    "pontosRaciaisEsperados": 3,
     "descricaoLite": "Felinos humanoides com pelagem que remete a tigres, leopardos ou gatos exóticos, além de garras e presas afiadas; transitam entre cidades próprias e os limites da sociedade comum, usando charme para conquistar confiança apesar da desconfiança que despertam."
   },
   {

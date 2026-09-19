@@ -137,8 +137,13 @@ object RacialTraitPointCatalog {
         "MUITO_AGIL" to RacialTraitEffect.AtributoStep("Agilidade", passos = 2), // sintético, usado pelo Template de Monstro Heroico Lobisomem (Horror)
         "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
         "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
+        // Anões (Fantasia) "ROBUSTO" (nome) é a MESMA habilidade "Resistente" do
+        // Anão Básico (Vigor d6, mesmo texto quase palavra por palavra) — usa
+        // id="RESISTENTE" compartilhado, skin "Robusto" via `nome`. Isso deixa o
+        // id "ROBUSTO" livre pro conceito oficial de verdade (Ogros, catálogo
+        // genérico "Robusto (1)": 2º Abalado não vira Ferimento — ver CUSTOS
+        // abaixo, sem entrada aqui porque não é aumento de atributo).
         "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),
-        "ROBUSTO" to RacialTraitEffect.AtributoStep("Vigor"),
         "SOLIDO_COMO_ROCHA" to RacialTraitEffect.AtributoStep("Vigor"),
         "VIGOROSO" to RacialTraitEffect.AtributoStep("Vigor"),
 
@@ -757,7 +762,7 @@ object RacialTraitPointCatalog {
         "RESISTENCIA_NATURAL" to 1, // oficial: imune_doencas_venenos
         "RESISTENTE" to 2, // oficial: aumento_atributo
         "ROBO" to 6, // oficial: robo
-        "ROBUSTO" to 2, // oficial: robusto (id igual, mesmo conceito)
+        "ROBUSTO" to 2, // oficial: "Robusto (1)" — 2º Abalado não vira Ferimento (Ogros); sem entrada em EFEITOS, não é cálculo automático
         "RUDE" to -2, // oficial: penalidade_pericia_2 (-2 Persuadir, perícia)
         "SANGUE_FRIO" to -3, // oficial: sangue_frio (id igual, mesmo conceito)
         "SANGUINARIO" to -2, // oficial: complicacao_racial_maior

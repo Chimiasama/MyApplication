@@ -607,3 +607,93 @@ genérico, mas duplicado.
 - Mesma limitação de sandbox: sem acesso aos repositórios de plugin do
   Gradle aqui, não rodei o app/testes JVM — validação por leitura cruzada
   do JSON contra `EFEITOS`/`CUSTOS`/`LABEL`/`VEZES_MAX`.
+
+## Décima rodada — lote de achados testados pelo dono do projeto (2026-09-17/19)
+
+O dono do projeto testou o app e anotou vários problemas. Cada um investigado e
+corrigido nesta rodada (exceto os marcados como pendente de confirmação):
+
+- **Tela "Ver detalhes" (`AncestralidadesSection.kt`) mostrava rótulo/pontos
+  errados pra traço empilhável ou com skin via `targetRef`** — causa raiz:
+  `RacialAbilityLite` (modelo "lite" usado só nessa tela) não carregava
+  `traitId`/`targetRef`/`value`/`pontos`/`invisivel`/`vezes`, então toda
+  habilidade chegava no `RacialCaracteristicasResolver` como se fosse 1
+  compra sem targetRef, não importa o que o JSON dissesse. Dois sintomas
+  relatados vinham daqui:
+  - **Meio-Gigantes "Tamanho 1" nos detalhes** (correto no Resumo): Tamanho
+    real é +3 (`TAMANHO_MAIS_1` × vezes=3), mas a tela mostrava a versão de
+    1 compra.
+  - **Povo Serpente com menos Movimentação que o real**: Movimentação real
+    é +4 (`MOVIMENTACAO` × vezes=2, Movimentação 10), tela mostrava +2.
+  - Corrigido adicionando os 6 campos que faltavam em `RacialAbilityLite` e
+    propagando em todo ponto de conversão (`RacialModifierLite`/"Ver
+    detalhes"/chamada do resolver). Também corrigido
+    `RacialCaracteristicasResolver` pra usar `labelComVezes()` (já existia,
+    só não era chamada aqui) em vez do `LABEL` fixo de 1 compra.
+  - **Efeito colateral bom**: como esse mesmo caminho carrega `targetRef`
+    agora, a tela "Ver detalhes" do Draconianos (rodada 7) também passa a
+    mostrar a Complicação "Arrogante" de verdade em vez de "Mal-Humorado" —
+    o JSON já estava certo, só essa tela achatava o dado antes de chegar no
+    resolver.
+- **Ogro "duplica Vigor com d8 e d6" nos detalhes**: achado — o id `ROBUSTO`
+  no catálogo tinha `EFEITOS["ROBUSTO"] = AtributoStep("Vigor")` (Vigor +1
+  passo), correto pro "Robusto" dos Anões (Fantasia) — que É um aumento de
+  atributo (Vigor d6) — mas ERRADO pro "Robusto" dos Ogros, que é uma
+  habilidade completamente diferente com o mesmo nome (confirmado no livro,
+  `docs/swade_basico:1090`: "Robusto (1): Um segundo resultado Abalado não
+  causa Ferimento" — sem nenhum aumento de atributo). Com o id
+  compartilhado, Ogro ganhava DOIS `AtributoStep("Vigor")` (um de
+  `MUITO_RESISTENTE`, +2 passos = d8; outro de `ROBUSTO`, +1 passo = d6) e
+  a tela de características lista cada um numa linha própria — daí "Vigor
+  d8 e Vigor d6" ao mesmo tempo. Corrigido: Anões (Fantasia) "Robusto"
+  passou a usar `id: "RESISTENTE"` (mesmo id/efeito que o "Resistente" do
+  Anão Básico — é literalmente a mesma habilidade, "Vigor d6, máximo
+  d12+1", só com nome diferente por livro), liberando `ROBUSTO` pro
+  conceito oficial de verdade (Ogros) — sem entrada em `EFEITOS` pra esse
+  id agora (não é cálculo automático, custo continua 2). Nome de exibição
+  "Robusto" não muda pra nenhuma das duas raças.
+- **Povo Ratazana e Rakashanos — Garras registradas sem PA, livro diz que
+  têm PA 2**: conferido em `docs/swade_fantasia` — Povo Ratazana (linha
+  1365) e Rakashanos (linha 1448) têm a MESMA frase: "Suas garras causam
+  For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo". O JSON
+  das duas raças tinha essa cláusula de PA cortada da descrição e usava
+  `id: "GARRAS_SEM_PA"` (custo 2) em vez de `id: "GARRAS"` (custo 3, base 2
+  + 1 por PA 2 — regra oficial em `docs/swade_basico:1046`). Corrigido nas
+  duas: `id`, `descricao`, `descricaoLite` e `armasNaturais[0].pa` (0→2).
+  Como o custo de cada raça sobe de 2 pra 3, adicionei
+  `pontosRaciaisEsperados: 3` explícito nas duas (antes usavam o default
+  2, que ficaria errado pro orçamento do editor de Variante). Único outro
+  livro/edição de Rakashanos com esse texto não conferido ainda (Básico/
+  Horror/Sci-Fi/Super também usam `GARRAS_SEM_PA` — fica pendente, fora do
+  escopo desta rodada que é só Fantasia).
+- **Armadura comprada nunca somava na Resistência exibida** (relatado:
+  "comprei um Corselete de Bronze, Resistência não mudou"): achado —
+  `CriadorState.armadura` era um `var` manual (`mutableIntStateOf(0)`) que
+  nenhum lugar do app nunca escrevia (só resetava pra 0 quando trocava de
+  raça, via `forceArmorZero` — reset que já era um no-op, já que o valor já
+  era sempre 0). `calcResistencia()` (usada tanto no Resumo quanto no PDF)
+  lê esse campo como `armorBase`, então a Armadura de equipamento comprado
+  nunca aparecia como bônus na Resistência total — só aparecia sozinha na
+  lista separada "Armaduras". Corrigido: `armadura` virou uma propriedade
+  computada, somando o campo `armadura` de cada item em
+  `equipamentosComprados` (mesma leitura que a lista "Armaduras" já usa).
+  Soma simples, sem modelar regra de empilhamento por local do corpo (o
+  catálogo não guarda essa informação estruturada hoje — nenhuma raça/item
+  testado tem mais de uma peça de armadura ao mesmo tempo neste momento).
+  **Achado incidental, não mexido**: `forceArmorZero` (usado por ~30 raças,
+  inclusive raças humanoides comuns via o `else` padrão do `when`) fica sem
+  efeito nenhum agora — antes já não tinha efeito nenhum tampouco (resetava
+  um campo que já era sempre 0), então não é uma regressão desta rodada,
+  mas fica registrado: se o dono do projeto quiser mesmo impedir raças como
+  Golens/Draconianos (que não podem vestir armadura humanoide) de ganhar
+  esse bônus, precisa de um mecanismo novo — o antigo nunca funcionou.
+- Não rodei o app/testes JVM nesta rodada (mesma limitação de sandbox das
+  anteriores) — validação por leitura cruzada de código e conferência
+  direta contra `docs/swade_basico`/`docs/swade_fantasia`.
+
+**Itens da lista do dono do projeto ainda pendentes de investigação/confirmação
+antes de mexer** (na dúvida, perguntei em vez de arriscar um fix errado):
+Traço Diminuto mexendo em "força de equipamentos"/dano; mecanismo de escolha
+de atributo (Meio-Orc Força/Vigor, Meio-Elfo etc.); Mechas (Sci-Fi) não
+adicionando armas customizadas ao PDF; Propulsores sem custo de mods; sugestão
+de UI "Wiseguys" (regras de raça na tela inicial).

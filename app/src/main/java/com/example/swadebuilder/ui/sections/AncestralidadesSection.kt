@@ -79,7 +79,19 @@ data class RacialAbilityLite(
     val descricao: String,
     val id: String? = null,
     val category: String? = null,
-    val severity: String? = null
+    val severity: String? = null,
+    // Sem estes campos, um traço empilhável (ex.: Meio-Gigantes Tamanho +1
+    // x3, Povo Serpente Movimentação x2) ou com skin via targetRef (ex.:
+    // Draconianos Mal-Humorado -> Arrogante) virava a versão de 1 compra/
+    // sem targetRef só na tela "Ver detalhes" — RacialCaracteristicasResolver
+    // recebe esses campos zerados e mostra rótulo/pontos errados mesmo com
+    // o dado de origem (RacialAbility) correto.
+    val traitId: String? = null,
+    val targetRef: String? = null,
+    val value: Int = 1,
+    val pontos: Int = 0,
+    val invisivel: Boolean = false,
+    val vezes: Int = 1
 )
 
 @Serializable
@@ -222,7 +234,19 @@ fun AncestralidadesSection(
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
-                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao, it.id, it.category, it.severity)
+                    RacialAbilityLite(
+                        nome = it.nome.toFancyTitleCase(),
+                        descricao = it.descricao,
+                        id = it.id,
+                        category = it.category,
+                        severity = it.severity,
+                        traitId = it.traitId,
+                        targetRef = it.targetRef,
+                        value = it.value,
+                        pontos = it.pontos,
+                        invisivel = it.invisivel,
+                        vezes = it.vezes
+                    )
                 }
 
                 RacialModifierLite(
@@ -1117,7 +1141,19 @@ fun AncestralidadesSection(
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
-                                            RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
+                                            RacialAbilityLite(
+                                                nome = it.nome,
+                                                descricao = it.descricao,
+                                                id = it.id,
+                                                category = it.category,
+                                                severity = it.severity,
+                                                traitId = it.traitId,
+                                                targetRef = it.targetRef,
+                                                value = it.value,
+                                                pontos = it.pontos,
+                                                invisivel = it.invisivel,
+                                                vezes = it.vezes
+                                            )
                                         } ?: item.habilidades
 
                                         // Description
@@ -1150,7 +1186,19 @@ fun AncestralidadesSection(
 
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
                                             habilidades = habilidadesParaCaracteristicas.map {
-                                                RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
+                                                RacialAbility(
+                                                    nome = it.nome,
+                                                    descricao = "",
+                                                    id = it.id,
+                                                    category = it.category,
+                                                    severity = it.severity,
+                                                    traitId = it.traitId,
+                                                    targetRef = it.targetRef,
+                                                    value = it.value,
+                                                    pontos = it.pontos,
+                                                    invisivel = it.invisivel,
+                                                    vezes = it.vezes
+                                                )
                                             }
                                         )
 
