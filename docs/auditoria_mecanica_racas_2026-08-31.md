@@ -1224,6 +1224,64 @@ leitura de código).
   próximo passo natural, num ambiente com CI disponível pra iterar.
 
 **Ainda pendente**: exibição de Resistência por local no PDF em tabela
-própria; Variante de raça-base de livro diferente das tags fica órfã;
-testes no nível de CriadorState (fluxo completo de criação de
-personagem) — ver acima.
+própria; Variante de raça-base de livro diferente das tags fica órfã.
+
+## Décima nona rodada — testes de CriadorState (o que ficou pendente na anterior)
+
+Pedido do dono do projeto: implementar também os testes no nível de
+`CriadorState` que ficaram de fora da rodada anterior por eu não conseguir
+verificar compilação neste ambiente sandbox sem rede pro Gradle.
+
+- **Resolvido o bloqueio técnico**: estendi o harness standalone (kotlinc +
+  jars já em disco) da rodada anterior pra compilar `CriadorState.kt` de
+  verdade, com todo o fechamento transitivo de dependências dele — 79
+  arquivos reais do projeto (`ModifierEngine`, `AncestryVariantRegistry`,
+  ~25 Use Cases de `model/usecase/`, etc.), ~18 mil linhas. Faltavam duas
+  peças que não existem em disco neste sandbox: o artefato binário do
+  `androidx.compose.runtime` (só havia metadados do catálogo de versões do
+  Gradle, não o jar) e o plugin de COMPILADOR do kotlinx.serialization
+  (só os jars de runtime, que não geram `.serializer()` em classes
+  `@Serializable`). Contornado com: (1) um shim mínimo de
+  `androidx.compose.runtime`/`.snapshots` (mutableStateOf/
+  mutableStateListOf/mutableStateMapOf/mutableIntStateOf/derivedStateOf,
+  com a mesma assinatura pública, só sem o sistema de snapshot/recomposição
+  de verdade — irrelevante pra teste sem UI) e stubs pontuais pras poucas
+  peças puramente de Android/infra que `CriadorState.kt` referencia sem
+  usar de fato nos testes (`Context`/`SystemClock`/`Log`, `BuildConfig`,
+  `DataLoader` só como referência de tipo, `AppPreferences` só pelo enum
+  `ModoSelecaoPericia`, a constante `TAG_GERAL`); (2) em só um arquivo
+  (`Requisito.kt`, numa cópia local, nunca no repositório real), troquei o
+  corpo de um `KSerializer` customizado que dependia de `.serializer()`
+  gerado por um `data class` interno por um stub que lança exceção — nunca
+  chamado pelos testes, que só constroem `Requisito` pelo construtor normal.
+- **Validação de que o harness não é vazio por engano**: rodei um
+  "controle negativo" — troquei de propósito um valor esperado nos testes
+  novos pra um valor errado, compilei e rodei, e o teste falhou como
+  esperado (`expected:<7> but was:<6>`), confirmando que a checagem
+  realmente executa a lógica de verdade e não passa à toa.
+- **`CriadorStateFullFlowTest.kt`** (novo, 3 testes, todos rodados de
+  verdade com JUnit antes de commitar):
+  1. Fluxo sintético completo — o cenário descrito na conversa anterior:
+     raça neutra (Humanos, sem regra de livro extra ligada), distribuição
+     de pontos de atributo, compra de Vantagem e Complicação, tudo numa
+     sequência só — confere que nada foi silenciosamente perdido/ignorado
+     entre uma etapa e outra.
+  2. Elfos do Básico **de verdade** (lido de `ancestralidades.json`, não
+     fixture inventada) rodando pela resolução real de `CriadorState`
+     (`getAncestralidadeDef`/`atributoBaseRacial`/`ModifierEngine`, não só
+     soma de pontos como em `AncestralidadeCatalogBudgetTest`): confere
+     que `atributoMinRaw("Agilidade")` fecha em 6 (traço Ágil, id=AGIL).
+     Esse teste pega uma classe de bug que o teste de soma de pontos NÃO
+     pegaria: um id que soma o valor certo mas está mapeado pro EFEITO
+     errado em `RacialTraitPointCatalog.EFEITOS` (ex.: concede Astúcia
+     em vez de Agilidade, mesmo custo, soma bate, mas o jogo aplica o
+     bônus no atributo errado).
+  3. Humanos do Básico de verdade: confere `temAdaptavel() == true` (traço
+     Adaptável, id=ADAPTAVEL) pela mesma resolução real.
+- Não expandi pra mais raças/livros nesta rodada (o harness agora permite,
+  mas cada teste novo pede pensar no cenário certo) — os 3 testes cobrem o
+  que a conversa anterior pediu como exemplo; dá pra crescer a lista depois
+  seguindo o mesmo padrão.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria; Variante de raça-base de livro diferente das tags fica órfã.
