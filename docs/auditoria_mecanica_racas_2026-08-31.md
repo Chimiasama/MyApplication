@@ -936,5 +936,89 @@ até agora só pegava a melhor e descartava a outra.
 
 **Ainda pendente**: exibição de Resistência por local (não só a Força
 Mínima) no PDF em tabela própria — o dado (`armaduraPorLocal()`) já cobre
-isso, só falta a tela/seção; Mechas com arma customizada de mentirinha no
-PDF; Propulsores sem custo de mods.
+isso, só falta a tela/seção.
+
+## Décima quinta rodada — arma customizada de Mecha e Propulsores
+
+Pedido do dono do projeto: (1) reconsiderar como funciona a criação de arma
+customizada na tela de Mecha (era só um campo de texto livre que virava
+"arma" de graça, sem nenhum custo em MODs — testado digitando "teste" e o
+app aceitou); (2) verificar a regra de Propulsores no livro de Sci-Fi (se
+ocupa slot de Mod ou não — no app era só um checkbox sem custo).
+
+**1) Arma customizada de Mecha**
+
+- Investigado o fluxo: `MechasSection.kt` tinha um `OutlinedTextField`
+  ("Arma Personalizada") que jogava a string digitada direto em
+  `mecha.armas_equipadas` (`List<String>`). O custo em MODs vem de
+  `matchWeaponFromCatalog()` casando esse texto contra o catálogo oficial
+  (`scifi_mecha_weapons.json`, 18 armas com `mods_cost` correto); texto que
+  não casa com nada retorna `null` → soma 0 MODs. Ou seja, qualquer string
+  virava uma arma sem custo.
+- Considerei reusar o criador de Equipamento Customizado genérico
+  (`EquipamentoCreatorForm.kt`, usado em Configurações → Conteúdo
+  Customizado) — mas é estruturalmente incompatível: aquele formulário
+  produz um `EquipamentoItem` de escala de PERSONAGEM (dano "For+dX", custo
+  em $ do bolso do jogador, sem campo de Mods), enquanto armas de Mecha são
+  de escala de VEÍCULO (dano em dados grandes tipo "6d6", custo em Mods do
+  chassi, preço só de referência). Conferido também que `equipamentos.json`
+  não tem nenhum item ligado a Mecha (busca por "mecha" no catálogo não
+  retornou nada) — os dois sistemas de equipamento (pessoal vs. Mecha)
+  sempre foram completamente separados, então forçar a integração
+  misturaria as duas escalas.
+- **Decisão**: um diálogo de criação dedicado (`CreateCustomMechaWeaponDialog`,
+  no mesmo padrão do `CreateCustomMechaDialog` que já existe pra criar
+  Mecha do zero), que produz um `MechaWeaponItem` de verdade com Mods cost
+  OBRIGATÓRIO (campo numérico, não opcional) — em vez de aceitar texto
+  livre sem custo. Esse item fica guardado só naquele Mecha
+  (`MechaItem.armasCustomizadas: List<MechaWeaponItem>`, novo campo — não
+  polui o catálogo global) e entra na mesma conta de MODs que as armas
+  oficiais (`weaponCatalog + mecha.armasCustomizadas` na hora de casar por
+  nome em `matchWeaponFromCatalog`).
+- Removido o campo de texto livre "Arma Personalizada". A tela agora tem
+  dois botões lado a lado: "Catálogo de Armas" (oficial, como já era) e
+  "Criar Arma" (abre o novo diálogo). Os chips de arma equipada passaram a
+  mostrar o custo em MODs entre colchetes (ex.: "Lâmina de Braço (For+d12,
+  PA 6) [2 MODs]"), e remover o chip também descarta a definição
+  customizada quando é a última cópia equipada dela (senão duplicatas
+  perderiam o Mods cost umas das outras).
+
+**2) Propulsores**
+
+- Confirmado no `docs/swade_scifi` (seção Mechas, MODS de LOCOMOÇÃO,
+  ~linha 12589): "Z Propulsores: Jatos e propulsores de manobra permitem
+  que o mecha voe com Classificação de Velocidade 8 (150 km/h)... Metade
+  do Tam. (1) $25K × Tam." — ou seja, É um Mod real, com custo em MODs que
+  escala com o Tamanho do chassi (metade, arredondado pra cima), igual a
+  "Propulsores para Salto" (Mod separado, próprio slot de pernas/salto, já
+  cadastrado também).
+- **Achado**: os dois já existiam corretos no catálogo de Mods
+  (`scifi_mecha_mods.json`: `mod_loc_propulsores_voo` e
+  `mod_loc_propulsores_salto`, ambos com `escala_tamanho_divisor = 2` e
+  `mods_cost` batendo com o livro) e já eram instaláveis pelo diálogo
+  "Modificadores & Qualidades" normal, com custo contabilizado
+  corretamente. O bug era só o toggle separado e redundante
+  (`MechaCustomizacoes.propulsores: Boolean`, na seção "Customizações
+  Rápidas") que ligava/desligava "Propulsores" de graça, sem nenhuma
+  relação com o Mod de verdade — duplicava (errado, sem custo) o que o Mod
+  já fazia certo.
+- **Fix**: removido o campo `propulsores` de `MechaCustomizacoes` e o
+  toggle correspondente na tela (junto com o composable `CircleToggle`,
+  que só era usado ali). Removidas as duas linhas que citavam
+  "Propulsores instalados"/"Propulsores" no resumo em texto
+  (`SummaryUtils.kt`) e no bloco de PDF do Mecha
+  (`ResumoPdfReferenciador.kt`) — informação que já aparece via
+  `mods_instalados` (que agora inclui o Mod real quando comprado). Como
+  todo o Json de personagem usa `ignoreUnknownKeys = true`
+  (`CharacterStorage.kt`), fichas salvas antes desse fix com
+  `"propulsores": true` continuam carregando normalmente, só ignoram o
+  campo morto.
+- Não rodei o app/testes JVM nesta rodada (o ambiente sandbox não tem
+  acesso de rede ao repositório de plugins do Gradle/Android, então
+  `./gradlew` não resolve nem localmente nem offline) — validação por
+  leitura cruzada do código (todos os pontos que citavam `.propulsores` e
+  `weaponInput` foram localizados via grep e conferidos um a um) e
+  conferência da regra contra o texto exato do livro.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria (mesma pendência da rodada anterior).

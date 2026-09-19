@@ -1,10 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -53,7 +50,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.CircleShape
@@ -394,32 +390,6 @@ private fun CreateCustomMechaDialog(
     )
 }
 
-@Composable
-private fun CircleToggle(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .size(17.dp)
-            .clip(CircleShape)
-            .background(if (checked) MaterialTheme.colorScheme.primary else Color.Transparent)
-            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
-            .clickable { onCheckedChange(!checked) },
-        contentAlignment = Alignment.Center
-    ) {
-        if (checked) {
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onPrimary)
-            )
-        }
-    }
-}
-
 // Os mechas prontos do catálogo (scifi_mechas.json) descrevem armas equipadas em texto livre
 // (ex.: "2x Lança-Mísseis (6d6, PA 16, Guiado)"), com prefixos de quantidade e sufixos que não
 // batem por igualdade exata com o nome canônico do catálogo de armas (ex.: "Lança-Mísseis Leve
@@ -451,17 +421,20 @@ private fun MechaCardItem(
     onUpdateMecha: (MechaItem) -> Unit,
     onRemove: () -> Unit
 ) {
-    var weaponInput by remember { mutableStateOf("") }
     var systemInput by remember { mutableStateOf("") }
     var showModDialog by remember { mutableStateOf(false) }
     var showWeaponCatalogDialog by remember { mutableStateOf(false) }
+    var showCreateCustomWeaponDialog by remember { mutableStateOf(false) }
 
     // Dynamic stat calculations with modifiers and equipped weapons MOD costs. Mods cujo custo
     // escala com o Tamanho ("Metade do Tam." no livro) são resolvidos contra o tamanho ATUAL do
     // chassi a cada recomposição, em vez de ficar congelado no valor de quando foram instalados.
+    // Armas customizadas do próprio Mecha entram na mesma busca que o catálogo oficial, senão
+    // seu Mods cost (definido na criação, ver CreateCustomMechaWeaponDialog) nunca seria contado.
+    val weaponCatalogComCustomizadas = weaponCatalog + mecha.armasCustomizadas
     val modsDoModifiers = mecha.mods_instalados.sumOf { it.custoResolvido(mecha.tamanho) }
     val modsDasArmas = mecha.armas_equipadas.sumOf { armaStr ->
-        matchWeaponFromCatalog(armaStr, weaponCatalog)?.mods_cost ?: 0
+        matchWeaponFromCatalog(armaStr, weaponCatalogComCustomizadas)?.mods_cost ?: 0
     }
     val modsGasto = modsDoModifiers + modsDasArmas
     val modsRestantes = mecha.mod_pontos_max - modsGasto
@@ -629,24 +602,6 @@ private fun MechaCardItem(
                             Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.size(14.dp))
                         }
                     }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text("Propulsores", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
-                        CircleToggle(
-                            checked = mecha.customizacoes.propulsores,
-                            onCheckedChange = { prop ->
-                                onUpdateMecha(
-                                    mecha.copy(
-                                        customizacoes = mecha.customizacoes.copy(propulsores = prop)
-                                    )
-                                )
-                            }
-                        )
-                    }
                 }
             }
 
@@ -658,15 +613,31 @@ private fun MechaCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Armas Equipadas", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                    OutlinedButton(
-                        onClick = { showWeaponCatalogDialog = true },
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Catálogo de Armas", fontSize = 12.sp)
+                    Row {
+                        OutlinedButton(
+                            onClick = { showWeaponCatalogDialog = true },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text("Catálogo de Armas", fontSize = 12.sp)
+                        }
+                        Spacer(Modifier.width(6.dp))
+                        OutlinedButton(
+                            onClick = { showCreateCustomWeaponDialog = true },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text("Criar Arma", fontSize = 12.sp)
+                        }
                     }
                 }
+                Text(
+                    text = "Uma arma customizada precisa de um custo em MODs (não existe arma de Mecha de graça) — use \"Criar Arma\" em vez de escrever o nome dela em outro lugar.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -674,43 +645,26 @@ private fun MechaCardItem(
                     modifier = Modifier.padding(vertical = 4.dp)
                 ) {
                     mecha.armas_equipadas.forEach { arma ->
+                        val armaMods = matchWeaponFromCatalog(arma, weaponCatalogComCustomizadas)?.mods_cost
                         InputChip(
                             selected = true,
                             onClick = {
+                                val restantes = mecha.armas_equipadas - arma
                                 onUpdateMecha(
                                     mecha.copy(
-                                        armas_equipadas = mecha.armas_equipadas - arma
+                                        armas_equipadas = restantes,
+                                        // Só descarta a definição customizada quando a última cópia
+                                        // equipada dela for removida (senão perderíamos o Mods cost
+                                        // de outras armas iguais que ainda estão equipadas).
+                                        armasCustomizadas = if (restantes.none { it == arma }) {
+                                            mecha.armasCustomizadas.filterNot { it.nome == arma }
+                                        } else mecha.armasCustomizadas
                                     )
                                 )
                             },
-                            label = { Text(arma) },
+                            label = { Text(if (armaMods != null) "$arma [$armaMods MODs]" else arma) },
                             trailingIcon = { Icon(Icons.Default.Delete, contentDescription = null) }
                         )
-                    }
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(
-                        value = weaponInput,
-                        onValueChange = { weaponInput = it },
-                        label = { Text("Arma Personalizada") },
-                        modifier = Modifier.weight(1f),
-                        singleLine = true
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    FilledTonalIconButton(
-                        onClick = {
-                            if (weaponInput.isNotBlank()) {
-                                onUpdateMecha(
-                                    mecha.copy(
-                                        armas_equipadas = mecha.armas_equipadas + weaponInput.trim()
-                                    )
-                                )
-                                weaponInput = ""
-                            }
-                        }
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Adicionar")
                     }
                 }
             }
@@ -960,4 +914,112 @@ private fun MechaCardItem(
             }
         )
     }
+
+    // Modal de Criação de Arma Customizada para este Mecha. Substitui o antigo campo de texto
+    // livre "Arma Personalizada" (que aceitava qualquer string e nunca gastava MODs) — aqui o
+    // Mods cost é um campo estruturado obrigatório, então a arma sempre entra na conta de
+    // `modsDasArmas` acima, igual às armas do catálogo oficial.
+    if (showCreateCustomWeaponDialog) {
+        CreateCustomMechaWeaponDialog(
+            onDismiss = { showCreateCustomWeaponDialog = false },
+            onCreate = { newWeapon ->
+                onUpdateMecha(
+                    mecha.copy(
+                        armasCustomizadas = mecha.armasCustomizadas + newWeapon,
+                        armas_equipadas = mecha.armas_equipadas + newWeapon.nome
+                    )
+                )
+                showCreateCustomWeaponDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun CreateCustomMechaWeaponDialog(
+    onDismiss: () -> Unit,
+    onCreate: (MechaWeaponItem) -> Unit
+) {
+    var nomeText by remember { mutableStateOf("") }
+    var danoText by remember { mutableStateOf("") }
+    var descricaoText by remember { mutableStateOf("") }
+    var modsCostText by remember { mutableStateOf("1") }
+    var custoText by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            FilledTonalButton(
+                enabled = nomeText.isNotBlank(),
+                onClick = {
+                    val nomeFinal = if (danoText.isNotBlank()) "${nomeText.trim()} (${danoText.trim()})" else nomeText.trim()
+                    onCreate(
+                        MechaWeaponItem(
+                            id = "custom_mecha_weapon_${java.util.UUID.randomUUID()}",
+                            nome = nomeFinal,
+                            mods_cost = modsCostText.toIntOrNull()?.coerceAtLeast(0) ?: 1,
+                            custo = custoText.trim(),
+                            descricao = descricaoText.trim()
+                        )
+                    )
+                }
+            ) {
+                Text("Criar Arma")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
+        },
+        title = { Text("Criar Arma de Mecha") },
+        text = {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "Fica registrada só neste Mecha (não entra no catálogo geral). O custo em MODs é decidido por você/o Mestre com base em armas parecidas do catálogo oficial.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                OutlinedTextField(
+                    value = nomeText,
+                    onValueChange = { nomeText = it },
+                    label = { Text("Nome da Arma") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = danoText,
+                    onValueChange = { danoText = it },
+                    label = { Text("Dano / PA (ex.: 3d8, PA 4)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = descricaoText,
+                    onValueChange = { descricaoText = it },
+                    label = { Text("Alcance / Observações") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = modsCostText,
+                        onValueChange = { modsCostText = it.filter { char -> char.isDigit() } },
+                        label = { Text("Custo em MODs") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = custoText,
+                        onValueChange = { custoText = it },
+                        label = { Text("Preço de referência ($)") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+            }
+        }
+    )
 }

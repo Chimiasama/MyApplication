@@ -808,7 +808,6 @@ class SuperPoderCardRowBlock(private val cards: List<SuperPoderCardSpec>) : PdfB
 class MechaCardBlock(private val m: com.example.swadebuilder.model.MechaItem) : PdfBlock {
     private val extras = buildList {
         if (m.customizacoes.blindagem_extra > 0) add("Blindagem extra: +${m.customizacoes.blindagem_extra}")
-        if (m.customizacoes.propulsores) add("Propulsores instalados")
         if (m.mods_instalados.isNotEmpty()) add("Mods: " + m.mods_instalados.joinToString { it.nome })
         if (m.armas_equipadas.isNotEmpty()) add("Armas: " + m.armas_equipadas.joinToString())
         if (m.sistemas_instalados.isNotEmpty()) add("Sistemas: " + m.sistemas_instalados.joinToString())
