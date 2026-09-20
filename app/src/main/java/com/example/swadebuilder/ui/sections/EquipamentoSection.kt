@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -64,6 +65,7 @@ import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.FilterCategoryGroup
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
@@ -194,6 +196,13 @@ fun EquipFilterDialog(
     onChange: (EquipFilter) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Cada categoria (Armas/Armaduras/etc.) abre/fecha independente — antes todas as
+    // subseções de toda categoria ficavam sempre abertas ao mesmo tempo dentro de uma altura
+    // fixa de 400dp, virando uma parede de Checkbox impossível de navegar com vários
+    // livros/módulos ativos (muitas categorias, cada uma com várias subseções). Começam
+    // fechadas; abrir só a categoria que importa no momento.
+    val expandedCategories = remember { mutableStateMapOf<EquipSuperType, Boolean>() }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Filtros Avançados") },
@@ -201,7 +210,7 @@ fun EquipFilterDialog(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp)
+                    .heightIn(max = 420.dp)
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
@@ -219,40 +228,25 @@ fun EquipFilterDialog(
 
                 Text("Categorias e Subseções", fontWeight = FontWeight.Bold)
                 availableSuperTypes.forEach { t ->
-                    // SuperType Header/Checkbox
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = t in current.superTipos,
-                            onCheckedChange = {
-                                val s = current.superTipos.toMutableSet()
-                                if (it) s += t else s -= t
-                                onChange(current.copy(superTipos = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(t.label, fontWeight = FontWeight.SemiBold)
-                    }
-
-                    // SubSections List (only if SuperType has subsections)
                     val subSecs = availableSubSections[t]?.sorted() ?: emptyList()
-                    if (subSecs.isNotEmpty()) {
-                        Column(modifier = Modifier.padding(start = 32.dp)) {
-                            subSecs.forEach { sub ->
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Checkbox(
-                                        checked = sub in current.subSections,
-                                        onCheckedChange = {
-                                            val s = current.subSections.toMutableSet()
-                                            if (it) s += sub else s -= sub
-                                            onChange(current.copy(subSections = s))
-                                        }
-                                    )
-                                    Spacer(Modifier.size(4.dp))
-                                    Text(sub, style = MaterialTheme.typography.bodySmall)
-                                }
-                            }
-                        }
-                    }
+                    FilterCategoryGroup(
+                        title = t.label,
+                        checked = t in current.superTipos,
+                        onCheckedChange = {
+                            val s = current.superTipos.toMutableSet()
+                            if (it) s += t else s -= t
+                            onChange(current.copy(superTipos = s))
+                        },
+                        subOptions = subSecs,
+                        selectedSubOptions = current.subSections,
+                        onToggleSub = { sub ->
+                            val s = current.subSections.toMutableSet()
+                            if (sub in s) s -= sub else s += sub
+                            onChange(current.copy(subSections = s))
+                        },
+                        expanded = expandedCategories[t] ?: false,
+                        onExpandedChange = { expandedCategories[t] = it }
+                    )
                 }
             }
         },

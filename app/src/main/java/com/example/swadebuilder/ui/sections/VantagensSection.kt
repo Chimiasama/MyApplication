@@ -77,6 +77,7 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.FilterChipGroup
 import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
@@ -98,6 +99,15 @@ fun VantFilterDialog(
     onChange: (VantFilter) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Cada grupo abre/fecha independente — Perícias sozinha já pode ter dezenas de opções, e
+    // antes os três grupos (Estágio/Atributos/Perícias) ficavam sempre todos abertos ao mesmo
+    // tempo dentro de uma altura fixa de 300dp, virando uma lista de Checkbox gigante e sem
+    // como recolher. Perícias começa fechada por padrão (é o grupo mais longo); os outros dois
+    // são curtos o bastante pra abrir já expandidos.
+    val expandedGroups = remember {
+        mutableStateMapOf("Estágio" to true, "Atributos" to true, "Perícias" to false)
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Filtros Avançados") },
@@ -105,59 +115,48 @@ fun VantFilterDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 300.dp)
+                    .heightIn(max = 420.dp)
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
-                Text("Estágio", fontWeight = FontWeight.Bold)
-                allEstagios.forEach { e ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = e in current.estagios,
-                            onCheckedChange = {
-                                val s = current.estagios.toMutableSet()
-                                if (it) s += e else s -= e
-                                onChange(current.copy(estagios = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(e)
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
+                FilterChipGroup(
+                    title = "Estágio",
+                    options = allEstagios,
+                    selected = current.estagios,
+                    onToggle = { e ->
+                        val s = current.estagios.toMutableSet()
+                        if (e in s) s -= e else s += e
+                        onChange(current.copy(estagios = s))
+                    },
+                    expanded = expandedGroups["Estágio"] ?: true,
+                    onExpandedChange = { expandedGroups["Estágio"] = it }
+                )
 
-                Text("Atributos", fontWeight = FontWeight.Bold)
-                allAtributos.forEach { a ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = a in current.atributos,
-                            onCheckedChange = {
-                                val s = current.atributos.toMutableSet()
-                                if (it) s += a else s -= a
-                                onChange(current.copy(atributos = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(a)
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
+                FilterChipGroup(
+                    title = "Atributos",
+                    options = allAtributos,
+                    selected = current.atributos,
+                    onToggle = { a ->
+                        val s = current.atributos.toMutableSet()
+                        if (a in s) s -= a else s += a
+                        onChange(current.copy(atributos = s))
+                    },
+                    expanded = expandedGroups["Atributos"] ?: true,
+                    onExpandedChange = { expandedGroups["Atributos"] = it }
+                )
 
-                Text("Perícias", fontWeight = FontWeight.Bold)
-                allPericias.forEach { p ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = p in current.pericias,
-                            onCheckedChange = {
-                                val s = current.pericias.toMutableSet()
-                                if (it) s += p else s -= p
-                                onChange(current.copy(pericias = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(p)
-                    }
-                }
+                FilterChipGroup(
+                    title = "Perícias",
+                    options = allPericias,
+                    selected = current.pericias,
+                    onToggle = { p ->
+                        val s = current.pericias.toMutableSet()
+                        if (p in s) s -= p else s += p
+                        onChange(current.copy(pericias = s))
+                    },
+                    expanded = expandedGroups["Perícias"] ?: false,
+                    onExpandedChange = { expandedGroups["Perícias"] = it }
+                )
             }
         },
         confirmButton = {
