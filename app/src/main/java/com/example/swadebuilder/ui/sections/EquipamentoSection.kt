@@ -73,7 +73,6 @@ import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
-import kotlinx.serialization.json.JsonPrimitive
 
 // --- Data Structures for Refactoring ---
 
@@ -481,6 +480,12 @@ fun EquipamentoSection(
     val selectedSuperTypes = state.equipSelectedSuperTypes
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+
+    // Traço Diminuto (livro Fantasia, pág. 10): equipamento comum comprado nesta seção
+    // (não o item mágico da Herança, que tem orçamento próprio de 10.000 PO e não muda
+    // de peso/custo) pesa e custa menos pra ancestralidades Pequenas/Muito Pequenas/
+    // Minúsculas. 0 = personagem não é Diminuto, sem desconto nenhum.
+    val passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(state)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
     val isSearching = searchQuery.isNotBlank()
@@ -768,11 +773,7 @@ fun EquipamentoSection(
                 Spacer(Modifier.padding(vertical = 4.dp))
             }
 
-            val totalWeight = equipamentosComprados
-            .mapNotNull { item ->
-                (item.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
-                }
-                .sum()
+            val totalWeight = state.totalPesoEquipamentos()
             val limit = state.valorCargaMaxima()
 
             val tensaoExcedida = tensaoTotal > tensaoLimite
@@ -842,7 +843,7 @@ fun EquipamentoSection(
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
-                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, usaRequisicao, compendioPathfinderAtivo) {
+                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, usaRequisicao, compendioPathfinderAtivo, passosDiminuto) {
                     mappedCategories.filter { mapped ->
                         // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
@@ -855,7 +856,7 @@ fun EquipamentoSection(
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
-                                val c = MoneyUtils.parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
+                                val c = state.custoEquipamentoEfetivo(item)
                                 if (!usaRiqueza && !usaRequisicao && c > dinheiro) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
@@ -895,7 +896,8 @@ fun EquipamentoSection(
                                 onClick = { onEquipamentoDoubleClick(entry.item) },
                                 allowLongTexts = allowLongTexts,
                                 showOriginalName = showOfficialNames,
-                                showTensao = compendioSciFiAtivo
+                                showTensao = compendioSciFiAtivo,
+                                passosDiminuto = passosDiminuto
                             )
                         }
                     }
@@ -910,7 +912,7 @@ fun EquipamentoSection(
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
                 // Added state.compendioScifiMechasCiberneticosAtivo to keys to ensure refresh when rule is toggled
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, usaRequisicao, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo) {
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, usaRequisicao, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo, passosDiminuto) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
                         // Apply SubSection Filter at Category Level
@@ -937,7 +939,7 @@ fun EquipamentoSection(
                                     }
                                     .filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
-                                        val c = MoneyUtils.parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
+                                        val c = state.custoEquipamentoEfetivo(entry.item)
                                         usaRiqueza || usaRequisicao || c <= dinheiro
                                     } else {
                                         true
@@ -1042,7 +1044,8 @@ fun EquipamentoSection(
                                                 onClick = { onEquipamentoDoubleClick(entry.item) },
                                                 allowLongTexts = allowLongTexts,
                                                 showOriginalName = showOfficialNames,
-                                                showTensao = compendioSciFiAtivo
+                                                showTensao = compendioSciFiAtivo,
+                                                passosDiminuto = passosDiminuto
                                             )
                                         }
                                         Spacer(Modifier.height(4.dp))

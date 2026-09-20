@@ -87,6 +87,7 @@ import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.ForcaMinimaCalculator
 import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
@@ -2581,6 +2582,31 @@ class CriadorState {
 
         return (stepIndex - 1) * 10f
     }
+
+    // "Equipamentos feitos para personagens Pequenas/Muito Pequenas/Minúsculas pesam e
+    // custam metade/um quarto/um décimo do valor listado" (livro Fantasia, "Diminuto",
+    // pág. 10). Só ancestralidades com o traço Diminuto (TamanhoBonus.minusculo = true,
+    // ver ModifierEngine.racialDiminutoPassos()) recebem o desconto — Tamanho negativo
+    // sem esse flag (Obeso invertido, Vantagens etc.) não conta.
+    private fun passosDiminuto(): Int = ModifierEngine.racialDiminutoPassos(this)
+
+    /** Peso de `item` já ajustado pelo desconto de Diminuto (kg), ou null se o item não tem peso cadastrado/reconhecível. */
+    fun pesoEquipamentoEfetivo(item: EquipamentoItem): Float? {
+        val pesoBase = (item.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull() ?: return null
+        val passos = passosDiminuto()
+        if (passos <= 0) return pesoBase
+        return pesoBase / ForcaMinimaCalculator.divisorEquipamentoDiminuto(passos).toFloat()
+    }
+
+    /** Custo de `item` (unidade base de moeda) já ajustado pelo desconto de Diminuto. */
+    fun custoEquipamentoEfetivo(item: EquipamentoItem): Int {
+        val custoBase = MoneyUtils.parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
+        return ForcaMinimaCalculator.custoInteiroReduzidoPorDiminuto(custoBase, passosDiminuto())
+    }
+
+    /** Soma do peso de todos os itens comprados, já com o desconto de Diminuto aplicado. */
+    fun totalPesoEquipamentos(): Float =
+        equipamentosComprados.sumOf { (pesoEquipamentoEfetivo(it) ?: 0f).toDouble() }.toFloat()
 
     fun forcaEfetivaParaArmaduras(): Int {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4

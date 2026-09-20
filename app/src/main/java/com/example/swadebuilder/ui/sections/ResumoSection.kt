@@ -201,14 +201,7 @@ fun SummaryContent(
     val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
     val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.currentAncestryDef?.especieId == "anao"
     val weightLimit = state.valorCargaMaxima()
-    val totalWeight = state.equipamentosComprados
-        .mapNotNull { item ->
-            (item.peso as? kotlinx.serialization.json.JsonPrimitive)
-                ?.content
-                ?.replace(",", ".")
-                ?.toFloatOrNull()
-        }
-        .sum()
+    val totalWeight = state.totalPesoEquipamentos()
     val isPersonagemRobotico = state.isPersonagemRobotico()
     val tensaoTotal = state.totalTensaoCibernetica()
     val tensaoLimite = if (isPersonagemRobotico) {

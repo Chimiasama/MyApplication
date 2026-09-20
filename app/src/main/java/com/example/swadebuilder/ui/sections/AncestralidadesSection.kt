@@ -1228,18 +1228,20 @@ fun AncestralidadesSection(
                                             }
                                         }
 
-                                        // Aviso sutil de raça acima do orçamento de pontos raciais dela mesma
-                                        // (item.pontosRaciaisEsperados — 2 pra maioria, mas já vem calibrado
-                                        // por raça: 3 pra Arte da Guerra, 4 pra Pathfinder/Crystal Heart, que
-                                        // são naturalmente "mais fortes" por design do próprio livro). Só
-                                        // acende quando os traços da raça somam MAIS pontos do que o
-                                        // orçamento dela mesma prevê — não é sobre comparar com o padrão de
-                                        // 2 pontos do livro básico.
-                                        val pontosRaciaisTotais = habilidadesResolvidas.sumOf { it.resolvedPontos() }
-                                        if (pontosRaciaisTotais > item.pontosRaciaisEsperados) {
+                                        // Aviso sutil de raça com orçamento de pontos raciais diferente do
+                                        // padrão do livro (com.example.swadebuilder.model.usecase
+                                        // .ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO, 2 pontos —
+                                        // a mesma calibração que toda raça oficial usa por padrão). Não é
+                                        // sobre a raça estar com dado errado (isso a varredura automática
+                                        // de AncestralidadeCatalogBudgetTest já garante em CI) — é só avisar
+                                        // o jogador que ESTA ancestralidade usa um orçamento diferente do
+                                        // padrão (3 pontos pro Arte da Guerra, 4 pro Pathfinder/Crystal
+                                        // Heart/Centauros etc.), acima ou abaixo, sem julgar se isso é
+                                        // "forte" ou "fraco" — só "fora do padrão".
+                                        if (item.pontosRaciaisEsperados != com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO) {
                                             Spacer(Modifier.height(4.dp))
                                             Text(
-                                                text = "⚠ Ancestralidade desbalanceada (traços somam $pontosRaciaisTotais pontos raciais, acima do orçamento de ${item.pontosRaciaisEsperados})",
+                                                text = "⚠ Ancestralidade desbalanceada (orçamento oficial desta ancestralidade: ${item.pontosRaciaisEsperados} pontos raciais, padrão do livro: ${com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO})",
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.tertiary
                                             )

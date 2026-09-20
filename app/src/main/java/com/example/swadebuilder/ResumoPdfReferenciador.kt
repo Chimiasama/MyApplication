@@ -29,6 +29,7 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.sections.asText
+import com.example.swadebuilder.ui.sections.pesoTextoComDiminuto
 import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.GenericNameMapper
@@ -1360,8 +1361,8 @@ private fun buildEquipamentosBlocks(personagem: MeuPersonagem, showOfficialNames
     if (gear.isEmpty()) return emptyList()
     val rows = gear.map { eq ->
         val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nomeExibicao
-        val custo = eq.toResumo().custo ?: "-"
-        val peso = eq.peso.asText() ?: "-"
+        val custo = eq.toResumo(personagem.passosDiminuto).custo ?: "-"
+        val peso = pesoTextoComDiminuto(eq.peso, personagem.passosDiminuto) ?: "-"
         Triple(name.toFancyTitleCase(), custo, peso)
     }
     return listOf(GearTableBlock(rows))

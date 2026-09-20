@@ -1,6 +1,7 @@
 package com.example.swadebuilder.util
 
 import com.example.swadebuilder.toDiceString
+import kotlin.math.roundToInt
 
 /**
  * Regras de "Força Mínima" do livro básico (Cap. 2 "Equipamento"), lidas a partir dos
@@ -163,5 +164,35 @@ object ForcaMinimaCalculator {
     fun minimoComCamadaExtra(minimo: String?): String? {
         val raw = minimo?.let { paraRaw(it) } ?: return null
         return stepParaRaw(passo(raw) + 1).toDiceString()
+    }
+
+    /**
+     * "Equipamentos feitos para personagens [Pequenas/Muito Pequenas/Minúsculas] pesam e
+     * custam [metade/um quarto/um décimo] do valor listado" (livro Fantasia, "Diminuto",
+     * pág. 10) — equipamento sob medida pro corpo menor do personagem é proporcionalmente
+     * mais leve e barato. `passosReducao` vem de `diminutoPassos()`/
+     * `ModifierEngine.racialDiminutoPassos()` (2=Pequeno, 3=Muito Pequeno, 4=Minúsculo).
+     * 1.0 (sem redução) pra qualquer outro valor, inclusive Diminuto empilhável genérico
+     * (Tamanho -1, "Pequenos" de Goblins/Gnomos/etc.) — esse é um traço DIFERENTE do
+     * Diminuto especial de tier único descrito aqui, sem esse desconto de equipamento.
+     */
+    fun divisorEquipamentoDiminuto(passosReducao: Int): Double = when (passosReducao) {
+        2 -> 2.0
+        3 -> 4.0
+        4 -> 10.0
+        else -> 1.0
+    }
+
+    /**
+     * Aplica `divisorEquipamentoDiminuto()` a um valor já em unidade base (peso em kg, ou
+     * custo já convertido por `MoneyUtils.parseCostInBaseUnit()`) e arredonda pro inteiro
+     * mais próximo — usado só pra custo (unidade discreta de moeda). Nunca zera um item que
+     * já custava algo (mínimo 1), pra não parecer que o item virou de graça só por causa do
+     * arredondamento pra baixo.
+     */
+    fun custoInteiroReduzidoPorDiminuto(baseValue: Int, passosReducao: Int): Int {
+        if (passosReducao <= 0 || baseValue <= 0) return baseValue
+        val divisor = divisorEquipamentoDiminuto(passosReducao)
+        return (baseValue / divisor).roundToInt().coerceAtLeast(1)
     }
 }

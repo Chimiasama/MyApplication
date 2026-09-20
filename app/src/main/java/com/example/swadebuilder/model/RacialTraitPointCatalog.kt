@@ -234,6 +234,12 @@ object RacialTraitPointCatalog {
         // AncestryVariantRegistry (ver TraitAddition) pros textos "DIMINUTO
         // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
         // (Padrão/Menor) injeta.
+        // "_2" (Pequeno) só tinha entrada em CUSTOS/LABEL, sem efeito nenhum aqui — nenhuma
+        // raça oficial usa esse tier ainda, mas sem isso uma Variante/raça customizada que
+        // usasse o tier Pequeno não ganharia Tamanho -2 nem contaria como Diminuto pra fins
+        // de redução de Força Mínima/dano/custo-peso de equipamento (ModifierEngine
+        // .racialDiminutoPassos() só olha o flag `minusculo`).
+        "DIMINUTO_TAMANHO_2" to RacialTraitEffect.TamanhoBonus(-2, minusculo = true),
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
         "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true)
     )

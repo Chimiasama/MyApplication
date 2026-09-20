@@ -1285,3 +1285,110 @@ verificar compilação neste ambiente sandbox sem rede pro Gradle.
 
 **Ainda pendente**: exibição de Resistência por local no PDF em tabela
 própria; Variante de raça-base de livro diferente das tags fica órfã.
+
+## Vigésima rodada — critério certo pro aviso de "Ancestralidade desbalanceada" + desconto de equipamento do traço Diminuto
+
+Duas coisas relatadas pelo dono do projeto ao testar com Centauros: (1) o
+selo "Ancestralidade desbalanceada" (Décima sexta rodada) não estava
+aparecendo em "Ver Detalhes" da aba Ancestralidades mesmo pra uma raça que
+ele esperava ver marcada; (2) faltava a redução de peso/custo de
+equipamento do traço Diminuto — "as ancestralidades menores têm redução de
+custo e peso para equipamentos... se ela for pequena, menos 2, muito
+pequena, menos 3, ou minúscula, menos 4".
+
+### Parte 1 — critério do aviso redefinido
+
+Perguntei o que ele esperava ver e a resposta mudou o critério: o selo não
+deve mais comparar a SOMA dos traços da raça contra o orçamento DELA MESMA
+(isso já é garantido automaticamente em CI por `AncestralidadeCatalogBudgetTest`,
+não precisa de aviso na UI pra isso) — deve acender sempre que o
+ORÇAMENTO da raça (`pontosRaciaisEsperados`) for diferente dos 2 pontos
+padrão do livro (`ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO`),
+pra cima ou pra baixo, sem julgar se isso deixa a raça "forte" ou "fraca"
+("Forte e fraco pode ofender as pessoas"). Também pediu pra preferir
+"Ancestralidade" a "raça" no texto (já era o termo usado no nome do selo,
+mantido).
+
+- `AncestralidadesSection.kt` ("Ver Detalhes"): trocada a condição de
+  `pontosRaciaisTotais > item.pontosRaciaisEsperados` (soma dos traços vs.
+  orçamento da própria raça) para
+  `item.pontosRaciaisEsperados != ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO`
+  (orçamento da raça vs. padrão do livro). Centauros (`pontosRaciaisEsperados = 4`,
+  ver rodadas anteriores) agora aciona o aviso; Humanos (`2`, o padrão) não.
+  A soma de pontos (`pontosRaciaisTotais`) foi removida do trecho por não
+  ser mais usada aqui.
+
+### Parte 2 — desconto de equipamento do traço Diminuto
+
+Conferido no livro Fantasia (pág. 10, "Diminuto"): "Equipamentos feitos
+para personagens Pequenas/Muito Pequenas/Minúsculas pesam e custam
+metade/um quarto/um décimo do valor listado" — 3 tiers (Tamanho -2/-3/-4),
+o mesmo limiar que `ForcaMinimaCalculator.diminutoPassos()`/
+`ModifierEngine.racialDiminutoPassos()` já usavam pra Força Mínima e
+penalidade de dano (Décima primeira/Décima segunda rodadas), agora
+estendido pro custo/peso de equipamento comum.
+
+- **Achado incidental ao mexer nisso**: `RacialTraitPointCatalog.EFEITOS`
+  tinha `DIMINUTO_TAMANHO_3`/`_4` (Muito Pequeno/Minúsculo) mas faltava
+  `DIMINUTO_TAMANHO_2` (Pequeno) — só existia em `CUSTOS`/`LABEL`. Nenhuma
+  raça oficial usa esse tier ainda, mas sem essa entrada uma Variante/raça
+  customizada que usasse Pequeno não ganharia Tamanho -2 nem contaria como
+  Diminuto pra nenhum dos benefícios (Força Mínima, dano, agora também
+  equipamento). Adicionado.
+- **`ForcaMinimaCalculator.kt`**: duas funções novas, só matemática pura —
+  `divisorEquipamentoDiminuto(passosReducao)` (2.0/4.0/10.0 pros tiers
+  2/3/4, 1.0 sem Diminuto) e `custoInteiroReduzidoPorDiminuto(baseValue,
+  passosReducao)` (aplica o divisor a um valor já em unidade-base de
+  moeda, arredonda, nunca zera um item que já custava algo — usada só pra
+  cálculo de saldo/orçamento, não pro texto exibido).
+- **`CriadorState.kt`**: três funções novas — `pesoEquipamentoEfetivo(item)`
+  e `custoEquipamentoEfetivo(item)` (peso/custo de um item já com o
+  desconto, lendo o Diminuto do personagem via
+  `ModifierEngine.racialDiminutoPassos(this)`) e `totalPesoEquipamentos()`
+  (soma o peso já descontado de tudo em `equipamentosComprados` — substitui
+  o cálculo de peso total que estava duplicado, sem desconto nenhum, em
+  `EquipamentoSection.kt` e `ResumoSection.kt`).
+- **`EquipamentoFormatters.kt`**: `toResumo()` ganhou o parâmetro
+  `passosDiminuto` (default 0, não quebra quem já chamava sem argumento) e
+  duas funções puras novas, `pesoTextoComDiminuto()`/
+  `custoTextoComDiminuto()` — aplicam o divisor ao número do texto original
+  (`"300"` → `"150"`, `"5 po"` → `"0.5 po"`) preservando a unidade,
+  **sem mexer** em texto que não é um número puro (`"Variável"`, `"x2"`,
+  `"-5K * Tam"` — preços especiais/multiplicadores de outros catálogos,
+  não o preço direto de um item comum).
+- **`ListItems.kt`** (`StandardEquipamentoItem`) e **`EquipamentoSection.kt`**:
+  o card de cada item na lista de Equipamentos (busca e navegação por
+  categoria) agora recebe `passosDiminuto` calculado uma vez
+  (`ModifierEngine.racialDiminutoPassos(state)`) e mostra peso/custo já
+  descontados; o filtro "Somente acessíveis" agora compara contra
+  `state.custoEquipamentoEfetivo(item)` em vez do custo cheio; o total de
+  peso da mochila (limite de Carga) usa `state.totalPesoEquipamentos()`.
+  **Não** mexi no diálogo de item mágico da Herança (orçamento fixo de
+  10.000 PO, peça mágica sob medida não listada por peso/custo de
+  catálogo comum — desconto de Diminuto não se aplica a esse fluxo).
+- **`ResumoSection.kt`**: mesmo total de peso trocado pra
+  `state.totalPesoEquipamentos()`.
+- **`ResumoPdfReferenciador.kt`**: `buildEquipamentosBlocks()` (tabela de
+  equipamento geral do PDF) passa `personagem.passosDiminuto` (campo que já
+  existia em `MeuPersonagem`, usado nas rodadas anteriores pra Força
+  Mínima/dano) pro `toResumo()` e pro novo `pesoTextoComDiminuto()`.
+- **Verificação**: compilei `CriadorState.kt`/`ForcaMinimaCalculator.kt`/
+  `RacialTraitPointCatalog.kt`/`EquipamentoFormatters.kt` de verdade no
+  harness standalone (mesmo usado na Décima nona rodada) e rodei 11 testes
+  JVM novos — `CriadorStateDiminutoEquipmentTest` (matemática pura dos 3
+  tiers, `pesoEquipamentoEfetivo`/`custoEquipamentoEfetivo`/
+  `totalPesoEquipamentos` com uma raça sintética Minúscula de verdade
+  passando por `CriadorState`, caso sem Diminuto continua com valor cheio,
+  texto não numérico não quebra) e
+  `EquipamentoFormattersDiminutoTest` (formatação de texto, preservação de
+  unidade Pathfinder, textos especiais intocados) — todos os 11 passaram.
+  Os arquivos de Compose UI tocados (`AncestralidadesSection.kt`,
+  `ListItems.kt`, `EquipamentoSection.kt`, `ResumoSection.kt`) não têm como
+  ser compilados neste sandbox (sem os artefatos reais de
+  compose-ui/material3) — validados por revisão manual e ficam pra CI/
+  Gradle real confirmar.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria; Variante de raça-base de livro diferente das tags fica órfã;
+dinheiro do personagem não é deduzido automaticamente ao comprar
+equipamento (não mexido nesta rodada, fora do escopo pedido).
