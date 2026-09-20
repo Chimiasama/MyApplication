@@ -1392,3 +1392,131 @@ estendido pro custo/peso de equipamento comum.
 própria; Variante de raça-base de livro diferente das tags fica órfã;
 dinheiro do personagem não é deduzido automaticamente ao comprar
 equipamento (não mexido nesta rodada, fora do escopo pedido).
+
+## Vigésima primeira rodada — Robusto do Ogro (investigado, não é bug), equipamento devolvido ao trocar de tamanho, grupos recolhíveis em Equipamentos
+
+Três pontos trazidos pelo dono do projeto depois de testar a rodada
+anterior.
+
+### Parte 1 — Robusto do Ogro: investigado, mantido como estava
+
+Suspeita: o Robusto do Ogro (custo 2, id `ROBUSTO`) estaria errado —
+deveria custar 4, vindo do traço genérico "Super Poderes" (2 pontos pelo
+Antecedente Arcano + custo do poder do Compêndio de Superpoderes
+escolhido, nesse caso "Robusto" a 2 pontos).
+
+- **Conferido nos dois livros antes de mexer**: o livro básico (cap. 1,
+  "Habilidades Raciais Positivas", pág. 20) lista **duas entradas
+  diferentes**: "Robusto (1): Um segundo resultado Abalado não causa
+  Ferimento" com custo **2**, direta, standalone; e "Super Poderes (1):
+  Possui habilidades... tiradas do Compêndio de Super Poderes... custo é
+  2... mais o custo do poder selecionado (X)" — um mecanismo GENÉRICO
+  separado, pra raças que concedem qualquer poder do Compêndio de
+  Superpoderes, não uma via alternativa pra montar o Robusto especificamente.
+  São dois caminhos possíveis pro Mestre calibrar uma raça, coincidência de
+  nome/efeito (e de custo base) entre os dois, não a mesma coisa.
+- **Confirmado por matemática**: somei TODOS os traços do Ogro (`ancestralidades.json`)
+  com as regras/custos já cadastrados (`ARROGANTE` -2, `PENALIDADE_PERICIA_1`
+  x2 -1 cada, `FORASTEIRO` Menor -1, `VOLUMOSO` -2, `MUITO_FORTE` +4,
+  `MUITO_RESISTENTE` +4, `ROBUSTO` +2, `SEM_NOCAO` -2, `TAMANHO_MAIS_1` +1)
+  e o total bate **exatamente 2** — o orçamento padrão do livro
+  (`pontosRaciaisEsperados` do Ogro não está sobrescrito no catálogo, fica
+  no default 2). Se `ROBUSTO` valesse 4, o Ogro fecharia em 4, e o livro
+  teria calibrado a raça com um orçamento maior (não é o caso: nenhuma
+  entrada de "raças mais fortes por design" — Pathfinder/Arte da
+  Guerra/Crystal Heart — cita Ogros). Isso confirma que o cálculo atual
+  (`ROBUSTO` custo 2, direto, sem passar pelo Antecedente Arcano) é o que
+  o próprio livro usou pra calibrar a raça.
+- **Achado incidental relevante**: o mecanismo genérico "Super Poderes
+  (2+X)" que o dono do projeto descreveu **já existe no app**, implementado
+  numa rodada anterior — é o picker `superPoderRacialPickerTarget` em
+  `SettingsDialog.kt` (fluxo de criação de Vantagem/Variante custom), que
+  lista o catálogo real de `super_poderes.json`, calcula
+  `custoTotal = 2 + custoPoder` pra cada opção e monta a `HabilidadeCriacao`
+  final com esse custo. Já está corretamente citado/comentado no código
+  ("Super Poderes (2+X): o traço racial em si custa 2 pontos, mais o custo
+  do Super Poder do Compêndio de Super Poderes escolhido"). Não precisou
+  implementar nada novo — só confirmar que já existe e que o Ogro (raça
+  OFICIAL) não usa esse caminho porque não precisa: o livro já cadastra
+  Robusto como habilidade direta própria.
+- **Nenhuma mudança de código nesta parte** — decisão do dono do projeto
+  após ver as evidências: manter o Ogro como está.
+
+### Parte 2 — equipamento "devolvido" ao trocar de tamanho (Diminuto)
+
+Preocupação: comprar equipamento pelo desconto de Diminuto (rodada
+anterior) e depois trocar de raça poderia deixar o personagem com o item
+"preso" no preço/peso baixo mesmo não sendo mais Diminuto.
+
+- **Testado antes de mexer em qualquer coisa**: reproduzi o cenário exato
+  descrito (comprar armadura de 300 por 30 como uma raça Minúscula
+  sintética, trocar pra Humano) num teste JVM real. O preço/peso **já**
+  recalculavam sozinhos pro valor cheio (300/peso cheio), porque
+  `pesoEquipamentoEfetivo()`/`custoEquipamentoEfetivo()` (rodada anterior)
+  nunca gravam o desconto NO item — recalculam ao vivo a partir da raça
+  ATUAL do personagem toda vez que são chamados. Ou seja, o número exibido
+  já nunca ficava "preso" no desconto.
+- **O que realmente faltava**: o ITEM em si continuava fisicamente na
+  mochila (`equipamentosComprados`) mesmo depois de trocar de raça — só o
+  preço/peso exibido corrigia, não a presença do item. Decisão do dono do
+  projeto: remover o item automaticamente, já que equipamento Diminuto é
+  "feito sob medida" pro tamanho da ancestralidade (texto do livro Fantasia,
+  pág. 10) e não serve mais num corpo de tamanho diferente.
+- **`ModifierEngine.kt`**: extraí `racialDiminutoPassosDe(habilidades: List<RacialAbility>?)`
+  a partir do corpo de `racialDiminutoPassos(state)` (que agora só delega
+  pra essa função com `state.currentAncestryDef?.habilidades`) — permite
+  calcular o tier de Diminuto de uma `RacialModifier` qualquer, não só da
+  raça ATUAL do `CriadorState` (precisava comparar a raça ANTES/DEPOIS da
+  troca, e a raça anterior já não é mais `state.currentAncestryDef` no
+  momento da comparação).
+- **`CriadorState.aplicarAncestralidade()`**: calcula `passosDiminutoAntes`/
+  `passosDiminutoDepois` (raça anterior/nova, via `racialDiminutoPassosDe()`)
+  logo no início da função, e logo depois de `ancestralidade = anc` — se os
+  dois tiers forem diferentes (inclusive 0→Diminuto ou Diminuto→0) e a
+  mochila não estiver vazia, limpa `equipamentosComprados` inteira e
+  adiciona uma mensagem de feedback ("N equipamento(s) devolvido(s):
+  o tamanho da Ancestralidade mudou..."), mesmo padrão de feedback já usado
+  pros outros ajustes automáticos dessa função (pontos de atributo/perícia/
+  Vantagem devolvidos, Vantagens removidas por requisito). Troca entre duas
+  raças do MESMO tier (ex.: duas raças de tamanho normal, ou duas raças
+  igualmente Muito Pequenas) não mexe na mochila.
+- **Verificação**: 3 testes JVM novos no harness standalone (raça Minúscula
+  → Humano devolve a mochila e avisa; duas raças de tamanho normal não
+  mexem em nada; troca entre dois tiers diferentes de Diminuto — Minúsculo
+  → Pequeno — também devolve), todos rodados de verdade e passando, mais
+  os 9 testes das rodadas anteriores continuam passando sem quebrar nada
+  (mesma assinatura pública de `racialDiminutoPassos(state)`, só ganhou um
+  overload novo).
+
+### Parte 3 — grupos recolhíveis na lista de Equipamentos
+
+Pedido: no modo "Navegar" (sem busca) da aba Equipamentos, o SuperType
+(ex.: "Armaduras") já era recolhível (`CollapsibleSection`, de uma rodada
+anterior), mas ao expandir um SuperType grande a lista inteira de Grupos
+(ex.: "Corpo", "Escudos"...) e todos os itens despejava de uma vez, sem
+como recolher só um Grupo específico — obrigando a rolar a tela inteira
+pra passar por uma lista grande.
+
+- **`CriadorState.kt`**: novo `equipExpandedGroups = mutableStateMapOf<String, Boolean>()`,
+  chaveado por `"SuperType/Grupo"` (ex.: `"Armaduras/Corpo"`) pra não
+  colidir entre SuperTypes diferentes que reaproveitem o mesmo nome de
+  grupo.
+- **`EquipamentoSection.kt`** (modo "Navegar"): cada `groupName` (antes um
+  `Text` fixo sempre visível) agora usa o MESMO componente
+  `CollapsibleSection` já usado pro SuperType — clica pra expandir/recolher
+  só aquele grupo, mesmo estilo visual (ícone +/-, borda arredondada) já
+  padronizado na rodada dos "Filtros Avançados". Recolhido por padrão
+  (mesmo padrão do SuperType), então abrir um SuperType grande agora mostra
+  só os títulos dos grupos, sem despejar item nenhum até o jogador escolher
+  qual grupo abrir. O nível de Subgrupo (dentro de cada Grupo, ex.:
+  "Medievais"/"Pólvora Negra" dentro de "Ataque à Distância") continua como
+  um cabeçalho simples, sem colapso — listas nesse nível costumam ser bem
+  menores, não pareceu precisar de um terceiro nível de recolhimento.
+- Não mexi no modo "Buscar" (lista plana filtrada por texto) — esse modo já
+  não tem hierarquia de Grupo/Subgrupo pra recolher, é resultado de busca
+  direto.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria; Variante de raça-base de livro diferente das tags fica órfã;
+dinheiro do personagem não é deduzido automaticamente ao comprar
+equipamento.

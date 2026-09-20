@@ -496,8 +496,17 @@ object ModifierEngine {
      * traço racial direto — Diminuto nunca é injetado só por Variante/Monstro Heroico
      * hoje, então não precisa somar `racialTraitIdsFromVariants` aqui.
      */
-    fun racialDiminutoPassos(state: CriadorState): Int {
-        val efeitoDiminuto = state.currentAncestryDef?.habilidades?.firstNotNullOfOrNull { hab ->
+    fun racialDiminutoPassos(state: CriadorState): Int = racialDiminutoPassosDe(state.currentAncestryDef?.habilidades)
+
+    /**
+     * Mesmo cálculo de `racialDiminutoPassos()`, mas a partir de uma lista de
+     * `habilidades` direta em vez de `CriadorState` — usada por
+     * `CriadorState.aplicarAncestralidade()` pra comparar o tier de Diminuto
+     * ANTES/DEPOIS de uma troca de raça (a raça anterior já não é mais
+     * `state.currentAncestryDef` no momento da comparação).
+     */
+    fun racialDiminutoPassosDe(habilidades: List<RacialAbility>?): Int {
+        val efeitoDiminuto = habilidades?.firstNotNullOfOrNull { hab ->
             val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
             (efeito as? RacialTraitEffect.TamanhoBonus)?.takeIf { it.minusculo }?.let { it.valor * hab.vezes }
         } ?: 0

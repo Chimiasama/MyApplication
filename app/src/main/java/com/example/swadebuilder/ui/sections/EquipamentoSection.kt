@@ -1018,37 +1018,39 @@ fun EquipamentoSection(
                                 // Itera sobre os dados pré-calculados
                                 filteredGroupKeys.forEach { groupName ->
                                     val subGroups = groupData[groupName]!!
-                                    Text(
-                                        text = groupName,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp)
-                                    )
+                                    val groupKey = "${superType.label}/$groupName"
+                                    val isGroupExpanded = state.equipExpandedGroups[groupKey] ?: false
 
-                                    subGroups.keys.sorted().forEach { subGroupName ->
-                                        if (subGroupName != groupName && subGroupName.isNotBlank()) {
-                                            Text(
-                                                text = subGroupName,
-                                                style = MaterialTheme.typography.labelLarge,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = MaterialTheme.colorScheme.secondary,
-                                                modifier = Modifier.padding(top = 4.dp, bottom = 2.dp, start = 4.dp)
-                                            )
-                                        }
+                                    CollapsibleSection(
+                                        title = groupName,
+                                        expanded = isGroupExpanded,
+                                        onToggle = { state.equipExpandedGroups[groupKey] = !isGroupExpanded },
+                                        onToggleFeedback = onUserFeedback
+                                    ) {
+                                        subGroups.keys.sorted().forEach { subGroupName ->
+                                            if (subGroupName != groupName && subGroupName.isNotBlank()) {
+                                                Text(
+                                                    text = subGroupName,
+                                                    style = MaterialTheme.typography.labelLarge,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = MaterialTheme.colorScheme.secondary,
+                                                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp, start = 4.dp)
+                                                )
+                                            }
 
-                                        val itemsInSub = subGroups[subGroupName]!!
-                                        itemsInSub.forEach { entry ->
-                                            StandardEquipamentoItem(
-                                                equipamento = entry.item,
-                                                onClick = { onEquipamentoDoubleClick(entry.item) },
-                                                allowLongTexts = allowLongTexts,
-                                                showOriginalName = showOfficialNames,
-                                                showTensao = compendioSciFiAtivo,
-                                                passosDiminuto = passosDiminuto
-                                            )
+                                            val itemsInSub = subGroups[subGroupName]!!
+                                            itemsInSub.forEach { entry ->
+                                                StandardEquipamentoItem(
+                                                    equipamento = entry.item,
+                                                    onClick = { onEquipamentoDoubleClick(entry.item) },
+                                                    allowLongTexts = allowLongTexts,
+                                                    showOriginalName = showOfficialNames,
+                                                    showTensao = compendioSciFiAtivo,
+                                                    passosDiminuto = passosDiminuto
+                                                )
+                                            }
+                                            Spacer(Modifier.height(4.dp))
                                         }
-                                        Spacer(Modifier.height(4.dp))
                                     }
                                 }
                             }

@@ -1783,6 +1783,10 @@ class CriadorState {
     val equipSelectedSuperTypes = mutableStateListOf<EquipSuperType>()
     var equipFilter by mutableStateOf(EquipFilter())
     val equipExpandedTypes = mutableStateMapOf<String, Boolean>()
+    // Chave "SuperType/Grupo" (ex.: "Armaduras/Corpo") — um grupo dentro de um SuperType
+    // já expandido também pode ser recolhido, pra não despejar a lista inteira de uma vez
+    // quando o SuperType tem muitos grupos (ex.: "Armas" com dezenas de itens).
+    val equipExpandedGroups = mutableStateMapOf<String, Boolean>()
     var equipSectionFilters = mutableStateMapOf<EquipSuperType, Set<String>>()
 
     var anotacoes by mutableStateOf("")
@@ -5644,6 +5648,19 @@ class CriadorState {
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
         val ancDef = getAncestralidadeDef(anc)
+
+        // Equipamento comprado sob o traço Diminuto (livro Fantasia, pág. 10) é "feito
+        // para" o tamanho da ancestralidade — não serve mais se o personagem passa a ser
+        // de OUTRO tamanho (inclusive perdendo Diminuto por completo, ou virando Diminuto
+        // vindo de um tamanho normal). Compara o tier ANTES/DEPOIS (2/3/4 = Pequeno/Muito
+        // Pequeno/Minúsculo, 0 = tamanho normal) e devolve tudo da mochila se mudou —
+        // sem isso, o jogador podia comprar equipamento caro pelo desconto e trocar de
+        // raça sem perder o item físico (o preço/peso exibido já corrige sozinho, ver
+        // CriadorState.pesoEquipamentoEfetivo()/custoEquipamentoEfetivo(), mas o ITEM em
+        // si continuava na mochila).
+        val passosDiminutoAntes = ModifierEngine.racialDiminutoPassosDe(prevAncDef?.habilidades)
+        val passosDiminutoDepois = ModifierEngine.racialDiminutoPassosDe(ancDef?.habilidades)
+
         val effectiveScifiVariant = resolveSciFiVariantSelectionFor(
             ancestryName = anc,
             availableOptions = ancDef?.opcoes ?: emptyList()
@@ -5739,6 +5756,14 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+
+        if (passosDiminutoAntes != passosDiminutoDepois && equipamentosComprados.isNotEmpty()) {
+            val quantidadeDevolvida = equipamentosComprados.size
+            equipamentosComprados.clear()
+            feedbackMessages.add(
+                "$quantidadeDevolvida equipamento(s) devolvido(s): o tamanho da Ancestralidade mudou (traço Diminuto) e o equipamento antigo não serve mais no tamanho novo."
+            )
+        }
 
         // SAFETY: Force removal of "Herança" edge for Fantasy Half-Elves if it slipped through
         if ((anc.keyify().contains("MEIO-ELFO") || anc.keyify().contains("MEIO-ELFOS")) && !anc.keyify().contains("PATHFINDER")) {
