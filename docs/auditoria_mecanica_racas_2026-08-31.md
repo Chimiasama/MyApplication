@@ -1520,3 +1520,138 @@ pra passar por uma lista grande.
 própria; Variante de raça-base de livro diferente das tags fica órfã;
 dinheiro do personagem não é deduzido automaticamente ao comprar
 equipamento.
+
+## Vigésima segunda rodada — Vantagem concedida duplicada no Resumo (Sáurios) + investigação do traço "Poder" (Transmorfos)
+
+Dois pontos trazidos pelo dono do projeto.
+
+### Parte 1 — "Sentidos Aguçados, Prontidão" duplicado no Resumo
+
+Relato: na aba Resumo, a lista "Características Raciais" de Sáurios mostrava
+"Sentidos Aguçados, Prontidão" — deveria mostrar só "Sentidos Aguçados" (o
+skin do traço da própria raça); "Prontidão" já aparece certo, separadamente,
+na seção "Vantagens".
+
+- **Causa raiz**: toda habilidade com `category == "racial_edge"` concede
+  uma Vantagem de verdade (`RacialModifier.vantagensGratisEfetivas()`) — o
+  id/targetRef dela vai pra `personagem.vantagensRaciais` (lógica de
+  requisito/automação) e o `nome` (skin) dela já vai separadamente pra
+  `habilidadesRaciais`. `SummaryUtils.buildSummaryLines()` juntava as DUAS
+  listas (`habilidadesRaciais + personagem.vantagensRaciais`) pra montar a
+  linha "Características Raciais" — pra qualquer traço `racial_edge`, isso
+  bota o MESMO traço duas vezes: uma pelo skin, outra pelo nome oficial da
+  Vantagem concedida. Existia um hardcode (`especieIdAtual == "saurios" &&
+  key == "PRONTIDAO" -> "Sentidos Aguçados"`) tentando mascarar exatamente
+  esse sintoma pra Sáurios, mas não removia a duplicata da lista — só
+  igualava o texto das duas entradas, dependendo de `especieIdAtual` bater
+  exatamente; não bati com certeza em qual condição específica ele estava
+  falhando pro relato do dono do projeto, mas a causa estrutural (a lista
+  duplicada por baixo) é a mesma em qualquer cenário.
+- **Correção estrutural** (não mais um hardcode por espécie):
+  `SummaryUtils.kt` agora calcula `vantagensCobertasPorHabilidadeEstatica`
+  — o conjunto de ids/targetRef de toda habilidade `racial_edge` da PRÓPRIA
+  raça (mesma extração de `vantagensGratisEfetivas()`) — e filtra
+  `personagem.vantagensRaciais` pra excluir qualquer entrada já coberta por
+  essa habilidade estática ANTES de juntar com `habilidadesRaciais`. Só
+  sobra em `vantagensRaciaisSemSkinEstatico` uma Vantagem concedida que NÃO
+  vem de uma habilidade estática da raça (ex.: injetada em tempo de
+  execução por uma Variante custom, sem entrada em `habilidades[]`) — essa
+  continua aparecendo normal (sem skin pra usar mesmo). Isso corrige Sáurios
+  E qualquer outra raça com o mesmo padrão (conferido no catálogo real:
+  Kitsunemimi "Socialmente Sofisticados"→Cativar o Ambiente tinha o MESMO
+  bug estrutural, sem hardcode nenhum tentando mascarar — corrigido de
+  graça pela mesma correção).
+- **Limpeza**: removidos dois hardcodes por nome de espécie que ficavam bem
+  ao lado — o de Sáurios (agora redundante/inalcançável, a entrada
+  duplicada nem chega mais nesse ponto do código) e o de Povo Rato/"Fobia"
+  (já era código morto ANTES desta rodada: `category == "racial_hindrance"`
+  nunca passa pelo filtro que monta `habilidadesRaciais`/`vantagensRaciais`,
+  então essa condição nunca disparava).
+- **PDF**: conferido que `ResumoPdfReferenciador.kt` NÃO chama
+  `buildSummaryLines()` — a ficha em PDF não tem hoje nenhuma seção
+  "Habilidades Raciais"/"Características Raciais" (só "Vantagens" e
+  "Complicações", vindas de `personagem.vantagens`/`personagem.complicacoes`
+  diretamente). Ou seja, o bug relatado só existia na tela de Resumo — no
+  PDF não tinha como acontecer porque essa lista simplesmente não é
+  desenhada lá. Não adicionei essa seção ao PDF nesta rodada (o dono do
+  projeto só supôs que existia, "acredito eu que...", sem confirmar) —
+  fica como pergunta em aberto se ele quer essa seção também no PDF.
+- **Verificação**: adicionado teste novo em `SummaryUtilsTest.kt`
+  reproduzindo o cenário exato (Sáurios com habilidade `racial_edge`
+  id=PRONTIDAO + `vantagensRaciais=["PRONTIDAO"]`) — confirma que
+  "Sentidos Aguçados" aparece exatamente uma vez e "Prontidão" não aparece
+  na linha racial. Rodei TODA a suíte `SummaryUtilsTest` (17 testes,
+  cobrindo Avianos/Elfos/Centaux/Tanukimimi/Feral/etc.) depois da mudança —
+  nenhum regrediu.
+
+### Parte 2 — traço "Poder" (Antecedente Arcano + poder específico) e Transmorfos
+
+Pedido: verificar se o mecanismo de criação de raça do livro básico "Poder
+(S)" — "a ancestralidade tem uma habilidade inata que funciona como um
+poder... por 2 pontos, tem o Antecedente Arcano (Dom) e um poder que
+reflete sua habilidade incomum" — está implementado e se Transmorfos usa
+ele corretamente (a habilidade "Mudar de Forma" deles é justamente essa,
+ligada ao poder Disfarce restrito a si mesmo).
+
+Investigação (sem mudar código ainda — achados pra decisão do próximo
+passo):
+
+- **Transmorfos RECEBE o Antecedente Arcano (Dom) corretamente** — testei
+  de verdade (`CriadorStateTransmorfosPoderTest`, via `aplicarAncestralidade`
+  real) com só o Compêndio de Fantasia ativo (sem Horror/Sci-Fi, que são os
+  únicos livros que têm a entrada específica "antecedente_arcano_dom" no
+  catálogo): o personagem termina com exatamente 1 Vantagem "Antecedente
+  Arcano" com a escolha "Dom" marcada. Isso funciona por causa de um
+  fallback já existente em `ResolveAncestryRacialPackageUseCase` (concede a
+  Vantagem genérica "antecedente_arcano" + escolha "DOM" quando a entrada
+  específica do livro não está carregada) combinado com um bloco
+  hardcoded por NOME DE RAÇA ("TRANSMORFOS") em
+  `ResolveAncestrySpecificAdjustmentsUseCase.kt`.
+- **O mecanismo GENÉRICO não existe** — e é isso que faz o hardcode acima
+  ser necessário. Dois problemas achados:
+  1. Existem DOIS ids diferentes pro mesmo conceito, sem ligação entre
+     eles: a raça oficial Transmorfos usa `id: "ANTECEDENTE_ARCANO_PODER"`
+     (`ancestralidades.json`); o catálogo de criação de raça customizada
+     (`basico_habilidades_raciais.json`, usado em `SettingsDialog.kt`) tem
+     uma entrada DIFERENTE, `id: "poder_racial"` ("Poder Inato", mesma
+     descrição do livro). Nenhum dos dois aparece em
+     `RacialTraitPointCatalog.EFEITOS` (só `ANTECEDENTE_ARCANO_PODER` tem
+     entrada em `CUSTOS`, custo 2 — `poder_racial` não tem NENHUMA entrada
+     no catálogo de pontos).
+  2. Ao contrário do "Super Poderes (2+X)" (que tem um picker de verdade em
+     `SettingsDialog.kt`, `superPoderRacialPickerTarget`, deixando o Mestre
+     escolher o poder específico do Compêndio de Super Poderes e calcula
+     2+X automaticamente), o "Poder Inato"/`poder_racial` NÃO tem picker
+     nenhum — escolher esse traço ao criar uma raça customizada só adiciona
+     um `HabilidadeCriacao` com o texto fixo do JSON, sem conceder o
+     Antecedente Arcano de verdade nem deixar escolher o poder. É só texto
+     decorativo.
+- **Transmorfos NÃO recebe o poder específico (Disfarce, restrito a si
+  mesmo) automaticamente** — busquei em todo o código por qualquer lugar
+  que adicione um poder a `poderesSelecionados` automaticamente por causa
+  de raça: não existe NENHUM (nem pra Transmorfos, nem pra nenhuma outra
+  raça). O jogador tem o Antecedente Arcano (Dom) de verdade, mas precisa
+  escolher/pagar o poder Disfarce manualmente entre os poderes iniciais
+  normais da Vantagem — o livro diz que esse poder deveria vir de graça,
+  além dos poderes iniciais normais ("Ela não aumenta os Pontos de
+  Poder—use a vantagem Pontos de Poder pra isso", ou seja, é um poder A
+  MAIS, não conta contra o total de PP).
+- **Achado extra no caminho** (mesma categoria de bug): a habilidade
+  "CARISMÁTICO" de Transmorfos ("Começam gratuitamente com a Vantagem
+  Carismático") também NÃO concede a Vantagem de verdade —
+  `ensureAdvantageNames`/`ensureAdvantageIds` do bloco hardcoded de
+  Transmorfos não incluem Carismático, e o id não está em
+  `RacialTraitPointCatalog.EFEITOS`. Travado num teste (`CriadorStateTransmorfosPoderTest`)
+  que documenta o estado ATUAL (falha de propósito se alguém corrigir sem
+  atualizar o teste, pra não regredir silenciosamente essa correção
+  futura).
+- **Nenhuma mudança de código nesta parte** — decisão de implementação
+  (unificar os dois ids, construir um picker de poder pro "Poder Inato"
+  igual ao de Super Poderes, conceder o poder Disfarce automático pra
+  Transmorfos, corrigir Carismático) fica pro dono do projeto decidir o
+  escopo/prioridade antes de eu mexer.
+
+**Ainda pendente**: tudo da rodada anterior, mais a seção "Habilidades
+Raciais" no PDF (se o dono do projeto quiser) e a implementação do
+mecanismo genérico "Poder" (Antecedente Arcano + poder específico) — ver
+Parte 2 acima.
