@@ -692,13 +692,35 @@ fun buildSummaryLines(
     } else {
         val isTanukimimiWithPositiveThoughts = especieIdAtual == "tanukimimi" &&
             habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
+
+        // Toda habilidade `category == "racial_edge"` da raça concede uma Vantagem de
+        // verdade (mesmo mecanismo de `vantagensGratisEfetivas()`, RacialModifier.kt) —
+        // essa Vantagem concedida entra em `personagem.vantagensRaciais` (pelo id/
+        // targetRef, pra lógica de requisito/automação em outro lugar do app) E a
+        // habilidade em si já entra em `habilidadesRaciais` (pelo `nome`, o skin da
+        // raça pra ela, ex.: Sáurios "Sentidos Aguçados" concede a Vantagem
+        // "Prontidão"). Sem esse filtro, as duas apareciam juntas aqui ("Sentidos
+        // Aguçados, Prontidão") — só que a segunda é a MESMA coisa, só sem o skin. Só
+        // sobra em `vantagensRaciaisSemSkinEstatico` uma Vantagem concedida que NÃO
+        // vem de uma habilidade estática da própria raça (ex.: injetada em tempo de
+        // execução por uma Variante custom, sem entrada correspondente em
+        // `habilidades[]`) — essa aparece aqui do jeito normal (sem skin pra usar).
+        val vantagensCobertasPorHabilidadeEstatica = (ancestralidadeAtual ?: ancestralidadeNomeObj)
+            ?.habilidades
+            ?.filter { it.category == "racial_edge" }
+            ?.map { hab -> (hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome).keyify() }
+            ?.toSet()
+            ?: emptySet()
+        val vantagensRaciaisSemSkinEstatico = personagem.vantagensRaciais
+            .filterNot { it.keyify() in vantagensCobertasPorHabilidadeEstatica }
+
         // isFeralWithInsanidade removido: "Insanidade" (habilidade única que
         // mencionava Furioso E Sanguinário no texto) virou dois traços de
         // verdade — SANGUINARIO (Complicação, habilidade própria "Insanidade
         // (Sanguinário)") e Furioso (Vantagem real, concedida via
         // vantagensGratis) — não tem mais duplicata pra esconder aqui, Furioso
         // deve aparecer normalmente como qualquer outra Vantagem concedida.
-        (habilidadesRaciais + personagem.vantagensRaciais)
+        (habilidadesRaciais + vantagensRaciaisSemSkinEstatico)
             .filterNot { trait ->
                 isElfosComunitario && trait.keyify() == "DESASTRADO"
             }
@@ -711,30 +733,22 @@ fun buildSummaryLines(
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
             .map { trait ->
                 val key = trait.keyify()
-                if (especieIdAtual == "saurios" && key == "PRONTIDAO") {
-                    "Sentidos Aguçados"
+                // 1. Check Advantages (Grantable Edges)
+                val vant = definitionMap[key]
+                if (vant != null) {
+                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nome.toFancyTitleCase()
                 } else {
-                    // 1. Check Advantages (Grantable Edges)
-                    val vant = definitionMap[key]
-                    if (vant != null) {
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nome.toFancyTitleCase()
+                    // 2. Check Racial Abilities (Definition Name)
+                    val ability = racialAbilityMap[key]
+                    if (ability != null) {
+                        // Use the display name from JSON (preserves symbols like '/')
+                        // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
+                        val formatted = formatRacialAnnotationDisplay(ability.nome)
+                        if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
                     } else {
-                        // 2. Check Racial Abilities (Definition Name)
-                        val ability = racialAbilityMap[key]
-                        if (ability != null) {
-                            if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
-                                "Fobia - Gatos (Menor)"
-                            } else {
-                                // Use the display name from JSON (preserves symbols like '/')
-                                // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
-                                val formatted = formatRacialAnnotationDisplay(ability.nome)
-                                if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
-                            }
-                        } else {
-                            // 3. Fallback
-                            val formatted = trait.toFancyTitleCase()
-                            if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
-                        }
+                        // 3. Fallback
+                        val formatted = trait.toFancyTitleCase()
+                        if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
                     }
                 }
             }

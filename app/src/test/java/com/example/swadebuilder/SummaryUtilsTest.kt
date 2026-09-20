@@ -764,6 +764,70 @@ class SummaryUtilsTest {
     }
 
     @Test
+    fun `buildSummaryLines mostra so o skin do traco racial que concede Vantagem, sem duplicar o nome da Vantagem`() {
+        // Sáurios "Sentidos Aguçados" (id=PRONTIDAO, category=racial_edge) concede a
+        // Vantagem real "Prontidão" — o id cru "PRONTIDAO" cai em vantagensRaciais
+        // (mesmo mecanismo de RacialModifier.vantagensGratisEfetivas()), mas a linha
+        // de "Características Raciais" deve mostrar só o skin "Sentidos Aguçados" UMA
+        // vez, nunca "Sentidos Aguçados, Prontidão" — a Vantagem "Prontidão" já
+        // aparece normalmente na seção de Vantagens, não precisa repetir aqui.
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Sáurio",
+                ancestralidade = "SAURIOS",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("PRONTIDAO"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap()
+            ),
+            allAdvantages = listOf(
+                Vantagem(
+                    id = "prontidao",
+                    nome = "Prontidão",
+                    descricao = "",
+                    categoria = Categoria.COMBATE,
+                    requisitos = Requisito()
+                )
+            ),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "SAURIOS",
+                    origem = "BASICO",
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Sentidos Aguçados",
+                            descricao = "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+                            id = "PRONTIDAO",
+                            category = "racial_edge"
+                        )
+                    ),
+                    especieId = "saurios"
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertTrue(racialLine!!.contains("Sentidos Aguçados"))
+        assertFalse("Não deveria repetir o nome da Vantagem concedida (Prontidão) numa entrada à parte", racialLine.contains("Prontidão"))
+        assertEquals(1, "Sentidos Aguçados".toRegex().findAll(racialLine).count())
+    }
+
+    @Test
     fun `buildSummaryLines uses skin names in lite mode even when modoOficialAtivo is true`() {
         org.junit.Assume.assumeFalse("Test only applies to Lite edition flavor", EditionConfig.isFullEdition)
         val advantages = listOf(
