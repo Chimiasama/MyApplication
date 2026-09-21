@@ -886,7 +886,12 @@ fun VantagensContent(
                                                     } else {
                                                         attemptPurchase(vant) {}
                                                     }
-                                                } else if (vant.id == "poder_favorito") {
+                                                // "poder_favorito_horror" é o mesmo conceito (Poder Favorito) só que
+                                                // com id próprio no livro Horror (requisitos.vantagens_previas
+                                                // diferente) — sem essa segunda checagem, comprar a versão Horror
+                                                // pulava direto pro "else" (attemptPurchase sem escolher poder
+                                                // nenhum), então nunca ficava registrado QUAL poder é o favorito.
+                                                } else if (vant.id == "poder_favorito" || vant.id == "poder_favorito_horror") {
                                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
                                                     if (ownedPowers.isEmpty()) {
                                                         viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
@@ -942,7 +947,7 @@ fun VantagensContent(
                                             } else {
                                                 attemptPurchase(vant) {}
                                             }
-                                        } else if (vant.id == "poder_favorito") {
+                                        } else if (vant.id == "poder_favorito" || vant.id == "poder_favorito_horror") {
                                             val ownedPowers = state.poderesSelecionados.filterNotNull()
                                             if (ownedPowers.isEmpty()) {
                                                 viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
@@ -1026,7 +1031,7 @@ fun VantagensContent(
                                     } else {
                                         attemptPurchase(vant) {}
                                     }
-                                } else if (vant.id == "poder_favorito") {
+                                } else if (vant.id == "poder_favorito" || vant.id == "poder_favorito_horror") {
                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
                                     if (ownedPowers.isEmpty()) {
                                         viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
@@ -1422,11 +1427,14 @@ fun VantagensContent(
             derivedStateOf { state.poderesSelecionados.distinct().filterNotNull() }
         }
 
-        // Retrieve already selected "Favored Powers" to exclude them
+        // Retrieve already selected "Favored Powers" to exclude them — "poder_favorito"
+        // (Fantasia/Sci-Fi) e "poder_favorito_horror" (id próprio no livro Horror) são o
+        // mesmo conceito, então contam juntos pra não deixar escolher o mesmo poder duas
+        // vezes se por algum motivo os dois estiverem disponíveis ao mesmo tempo.
         val alreadyFavored by remember {
             derivedStateOf {
                 state.vantagensSelecionadas
-                    .filter { it.id == "poder_favorito" && !it.choice.isNullOrBlank() }
+                    .filter { (it.id == "poder_favorito" || it.id == "poder_favorito_horror") && !it.choice.isNullOrBlank() }
                     .mapNotNull { it.choice }
                     .toSet()
             }

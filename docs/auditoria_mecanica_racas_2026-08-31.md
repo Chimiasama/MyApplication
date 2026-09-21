@@ -1655,3 +1655,136 @@ passo):
 Raciais" no PDF (se o dono do projeto quiser) e a implementação do
 mecanismo genérico "Poder" (Antecedente Arcano + poder específico) — ver
 Parte 2 acima.
+
+## Vigésima terceira rodada — Habilidades Raciais no PDF, Carismático, Golpe de Asa/Queimar/Arma de Sopro, Poder Favorito e mecanismo genérico "Poder"
+
+Retomando os itens em aberto da rodada anterior, mais três Vantagens novas
+do livro Fantasia trazidas pelo dono do projeto (Golpe de Asa, Queimar,
+Poder Favorito).
+
+### Seção "Habilidades Raciais" no PDF
+
+Extraída a lógica de "Características Raciais" (skin da raça, casos
+especiais por espécie, dedupe de Vantagem concedida — rodada anterior) de
+dentro de `SummaryUtils.buildSummaryLines()` para a função pública
+`buildRacialTraitsList()`, reaproveitada agora também por
+`ResumoPdfReferenciador.gerarFichaEmPdf()` como uma seção própria "Habilidades
+Raciais" — mesma lista, mesma lógica, sem duplicar código. `ancestralidadeAtual`
+(já resolvida, `state.currentAncestryDef`) passa a ser parâmetro de
+`produzirEExibirFichaPdf()`/`gerarFichaEmPdf()`, threaded desde `MainActivity.kt`
+(`PdfExportRequest`). Os 17 testes de `SummaryUtilsTest` continuam passando
+sem nenhuma mudança de comportamento (só reorganização de onde o código mora).
+
+### Carismático dos Transmorfos
+
+A habilidade "CARISMÁTICO" ("Começam gratuitamente com a Vantagem
+Carismático") nunca concedia a Vantagem de verdade — mesma classe de bug do
+"Poder"/Antecedente Arcano investigada na rodada anterior. Adicionada ao
+pacote racial hardcoded de Transmorfos (`ensureAdvantageNames`), protegida
+da remoção por requisito não atendido (Espírito d8+, que um personagem
+recém-criado não tem) pelo mesmo mecanismo que já protege qualquer outra
+Vantagem concedida por raça.
+
+### Golpe de Asa (requisito "Asas") e Queimar (requisito "Arma de Sopro")
+
+Trocada a checagem da tag manual solta em `ancestralidades.json` pelo
+traço de VERDADE da raça — `RacialTraitPointCatalog.temTracoVoo()`/
+`temArmaDeSopro()`, novos, checam `habilidades[]` por id (`VOO_MOV_6`/
+`VOO_MOV_12`/`VOO_MOV_24`/`ASAS_DE_ANJO` pra Voo; `ARMA_DE_SOPRO` pro
+Sopro) — nos dois lugares que validam requisito de Vantagem
+(`CriadorState.atendeRequisitosMantidos`, `ValidateRequirementsUseCase`,
+usado por `RequirementValidator`/Progressão e por `ValidateSelectionUseCase`/
+criação). Achado real ao fazer essa troca: Draconianos tinham a tag "asas"
+cadastrada mesmo sem nenhum traço de Voo — o livro (Ideias Variantes de
+Draconianos) deixa claro que voar é opcional pra essa raça, não o padrão —
+corrigido também no JSON (removida a tag errada, mantida "arma_de_sopro",
+que está correta).
+
+### Ataque de Sopro exibido (dano + área) e Vantagem Queimar
+
+A habilidade "Arma de Sopro" dos Draconianos (2d6 de dano em Modelo de
+Cone ou linha de 12 quadros) nunca aparecia em lugar nenhum além do texto
+narrativo do traço — sem representação estruturada, não tinha como a
+Vantagem Queimar ("o dano... aumenta em um tipo de dado") alterar nada de
+verdade. `CriadorState.extrairArmasNaturais()` agora adiciona um item
+"Ataque de Sopro" (dano 2d6, ou 2d8 com Queimar, reaproveitando o mesmo
+`upgradeDie()` já usado por Garras/Mordida aprimoradas) sempre que a raça
+tiver o traço — mesma lista que já alimenta Resumo e PDF: no PDF entra na
+tabela de Armas à Distância (tem `distancia` preenchido, não "Toque"); no
+Resumo, na lista de Ataques Naturais (a área vai nas observações, já que
+essa lista não tem coluna de alcance própria).
+
+### Poder Favorito — já funcionava (Fantasia); faltava só a variante do Horror
+
+Investigado antes de implementar qualquer coisa: o picker de "Poder
+Favorito" (escolher um dos poderes já conhecidos, ficar registrado como
+"Poder Favorito (Disfarce)" no nome, via o mesmo campo `Vantagem.choice`
+que Antecedente Arcano/Conexões já usam pra mostrar a escolha) **já
+estava implementado por completo** pra `id == "poder_favorito"` (Fantasia
+e Sci-Fi, que compartilham esse id) — dialog de escolha
+(`dialogMostrandoPoderFavorito`), exclusão de poderes já favoritados,
+`.choice` setado na compra, exibição automática em Vantagens/Resumo/PDF
+via o mecanismo genérico de `choice`. O único id que ficava de fora era
+`poder_favorito_horror` (entrada própria do livro Horror, com requisito
+diferente) — comprá-lo caía direto no fluxo genérico (sem escolher poder
+nenhum, sem NUNCA ficar registrado qual poder é o favorito). Corrigido
+nos 3 pontos onde o app checa `vant.id == "poder_favorito"` pra decidir
+se abre o picker (mesmo trecho duplicado 3x em `VantagensSection.kt`,
+achado ao mexer) e no filtro de "já favoritados" do próprio dialog.
+
+### Mecanismo genérico "Poder" (Antecedente Arcano + poder específico)
+
+Implementado o picker que faltava (achado real na rodada anterior:
+"ANTECEDENTE_ARCANO_PODER", da raça oficial Transmorfos, e "poder_racial"/
+"Poder Inato", do catálogo de criação de raça customizada, são dois ids
+DESCONECTADOS pro mesmo conceito, e nenhum dos dois tinha picker — ao
+contrário de "Super Poderes", que já tinha um totalmente funcional).
+`SettingsDialog.kt` ganhou um picker análogo ao de Super Poderes
+(`poderRacialPickerTarget`), mas com duas diferenças de propósito,
+pedidas pelo dono do projeto:
+- **Custo fixo de 2 pontos**, não "2+X" — o livro não soma custo do poder
+  escolhido pro traço "Poder" (diferente de "Super Poderes", que soma o
+  custo do Compêndio de Super Poderes de verdade).
+- **Restrito a poderes de Estágio Novato** (`Poder.estagio == "Novato"`):
+  o traço em si não diz isso no livro, mas sem essa trava um Mestre podia
+  escolher um poder Lendário (ex.: Ressurreição) pelos mesmos 2 pontos —
+  o próprio dono do projeto identificou esse desbalanceamento ao descrever
+  o pedido, então a trava entrou de propósito, com um aviso no texto do
+  dialog explicando o porquê.
+- **Escopo confirmado por paridade com Super Poderes**: assim como
+  escolher "Super Poderes (Voo)" num traço de raça customizada NÃO concede
+  a Vantagem Antecedente Arcano (Super Poderes) de verdade quando um
+  jogador depois seleciona essa raça (confirmado lendo o código: o traço
+  vira `RacialAbility` com `category = "racial_trait_positive"`, nunca
+  `"racial_edge"` — a categoria que de fato aciona a concessão automática
+  de Vantagem em `vantagensGratisEfetivas()`), o novo picker "Poder"
+  registra o traço (nome, custo, descrição) do mesmo jeito, sem conceder
+  Antecedente Arcano nem o poder escolhido automaticamente ainda. Isso é
+  uma limitação JÁ EXISTENTE de Super Poderes, não algo introduzido agora
+  — implementar a concessão automática de verdade (tanto pra Super Poderes
+  quanto pra Poder) é uma feature maior, à parte, que fica pra decisão
+  futura do dono do projeto.
+- Não consegui compilar/rodar `SettingsDialog.kt` (Compose UI, mesma
+  limitação de sempre neste sandbox) — validado por leitura cruzada de
+  todos os 3 pontos que precisavam da mesma mudança (2 blocos de seleção
+  de traço + o novo dialog), balanceamento de chaves/parênteses, e
+  conferência de que `HabilidadeCriacao`/`RacialAbility`/`Poder` têm os
+  campos usados. Fica pro CI confirmar a compilação.
+
+### Verificação
+
+38 testes JVM novos nesta rodada + rodadas anteriores (41 no total do
+grupo relevante), todos rodados de verdade no harness standalone e
+passando: `SummaryUtilsTest` (17, incluindo o novo teste de dedupe da
+rodada anterior), `CriadorStateTransmorfosPoderTest` (2, agora cobrindo
+Carismático concedido de verdade), `ValidateRequirementsUseCaseTagsTest`
+(5, novo — Golpe de Asa/Queimar por traço real), `CriadorStateArmaDeSoproTest`
+(3, novo — dano/área do Ataque de Sopro com e sem Queimar), mais os testes
+de Diminuto das rodadas anteriores.
+
+**Ainda pendente**: exibição de Resistência por local no PDF em tabela
+própria; Variante de raça-base de livro diferente das tags fica órfã;
+dinheiro do personagem não é deduzido automaticamente ao comprar
+equipamento; concessão automática de verdade (Antecedente Arcano + poder/
+super poder) pra traços de raça customizada criados via "Super Poderes"/
+"Poder" — hoje só registram o traço, não concedem nada ao personagem.

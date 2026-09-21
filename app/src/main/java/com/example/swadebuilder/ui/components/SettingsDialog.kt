@@ -778,6 +778,21 @@ fun CustomContentManageDialog(
                             mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
                         }
 
+                        // "Poder (S)"/"Poder Inato" (livro básico, pág. 20): "Por 2 pontos, ela
+                        // tem o Antecedente Arcano (Dom) e um poder que reflete sua habilidade
+                        // incomum." — custo FIXO de 2 pontos (ao contrário de Super Poderes, o
+                        // livro não soma o custo do poder escolhido — Poderes comuns não têm um
+                        // "custo de compra" próprio como os Super Poderes têm). Só restrito a
+                        // poderes de Novato: o traço não diz isso explicitamente, mas sem essa
+                        // trava um Mestre podia escolher um poder Lendário (ex.: Ressurreição)
+                        // pelos mesmos 2 pontos — desbalanceado demais pra passar sem aviso.
+                        val poderesNovatoCatalog: List<com.example.swadebuilder.model.Poder> = remember(state.listaPoderes) {
+                            state.listaPoderes.filter { it.estagio.keyify() == "NOVATO" }.distinctBy { it.id }
+                        }
+                        var poderRacialPickerTarget by remember {
+                            mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
+                        }
+
                         // "Bônus/Penalidade de Perícia (±1/±2)": traços genéricos do catálogo
                         // oficial (basico_habilidades_raciais.json) que dizem "uma Perícia
                         // específica"/"uma perícia escolhida" — sem picker, o Mestre selecionava
@@ -2795,11 +2810,14 @@ fun CustomContentManageDialog(
                                         )
                                         allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isPoderInatoRow = trait.nome == "Poder Inato"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isStackableRow = (trait.vezesMax ?: 1) > 1
                                             val isGrupoEscolhaRow = trait.grupoEscolha != null
                                             val isSel = if (isSuperPoderesRow) {
                                                 selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isPoderInatoRow) {
+                                                selectedRacialTraits.any { it.nome.startsWith("Poder (") }
                                             } else if (isGrupoEscolhaRow) {
                                                 selectedRacialTraits.any { it.grupoEscolha == trait.grupoEscolha }
                                             } else if (isPericiaChoiceRow || isStackableRow) {
@@ -2815,6 +2833,14 @@ fun CustomContentManageDialog(
                                                         }
                                                     } else {
                                                         selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isPoderInatoRow) {
+                                                    if (checked) {
+                                                        poderRacialPickerTarget = { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Poder (") }
                                                     }
                                                 } else if (isGrupoEscolhaRow) {
                                                     if (checked) {
@@ -2922,11 +2948,14 @@ fun CustomContentManageDialog(
                                         )
                                         allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isPoderInatoRow = trait.nome == "Poder Inato"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isStackableRow = (trait.vezesMax ?: 1) > 1
                                             val isGrupoEscolhaRow = trait.grupoEscolha != null
                                             val isSel = if (isSuperPoderesRow) {
                                                 varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isPoderInatoRow) {
+                                                varianteTracosAdicionados.any { it.nome.startsWith("Poder (") }
                                             } else if (isGrupoEscolhaRow) {
                                                 varianteTracosAdicionados.any { it.grupoEscolha == trait.grupoEscolha }
                                             } else if (isPericiaChoiceRow || isStackableRow) {
@@ -2942,6 +2971,14 @@ fun CustomContentManageDialog(
                                                         }
                                                     } else {
                                                         varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isPoderInatoRow) {
+                                                    if (checked) {
+                                                        poderRacialPickerTarget = { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Poder (") }
                                                     }
                                                 } else if (isGrupoEscolhaRow) {
                                                     if (checked) {
@@ -3050,6 +3087,63 @@ fun CustomContentManageDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { superPoderRacialPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        poderRacialPickerTarget?.let { onEscolhido ->
+                            var filterPoderText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { poderRacialPickerTarget = null },
+                                title = { Text("Escolher Poder") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            "O traço Poder custa 2 pontos fixos pelo Antecedente Arcano (Dom) e um poder — restrito a poderes de Novato, pra não desbalancear a raça com um poder mais avançado pelos mesmos 2 pontos.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterPoderText,
+                                            onValueChange = { filterPoderText = it },
+                                            label = { Text("Filtrar Poder") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        if (poderesNovatoCatalog.isEmpty()) {
+                                            Text(
+                                                "Nenhum poder de Novato encontrado no catálogo carregado.",
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+                                        poderesNovatoCatalog
+                                            .filter { it.nome.contains(filterPoderText, ignoreCase = true) }
+                                            .sortedBy { it.nome }
+                                            .forEach { poder ->
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                        onEscolhido(
+                                                            com.example.swadebuilder.model.HabilidadeCriacao(
+                                                                nome = "Poder (${poder.nome})",
+                                                                custo = 2,
+                                                                descricao = "Antecedente Arcano (Dom) + poder \"${poder.nome}\" (Novato).",
+                                                                descricaoLite = "Concede o Antecedente Arcano (Dom) e o poder \"${poder.nome}\"."
+                                                            )
+                                                        )
+                                                        poderRacialPickerTarget = null
+                                                    }.padding(vertical = 6.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Column {
+                                                        Text(poder.nome, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                        if (poder.descricao.isNotBlank()) {
+                                                            Text(poder.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { poderRacialPickerTarget = null }) { Text("Cancelar") } }
                             )
                         }
 
