@@ -26,6 +26,7 @@ import com.example.swadebuilder.model.ataquesCorpoACorpoDeSuperPoderes
 import com.example.swadebuilder.model.ataquesADistanciaDeSuperPoderes
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.sections.asText
@@ -202,6 +203,10 @@ suspend fun produzirEExibirFichaPdf(
     listaSuperPoderes: List<SuperPoder> = emptyList(),
     // Ver gerarFichaEmPdf.
     especieId: String? = null,
+    // Ancestralidade já resolvida (state.currentAncestryDef) — usada pra montar a seção
+    // "Habilidades Raciais" do PDF (buildRacialTraitsList, SummaryUtils.kt), mesma fonte
+    // que o Resumo já usa. Null pra raça customizada (cai no fallback por nome de sempre).
+    ancestralidadeAtual: RacialModifier? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
     // Pontos de Poder base + foco por Antecedente Arcano (GameDataStore.getArcanoInfoMap()) —
     // usado só pra exibir a reserva total de PP no cabeçalho de cada Antecedente Arcano
@@ -241,6 +246,7 @@ suspend fun produzirEExibirFichaPdf(
                 listaPoderes,
                 listaSuperPoderes,
                 especieId,
+                ancestralidadeAtual,
                 secoesIncluidas,
                 arcanoInfo = arcanoInfo
             )
@@ -924,6 +930,8 @@ fun gerarFichaEmPdf(
     // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
     // regra oficial por engano) ou quando o chamador não o resolveu.
     especieId: String? = null,
+    // Ver produzirEExibirFichaPdf.
+    ancestralidadeAtual: RacialModifier? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
     arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
 ) {
@@ -995,6 +1003,21 @@ fun gerarFichaEmPdf(
         }
     }
     mainQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
+
+    // Habilidades Raciais — mesma lista/lógica que o Resumo mostra na tela (Sáurios
+    // "Sentidos Aguçados", Ogros "Robusto" etc.), extraída pra SummaryUtils
+    // .buildRacialTraitsList() pra não duplicar essa lógica (bem intrincada) nos dois
+    // lugares. TextListBlock já se auto-oculta quando a lista vem vazia (raça sem
+    // traço nenhum, ou raça totalmente customizada sem habilidades[] cadastradas).
+    val racialTraits = buildRacialTraitsList(
+        personagem = personagem,
+        allAdvantages = listaVantagens,
+        ancestralidadeAtual = ancestralidadeAtual,
+        ancestralidadeNomeObj = null,
+        especieIdAtual = especieId,
+        showOfficialNames = showOfficialNames
+    )
+    mainQueue.add(object : TextListBlock("Habilidades Raciais", racialTraits) {})
 
     // Poderes agora ganham página dedicada (ver renderPoderesPages logo abaixo do loop
     // principal) — página 1 fica só com o essencial de combate/perícias.

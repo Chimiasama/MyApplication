@@ -6045,10 +6045,18 @@ class CriadorState {
             }
         }
 
-        // Tags
+        // Tags — "asas"/"arma_de_sopro" checam o traço de verdade da raça, não a tag
+        // manual solta (mesmo motivo/comentário de ValidateRequirementsUseCase.kt).
         if (v.requisitos.tags.isNotEmpty()) {
             val ancDef = currentAncestryDef
-            if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) return false
+            val atendeTodasAsTags = v.requisitos.tags.all { tag ->
+                when (tag.keyify()) {
+                    "ASAS" -> RacialTraitPointCatalog.temTracoVoo(ancDef?.habilidades)
+                    "ARMA_DE_SOPRO" -> RacialTraitPointCatalog.temArmaDeSopro(ancDef?.habilidades)
+                    else -> ancDef?.tags?.any { it.keyify() == tag.keyify() } == true
+                }
+            }
+            if (!atendeTodasAsTags) return false
         }
 
         // Template Monstruoso

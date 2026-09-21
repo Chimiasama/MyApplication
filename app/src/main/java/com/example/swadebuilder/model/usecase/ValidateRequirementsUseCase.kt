@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -79,12 +80,25 @@ class ValidateRequirementsUseCase {
         // 13) Exige Carta Selvagem?
         if (v.requisitos.exigeCS && !input.cartaSelvagem) return false
 
-        // 13a) Tags Raciais
+        // 13a) Tags Raciais — "asas" (Golpe de Asa) e "arma_de_sopro" (Queimar) checam o
+        // traço de VERDADE da raça (RacialTraitPointCatalog.temTracoVoo()/
+        // temArmaDeSopro()), não a tag manual solta em ancestralidades.json: essa tag
+        // podia ficar desatualizada (achado real ao implementar isso — Draconianos
+        // tinham a tag "asas" cadastrada mesmo sem o traço Voo, quando o próprio livro
+        // diz que "asas" é só uma Ideia Variante opcional pra Draconianos, não o padrão).
+        // As demais tags (nacionalidades do Crystal Heart, ex. "BOGOVIANO") continuam
+        // batendo contra a lista manual de sempre — não têm um traço mecânico
+        // equivalente pra checar.
         if (v.requisitos.tags.isNotEmpty()) {
             val ancDef = input.ancestralidadeDef
-            if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) {
-                return false
+            val atendeTodasAsTags = v.requisitos.tags.all { tag ->
+                when (tag.keyify()) {
+                    "ASAS" -> RacialTraitPointCatalog.temTracoVoo(ancDef?.habilidades)
+                    "ARMA_DE_SOPRO" -> RacialTraitPointCatalog.temArmaDeSopro(ancDef?.habilidades)
+                    else -> ancDef?.tags?.any { it.keyify() == tag.keyify() } == true
+                }
             }
+            if (!atendeTodasAsTags) return false
         }
 
         // 13c) Template Monstruoso

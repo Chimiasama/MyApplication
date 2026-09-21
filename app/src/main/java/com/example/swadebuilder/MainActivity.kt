@@ -405,6 +405,7 @@ class MainActivity : ComponentActivity() {
                                     request.powers,
                                     request.superPowers,
                                     request.especieId,
+                                    request.ancestralidadeAtual,
                                     secoesIncluidas,
                                     arcanoInfo = request.arcanoInfo
                                 ) { msg ->
@@ -994,6 +995,7 @@ class MainActivity : ComponentActivity() {
                                                     powers = criadorViewModel.gameDataStore.getPoderes(),
                                                     superPowers = criadorViewModel.gameDataStore.getSuperPoderes(),
                                                     especieId = state.currentAncestryDef?.especieId,
+                                                    ancestralidadeAtual = state.currentAncestryDef,
                                                     availableSections = secoesPdfDisponiveis(personagem),
                                                     arcanoInfo = criadorViewModel.gameDataStore.getArcanoInfoMap()
                                                 )
@@ -1062,6 +1064,8 @@ private data class PdfExportRequest(
     val powers: List<Poder>,
     val superPowers: List<SuperPoder>,
     val especieId: String?,
+    // Ancestralidade já resolvida (state.currentAncestryDef) — ver produzirEExibirFichaPdf.
+    val ancestralidadeAtual: com.example.swadebuilder.model.RacialModifier?,
     val availableSections: Set<FichaPdfSecao>,
     val arcanoInfo: Map<String, Triple<Int, Int, String>>
 )

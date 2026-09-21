@@ -80,12 +80,17 @@ class CriadorStateTransmorfosPoderTest {
         choiceOptions = listOf("Dom", "Magia", "Milagres", "Psiônicos", "Ciência Estranha")
     )
 
+    // Requisito real (vantagens.json): Espírito d8 — de propósito, pra provar que a
+    // concessão racial sobrevive mesmo com um personagem recém-criado (Espírito d4
+    // padrão, sem esse requisito atendido ainda) e não é removida pela validação
+    // automática de requisitos (mesma proteção que qualquer outra Vantagem concedida
+    // por raça já usa, via `vantagensRaciais`).
     private val carismatico = Vantagem(
         id = "carismatico",
-        nome = "Carismático",
+        nome = "CARISMÁTICO",
         categoria = Categoria.SOCIAIS,
         origem = "BASICO",
-        requisitos = Requisito()
+        requisitos = Requisito(atributoMin = mapOf("Espírito" to 8))
     )
 
     @Test
@@ -112,13 +117,13 @@ class CriadorStateTransmorfosPoderTest {
     }
 
     @Test
-    fun `Traco Carismatico do Transmorfo NAO concede a Vantagem de verdade (achado, nao corrigido ainda)`() {
-        // Documenta o estado ATUAL: a descrição da habilidade diz "Começam
-        // gratuitamente com a Vantagem Carismático", mas nada no pacote racial
-        // de TRANSMORFOS (ensureAdvantageNames/ensureAdvantageIds) concede essa
-        // Vantagem de verdade — nem o id "CARISMATICO" está em EFEITOS pra virar
-        // efeito automático. Este teste trava o comportamento atual (falha se
-        // alguém corrigir isso sem atualizar o teste) — ver relatório da rodada.
+    fun `Traco Carismatico do Transmorfo concede a Vantagem de verdade, mesmo sem Espirito d8 ainda`() {
+        // A descrição da habilidade diz "Começam gratuitamente com a Vantagem
+        // Carismático" — corrigido pra conceder de verdade (antes não concedia
+        // nada, achado ao investigar o traço "Mudar de Forma"). O personagem
+        // recém-criado começa em Espírito d4 (não atende o requisito de d8+ da
+        // Vantagem), então este teste também confere que a concessão racial não é
+        // removida pela validação automática de requisitos.
         val state = CriadorState()
         state.updateGameData(snapshotWith(listOf(transmorfos), listOf(genericAntecedenteArcano, carismatico)))
         state.compendioFantasiaAtivo = true
@@ -127,8 +132,8 @@ class CriadorStateTransmorfosPoderTest {
         state.aplicarAncestralidade("TRANSMORFOS", feedback)
 
         assertTrue(
-            "Se este teste falhar, é sinal de que Carismático PASSOU a ser concedido — bom, é o comportamento correto; só ajustar o teste.",
-            state.vantagensSelecionadas.none { it.id == "carismatico" }
+            "Esperava a Vantagem Carismático concedida de verdade, vantagens atuais: ${state.vantagensSelecionadas.map { it.id }}",
+            state.vantagensSelecionadas.any { it.id == "carismatico" }
         )
     }
 }

@@ -551,7 +551,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             "TRANSMORFOS".keyify() -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = emptyList(),
+                // "CARISMÁTICO" (habilidade racial, category=racial_trait_positive, id=
+                // CARISMATICO — mesmo texto do livro: "Começam gratuitamente com a
+                // Vantagem Carismático"): sem entrada aqui, a Vantagem nunca era
+                // concedida de verdade (o id não tem efeito automático em
+                // RacialTraitPointCatalog.EFEITOS, só custo de criação de raça) —
+                // achado ao investigar o traço "Mudar de Forma" logo abaixo.
+                ensureAdvantageNames = listOf("CARISMÁTICO"),
                 ensureAdvantageIds = listOf("antecedente_arcano_dom"),
                 ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (DOM)", "ANTECEDENTE_ARCANO_DOM")),
                 ensureRacialDisadvantages = emptyList(),

@@ -1000,4 +1000,24 @@ object RacialTraitPointCatalog {
             else -> CUSTOS[key] ?: 0
         }
     }
+
+    // Ids de traço racial que representam Voo de verdade (qualquer tier: Fadas
+    // VOO_MOV_6, Avianos/Celestiais VOO_MOV_12, Anjo/Cidade do Sol a Vapor
+    // ASAS_DE_ANJO — mesmo efeito de Voo, id próprio por causa das regras extras do
+    // traço — e VOO_MOV_24, reservado mesmo sem raça oficial usando ainda). Usado por
+    // `temTracoVoo()` pra decidir quem pode comprar a Vantagem "Golpe de Asa" (livro
+    // Fantasia, requisito oficial "Asas") a partir do traço de verdade da raça, em vez
+    // da tag manual solta "asas" que `ancestralidades.json` mantinha à parte (uma raça
+    // nova/custom com Voo não ganhava a tag automaticamente, então não conseguia
+    // comprar Golpe de Asa mesmo tendo o traço).
+    private val VOO_TRAIT_IDS = setOf("VOO_MOV_6", "VOO_MOV_12", "VOO_MOV_24", "ASAS_DE_ANJO")
+
+    fun temTracoVoo(habilidades: List<RacialAbility>?): Boolean =
+        habilidades?.any { it.resolvedTraitId().keyify() in VOO_TRAIT_IDS } ?: false
+
+    // Mesma ideia de `temTracoVoo()`, pra decidir quem pode comprar "Queimar" (livro
+    // Fantasia, requisito oficial "Arma de Sopro") a partir do traço de verdade da
+    // raça, em vez da tag manual solta "arma_de_sopro".
+    fun temArmaDeSopro(habilidades: List<RacialAbility>?): Boolean =
+        habilidades?.any { it.resolvedTraitId().keyify() == "ARMA_DE_SOPRO" } ?: false
 }
