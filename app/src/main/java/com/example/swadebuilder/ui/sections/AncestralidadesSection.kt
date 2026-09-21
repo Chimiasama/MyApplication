@@ -31,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,9 +56,11 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
+import com.example.swadebuilder.model.HabilidadeCriacao
 import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitAuditFormatter
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
@@ -67,7 +70,9 @@ import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.theme.emphasis
+import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toFancyTitleCase
@@ -139,6 +144,18 @@ fun AncestralidadesSection(
     val configuration = LocalConfiguration.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+
+    // Interruptor de auditoria (ver AppPreferences.loadModoAuditoriaIdPuro/
+    // RacialTraitAuditFormatter.kt) — só pra quem audita o app, nunca pro jogador/criador de
+    // raça: troca a leitura normal de "Ver detalhes" (nome/descrição da raça, possivelmente
+    // reskinada) pela leitura crua id-por-id contra o catálogo oficial. Reversível a
+    // qualquer momento, padrão sempre desligado.
+    var modoAuditoriaIdPuro by remember { mutableStateOf(AppPreferences.loadModoAuditoriaIdPuro(context)) }
+    val catalogoOficialHabilidades: List<HabilidadeCriacao> = remember {
+        runCatching {
+            context.loadJsonAsset<List<HabilidadeCriacao>>("basico_habilidades_raciais.json")
+        }.getOrElse { emptyList() }
+    }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
@@ -340,6 +357,33 @@ fun AncestralidadesSection(
             onListaCompletaClick = null,
             listaCompletaText = ""
         )
+
+        // Só aparece quando "Ver detalhes" existe pra ver (allowLongTexts) — sem esse painel
+        // expandido, ligar o modo auditoria não muda nada visível. Deliberadamente sem
+        // esconder atrás de nenhuma outra flag: é um botão a mais na tela, não algo o
+        // jogador vai entender ou se importar, mas também não precisa de mistério.
+        if (allowLongTexts) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Auditoria: ID de traço (sem skin)",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Switch(
+                    checked = modoAuditoriaIdPuro,
+                    onCheckedChange = {
+                        modoAuditoriaIdPuro = it
+                        AppPreferences.saveModoAuditoriaIdPuro(context, it)
+                    }
+                )
+            }
+        }
 
         if (state.habilitarCriacaoNasAbas) {
             var showCreateOptionsDialog by rememberSaveable { mutableStateOf(false) }
@@ -1163,16 +1207,6 @@ fun AncestralidadesSection(
                                             )
                                         } ?: item.habilidades
 
-                                        // Description
-                                        if (descricao.isNotBlank()) {
-                                            Text(
-                                                text = descricao,
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                            Spacer(Modifier.height(8.dp))
-                                        }
-
                                         // Características: uma lista só, montada inteiramente a partir de
                                         // dado estruturado (atributos/perícias numéricos, vantagens/
                                         // complicações grátis, id por habilidade) — nunca da descrição
@@ -1207,24 +1241,56 @@ fun AncestralidadesSection(
                                             )
                                         }
 
-                                        val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                            habilidades = habilidadesResolvidas
-                                        )
-
-                                        if (caracteristicas.isNotEmpty()) {
+                                        if (modoAuditoriaIdPuro) {
+                                            // Leitura "crua": ignora de propósito `descricao`/nome
+                                            // reskinado da raça — só id/traitId de cada habilidade
+                                            // contra a definição oficial do catálogo. Ver
+                                            // RacialTraitAuditFormatter.
                                             Text(
-                                                text = "Características:",
+                                                text = "Auditoria (id puro, sem skin):",
                                                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                                                color = MaterialTheme.colorScheme.onSurface
+                                                color = MaterialTheme.colorScheme.tertiary
                                             )
                                             Spacer(Modifier.height(2.dp))
-                                            caracteristicas.forEach { linha ->
+                                            RacialTraitAuditFormatter.formatar(habilidadesResolvidas, catalogoOficialHabilidades)
+                                                .forEach { linha ->
+                                                    Text(
+                                                        text = "• $linha",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                                                    )
+                                                }
+                                        } else {
+                                            // Description
+                                            if (descricao.isNotBlank()) {
                                                 Text(
-                                                    text = "• $linha",
+                                                    text = descricao,
                                                     style = MaterialTheme.typography.bodySmall,
-                                                    color = MaterialTheme.colorScheme.onSurface,
-                                                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
+                                                Spacer(Modifier.height(8.dp))
+                                            }
+
+                                            val caracteristicas = RacialCaracteristicasResolver.resolver(
+                                                habilidades = habilidadesResolvidas
+                                            )
+
+                                            if (caracteristicas.isNotEmpty()) {
+                                                Text(
+                                                    text = "Características:",
+                                                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                                    color = MaterialTheme.colorScheme.onSurface
+                                                )
+                                                Spacer(Modifier.height(2.dp))
+                                                caracteristicas.forEach { linha ->
+                                                    Text(
+                                                        text = "• $linha",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                                                    )
+                                                }
                                             }
                                         }
 

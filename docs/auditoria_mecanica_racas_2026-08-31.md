@@ -1950,3 +1950,61 @@ desbalanceamento novo), e por script Python conferindo os 67 nomes do
 conjunto de exclusão contra `super_poderes.json` (sem typo, sem
 duplicata, todos existentes) e contando os 25 que sobraram
 selecionáveis. Fica pro CI confirmar a compilação.
+
+## Vigésima sexta rodada — Modo Auditoria: "ID de traço" em Ver Detalhes
+
+Pedido: na tela "Ver detalhes" de uma raça (aba Ancestralidades), não dava
+pra distinguir de olho se o que aparece ali vem do id de traço com uma
+definição de verdade, de uma reskinagem por raça (ex.: Draconianos
+"Mal-Humorado" reaproveitado como "Arrogante" via `targetRef`, comentário
+já existente em `RacialAbilityLite`), ou de sujeira de hardcode sem
+nenhuma das duas coisas. Pedido explícito: um jeito de ligar/desligar essa
+leitura, só pra quem audita o app (não pro jogador nem pra quem cria
+raça), com a leitura normal (com skin) continuando padrão e reversível a
+qualquer momento.
+
+Implementado:
+
+- **`model/RacialTraitAuditFormatter.kt`** (novo): pra cada `RacialAbility`
+  de uma raça, formata uma linha só com id/traitId cru, `targetRef`/`vezes`/
+  `invisivel`/`category`, e a DEFINIÇÃO OFICIAL — nesta ordem de fonte:
+  1. entrada com o mesmo id em `basico_habilidades_raciais.json` (via
+     `HabilidadeCriacao`, carregado à parte, é o catálogo de criação de
+     raças que já existe no app) — nome e descrição oficiais, ignorando de
+     propósito `RacialAbility.nome`/`descricao` (onde mora a skin);
+  2. sem entrada no catálogo oficial mas com `RacialTraitPointCatalog.LABEL`
+     cadastrado — mostra o rótulo e avisa "sem entrada em
+     basico_habilidades_raciais.json, só em RacialTraitPointCatalog" (traço
+     bem específico de uma raça, sem equivalente no livro de criação);
+  3. sem LABEL mas com efeito mecânico resolvido (`RacialTraitPointCatalog
+     .efeitoDe`) — mostra o efeito bruto (ex.: "Atributo VIGOR +1 passo");
+  4. nem catálogo nem efeito — `"⚠ SEM CATÁLOGO nem efeito mecânico —
+     possível sujeira de hardcode..."`, com o nome de exibição normal como
+     referência. `GRANTED_EDGE`/`RACIAL_HINDRANCE` (Vantagem/Complicação
+     concedida por raça) ganham um caso à parte: o conteúdo de verdade está
+     no `targetRef`, não faz sentido procurar "GRANTED_EDGE" no catálogo de
+     traços.
+- **`AppPreferences.loadModoAuditoriaIdPuro`/`saveModoAuditoriaIdPuro`**
+  (novo, mesmo padrão de `loadTutoriaisDesabilitados`): boolean persistido,
+  padrão `false` (leitura normal).
+- **`AncestralidadesSection.kt`**: um `Switch` compacto ("Auditoria: ID de
+  traço (sem skin)") logo abaixo do cabeçalho da aba, visível só quando
+  "Ver detalhes" existe (`allowLongTexts`). Dentro do painel expandido de
+  cada raça, com o modo ligado, a Descrição normal e a lista
+  "Características:" (via `RacialCaracteristicasResolver`, que já mistura
+  LABEL com fallback pro `nome` da raça) são substituídas pela lista de
+  auditoria; desligado, comportamento idêntico a antes — nenhum código do
+  caminho normal foi alterado, só envolvido num `if (modoAuditoriaIdPuro)`.
+
+### Verificação
+
+5 testes novos (`RacialTraitAuditFormatterTest`), rodados de verdade no
+harness standalone e passando: entrada com catálogo oficial (ignora nome
+reskinado), entrada só com LABEL (avisa que falta catálogo), GRANTED_EDGE
+(usa targetRef), id sem catálogo nem efeito (vira aviso de hardcode), e
+traço empilhável (x vezes, pontos multiplicados). `scripts/phase6_reliability_gate.sh`
+passou. `AncestralidadesSection.kt` não compila no harness (Compose UI) —
+validado por balanceamento de chaves/parênteses (0/0 antes e depois, sem
+mudança) e leitura cruzada dos pontos alterados (import, estado do
+toggle, catálogo carregado, switch, branch dentro do painel "Ver
+detalhes"). Fica pro CI confirmar a compilação.
