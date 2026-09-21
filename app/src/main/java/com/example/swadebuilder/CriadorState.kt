@@ -2333,6 +2333,33 @@ class CriadorState {
             hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
         }
 
+        // Arma de Sopro (Draconianos, livro Fantasia): "causa 2d6 de dano em um Modelo
+        // de Cone ou em uma linha de 12 quadros" — sem campo estruturado próprio (não é
+        // corpo a corpo/Toque como armasNaturais), então entra direto como item de
+        // Armas à Distância (ResumoPdfReferenciador.buildWeaponAndArmorBlocks já roteia
+        // pra lá qualquer EquipamentoItem com `dano` + `distancia` != "Toque"). A
+        // Vantagem Queimar ("o dano... aumenta em um tipo de dado", livro Fantasia)
+        // sobe 2d6 pra 2d8 usando o mesmo upgradeDie() já usado pra Garras/Mordida
+        // aprimoradas acima.
+        if (RacialTraitPointCatalog.temArmaDeSopro(ancestralidadeObj.habilidades)) {
+            val temQueimar = vantagensSelecionadas.any { it.id == "queimar" }
+            val danoSopro = if (temQueimar) upgradeDie("2d6") else "2d6"
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Ataque de Sopro",
+                    dano = JsonPrimitive(danoSopro),
+                    distancia = JsonPrimitive("Cone ou Linha (12)"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0),
+                    // Repete a área aqui (além do campo `distancia` acima) porque o Resumo em
+                    // tela mostra ataques naturais numa linha só de nome+dano+observações (sem
+                    // coluna de alcance própria) — só o PDF usa a tabela de Armas à Distância
+                    // (com coluna "Alcance") pra mostrar `distancia` direto.
+                    observacoes = JsonPrimitive("Área: Cone ou Linha (12 quadros). Teste de Atletismo (pode ser Evadido); Falha Crítica causa Fadiga.")
+                )
+            )
+        }
+
         // Monster Natural Weapons: mesma leitura estruturada, pro Template de
         // Monstro Heroico (horror_monstros.json).
         getMonstroSelecionado()?.let { monstro ->
