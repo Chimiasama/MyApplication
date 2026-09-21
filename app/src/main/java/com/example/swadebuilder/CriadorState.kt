@@ -1230,41 +1230,23 @@ class CriadorState {
         // habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
         // Meio-Elfo acima (escolha por id do traço "ADAPTAVEL_OU_ANTECEDENTE_
         // ARCANO_DEMONIO", não por nome de raça), mas sem interação com
-        // atributos.
+        // atributos. Migrado pro resolveMarkedSelection genérico na rodada
+        // 38 — antes ficava só cadastrado no registro sem ser chamado, por
+        // um risco real de concessão de Vantagem quebrada (targetRef não
+        // era threadado ainda; ver comentário de
+        // AncestryVariantRegistry.meioDemonio()), já resolvido pela rodada
+        // 36 (Descendente Elemental).
         if (base.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" }) {
-            val newHabilidades = base.habilidades.toMutableList()
-            newHabilidades.removeAll {
-                it.id == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" ||
-                    it.id == "ADAPTAVEL" ||
-                    it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO"
-            }
-
-            if (meioDemonioAA) {
-                if (newHabilidades.none { it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Antecedente Arcano (Demônio)",
-                            descricao = "Pode adquirir o Antecedente Arcano (Demônio) como habilidade racial — versão diluída do sangue demoníaco, sem Disfarce Demoníaco de graça (só disponível a partir do Estágio Experiente, pela Vantagem separada Disfarce Demoníaco (Estágio Experiente)).",
-                            id = "ANTECEDENTE_ARCANO_DEMONIO_MEIO",
-                            category = "racial_edge",
-                            traitId = "GRANTED_EDGE",
-                            targetRef = "aa_demonio_meio_demonio"
-                        )
-                    )
-                }
-            } else {
-                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Adaptável",
-                            descricao = "Recebe uma Vantagem Novato extra, como um humano comum.",
-                            id = "ADAPTAVEL",
-                            category = "racial_trait_positive"
-                        )
-                    )
-                }
-            }
-            return base.copy(habilidades = newHabilidades)
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO",
+                ancestralidadeId = "MEIO-DEMONIO",
+                livro = "CIDADE_SOL_VAPOR",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "meio_demonio_traco",
+                    fixedPackageChoiceId = if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
+                )
+            )
         }
 
         // Humano (Império San, Arte da Guerra) — Signos de Nascença: mesmo

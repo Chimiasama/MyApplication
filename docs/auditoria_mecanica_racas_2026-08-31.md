@@ -3500,3 +3500,80 @@ Com isso, as 5 raças com "opções" (não Variante) identificadas na
 varredura da rodada 36 — Meio-Orc, Feral, Kitsunemimi, Gnomo e
 Usagimimi — estão todas no sistema de Seleção genérico. Não ficou
 nada pendente desta frente.
+
+## Trigésima oitava rodada — Meio-Demônio migrado (o bloqueio de rodadas atrás já tinha sido resolvido sem ninguém voltar pra fechar); 3 candidatos conferidos e confirmados como não-gap
+
+Revisão do que ainda restava da varredura completa (rodada 36): 4
+itens em aberto, nenhum deles pedido explicitamente por ninguém, mas
+citados como pendentes na lista de tarefas.
+
+### Meio-Demônio migrado
+
+`CriadorState.applyAncestryVariantAdjustments()` tinha um bloco
+`if (meioDemonioAA) {...} else {...}` construindo o traço/Vantagem na
+mão, embora `AncestryVariantRegistry.meioDemonio()` já existisse,
+cadastrado mas nunca chamado. O comentário no código (de uma rodada
+bem anterior) explicava por quê: migrar pra `resolveMarkedSelection`
+na época teria trocado silenciosamente o alvo da concessão de
+"aa_demonio_meio_demonio" (id real da Vantagem, o que
+`resolvedVantagensGratis()` espera em `targetRef`) para
+"ANTECEDENTE_ARCANO_DEMONIO_MEIO" (id do TRAÇO, que não existe no
+catálogo de Vantagens) — porque `resolveMarkedSelection` só lia
+`vantagensGratisParaAdicionar.id`, nunca `.targetRef`. Conferindo o
+código de hoje: a rodada 36 (bug #2 do Descendente Elemental, Vantagem
+Rápido nunca concedida) já resolveu exatamente essa lacuna, threadando
+`targetRef` de verdade em `TraitAddition`/`adicionarTraco`/
+`resolveMarkedSelection` — só que ninguém voltou pra Meio-Demônio pra
+aproveitar o conserto. Migrado agora: `AncestryVariantRegistry.meioDemonio()`
+ganhou `targetRef = "aa_demonio_meio_demonio"` na opção
+"antecedente_arcano" (removido o `vantagensGratisIds` que nunca foi
+consumido por nada — não existe bloco de Meio-Demônio em
+`ResolveAncestrySpecificAdjustmentsUseCase`, confirmado por grep, e
+`resolveMarkedSelection` deliberadamente não lê esse campo); o bloco
+manual em `CriadorState` virou uma chamada a `resolveMarkedSelection`,
+mesmo padrão de Meio-Elfo/Kitsunemimi/Gnomo/Usagimimi.
+
+### 3 candidatos conferidos e confirmados como não-gap (não precisam migrar)
+
+- **Rakashanos "Inimigo Racial/Ancestral"**: conferido no código — o
+  id só existe em `RacialTraitPointCatalog.CUSTOS` (custo -1, uma
+  Complicação Menor) e em nenhum outro lugar. É puramente narrativo
+  ("escolha uma ancestralidade rival do cenário", o -2 em Persuadir é
+  situacional, aplicado pelo mestre em jogo, não algo que a ficha
+  digital tem contexto pra calcular sozinha) — não existe efeito
+  numérico de personagem pra migrar, nem campo de estado, nem UI. Não
+  é uma "opção" no sentido que o sistema de Seleção resolve.
+- **Humano "Adaptável" (Vantagem de Estágio Novato à escolha)**: já
+  tem mecanismo próprio, funcional e testado
+  (`vantagemAdaptavelSelecionadaId` + um seletor de Vantagem
+  dedicado) — mas é um tipo de escolha estruturalmente diferente do
+  que `TARGET_ATTRIBUTE_OR_SKILL`/`FIXED_PACKAGE` resolvem (escolher
+  uma Vantagem inteira do catálogo do jogo, com elegibilidade
+  própria, não um atributo/perícia/pacote fixo pequeno). Migrar isso
+  pro sistema de Seleção exigiria um `SelectionType` novo inteiro —
+  fora do escopo desta varredura, que era sobre ad hoc não migrado,
+  não sobre substituir mecanismos já corretos.
+- **Quadroides "Habilidoso" (traço negativo à escolha)**: conferido —
+  só existe quando `effectiveScifiVariant == "Habilidoso"`, ou seja,
+  é uma escolha ANINHADA DENTRO DE UMA VARIANTE (troca de cenário
+  pelo mestre), não uma Seleção que a raça sempre oferece — mesma
+  categoria de Anões Ciber/Terracota, que também têm seus próprios
+  blocos dedicados dentro da Variante em vez de entrar no sistema de
+  Seleção genérico. Exatamente o tipo de coisa que o usuário pediu
+  pra EXCLUIR ("não estou falando de variante").
+
+### Verificação
+
+- Suite completa (29 arquivos, 218 testes, `CriadorStateMeioDemonioTest`
+  incluído com seus 5 testes originais intactos — inclusive o que
+  confere `vantagensSelecionadas.any { it.id == "aa_demonio_meio_demonio" }`,
+  a prova de que a Vantagem continua sendo concedida de verdade depois
+  da migração) e `scripts/phase6_reliability_gate.sh` passando (mesmo
+  WARN pré-existente de tamanho de `CriadorState.kt`, sem regressão
+  nova).
+
+Com isso, a varredura completa de "opções" (não Variante) iniciada na
+rodada 36 está fechada: todas as raças identificadas migraram pro
+sistema de Seleção genérico, e os candidatos restantes foram
+conferidos individualmente e confirmados como corretamente fora de
+escopo, não esquecidos.

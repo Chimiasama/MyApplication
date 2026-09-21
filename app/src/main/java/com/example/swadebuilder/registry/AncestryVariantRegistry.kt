@@ -1174,6 +1174,21 @@ object AncestryVariantRegistry {
     // opções são Adaptável x Antecedente Arcano (Demônio) diluído
     // (aa_demonio_meio_demonio — mesmo id de vantagem já usado em
     // ResolveAncestrySpecificAdjustmentsUseCase, não um clone novo).
+    //
+    // Ficou só cadastrado aqui (sem aplicação de verdade) da rodada em que
+    // foi criado até a rodada 38: `resolveMarkedSelection` só lia
+    // `vantagensGratisParaAdicionar` sem setar `targetRef` (só `id`), o que
+    // teria trocado silenciosamente o alvo da concessão de
+    // "aa_demonio_meio_demonio" (id real da Vantagem, o que
+    // `resolvedVantagensGratis()` espera) pra "ANTECEDENTE_ARCANO_DEMONIO_MEIO"
+    // (id do TRAÇO, que não existe no catálogo de Vantagens) — quebrando a
+    // concessão sem nenhum teste acusar na hora. A rodada 36 (Descendente
+    // Elemental) já resolveu isso threadando `targetRef` de verdade em
+    // `TraitAddition`/`resolveMarkedSelection`; `vantagensGratisIds` abaixo
+    // nunca chegou a ser consumido por nada pra esta raça (não existe bloco
+    // de Meio-Demônio em `ResolveAncestrySpecificAdjustmentsUseCase`,
+    // confirmado por grep) — removido por virar dado morto/confuso agora
+    // que `targetRef` é o mecanismo de verdade.
     private fun meioDemonio(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "MEIO-DEMONIO",
         livro = "CIDADE_SOL_VAPOR",
@@ -1200,11 +1215,11 @@ object AncestryVariantRegistry {
                             tracosParaRemoverPorId = listOf("ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"),
                             vantagensGratisParaAdicionar = listOf(
                                 TraitAddition(
-                                    "Antecedente Arcano (Demônio)",
-                                    "ANTECEDENTE_ARCANO_DEMONIO_MEIO"
+                                    nome = "Antecedente Arcano (Demônio)",
+                                    id = "ANTECEDENTE_ARCANO_DEMONIO_MEIO",
+                                    targetRef = "aa_demonio_meio_demonio"
                                 )
-                            ),
-                            vantagensGratisIds = listOf("aa_demonio_meio_demonio")
+                            )
                         )
                     )
                 )
