@@ -3027,9 +3027,156 @@ migração).
 - **Peça 4** (Variante Customizada escopada a uma única opção dentro de
   uma raça — ex.: customizar só o Signo Dragão mantendo os outros 13
   oficiais) — ainda só desenho, não implementada.
-- **Generalizar pra raças de escolha de atributo** (Minerador Genético/
-  Meio-Orc/Feral — Força-ou-Vigor(-ou-Agilidade)) — pedido explícito do
-  usuário na mesma mensagem que pediu a migração dos 14 Signos, ainda
-  não iniciado. Exige finalmente implementar
-  `SelectionType.TARGET_ATTRIBUTE_OR_SKILL`, que existe no enum desde
-  rodada anterior mas nunca foi usado por nenhuma raça.
+
+## Trigésima quarta rodada — mecanismo genérico de Seleção pra QUALQUER raça: `resolveMarkedSelection`, `TARGET_ATTRIBUTE_OR_SKILL` implementado, Meio-Orc/Feral/Minerador migrados
+
+Pedido explícito do usuário: em vez de continuar copiando o padrão
+"if de gate por id + bloco de resolução manual" pra cada raça nova
+(como as rodadas anteriores fizeram pra Herança/Signo), construir de
+verdade **um mecanismo único, usável por qualquer raça, mas só
+ativado nas que registram uma Seleção** — "Uma raça que não tenha isso
+não vai ter seletor de opção... Uma raça que tenha variações... vai
+mostrar dados diferentes no seletor." Aproveitado pra fechar o item
+pendente da rodada anterior: generalizar a escolha de atributo
+(Meio-Orc, Feral, Minerador Genético) pro mesmo formato de Seleção,
+implementando `SelectionType.TARGET_ATTRIBUTE_OR_SKILL` de verdade
+pela primeira vez.
+
+### O mecanismo genérico
+
+**Modelo** (`AncestryVariantSystem.kt`): `TraitAddition` ganhou
+`traitId`/`targetRef` opcionais — antes só existia pra pacotes de
+efeito FIXO (um id já sabe seu próprio efeito); agora uma Seleção pode
+injetar um traço cujo efeito mecânico depende do que o jogador
+escolheu (`traitId="ATTRIBUTE_BOOST"` + `targetRef=<atributo
+escolhido>`, mesmo par `traitId`/`targetRef` que `RacialAbility` já
+usa em outros lugares do app — ex.: bônus de atributo de Monstro
+Heroico). `SelectionDef` ganhou `marcadorTraitId` (declara qual id, em
+`habilidades[]` da raça base, sinaliza "esta Seleção está ativa aqui"
+— antes cada raça migrada precisava de um `if` de gate próprio
+escrito à mão em `CriadorState`; agora é um campo do registro) e
+`manterMarcadorVisivel` (Signo mantém o card de referência dos 13
+Signos depois de resolvido; Herança/Endurecido/Primitivo não, o
+marcador é só um placeholder que desaparece) e `defaultTargetChoice`
+(cada Seleção declara seu próprio default quando o jogador não
+escolheu nada ainda — antes cada bloco em `CriadorState`/na UI tinha
+o próprio `?: "Vigor"`/`?: "Força"` espalhado e duplicado).
+
+**Resolução** (`ResolveAncestryVariantPackageUseCase.resolveTargetAttributeOrSkill`,
+NOVO): recebe a resposta do jogador (`SelectionAnswer.targetChoice`),
+valida contra `targetOptions`, cai no `defaultTargetChoice` da própria
+Seleção se a resposta for nula/inválida, e injeta UM `TraitAddition`
+com `traitId=ATTRIBUTE_BOOST`/`SKILL_BOOST` + `targetRef` + `pontos`
+explícito (2 pra atributo, 1 pra perícia — não confia em
+`RacialTraitPointCatalog.CUSTOS[id]`, porque o `id` do traço é único
+por Seleção, não um id genérico reaproveitável entre raças, então o
+custo tem que vir junto no próprio `TraitAddition`, igual ao padrão
+"traço calibrado à mão" que já existia pra casos como as armas de
+Draconianos).
+
+**`CriadorState.resolveMarkedSelection()`** (NOVO, privado): UMA função
+que qualquer raça com marcador pode chamar — resolve o pacote via
+`resolveAncestryVariantPackageUseCase.resolve()`, remove (ou mantém,
+conforme `manterMarcadorVisivel`) o marcador de `habilidades[]`, injeta
+os traços resolvidos (repassando `traitId`/`targetRef`/`pontos`, e
+escolhendo `category` certo — `racial_edge`/`racial_hindrance`/
+`racial_trait_positive` — a partir do `traitId` do traço, não mais
+fixo). Os blocos de Herança (Meio-Elfo) e Signo (Humano Arte da
+Guerra), que antes tinham ~25 linhas cada construindo `RacialAbility`
+na mão, viraram uma chamada de ~10 linhas cada — prova de que o
+mecanismo generaliza sem perder nada. Meio-Orc (marcador `ENDURECIDO`)
+e Feral (marcador `PRIMITIVO`) usam a MESMA função.
+
+**Meio-Demônio continua fora desta migração** (Peça 2, decisão já
+documentada): agora que `traitId`/`targetRef` passam pelo pipeline
+genérico, o bloqueio original (perder o `targetRef` da Vantagem real ao
+usar `addIfAbsent`) não existe mais — mas migrar essa raça especificamente
+não foi pedido nesta rodada, e reabrir esse risco sem necessidade não
+está no escopo. Fica anotado como via livre pra uma rodada futura, se
+pedido.
+
+### Meio-Orc, Feral e Humano Sci-Fi "Minerador" migrados
+
+- `AncestryVariantRegistry.meioOrc()` (MEIO-ORCS/FANTASIA): Seleção
+  `TARGET_ATTRIBUTE_OR_SKILL`, `targetOptions=[Força,Vigor]`,
+  `defaultTargetChoice="Vigor"` (livro não define um padrão; preserva
+  o comportamento de antes), `marcadorTraitId="ENDURECIDO"`.
+- `AncestryVariantRegistry.feralArteDaGuerra()` (FERAL/ARTE_DA_GUERRA):
+  `targetOptions=[Força,Vigor,Agilidade]`, `defaultTargetChoice="Força"`,
+  `marcadorTraitId="PRIMITIVO"`.
+- `AncestryVariantRegistry.humanos()` (HUMANOS/SCI_FI): a `VariantOption`
+  "minerador" ganhou uma Seleção ANINHADA (mesmo padrão já usado por
+  `humanoFantasia()`'s Povo do Mar/Senhores dos Cavalos) —
+  `targetOptions=[Força,Vigor]`. O marcador fixo `MINERADOR_ATRIBUTO`
+  (que só sinalizava a escolha, sem custo cadastrado — a raça toda
+  nunca passava pelo validador de orçamento por opção) foi removido; o
+  traço real resolvido entra no lugar.
+- `atributoBaseRacial()`: bloco especial
+  `habilidadeIds.contains("ENDURECIDO" || "PRIMITIVO" || "MINERADOR_ATRIBUTO")`
+  removido inteiramente — o laço genérico de `AtributoStep` (que já lê
+  `traitId`/`targetRef` de qualquer traço) cobre os três agora, mesmo
+  padrão que já cobria Boi/Dragão/Macaco/Urso desde a rodada do Signo.
+- `precisaPassarPorAjusteDeVariante`/`withVariant` (gate que decide se
+  `applyAncestryVariantAdjustments` roda): ganharam
+  `temEscolhaDeAtributoRacial()`, mesmo padrão de
+  `temSignoDeNascenca()`/`temEscolhaMeioDemonio()` — sem isso, o
+  candidato único de Meio-Orc/Feral nunca chegava a resolver a Seleção
+  (achado real via teste, não hipotético: `CriadorStateRacialTraitDrivenAttributesTest`
+  e `ScifiAncestryVariantSyncTest` quebraram com o marcador presente
+  mas sem o traço resolvido substituindo).
+
+### UI: um seletor genérico em vez de 3 blocos quase idênticos
+
+`AncestralidadesSection.kt` tinha 3 blocos de `OutlinedButton`+
+`DropdownMenu` praticamente idênticos (Minerador, Feral, Meio-Orc),
+cada um com sua lista de opções e rótulo escritos à mão. Substituídos
+por `atributoEscolhidoSelectionDefFor()` (acha a `SelectionDef`
+aplicável — top-level via `marcadorTraitId`, ou aninhada dentro da
+`VariantOption` ativa) + `AtributoEscolhidoPicker()` (um Composable só,
+rótulo e opções lidos do próprio `SelectionDef`). `isFeral`/`isMeioOrc`
+(flags por nome/id só usadas por esses blocos) removidas junto —
+ficaram redundantes.
+
+### Achado e correção: bloco genérico já resolvia a Seleção aninhada, "capenga"
+
+O bloco genérico de `scifiVariantDrivenKeys` (que já resolve toda
+Variante Sci-Fi de 2 opções) roda ANTES do bloco dedicado de Minerador,
+pra QUALQUER `VariantOption` — inclusive "minerador", que agora tem uma
+Seleção aninhada. Só que aquele bloco genérico passa
+`selectionAnswers=emptyList()` (não sabe de resposta de jogador, só de
+Variante) e usa um `addIfAbsent` que não repassa `traitId`/`targetRef` —
+então ele MESMO já resolvia (e injetava, capenga, sem o par
+`traitId`/`targetRef`) o traço de atributo, caindo sempre no
+`defaultTargetChoice` (Força), ANTES do bloco dedicado rodar. O dedup
+por id (`newHabilidades.none { it.id == traco.id }`) do bloco dedicado
+então via o id já presente e silenciosamente MANTINHA a versão errada
+— a escolha real do jogador (`humanoMineradorAtributo`) nunca chegava
+a valer pro Minerador. Pego por teste real
+(`CriadorStateAtributoEscolhidoTest`, não hipotético — as 2 primeiras
+tentativas falharam consistentemente com "Vigor" caindo pra "Força"),
+corrigido trocando o dedup por `removeAll` antes de adicionar: o bloco
+dedicado agora sempre substitui a versão capenga do genérico pela
+resolvida de verdade.
+
+### Verificação
+
+- Novo arquivo de teste (`CriadorStateAtributoEscolhidoTest`, 8
+  testes): Meio-Orc sem escolha usa Vigor (default), com Força
+  escolhida sobe Força; Feral sem escolha usa Força (default), com
+  Agilidade escolhida sobe Agilidade; Humano Sci-Fi Minerador sem
+  escolha usa Força, com Vigor escolhido sobe Vigor; Baixa Gravidade
+  (a outra opção da mesma raça) não ganha bônus de Força/Vigor;
+  trocar Meio-Orc de Vigor pra Força não deixa Vigor vazando.
+- Suite completa rodada no harness (25 arquivos, 202 testes) — todos
+  passando, incluindo os 3 testes de `CriadorStateFullFlowTest`
+  (rodados a partir da raiz do repo).
+  `scripts/phase6_reliability_gate.sh` passou (mesmo WARN pré-existente
+  de tamanho de `CriadorState.kt`, sem regressão nova).
+
+### Pendente pra próxima rodada
+
+- **Peça 4** (Variante Customizada escopada a uma única opção dentro de
+  uma raça) — segue só desenho, não implementada.
+- Migrar Meio-Demônio pro `resolveMarkedSelection` genérico — agora
+  tecnicamente seguro (o bloqueio original não existe mais), mas não
+  pedido nesta rodada.

@@ -7,6 +7,7 @@ import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionDef
 import com.example.swadebuilder.model.SelectionType
 import com.example.swadebuilder.model.TraitAddition
+import com.example.swadebuilder.model.TraitTargetKind
 import com.example.swadebuilder.model.VariantGroup
 import com.example.swadebuilder.model.VariantOption
 
@@ -23,7 +24,8 @@ import com.example.swadebuilder.model.VariantOption
  * ambiguidade que tinha adiado esse par no lote 2 não existe de verdade.
  *
  * Uma raça ausente daqui simplesmente não tem variante nem seleção conhecida
- * pelo motor novo (ex.: Feral — tem traços fixos, não variante nem seleção).
+ * pelo motor novo (ex.: a maioria das raças de Fantasia/Horror sem nenhuma
+ * escolha embutida — só Adaptável ou um traço fixo, sem opção nenhuma).
  */
 object AncestryVariantRegistry {
 
@@ -59,7 +61,9 @@ object AncestryVariantRegistry {
         meioElfoHeranca("HORROR"),
         meioElfoHeranca("SUPER"),
         meioDemonio(),
-        humanoArteDaGuerraSignos()
+        humanoArteDaGuerraSignos(),
+        meioOrc(),
+        feralArteDaGuerra()
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -233,6 +237,26 @@ object AncestryVariantRegistry {
                     nome = "Minerador",
                     pacoteFixo = ResolvedTraitPackage(
                         desvantagensParaAdicionar = listOf(TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR"))
+                    ),
+                    // Seleção aninhada (mesmo padrão de humanoFantasia() —
+                    // VariantOption.selecoes): o jogador escolhe Força OU
+                    // Vigor pro d6 inicial ("Planeta de Mineração"). Antes o
+                    // marcador MINERADOR_ATRIBUTO só sinalizava a escolha,
+                    // sem custo cadastrado (a raça toda não passava pelo
+                    // validador de orçamento por opção); agora o traço
+                    // resolvido (ATTRIBUTE_BOOST, 2 pts) entra de verdade em
+                    // habilidades[] via CriadorState, mesmo mecanismo de
+                    // Meio-Orc/Feral acima.
+                    selecoes = listOf(
+                        SelectionDef(
+                            id = "humano_minerador_atributo",
+                            rotulo = "Planeta de Mineração",
+                            tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                            targetKind = TraitTargetKind.ATTRIBUTE,
+                            targetOptions = listOf("Força", "Vigor"),
+                            defaultTargetChoice = "Força",
+                            injectionTemplate = "{alvo} d6 (Planeta de Mineração)"
+                        )
                     )
                 )
             )
@@ -1343,6 +1367,53 @@ object AncestryVariantRegistry {
                         )
                     )
                 )
+            )
+        )
+    )
+
+    // --- Meio-Orc (Fantasia) e Feral (Arte da Guerra): Seleção do tipo
+    // TARGET_ATTRIBUTE_OR_SKILL — o jogador escolhe QUAL atributo recebe o
+    // d6 inicial, não um pacote nomeado (mesma ideia de Herança/Signo acima,
+    // mas o "efeito mecânico" é o próprio alvo escolhido, não um pacote de
+    // traços fixo por opção). O marcador (ENDURECIDO/PRIMITIVO) já existe em
+    // ancestralidades.json com custo cadastrado em RacialTraitPointCatalog.CUSTOS
+    // (2, "oficial: aumento_atributo") — continua valendo pro cálculo de
+    // orçamento da raça BASE (ResolveVariantPointBudgetUseCase.valorTotalDe),
+    // já que o traço resolvido (ATTRIBUTE_BOOST) substitui o marcador em
+    // habilidades[] em tempo de execução, não no JSON.
+    private fun meioOrc(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MEIO-ORCS",
+        livro = "FANTASIA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "meio_orc_atributo",
+                rotulo = "Endurecido",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.ATTRIBUTE,
+                targetOptions = listOf("Força", "Vigor"),
+                // Livro não define um padrão pra "Endurecido" — "Vigor"
+                // preserva o comportamento default de antes desta raça
+                // migrar pro mesmo mecanismo de Feral/Minerador.
+                defaultTargetChoice = "Vigor",
+                injectionTemplate = "{alvo} d6 (Endurecido)",
+                marcadorTraitId = "ENDURECIDO"
+            )
+        )
+    )
+
+    private fun feralArteDaGuerra(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "FERAL",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "feral_atributo",
+                rotulo = "Primitivo",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.ATTRIBUTE,
+                targetOptions = listOf("Força", "Vigor", "Agilidade"),
+                defaultTargetChoice = "Força",
+                injectionTemplate = "{alvo} d6 (Primitivo)",
+                marcadorTraitId = "PRIMITIVO"
             )
         )
     )

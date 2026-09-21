@@ -831,6 +831,15 @@ class CriadorState {
         fun temSignoDeNascenca(candidato: RacialModifier): Boolean =
             candidato.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
 
+        // Mesmo padrão acima, pra Seleção TARGET_ATTRIBUTE_OR_SKILL de
+        // Meio-Orc (ENDURECIDO, Fantasia) e Feral (PRIMITIVO, Arte da
+        // Guerra) — dois ids exclusivos dessas raças, sem precisar checar o
+        // nome. Feral já tem origem ARTE_DA_GUERRA, que sozinha não força
+        // `applyAncestryVariantAdjustments` (só FC/SCI_FI força incondicional
+        // logo abaixo); Meio-Orc é Fantasia, mesmo caso.
+        fun temEscolhaDeAtributoRacial(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any { it.id?.keyify() == "ENDURECIDO" || it.id?.keyify() == "PRIMITIVO" }
+
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
         // Elementais (Sci-Fi) fica fora de scifiVariantDrivenKeys de propósito
@@ -853,6 +862,7 @@ class CriadorState {
         val precisaPassarPorAjusteDeVariante = key.contains("UMVEE") ||
             temEscolhaMeioDemonio(candidates.first()) ||
             temSignoDeNascenca(candidates.first()) ||
+            temEscolhaDeAtributoRacial(candidates.first()) ||
             (candidatoEhScifiOuFc && key == "ELEMENTAIS") ||
             (candidatoEhScifiOuFc && key in AncestryVariantRegistry.scifiVariantDrivenKeys) ||
             isFantasiaHumanoOuDescElemental ||
@@ -887,7 +897,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected) || temSignoDeNascenca(selected)) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected) || temSignoDeNascenca(selected) || temEscolhaDeAtributoRacial(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
@@ -998,6 +1008,71 @@ class CriadorState {
         return base.copy(habilidades = newHabilidades)
     }
 
+    /**
+     * Mecanismo genérico de Seleção "marcador em habilidades[]": QUALQUER
+     * raça pode usar (Herança do Meio-Elfo, Signo do Humano Arte da Guerra,
+     * Endurecido do Meio-Orc, Primitivo do Feral — nenhuma delas precisa de
+     * lógica própria além de UM `if` de gate por id de marcador + UMA
+     * chamada aqui), mas não fica ativado a menos que a raça carregue um
+     * traço-marcador em `habilidades[]` (ver `AncestryVariantRegistry` —
+     * `SelectionDef.marcadorTraitId`, quando presente, documenta qual id é
+     * esse pra cada Seleção). Uma raça sem marcador simplesmente nunca entra
+     * nesta função — mostra os dados normais da raça, sem nada a mais.
+     *
+     * `base` sempre chega como a definição PRÍSTINA da raça (vinda do JSON,
+     * nunca da versão já resolvida em `currentAncestryDef`), então "tirar o
+     * marcador, adicionar o resolvido" nunca precisa desfazer uma escolha
+     * anterior — ela nunca chega a entrar em `base` pra começo de conversa.
+     *
+     * Só lê `resolved.tracosParaAdicionar` — nenhuma das Seleções que usam
+     * este caminho hoje produz `vantagensGratisParaAdicionar`/
+     * `desvantagensParaAdicionar` (essas continuam sendo concedidas por
+     * Vantagem real via `SIGNO_VANTAGENS_AUTOMATICAS`/`ResolveAncestrySpecificAdjustmentsUseCase`,
+     * não por aqui — ver rodada do Meio-Demônio sobre o risco de duplicar
+     * concessão de Vantagem). Se uma futura Seleção precisar disso, estender
+     * aqui em vez de duplicar a função.
+     */
+    private fun resolveMarkedSelection(
+        base: RacialModifier,
+        marcador: String,
+        ancestralidadeId: String,
+        livro: String,
+        answer: com.example.swadebuilder.model.SelectionAnswer,
+        manterMarcadorVisivel: Boolean = false
+    ): RacialModifier {
+        val resolved = resolveAncestryVariantPackageUseCase.resolve(
+            ancestralidadeId = ancestralidadeId,
+            livro = livro,
+            variantOptionId = null,
+            selectionAnswers = listOf(answer)
+        )
+        val newHabilidades = base.habilidades
+            .filter { hab -> if (manterMarcadorVisivel) hab.id?.keyify() == marcador else hab.id?.keyify() != marcador }
+            .toMutableList()
+        resolved.tracosParaAdicionar.forEach { traco ->
+            if (newHabilidades.none { it.id == traco.id }) {
+                val category = when (traco.traitId) {
+                    "GRANTED_EDGE" -> "racial_edge"
+                    "RACIAL_HINDRANCE" -> "racial_hindrance"
+                    else -> "racial_trait_positive"
+                }
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = traco.nome,
+                        descricao = "",
+                        id = traco.id,
+                        category = category,
+                        traitId = traco.traitId,
+                        targetRef = traco.targetRef,
+                        pontos = traco.pontos,
+                        vezes = traco.vezes
+                    )
+                )
+            }
+        }
+        return base.copy(habilidades = newHabilidades)
+    }
+
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
             // Pacotes Culturais: Variante de verdade (mesmo sistema genérico de
@@ -1071,32 +1146,16 @@ class CriadorState {
         // pacote, então não tem como as opções saírem de sincronismo entre
         // Básico/Fantasia/Horror/Super.
         if (base.habilidades.any { it.id?.keyify() == "HERANCA" }) {
-            val herancaAnswer = com.example.swadebuilder.model.SelectionAnswer(
-                selectionId = "meio_elfo_heranca",
-                fixedPackageChoiceId = if (meioElfoAgil) "agil" else "adaptavel"
-            )
-            val resolved = resolveAncestryVariantPackageUseCase.resolve(
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "HERANCA",
                 ancestralidadeId = "MEIO-ELFOS",
                 livro = canonicalOriginKey(base.origem),
-                variantOptionId = null,
-                selectionAnswers = listOf(herancaAnswer)
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "meio_elfo_heranca",
+                    fixedPackageChoiceId = if (meioElfoAgil) "agil" else "adaptavel"
+                )
             )
-            val newHabilidades = base.habilidades.toMutableList()
-            newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
-            resolved.tracosParaAdicionar.forEach { traco ->
-                if (newHabilidades.none { it.id == traco.id }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = traco.nome,
-                            descricao = "",
-                            id = traco.id,
-                            category = "racial_trait_positive",
-                            vezes = traco.vezes
-                        )
-                    )
-                }
-            }
-            return base.copy(habilidades = newHabilidades)
         }
 
         // Meio-Demônio (Cidade do Sol a Vapor): igual ao livro, escolhe entre
@@ -1158,34 +1217,57 @@ class CriadorState {
         if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
             base.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
         ) {
-            val signoOptionId = signoIdFromNome(signoAdgSelecionado)?.lowercase()
-            val signoAnswer = com.example.swadebuilder.model.SelectionAnswer(
-                selectionId = "signo_de_nascenca",
-                fixedPackageChoiceId = signoOptionId
-            )
-            val resolved = resolveAncestryVariantPackageUseCase.resolve(
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "SIGNOS_DE_NASCENCA",
                 ancestralidadeId = "HUMANOS",
                 livro = "ARTE_DA_GUERRA",
-                variantOptionId = null,
-                selectionAnswers = listOf(signoAnswer)
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "signo_de_nascenca",
+                    fixedPackageChoiceId = signoIdFromNome(signoAdgSelecionado)?.lowercase()
+                ),
+                manterMarcadorVisivel = true
             )
-            val newHabilidades = base.habilidades
-                .filter { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
-                .toMutableList()
-            resolved.tracosParaAdicionar.forEach { traco ->
-                if (newHabilidades.none { it.id == traco.id }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = traco.nome,
-                            descricao = "",
-                            id = traco.id,
-                            category = "racial_trait_positive",
-                            vezes = traco.vezes
-                        )
-                    )
-                }
-            }
-            return base.copy(habilidades = newHabilidades)
+        }
+
+        // Meio-Orc (Fantasia): Endurecido — escolha entre Força/Vigor d6.
+        // Feral (Arte da Guerra): Primitivo — escolha entre Força/Vigor/
+        // Agilidade d6. Mesmo mecanismo genérico acima (resolveMarkedSelection),
+        // só que a Seleção é TARGET_ATTRIBUTE_OR_SKILL: quem decide QUAL
+        // atributo é o campo compartilhado `humanoMineradorAtributo` (mesmo
+        // campo já usado pela variante "Minerador" de Humanos Sci-Fi
+        // abaixo — nunca duas raças com essa escolha ativas ao mesmo tempo).
+        // Repassado cru pra `resolve()` — validação contra `targetOptions` e
+        // o default por Seleção (Vigor pro Meio-Orc, Força pro resto, ver
+        // AncestryVariantRegistry.meioOrc()/feral()) já acontecem lá dentro
+        // (ResolveAncestryVariantPackageUseCase.resolveTargetAttributeOrSkill),
+        // não precisam ser duplicados aqui.
+        if (base.habilidades.any { it.id?.keyify() == "ENDURECIDO" }) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "ENDURECIDO",
+                ancestralidadeId = "MEIO-ORCS",
+                livro = "FANTASIA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "meio_orc_atributo",
+                    targetChoice = humanoMineradorAtributo
+                )
+            )
+        }
+
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "PRIMITIVO" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "PRIMITIVO",
+                ancestralidadeId = "FERAL",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "feral_atributo",
+                    targetChoice = humanoMineradorAtributo
+                )
+            )
         }
 
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
@@ -1474,13 +1556,54 @@ class CriadorState {
                     )
                 }
             } else if (variant.equals("Minerador", ignoreCase = true)) {
-                if (newHabilidades.none { it.id == "MINERADOR_ATRIBUTO" }) {
+                // Seleção aninhada dentro da VariantOption "minerador" (ver
+                // AncestryVariantRegistry.humanos() SCI_FI) — mesmo mecanismo
+                // de TARGET_ATTRIBUTE_OR_SKILL usado por Meio-Orc/Feral acima,
+                // só que aninhado numa Variante em vez de direto na raça
+                // (marcador MINERADOR_ATRIBUTO fixo removido: o traço real
+                // resolvido, ATTRIBUTE_BOOST+targetRef, entra no lugar).
+                // DEPENDENCIA_ATMOSFERICA_MAIOR (a outra metade do pacote
+                // desta VariantOption) já foi injetada pelo bloco genérico de
+                // scifiVariantDrivenKeys logo acima — só o traço de atributo
+                // (não coberto ali, que resolve sem respostas de Seleção)
+                // falta aqui.
+                val nestedDef = AncestryVariantRegistry.get("HUMANOS", "SCI_FI")
+                    ?.grupoVariante?.opcoes
+                    ?.firstOrNull { it.id == "minerador" }
+                    ?.selecoes?.firstOrNull()
+                val answer = nestedDef?.let {
+                    com.example.swadebuilder.model.SelectionAnswer(
+                        selectionId = it.id,
+                        targetChoice = humanoMineradorAtributo
+                    )
+                }
+                val resolved = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "HUMANOS",
+                    livro = "SCI_FI",
+                    variantOptionId = "minerador",
+                    selectionAnswers = listOfNotNull(answer)
+                )
+                // O bloco genérico de scifiVariantDrivenKeys logo acima já
+                // rodou pra esta mesma VariantOption, mas com
+                // selectionAnswers=emptyList() (não sabe de Seleções — só de
+                // Variantes) — ele já resolveu e injetou este MESMO traço,
+                // só que caindo no default (defaultTargetChoice) por falta
+                // de resposta, e via addIfAbsent (que não repassa traitId/
+                // targetRef). Precisa remover essa versão "capenga" antes de
+                // adicionar a de verdade, senão o dedup por id abaixo
+                // silenciosamente mantém a errada.
+                resolved.tracosParaAdicionar.forEach { traco ->
+                    newHabilidades.removeAll { it.id == traco.id }
                     newHabilidades.add(
                         com.example.swadebuilder.model.RacialAbility(
-                            nome = "Planeta de Mineração",
-                            descricao = "Habitantes de planetas de mineração começam com d6 em Força ou Vigor (à escolha) em vez de d4. Isso aumenta o máximo do atributo escolhido para d12+1.",
-                            id = "MINERADOR_ATRIBUTO",
-                            category = "racial_trait_positive"
+                            nome = traco.nome,
+                            descricao = "",
+                            id = traco.id,
+                            category = "racial_trait_positive",
+                            traitId = traco.traitId,
+                            targetRef = traco.targetRef,
+                            pontos = traco.pontos,
+                            vezes = traco.vezes
                         )
                     )
                 }
@@ -5510,32 +5633,14 @@ class CriadorState {
             }
         }
 
-        // Traços de alvo escolhido pelo jogador entre 2-3 atributos: o traço só
-        // decide QUE a raça tem a escolha; qual atributo foi escolhido continua
-        // vindo do state dedicado (mesmo padrão usado no restante do app,
-        // reaproveitando o mesmo campo pras 3 raças — nunca duas ativas ao
-        // mesmo tempo, já que só existe uma ancestralidade escolhida por vez).
-        if (habilidadeIds.contains("ENDURECIDO") || habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
-            // Meio-Orc (Fantasia): escolha entre Força/Vigor (livro não define um
-            // padrão; "Vigor" preserva o comportamento default de antes desta raça
-            // migrar pro mesmo mecanismo de Feral/Minerador).
-            // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
-            // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
-            val opcoesValidas = if (habilidadeIds.contains("PRIMITIVO")) {
-                setOf("FORCA", "VIGOR", "AGILIDADE")
-            } else {
-                setOf("FORCA", "VIGOR")
-            }
-            val defaultChoice = if (habilidadeIds.contains("ENDURECIDO")) "Vigor" else "Força"
-            // `humanoMineradorAtributo` é compartilhado pelas 3 raças — sem essa
-            // validação, uma escolha "Agilidade" deixada pelo Feral sobrevivia à
-            // troca pro Meio-Orc/Minerador (que não têm essa opção) e cancelava o
-            // bônus por completo (nem Força nem Vigor batiam), silenciosamente.
-            val chosen = humanoMineradorAtributo?.takeIf { it.keyify() in opcoesValidas } ?: defaultChoice
-            if (attrKey == chosen.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
+        // Meio-Orc (Fantasia)/Feral (Arte da Guerra)/Humano Sci-Fi "Minerador":
+        // escolha de atributo (Força/Vigor/Agilidade à escolha do jogador) não
+        // é mais um "if" hardcoded aqui — applyAncestryVariantAdjustments
+        // (resolveMarkedSelection, Seleção TARGET_ATTRIBUTE_OR_SKILL) já
+        // injeta o traço real (traitId=ATTRIBUTE_BOOST + targetRef=o atributo
+        // escolhido) em habilidades[] conforme `humanoMineradorAtributo`, e o
+        // loop genérico de AtributoStep logo acima já o lê como qualquer
+        // outro traço racial — mesmo padrão do Povo da Montanha/Signos.
 
         // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
         // não precisam mais de exceção numérica aqui: MUITO_FORTE/RESISTENCIA

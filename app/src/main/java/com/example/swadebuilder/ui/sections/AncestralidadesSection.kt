@@ -61,6 +61,8 @@ import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitAuditFormatter
+import com.example.swadebuilder.model.SelectionDef
+import com.example.swadebuilder.model.SelectionType
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
@@ -126,6 +128,70 @@ private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
 // vivem em com.example.swadebuilder.model.RacialModifier.kt (groupAncestralidadesForDisplay),
 // para serem testáveis por unit test puro sem depender do Compose.
 private fun stripScenarioSuffix(nome: String): String = stripAncestralidadeScenarioSuffix(nome)
+
+/**
+ * Acha a Seleção TARGET_ATTRIBUTE_OR_SKILL aplicável a esta exibição de raça,
+ * se houver — mesmo mecanismo genérico usado por Meio-Orc (Endurecido),
+ * Feral (Primitivo) e Humanos Sci-Fi (Planeta de Mineração, aninhada dentro
+ * da VariantOption "Minerador"), sem precisar de 3 blocos de UI quase
+ * idênticos copiados um do outro. Uma raça sem nenhuma Seleção deste tipo
+ * (a maioria) simplesmente recebe null aqui e não mostra seletor nenhum —
+ * só os dados normais da raça.
+ */
+private fun atributoEscolhidoSelectionDefFor(
+    item: RacialModifierLite,
+    variantConfig: com.example.swadebuilder.model.AncestryVariantConfig?,
+    currentSelection: String?
+): SelectionDef? {
+    if (variantConfig == null) return null
+    val topLevel = variantConfig.selecoes.firstOrNull { def ->
+        def.tipo == SelectionType.TARGET_ATTRIBUTE_OR_SKILL &&
+            def.marcadorTraitId != null &&
+            item.habilidades.any { it.id?.keyify() == def.marcadorTraitId }
+    }
+    if (topLevel != null) return topLevel
+    return variantConfig.grupoVariante?.opcoes
+        ?.firstOrNull { it.nome.equals(currentSelection, ignoreCase = true) }
+        ?.selecoes
+        ?.firstOrNull { it.tipo == SelectionType.TARGET_ATTRIBUTE_OR_SKILL }
+}
+
+/**
+ * Seletor genérico pra uma Seleção TARGET_ATTRIBUTE_OR_SKILL — rótulo e
+ * opções vêm do próprio `SelectionDef` (dado, não código), reaproveitado por
+ * qualquer raça que registre uma (ver `atributoEscolhidoSelectionDefFor`
+ * acima e `AncestryVariantRegistry.meioOrc()/feral()`/a Seleção aninhada de
+ * `humanos()` Sci-Fi). `state.humanoMineradorAtributo` é o único campo
+ * compartilhado por todas elas — nunca duas ativas ao mesmo tempo, já que só
+ * existe uma ancestralidade escolhida por vez.
+ */
+@Composable
+private fun AtributoEscolhidoPicker(def: SelectionDef, state: CriadorState) {
+    Spacer(Modifier.height(8.dp))
+    val opcoes = def.targetOptions.orEmpty()
+    val atual = state.humanoMineradorAtributo
+        ?.takeIf { escolha -> opcoes.any { it.equals(escolha, ignoreCase = true) } }
+        ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.any { it.equals(padrao, ignoreCase = true) } }
+        ?: opcoes.firstOrNull().orEmpty()
+    Text("${def.rotulo}:", style = MaterialTheme.typography.labelMedium)
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        OutlinedButton(onClick = { expanded = true }) {
+            Text(atual.toFancyTitleCase())
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            opcoes.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option.toFancyTitleCase()) },
+                    onClick = {
+                        state.selecionarHumanoMineradorAtributo(option)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -540,7 +606,7 @@ fun AncestralidadesSection(
                             }
 
                             // Por id do traço "SIGNOS_DE_NASCENCA", não por nome de raça —
-                            // mesmo padrão de isMeioOrc/isMeioElfo/isMeioDemonio acima.
+                            // mesmo padrão de isMeioElfo/isMeioDemonio abaixo.
                             val temSigno = item.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
                             if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && temSigno) {
                                 Spacer(Modifier.height(8.dp))
@@ -610,21 +676,14 @@ fun AncestralidadesSection(
                             if (isSelected) {
                                 val opcoesValidas = item.opcoes
 
-                                // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
-                                // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
-                                val isFeral = item.nome.keyify() == "FERAL"
-                                // Por id do traço, não por nome de raça: "Endurecido" é o único traço
-                                // oficial com esse id, e só existe nas raças que têm a escolha
-                                // Força/Vigor de verdade (Meio-Orc Fantasia) — o Meio-Orc do Pathfinder
-                                // também casa com o nome, mas tem "Forte" (fixo, sem escolha) em vez
-                                // de "Endurecido".
-                                val isMeioOrc = item.habilidades.any { it.id?.keyify() == "ENDURECIDO" }
                                 // Por id do traço "HERANCA", não por nome de raça: "Meio-Elfo" do
                                 // Pathfinder também casa com o nome, mas tem "Flexibilidade" (atributo
                                 // à escolha livre) em vez desta Herança Élfica/Humana.
                                 val isMeioElfo = item.habilidades.any { it.id?.keyify() == "HERANCA" }
                                 // Por id do traço, não por nome de raça — mesmo padrão de
-                                // isMeioOrc/isMeioElfo acima.
+                                // isMeioElfo acima. Meio-Orc (Endurecido) e Feral (Primitivo) não
+                                // precisam mais de flag própria aqui — resolvidos genericamente por
+                                // atributoEscolhidoSelectionDefFor (ver mais abaixo).
                                 val isMeioDemonio = item.habilidades.any {
                                     it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"
                                 }
@@ -675,32 +734,11 @@ fun AncestralidadesSection(
                                         }
                                     }
 
-                                    // Human Miner Attribute Choice
-                                    if (item.nome.keyify() == "HUMANOS" && currentSelection == "Minerador") {
-                                        Spacer(Modifier.height(8.dp))
-                                        val attributeOptions = listOf("Força", "Vigor")
-                                        var attributeExpanded by remember { mutableStateOf(false) }
-                                        val currentAttributeSelection = state.humanoMineradorAtributo
-                                            ?.takeIf { it in attributeOptions }
-                                            ?: "Força"
-                                        Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                        Box {
-                                            OutlinedButton(onClick = { attributeExpanded = true }) {
-                                                Text(currentAttributeSelection.toFancyTitleCase())
-                                            }
-                                            DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                                attributeOptions.forEach { option ->
-                                                    DropdownMenuItem(
-                                                        text = { Text(option.toFancyTitleCase()) },
-                                                        onClick = {
-                                                            state.selecionarHumanoMineradorAtributo(option)
-                                                            attributeExpanded = false
-                                                        }
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
+                                    // Humanos Sci-Fi "Minerador": Seleção aninhada dentro da
+                                    // VariantOption (ver atributoEscolhidoSelectionDefFor acima) —
+                                    // mesmo seletor genérico usado por Meio-Orc/Feral abaixo.
+                                    atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection)
+                                        ?.let { def -> AtributoEscolhidoPicker(def, state) }
 
                                     // Anões Ciber: até 2 pontos de traços raciais negativos (nenhum maior que -2)
                                     if (item.nome.keyify() == "ANOES" && currentSelection == "Ciber") {
@@ -889,35 +927,14 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                if (isFeral) {
-                                    Spacer(Modifier.height(8.dp))
-                                    // Rótulo "Dons da Natureza: Ápice" removido — texto sobrado de
-                                    // Umvee (Dons da Natureza é a Seleção DELES, "Ápice" uma das
-                                    // opções), copiado aqui sem ajustar; Feral não tem Dons da
-                                    // Natureza nem Ápice, só o Primitivo abaixo.
-                                    val attributeOptions = listOf("Força", "Vigor", "Agilidade")
-                                    var attributeExpanded by remember { mutableStateOf(false) }
-                                    val currentAttributeSelection = state.humanoMineradorAtributo
-                                        ?.takeIf { it in attributeOptions }
-                                        ?: "Força"
-                                    Text("Atributo Primitivo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                    Box {
-                                        OutlinedButton(onClick = { attributeExpanded = true }) {
-                                            Text(currentAttributeSelection.toFancyTitleCase())
-                                        }
-                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                            attributeOptions.forEach { option ->
-                                                DropdownMenuItem(
-                                                    text = { Text(option.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarHumanoMineradorAtributo(option)
-                                                        attributeExpanded = false
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
+                                // Feral (Primitivo): mesmo seletor genérico do Minerador acima —
+                                // Seleção TARGET_ATTRIBUTE_OR_SKILL top-level desta vez (não
+                                // aninhada numa VariantOption), gateada pelo id do traço-marcador
+                                // "PRIMITIVO" (ver atributoEscolhidoSelectionDefFor), não pelo
+                                // nome da raça.
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "PRIMITIVO" }
+                                    ?.let { def -> AtributoEscolhidoPicker(def, state) }
 
                                 // Meio-Elfos: escolha entre Herança Élfica (traço "AGIL", Agilidade d6)
                                 // e Herança Humana (traço "ADAPTAVEL", Vantagem de Estágio Novato à
@@ -962,36 +979,12 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                // Meio-Orcs: "Endurecido" — escolha entre Força ou Vigor d6 (livro:
-                                // "Começam com um d6 em Força ou Vigor em vez de um d4"). Mesmo
-                                // mecanismo de escolha de atributo já usado por Feral/Minerador
-                                // Genético acima, não um dialog dedicado.
-                                if (isMeioOrc) {
-                                    Spacer(Modifier.height(8.dp))
-                                    Text("Endurecido:", style = MaterialTheme.typography.labelMedium)
-                                    val attributeOptions = listOf("Força", "Vigor")
-                                    var attributeExpanded by remember { mutableStateOf(false) }
-                                    val currentAttributeSelection = state.humanoMineradorAtributo
-                                        ?.takeIf { it in attributeOptions }
-                                        ?: "Vigor"
-                                    Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                    Box {
-                                        OutlinedButton(onClick = { attributeExpanded = true }) {
-                                            Text(currentAttributeSelection.toFancyTitleCase())
-                                        }
-                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                            attributeOptions.forEach { option ->
-                                                DropdownMenuItem(
-                                                    text = { Text(option.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarHumanoMineradorAtributo(option)
-                                                        attributeExpanded = false
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
+                                // Meio-Orc (Endurecido): mesmo seletor genérico do Feral/Minerador
+                                // acima — gateado pelo id do traço-marcador "ENDURECIDO", não pelo
+                                // nome da raça.
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "ENDURECIDO" }
+                                    ?.let { def -> AtributoEscolhidoPicker(def, state) }
 
                                 // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si já
                                 // é o dropdown genérico de Variante lá em cima (dentro do
