@@ -1023,7 +1023,22 @@ object RacialTraitPointCatalog {
         if (id == null) return 0
         return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> value * 2
-            "SKILL_BOOST" -> if (value >= 1) 2 else 1
+            // Achado real (rodada 36): fórmula antiga era `if (value>=1) 2
+            // else 1` — invertida em relação ao catálogo oficial
+            // (pericia_racial_d4 custa 1, pericia_racial_d6 custa 2, ver
+            // basico_habilidades_raciais.json), nunca pega antes porque
+            // nenhuma raça cadastrada usava SKILL_BOOST com value>=1 até
+            // esta rodada (Kitsunemimi/Usagimimi/Gnomo). `value` aqui é
+            // "passos", MESMA unidade que AtributoStep/PericiaStep.passos
+            // usam no loop genérico de resolução ao vivo (4 + passos*2) —
+            // mas ATTRIBUTE_BOOST e SKILL_BOOST têm baselines diferentes:
+            // atributo já começa em d4 (passos=1 vira d6, "1 passo ACIMA da
+            // base"), perícia começa DESTREINADA (passos=0 vira d4, "o
+            // primeiro patamar treinado"; passos=1 vira d6). Por isso o
+            // custo de SKILL_BOOST é `value + 1`, não `value` puro:
+            // passos=0 (d4) = 1pt, passos=1 (d6) = 2pt — bate exatamente
+            // com os dois tiers oficiais.
+            "SKILL_BOOST" -> value + 1
             // Só usado se quem criar o traço deixar `custo` em 0 (o editor
             // sempre pede um valor explícito) — 1 ponto de orçamento por
             // Ponto de Perícia/Atributo concedido ou tirado, o mesmo peso já

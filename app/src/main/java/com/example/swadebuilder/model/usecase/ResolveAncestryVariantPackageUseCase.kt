@@ -74,10 +74,13 @@ class ResolveAncestryVariantPackageUseCase {
     // vez de um id fixo por combinação (ex.: um id só pra "Força escolhida"
     // e outro pra "Vigor escolhido" seria hardcode por valor final, o mesmo
     // problema que RacialTraitPointCatalog já evita com AtributoStep/
-    // PericiaStep). `pontos` vai explícito (não confia em CUSTOS[id]) porque
-    // o custo de ATTRIBUTE_BOOST/SKILL_BOOST no orçamento (Resolve/
-    // ValidateAncestryOptionBudgetsUseCase) lê `TraitAddition.id` cru, não
-    // `traitId` — ver o comentário de TraitAddition.traitId.
+    // PericiaStep). `pontos` vai explícito (não confia em CUSTOS[id]), mas
+    // computado via RacialTraitPointCatalog.custoDe() — a MESMA fórmula que
+    // já calibra o catálogo oficial pra ATTRIBUTE_BOOST/SKILL_BOOST (ver
+    // custoDe) — em vez de duplicado aqui, porque o custo de ATTRIBUTE_BOOST/
+    // SKILL_BOOST no orçamento (Resolve/ValidateAncestryOptionBudgetsUseCase)
+    // lê `TraitAddition.id` cru, não `traitId` — ver o comentário de
+    // TraitAddition.traitId.
     private fun resolveTargetAttributeOrSkill(def: SelectionDef, answer: SelectionAnswer?): ResolvedTraitPackage {
         val opcoes = def.targetOptions.orEmpty()
         val alvo = answer?.targetChoice?.takeIf { escolhido -> opcoes.any { it.equals(escolhido, ignoreCase = true) } }
@@ -86,7 +89,7 @@ class ResolveAncestryVariantPackageUseCase {
             ?: return ResolvedTraitPackage()
         val nomeExibicao = def.injectionTemplate?.replace("{alvo}", alvo) ?: alvo
         val traitIdMecanico = if (def.targetKind == TraitTargetKind.SKILL) "SKILL_BOOST" else "ATTRIBUTE_BOOST"
-        val pontos = if (def.targetKind == TraitTargetKind.SKILL) 1 else 2
+        val pontos = com.example.swadebuilder.model.RacialTraitPointCatalog.custoDe(traitIdMecanico, value = def.passos)
         return ResolvedTraitPackage(
             tracosParaAdicionar = listOf(
                 TraitAddition(
@@ -94,6 +97,7 @@ class ResolveAncestryVariantPackageUseCase {
                     id = "${def.id}_escolha".uppercase(),
                     traitId = traitIdMecanico,
                     targetRef = alvo,
+                    value = def.passos,
                     pontos = pontos
                 )
             )

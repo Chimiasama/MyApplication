@@ -87,7 +87,13 @@ data class TraitAddition(
     // ainda lê `id` cru — por isso quem usa `traitId` aqui também deve
     // preencher `pontos` explicitamente, não confiar em CUSTOS[id].
     val traitId: String? = null,
-    val targetRef: String? = null
+    val targetRef: String? = null,
+    // Idem — override de RacialAbility.value (passos acima de d4; ver
+    // RacialTraitEffect.AtributoStep/PericiaStep.passos) pros mesmos casos
+    // de `traitId`/`targetRef` acima, quando o passo não é o padrão 1 (d6
+    // de atributo, d4 de perícia) — ex.: Usagimimi "Definido pelo Ofício"
+    // concede perícia d6 (passos=2), não d4.
+    val value: Int = 1
 )
 
 /** Id + contagem de compras de um traço empilhável (ver RacialTraitPointCatalog.
@@ -164,6 +170,21 @@ data class SelectionDef(
     // um `?: "Vigor"` espalhado em CriadorState/na UI. Nulo cai no primeiro
     // de `targetOptions`.
     val defaultTargetChoice: String? = null,
+    // Quantos passos acima de d4 o alvo escolhido recebe — mesma unidade
+    // que o laço genérico de resolução ao vivo usa (CriadorState.
+    // atributoBaseRacial/periciaStartRawInternal: `4 + passos*2`), então
+    // passos=0 é d4 e passos=1 é d6. ATTRIBUTE_BOOST sempre usa passos>=1
+    // (atributo já nasce em d4, não faz sentido "subir pra d4"; o padrão 1
+    // cobre Meio-Orc/Feral/Minerador, todos "d6 à escolha"). SKILL_BOOST
+    // usa passos=0 quando o livro diz só "começam com d4" (perícia nasce
+    // DESTREINADA, então d4 já É o primeiro patamar — ex.: Kitsunemimi
+    // Preparado, Gnomo Obsessivos) e passos=1 quando o livro diz "d6"
+    // (ex.: Usagimimi Definido pelo Ofício). O custo em pontos vem de
+    // RacialTraitPointCatalog.custoDe() com este valor (ATTRIBUTE_BOOST=
+    // passos*2, SKILL_BOOST=passos+1 — a mesma fonte única que já calibra
+    // o catálogo oficial: pericia_racial_d4=1pt/passos=0,
+    // pericia_racial_d6=2pt/passos=1), nunca hardcoded aqui.
+    val passos: Int = 1,
     val injectionTemplate: String? = null,
     // BUDGETED_CATALOG — delega pro catálogo existente (ex.: AnaoCiberTraitCatalog)
     val catalogId: String? = null,

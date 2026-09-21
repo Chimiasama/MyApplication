@@ -3276,3 +3276,144 @@ Com isso, as 4 peças do plano original da rodada 33 estão completas.
 Pendente, não pedido em nenhuma rodada: migrar Meio-Demônio pro
 `resolveMarkedSelection` genérico (tecnicamente seguro desde a rodada
 34, nunca pedido).
+
+## Trigésima sexta rodada — auditoria de TODAS as raças do app por Seleção não migrada; 2 bugs reais achados no caminho
+
+Pedido explícito, distinto de "Variante" (mestre reconfigura a raça
+pro cenário): "as opções disponíveis delas" — toda raça que oferece
+uma escolha ao próprio jogador na criação (perícia/atributo à escolha,
+traço A-ou-B etc.), migrada pro sistema de Seleção genérico da rodada
+34, não só o Humanoide da Guerra citado como exemplo. Varredura
+completa das 112 raças de `ancestralidades.json` + todo campo de
+estado `*Escolhida`/`*Selecionado` de `CriadorState.kt`.
+
+### Achados que já estavam corretos (não é gap)
+
+- Humano/Meio-Elfo Pathfinder "Flexibilidade": +1 Ponto de Atributo
+  livre pro jogador gastar (evita o caso de borda de um atributo já
+  em d12 não ter como subir mais um passo) — mecanismo
+  deliberadamente diferente de um traço-marcador fixo, não uma
+  Seleção do mesmo tipo. Deixado como está.
+- Rakashanos (Inimigo Racial/Ancestral) e o "Adaptável" de Humano
+  (Vantagem de Estágio Novato à escolha, várias edições) — mecanismos
+  próprios já servidos por UI dedicada, fora do escopo desta rodada
+  (escolha de Vantagem/raça-inimiga, não perícia/atributo).
+
+### Bug real #1 — Descendente Elemental: escolha de elemento sem nenhum efeito mecânico
+
+`applyAncestryVariantAdjustments` tinha um bloco
+`when (descendenteElementalSelecionado) { ... }` de verdade — só que
+posicionado DEPOIS de um `return base` que já disparava sempre pra
+essa raça (`opcoes` vazio). Confirmado ao vivo: escolher "Terra" não
+mudava Vigor (continuava d4) nem injetava Sólido como Rocha. Bug de
+produção anterior a esta sessão, só exposto agora pela varredura
+sistemática. Corrigido: novo bloco gateado por
+`habilidadeIds.contains("ELEMENTO_ANCESTRAL")`, roteado por
+`resolveMarkedSelection` (marcador `ELEMENTO_ANCESTRAL`,
+`FixedPackageOption` por elemento em
+`AncestryVariantRegistry.descendenteElemental()`), posicionado ANTES
+do `return base` do bloco Sci-Fi. O código morto também removia
+incondicionalmente `RESISTENCIA_AMBIENTAL` — confirmado por
+orçamento de pontos (1+2-1=2, bate com `pontosRaciaisEsperados`) que
+esse traço é permanente, não ligado à escolha de elemento; não
+carregado pra versão nova.
+
+### Bug real #2 — Descendente Elemental (Fogo): Vantagem "Rápido" nunca era concedida
+
+Mesmo depois do bug #1 corrigido, escolher "Fogo" ainda não dava a
+Vantagem Rápido prometida pelo traço. Duas causas: (a)
+`resolveMarkedSelection` só processava `tracosParaAdicionar`
+(traços/habilidades), nunca `vantagensGratisParaAdicionar`; (b)
+`ResolveAncestrySpecificAdjustmentsUseCase` já tinha um bloco
+"DESCENDENTE ELEMENTAL" — mas só com lógica de REMOÇÃO
+(`automaticAdvantagesToRemove`), nunca de concessão, mecanismo
+totalmente separado do primeiro. Corrigido estendendo
+`resolveMarkedSelection` com um `adicionarTraco()` compartilhado que
+processa os dois tipos de traço e roteia `GRANTED_EDGE` pro mecanismo
+`resolvedVantagensGratis()` (que já funciona pra outras raças); o
+`TraitAddition("RÁPIDO", ...)` do registro ganhou
+`targetRef = "rapido"` (id real de `vantagens.json`).
+
+### Bug real #3 — fórmula de custo de SKILL_BOOST (latente, nunca exercitada)
+
+Ao migrar Kitsunemimi/Gnomo (perícia à escolha, primeira vez que
+`TARGET_ATTRIBUTE_OR_SKILL` resolve uma PERÍCIA em vez de um
+atributo), os testes novos falharam: perícia escolhida vinha d6 em
+vez de d4. Causa raiz, em duas camadas:
+- `RacialTraitPointCatalog.custoDe("SKILL_BOOST", value)` calculava
+  `if (value >= 1) 2 else 1` — invertido; corrigido primeiro pra
+  `value` (ainda errado, ver abaixo), depois pra `value + 1`.
+- Semântica real de `passos`, confirmada lendo os DOIS loops de
+  resolução ao vivo (`atributoBaseRacial`/`periciaStartRawInternal`,
+  ambos usam `4 + passos*2`): ATRIBUTO sempre parte de d4 implícito,
+  então `passos=1` sempre foi d6 (comportamento pré-existente, correto,
+  do Meio-Orc/Feral/Minerador). PERÍCIA parte DESTREINADA — d4 é o
+  PRIMEIRO patamar treinado, não "um passo acima" —, então
+  `passos=0` é d4 e `passos=1` é d6. Calibração oficial confirmada
+  em `basico_habilidades_raciais.json`:
+  `pericia_racial_d4`=1pt, `pericia_racial_d6`=2pt — exatamente
+  `value + 1` com `value=passos`. `SelectionDef.passos` ganhou
+  default `= 1` e um comentário explicando a distinção; Kitsunemimi/
+  Gnomo declaram `passos = 0` explicitamente (caso "começa
+  destreinada").
+
+### Kitsunemimi (Preparado) e Gnomo (Obsessivos) migrados
+
+Mesmo padrão de Meio-Orc/Feral, mas `targetKind = SKILL`:
+`AncestryVariantRegistry.kitsunemimiArteDaGuerra()` (5 perícias:
+Conhecimento Acadêmico, Convenção, Intimidar, Pesquisar, Provocar) e
+`gnomoPathfinder()` (11 perícias de Astúcia do Pathfinder, listadas
+via `pericias.json`). `CriadorState.temEscolhaDeAtributoOuPericia`
+(renomeada de `temEscolhaDeAtributoRacial`) estendida de
+`{ENDURECIDO, PRIMITIVO}` pra incluir `PREPARADO`/`OBSESSIVOS`; os
+`if` avulsos velhos dentro de `periciaStartRawInternal` que liam
+`habilidadeIdsPericia.contains("OBSESSIVOS"/"PREPARADO")` removidos,
+substituídos pelos blocos gateados por
+`habilidadeIds.any { it.id?.keyify() == "PREPARADO"/"OBSESSIVOS" }` +
+`resolveMarkedSelection`, igual ao resto da família.
+
+### UI: `AtributoEscolhidoPicker` deixa de ser hardcoded
+
+Achado ao preparar o seletor de Kitsunemimi/Gnomo: o composable
+`AtributoEscolhidoPicker(def, state)` (rodada 34) lia/escrevia direto
+`state.humanoMineradorAtributo`/`selecionarHumanoMineradorAtributo` —
+reusar como estava pra Kitsunemimi/Gnomo escreveria no campo ERRADO
+(o de Minerador/Feral/Meio-Orc), corrompendo os dois. Assinatura
+trocada pra `AtributoEscolhidoPicker(def, valorAtual, onSelecionar)`;
+os 3 chamadores existentes (Minerador, Feral, Meio-Orc) passam
+explicitamente `state.humanoMineradorAtributo`/
+`{ state.selecionarHumanoMineradorAtributo(it) }`; 2 chamadores novos
+(Kitsunemimi/Gnomo) passam seus próprios campos
+(`kitsunemimiPericiaEscolhida`/`gnomoPericiaEscolhida`), gateados
+pelo `marcadorTraitId` da Seleção ativa, mesmo padrão do
+Feral/Meio-Orc.
+
+### Deliberadamente adiado: Usagimimi "Definido pelo Ofício"
+
+Escolha de QUALQUER perícia (não uma lista fixa curta) — o picker
+genérico atual (`AtributoEscolhidoPicker`) só sabe renderizar um
+dropdown de poucas opções fixas, não um catálogo filtrado completo
+como o seletor de perícia dos Anões Ciber
+(`periciasFiltradasPorCompendio`); precisa de uma nova capacidade de
+UI. Além disso tem um efeito colateral independente de
+compatibilidade com Tropo (`isUsagimimiTransicaoRestrictionActive()`,
+ligado a um valor-sentinela "Transição") que não pode ser perturbado
+de passagem. Adiamento consciente e documentado, não esquecimento.
+
+### Verificação
+
+- 2 testes novos: `CriadorStateDescendenteElementalTest` (5 testes —
+  Água/Terra/Fogo cada um com o traço/atributo certo, Fogo concede a
+  Vantagem Rápido de verdade via `GRANTED_EDGE`/`targetRef` E
+  `resolvedVantagensGratis()`, trocar de elemento não deixa o traço
+  anterior vazando) e `CriadorStatePericiaEscolhidaTest` (3 testes —
+  Kitsunemimi/Gnomo começam com a perícia escolhida em d4, trocar de
+  perícia no Gnomo não deixa a anterior vazando).
+- Suite completa (29 arquivos, 215 testes) e
+  `scripts/phase6_reliability_gate.sh` passando (mesmo WARN
+  pré-existente de tamanho de `CriadorState.kt`, sem regressão nova).
+- `AncestralidadesSection.kt` revisado manualmente linha a linha
+  (não compila no harness puro-JVM, sem Compose/Material3 real).
+
+Pendente, explicitamente fora desta rodada: migração de Usagimimi
+(ver acima, precisa de nova capacidade de UI).

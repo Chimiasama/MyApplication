@@ -63,7 +63,9 @@ object AncestryVariantRegistry {
         meioDemonio(),
         humanoArteDaGuerraSignos(),
         meioOrc(),
-        feralArteDaGuerra()
+        feralArteDaGuerra(),
+        kitsunemimiArteDaGuerra(),
+        gnomoPathfinder()
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -903,12 +905,28 @@ object AncestryVariantRegistry {
     )
 
     // --- Descendente Elemental (Fantasia): Seleção de elemento, mesmo padrão
-    // de elementaisScifi() acima (o comentário de lá já citava este caso como
-    // o análogo pendente). Base fixa em ancestralidades.json (Resistência
-    // Ambiental +1, Forasteiro Menor -1) mais o placeholder "Elemento
-    // Ancestral" (ELEMENTO_ANCESTRAL, custo 0 — ver RacialTraitPointCatalog);
-    // cada elemento resolvido vale 2 pontos, então a raça fecha em +2
-    // (-1+1+0 do placeholder, +2 do elemento) qualquer que seja a escolha.
+    // de elementaisScifi() acima. Base fixa em ancestralidades.json
+    // (Resistência Ambiental +1, sempre presente — NÃO é substituída pela
+    // escolha, é um traço permanente à parte; Forasteiro Menor -1) mais o
+    // marcador "Elemento Ancestral" (ELEMENTO_ANCESTRAL, custo 2 —
+    // resolveMarkedSelection REMOVE esse marcador e injeta o traço real do
+    // elemento escolhido, que já custa 2 também, então o catálogo estático
+    // (RESISTENCIA_AMBIENTAL 1 + ELEMENTO_ANCESTRAL 2 + FORASTEIRO -1 = 2)
+    // e o resolvido ao vivo (RESISTENCIA_AMBIENTAL 1 + <elemento> 2 +
+    // FORASTEIRO -1 = 2) fecham no mesmo total — mesmo padrão de HERANCA
+    // (Meio-Elfo), sem precisar mexer no JSON nem na lista de exceções de
+    // AncestralidadeCatalogBudgetTest.
+    //
+    // Achado real (rodada 36): antes desta rodada, o bloco que resolvia
+    // `descendenteElementalSelecionado` em CriadorState.applyAncestryVariantAdjustments
+    // ficava DEPOIS de `resolveSciFiVariantSelectionFor(base.nome, base.opcoes)
+    // ?: return base` — e Descendente Elemental não tem `opcoes` (raça sem
+    // Variante de livro, só Seleção), então esse early-return disparava
+    // sempre primeiro e o bloco inteiro nunca era alcançado: escolher um
+    // elemento não tinha efeito mecânico nenhum (bug real em produção,
+    // confirmado rodando o app — não hipotético). Corrigido movendo a
+    // resolução pra antes desse early-return, mesmo lugar de Herança/
+    // Signo/Meio-Orc/Feral.
     private fun descendenteElemental(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "DESCENDENTE ELEMENTAL",
         livro = "FANTASIA",
@@ -917,6 +935,7 @@ object AncestryVariantRegistry {
                 id = "descendente_elemental_elemento",
                 rotulo = "Escolha o elemento ancestral",
                 tipo = SelectionType.FIXED_PACKAGE,
+                marcadorTraitId = "ELEMENTO_ANCESTRAL",
                 pacotesFixos = listOf(
                     FixedPackageOption(
                         "agua", "Água",
@@ -928,7 +947,17 @@ object AncestryVariantRegistry {
                     ),
                     FixedPackageOption(
                         "fogo", "Fogo",
-                        ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf(TraitAddition("RÁPIDO", "RAPIDO")))
+                        // targetRef = id real de vantagens.json ("rapido") —
+                        // resolveMarkedSelection injeta isso como
+                        // traitId=GRANTED_EDGE + targetRef, o par que
+                        // resolvedVantagensGratis() já lê pra conceder a
+                        // Vantagem de verdade (mesmo mecanismo de
+                        // Kitsunemimi/Tanukimimi/Meio-Demônio).
+                        ResolvedTraitPackage(
+                            vantagensGratisParaAdicionar = listOf(
+                                TraitAddition("RÁPIDO", "RAPIDO", targetRef = "rapido")
+                            )
+                        )
                     ),
                     FixedPackageOption(
                         "terra", "Terra",
@@ -1414,6 +1443,67 @@ object AncestryVariantRegistry {
                 defaultTargetChoice = "Força",
                 injectionTemplate = "{alvo} d6 (Primitivo)",
                 marcadorTraitId = "PRIMITIVO"
+            )
+        )
+    )
+
+    // --- Kitsunemimi (Raposa, Arte da Guerra): "Preparado" — escolhe 1 de 5
+    // perícias listadas pelo livro pra começar em d4 (passos=1, mesmo custo
+    // 1pt já cadastrado em RacialTraitPointCatalog pro marcador PREPARADO).
+    // Achado real (rodada 36): antes só existia como `if` avulso em
+    // CriadorState (habilidadeIdsPericia.contains("PREPARADO") +
+    // kitsunemimiPericiaEscolhida) — funcionava, mas fora do sistema de
+    // Seleção; migrado agora pro mesmo padrão de Meio-Orc/Feral.
+    private fun kitsunemimiArteDaGuerra(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "KITSUNEMIMI (RAPOSA)",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "kitsunemimi_preparado",
+                rotulo = "Preparado",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.SKILL,
+                targetOptions = listOf(
+                    "Conhecimento Acadêmico", "Convenção", "Intimidar", "Pesquisar", "Provocar"
+                ),
+                defaultTargetChoice = "Conhecimento Acadêmico",
+                // passos=0: livro diz "começar com d4" — perícia nasce
+                // destreinada, então d4 já é o primeiro patamar (não "d6",
+                // que seria passos=1/padrão da classe). Custo 1pt (ver
+                // RacialTraitPointCatalog.custoDe SKILL_BOOST).
+                passos = 0,
+                injectionTemplate = "{alvo} d4 (Preparado)",
+                marcadorTraitId = "PREPARADO"
+            )
+        )
+    )
+
+    // --- Gnomo (Pathfinder): "Obsessivos" — escolhe 1 perícia baseada em
+    // Astúcia (dentre as do próprio livro Pathfinder) pra começar em d4.
+    // Lista estática (mesma ideia de Meio-Orc Força/Vigor) em vez de "livre
+    // entre todas as perícias de Astúcia" — o livro já enumera um conjunto
+    // finito por edição, então não precisa do picker "qualquer perícia"
+    // (esse sim ainda pendente, ver Usagimimi "Definido pelo Ofício").
+    private fun gnomoPathfinder(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "GNOMO",
+        livro = "PATHFINDER",
+        selecoes = listOf(
+            SelectionDef(
+                id = "gnomo_obsessivos",
+                rotulo = "Obsessivos",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.SKILL,
+                targetOptions = listOf(
+                    "Conhecimento de Batalha", "Ciência", "Conhecimento Acadêmico",
+                    "Conhecimento Geral", "Conjurar", "Consertar", "Curar", "Jogar",
+                    "Ocultismo", "Perceber", "Sobrevivência"
+                ),
+                defaultTargetChoice = "Conhecimento Acadêmico",
+                // passos=0: mesmo caso de Kitsunemimi acima — "d4" é o
+                // primeiro patamar de uma perícia destreinada.
+                passos = 0,
+                injectionTemplate = "{alvo} d4 (Obsessivos)",
+                marcadorTraitId = "OBSESSIVOS"
             )
         )
     )

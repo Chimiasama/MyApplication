@@ -832,13 +832,16 @@ class CriadorState {
             candidato.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
 
         // Mesmo padrão acima, pra Seleção TARGET_ATTRIBUTE_OR_SKILL de
-        // Meio-Orc (ENDURECIDO, Fantasia) e Feral (PRIMITIVO, Arte da
-        // Guerra) — dois ids exclusivos dessas raças, sem precisar checar o
-        // nome. Feral já tem origem ARTE_DA_GUERRA, que sozinha não força
-        // `applyAncestryVariantAdjustments` (só FC/SCI_FI força incondicional
-        // logo abaixo); Meio-Orc é Fantasia, mesmo caso.
-        fun temEscolhaDeAtributoRacial(candidato: RacialModifier): Boolean =
-            candidato.habilidades.any { it.id?.keyify() == "ENDURECIDO" || it.id?.keyify() == "PRIMITIVO" }
+        // Meio-Orc (ENDURECIDO, Fantasia), Feral (PRIMITIVO, Arte da
+        // Guerra), Kitsunemimi (PREPARADO, Arte da Guerra) e Gnomo
+        // (OBSESSIVOS, Pathfinder) — ids exclusivos dessas raças, sem
+        // precisar checar o nome. Nenhuma delas tem origem que já força
+        // `applyAncestryVariantAdjustments` incondicionalmente (só FC/
+        // SCI_FI fazem isso logo abaixo).
+        fun temEscolhaDeAtributoOuPericia(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any {
+                it.id?.keyify() in setOf("ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS")
+            }
 
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
@@ -862,7 +865,7 @@ class CriadorState {
         val precisaPassarPorAjusteDeVariante = key.contains("UMVEE") ||
             temEscolhaMeioDemonio(candidates.first()) ||
             temSignoDeNascenca(candidates.first()) ||
-            temEscolhaDeAtributoRacial(candidates.first()) ||
+            temEscolhaDeAtributoOuPericia(candidates.first()) ||
             (candidatoEhScifiOuFc && key == "ELEMENTAIS") ||
             (candidatoEhScifiOuFc && key in AncestryVariantRegistry.scifiVariantDrivenKeys) ||
             isFantasiaHumanoOuDescElemental ||
@@ -897,7 +900,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected) || temSignoDeNascenca(selected) || temEscolhaDeAtributoRacial(selected)) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected) || temSignoDeNascenca(selected) || temEscolhaDeAtributoOuPericia(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
@@ -1072,13 +1075,17 @@ class CriadorState {
      * marcador, adicionar o resolvido" nunca precisa desfazer uma escolha
      * anterior — ela nunca chega a entrar em `base` pra começo de conversa.
      *
-     * Só lê `resolved.tracosParaAdicionar` — nenhuma das Seleções que usam
-     * este caminho hoje produz `vantagensGratisParaAdicionar`/
-     * `desvantagensParaAdicionar` (essas continuam sendo concedidas por
-     * Vantagem real via `SIGNO_VANTAGENS_AUTOMATICAS`/`ResolveAncestrySpecificAdjustmentsUseCase`,
-     * não por aqui — ver rodada do Meio-Demônio sobre o risco de duplicar
-     * concessão de Vantagem). Se uma futura Seleção precisar disso, estender
-     * aqui em vez de duplicar a função.
+     * Lê `resolved.tracosParaAdicionar` E `resolved.vantagensGratisParaAdicionar`
+     * (Vantagem real concedida — ex.: Descendente Elemental "Fogo" concede
+     * Rápido de verdade). NÃO lê `desvantagensParaAdicionar`/`vantagensGratisIds`:
+     * nenhuma Seleção que usa este caminho hoje produz Complicação
+     * concedida, e `vantagensGratisIds` é consumida por um mecanismo à
+     * parte (`ResolveAncestrySpecificAdjustmentsUseCase.ensureAdvantageIds`)
+     * que este caminho não substitui (ver rodada do Meio-Demônio sobre o
+     * risco de duplicar concessão de Vantagem se os dois caminhos lerem a
+     * mesma resposta). Se uma futura Seleção precisar de Complicação
+     * concedida ou de `vantagensGratisIds`, estender aqui em vez de
+     * duplicar a função.
      */
     private fun resolveMarkedSelection(
         base: RacialModifier,
@@ -1097,9 +1104,10 @@ class CriadorState {
         val newHabilidades = base.habilidades
             .filter { hab -> if (manterMarcadorVisivel) hab.id?.keyify() == marcador else hab.id?.keyify() != marcador }
             .toMutableList()
-        resolved.tracosParaAdicionar.forEach { traco ->
+        fun adicionarTraco(traco: com.example.swadebuilder.model.TraitAddition, traitIdPadrao: String?) {
             if (newHabilidades.none { it.id == traco.id }) {
-                val category = when (traco.traitId) {
+                val traitId = traco.traitId ?: traitIdPadrao
+                val category = when (traitId) {
                     "GRANTED_EDGE" -> "racial_edge"
                     "RACIAL_HINDRANCE" -> "racial_hindrance"
                     else -> "racial_trait_positive"
@@ -1110,14 +1118,17 @@ class CriadorState {
                         descricao = "",
                         id = traco.id,
                         category = category,
-                        traitId = traco.traitId,
+                        traitId = traitId,
                         targetRef = traco.targetRef,
+                        value = traco.value,
                         pontos = traco.pontos,
                         vezes = traco.vezes
                     )
                 )
             }
         }
+        resolved.tracosParaAdicionar.forEach { adicionarTraco(it, traitIdPadrao = null) }
+        resolved.vantagensGratisParaAdicionar.forEach { adicionarTraco(it, traitIdPadrao = "GRANTED_EDGE") }
         return base.copy(habilidades = newHabilidades)
     }
 
@@ -1318,6 +1329,76 @@ class CriadorState {
             )
         }
 
+        // Kitsunemimi (Raposa, Arte da Guerra): Preparado — escolhe 1 de 5
+        // perícias listadas pra começar em d4. Mesmo mecanismo de Meio-Orc/
+        // Feral, mas SKILL em vez de ATTRIBUTE; kitsunemimiPericiaEscolhida
+        // é o campo de estado dedicado (já existia, só não alimentava a
+        // Seleção genérica ainda).
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "PREPARADO" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "PREPARADO",
+                ancestralidadeId = "KITSUNEMIMI (RAPOSA)",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "kitsunemimi_preparado",
+                    targetChoice = kitsunemimiPericiaEscolhida
+                )
+            )
+        }
+
+        // Gnomo (Pathfinder): Obsessivos — escolhe 1 perícia de Astúcia (do
+        // conjunto fixo do livro) pra começar em d4. Mesmo mecanismo acima.
+        if (canonicalOriginKey(base.origem) == "PATHFINDER" &&
+            base.habilidades.any { it.id?.keyify() == "OBSESSIVOS" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "OBSESSIVOS",
+                ancestralidadeId = "GNOMO",
+                livro = "PATHFINDER",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "gnomo_obsessivos",
+                    targetChoice = gnomoPericiaEscolhida
+                )
+            )
+        }
+
+        // Descendente Elemental (Fantasia): Seleção de elemento (Água/Ar/
+        // Fogo/Terra) — precisa vir ANTES do early-return de
+        // resolveSciFiVariantSelectionFor logo abaixo, porque esta raça não
+        // tem `opcoes` (não é Variante de livro, só Seleção): o bloco antigo
+        // que resolvia isso ficava DEPOIS desse early-return e nunca era
+        // alcançado — escolher um elemento não tinha efeito nenhum (bug
+        // real, corrigido nesta rodada; ver comentário em
+        // AncestryVariantRegistry.descendenteElemental()). Resistência
+        // Ambiental é permanente (não é substituída pela escolha, ao
+        // contrário do que o bloco antigo assumia) — resolveMarkedSelection
+        // só mexe no marcador ELEMENTO_ANCESTRAL, mantendo o resto intacto.
+        if (canonicalOriginKey(base.origem) == "FANTASIA" &&
+            base.habilidades.any { it.id?.keyify() == "ELEMENTO_ANCESTRAL" }
+        ) {
+            val elementoId = when (descendenteElementalSelecionado) {
+                "Água" -> "agua"
+                "Ar" -> "ar"
+                "Fogo" -> "fogo"
+                "Terra" -> "terra"
+                else -> null
+            }
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "ELEMENTO_ANCESTRAL",
+                ancestralidadeId = "DESCENDENTE ELEMENTAL",
+                livro = "FANTASIA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "descendente_elemental_elemento",
+                    fixedPackageChoiceId = elementoId
+                )
+            )
+        }
+
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
@@ -1330,39 +1411,6 @@ class CriadorState {
         // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
-
-        if (key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL") {
-            // Always remove generic resistance, as it will be replaced by specific one from selection
-            removeByIdOrName("RESISTENCIA_AMBIENTAL", "RESISTÊNCIA AMBIENTAL")
-
-            when (descendenteElementalSelecionado) {
-                "Água" -> {
-                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("rapido", "RÁPIDO")
-                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
-                }
-                "Ar" -> {
-                    removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("rapido", "RÁPIDO")
-                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
-                }
-                "Fogo" -> {
-                    removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
-                }
-                "Terra" -> {
-                    removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("rapido", "RÁPIDO")
-                }
-                // If null (not selected yet), arguably show all or none. Showing all lets user see options.
-                // But removing generic resistance avoids duplication if logic adds it elsewhere?
-                // Logic in selecionarDescendenteElemental adds specific one. If none selected, none added.
-                // So removing generic here is correct if we want to enforce selection.
-                // But if selection is null, we show filtered list (all - generic).
-            }
-        }
 
         // Elementais (Sci-Fi): a troca Padrão↔"Ar, Fogo ou Água" (Forte+
         // Resistência vira Forma de Energia + ajuste de orçamento) mora nos
@@ -3819,21 +3867,14 @@ class CriadorState {
             ?.toSet()
             ?: emptySet()
 
-        // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
-        if (habilidadeIdsPericia.contains("OBSESSIVOS")) {
-            val chosen = gnomoPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-
-        // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
-        if (habilidadeIdsPericia.contains("PREPARADO")) {
-            val chosen = kitsunemimiPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
+        // Gnomo (Obsessivos) e Kitsunemimi (Preparado): escolha de perícia à
+        // escolha do jogador — não é mais um "if" hardcoded aqui.
+        // applyAncestryVariantAdjustments (resolveMarkedSelection, Seleção
+        // TARGET_ATTRIBUTE_OR_SKILL) já injeta o traço real (traitId=
+        // SKILL_BOOST + targetRef=a perícia escolhida) em habilidades[]
+        // conforme gnomoPericiaEscolhida/kitsunemimiPericiaEscolhida, e o
+        // laço genérico de PericiaStep logo acima já o lê como qualquer
+        // outro traço racial — mesmo padrão de Endurecido/Primitivo.
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             // Guarantia base de Sobrevivência d4 para Umvee — traço próprio

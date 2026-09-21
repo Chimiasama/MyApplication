@@ -160,16 +160,23 @@ private fun atributoEscolhidoSelectionDefFor(
  * Seletor genérico pra uma Seleção TARGET_ATTRIBUTE_OR_SKILL — rótulo e
  * opções vêm do próprio `SelectionDef` (dado, não código), reaproveitado por
  * qualquer raça que registre uma (ver `atributoEscolhidoSelectionDefFor`
- * acima e `AncestryVariantRegistry.meioOrc()/feral()`/a Seleção aninhada de
- * `humanos()` Sci-Fi). `state.humanoMineradorAtributo` é o único campo
- * compartilhado por todas elas — nunca duas ativas ao mesmo tempo, já que só
- * existe uma ancestralidade escolhida por vez.
+ * acima e `AncestryVariantRegistry.meioOrc()/feral()/kitsunemimiArteDaGuerra()/
+ * gnomoPathfinder()`/a Seleção aninhada de `humanos()` Sci-Fi). `valorAtual`/
+ * `onSelecionar` vêm de cada chamador ligados ao campo de estado dedicado
+ * daquela raça (ex.: `state.humanoMineradorAtributo`/
+ * `state.selecionarHumanoMineradorAtributo`, `state.kitsunemimiPericiaEscolhida`/
+ * `state.selecionarPericiaKitsunemimi`) — nunca dois pickers ativos ao mesmo
+ * tempo, já que só existe uma ancestralidade escolhida por vez.
  */
 @Composable
-private fun AtributoEscolhidoPicker(def: SelectionDef, state: CriadorState) {
+private fun AtributoEscolhidoPicker(
+    def: SelectionDef,
+    valorAtual: String?,
+    onSelecionar: (String) -> Unit
+) {
     Spacer(Modifier.height(8.dp))
     val opcoes = def.targetOptions.orEmpty()
-    val atual = state.humanoMineradorAtributo
+    val atual = valorAtual
         ?.takeIf { escolha -> opcoes.any { it.equals(escolha, ignoreCase = true) } }
         ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.any { it.equals(padrao, ignoreCase = true) } }
         ?: opcoes.firstOrNull().orEmpty()
@@ -184,7 +191,7 @@ private fun AtributoEscolhidoPicker(def: SelectionDef, state: CriadorState) {
                 DropdownMenuItem(
                     text = { Text(option.toFancyTitleCase()) },
                     onClick = {
-                        state.selecionarHumanoMineradorAtributo(option)
+                        onSelecionar(option)
                         expanded = false
                     }
                 )
@@ -738,7 +745,13 @@ fun AncestralidadesSection(
                                     // VariantOption (ver atributoEscolhidoSelectionDefFor acima) —
                                     // mesmo seletor genérico usado por Meio-Orc/Feral abaixo.
                                     atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection)
-                                        ?.let { def -> AtributoEscolhidoPicker(def, state) }
+                                        ?.let { def ->
+                                            AtributoEscolhidoPicker(
+                                                def = def,
+                                                valorAtual = state.humanoMineradorAtributo,
+                                                onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                            )
+                                        }
 
                                     // Anões Ciber: até 2 pontos de traços raciais negativos (nenhum maior que -2)
                                     if (item.nome.keyify() == "ANOES" && currentSelection == "Ciber") {
@@ -957,7 +970,41 @@ fun AncestralidadesSection(
                                 // nome da raça.
                                 atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
                                     ?.takeIf { it.marcadorTraitId == "PRIMITIVO" }
-                                    ?.let { def -> AtributoEscolhidoPicker(def, state) }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.humanoMineradorAtributo,
+                                            onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                        )
+                                    }
+
+                                // Kitsunemimi (Preparado): mesmo seletor genérico, mas escolhendo
+                                // uma PERÍCIA em vez de um atributo — campo de estado próprio
+                                // (kitsunemimiPericiaEscolhida), gateado pelo traço-marcador
+                                // "PREPARADO" (ver AncestryVariantRegistry.kitsunemimiArteDaGuerra()).
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "PREPARADO" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.kitsunemimiPericiaEscolhida,
+                                            onSelecionar = { state.selecionarPericiaKitsunemimi(it) }
+                                        )
+                                    }
+
+                                // Gnomo (Obsessivos): mesmo seletor genérico, escolhendo uma
+                                // PERÍCIA baseada em Astúcia — campo de estado próprio
+                                // (gnomoPericiaEscolhida), gateado pelo traço-marcador
+                                // "OBSESSIVOS" (ver AncestryVariantRegistry.gnomoPathfinder()).
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "OBSESSIVOS" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.gnomoPericiaEscolhida,
+                                            onSelecionar = { state.selecionarPericiaGnomo(it) }
+                                        )
+                                    }
 
                                 // Meio-Elfos: escolha entre Herança Élfica (traço "AGIL", Agilidade d6)
                                 // e Herança Humana (traço "ADAPTAVEL", Vantagem de Estágio Novato à
@@ -1007,7 +1054,13 @@ fun AncestralidadesSection(
                                 // nome da raça.
                                 atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
                                     ?.takeIf { it.marcadorTraitId == "ENDURECIDO" }
-                                    ?.let { def -> AtributoEscolhidoPicker(def, state) }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.humanoMineradorAtributo,
+                                            onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                        )
+                                    }
 
                                 // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si já
                                 // é o dropdown genérico de Variante lá em cima (dentro do
