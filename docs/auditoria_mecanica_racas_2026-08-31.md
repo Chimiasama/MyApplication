@@ -2301,3 +2301,262 @@ entre os dois, não só os 2 que mudaram) — todos passando.
 `grep -rl "ELEMENTAIS"` em todo `app/src/test` confirma que não sobra
 nenhum outro teste pendente sobre a raça. `scripts/phase6_reliability_gate
 .sh` passou.
+
+## Trigésima primeira rodada
+
+Rodada de verificação/investigação a pedido do usuário, em resposta ao
+relatório de "wipe inteiro" de hardcode-por-nome entregue na rodada
+anterior. O usuário corrigiu, caso a caso, o que realmente precisa de
+ação — a maior parte do que eu tinha listado como "hardcode a
+resolver" já está corretamente resolvido pelo sistema genérico; o
+problema real estava em outro lugar. Registrado aqui item por item,
+como pedido ("nem que a gente desenhe no documento a regra sendo
+isso").
+
+### Terracota (Arte da Guerra): confirmado, NÃO é como o Anão Ciber
+
+Hipótese do usuário: Terracota escolheria entre "defeito negativo tipo
+1 ou tipo 2", parecido com o catálogo orçado (`BUDGETED_CATALOG`) do
+Anão Ciber. Conferido contra o dado real do livro embutido no app
+(`ancestralidades.json`, entrada `anc_terracota_adg`): o campo
+`"opcoes"` da raça é literalmente `["Voto (Maior)", "Obrigação
+(Maior)"]` — duas Complicações Maiores nomeadas, não uma lista aberta
+de traços negativos de menor porte. Isso bate exatamente com o que já
+está implementado em `AncestryVariantRegistry.terracota()`: uma
+`SelectionDef` única (`terracota_complicacao`) do tipo `FIXED_PACKAGE`
+com 2 `FixedPackageOption` (voto/obrigacao), cada uma concedendo a
+Complicação certa via `TraitAddition`. **Terracota já está correto —
+não precisa de nenhuma mudança.** O único hardcode-por-nome que resta
+aqui é o `if (ancKey.contains("TERRACOTA"))` de despacho em
+`ResolveAncestrySpecificAdjustmentsUseCase` — mas isso é só "qual
+registro buscar", mesmo padrão usado por Umvee/Elementais/Humanos
+Fantasia (ver seção de Humanos abaixo).
+
+### Akaimimi (Arte da Guerra): `forceArmorZero=true` não é especial, é o padrão
+
+O usuário não lembrava a razão de o app zerar armadura natural do
+Akaimimi. Conferido: `forceArmorZero=true` é o valor usado por
+**quase toda raça** no `when`/cadeia de `if` de
+`ResolveAncestrySpecificAdjustmentsUseCase` — Saurios, Golens,
+Draconianos, Insetoides, Pequeninos, Celestiais, Descendente Elemental,
+Transmorfos, Demônio (Abismo), o `else` genérico, e o bloco de
+`buildResultFromVariantRegistry()` usado pelas 19 raças de
+`scifiVariantDrivenKeys`, todos usam `forceArmorZero=true`. Não é um
+comportamento específico do Akaimimi. E o JSON real do Akaimimi (`anc_
+akaimimi`) confirma que a raça não tem nenhum traço de armadura entre
+suas 4 habilidades (Bom Conselheiro, Dicas Culturais, Conhecimento
+Geral, Visão no Escuro) — então `naturalArmorFromRace=0,
+forceArmorZero=true` está correto: reseta qualquer armadura racial
+"perdida" de uma raça anterior, e não define nenhuma nova porque
+Akaimimi realmente não tem armadura natural no livro. **Nenhuma
+mudança necessária.**
+
+### DRAKENS na exceção de "candidato único": não era vestigial — o problema era o oposto
+
+Pergunta do usuário: por que Drakens continua na lista de exceção do
+curto-circuito de "candidato único" (`CriadorState.kt`, dentro de
+`getAncestralidadeDef()`) se já é resolvido pelo caminho genérico?
+Investigando a fundo: Drakens **precisa** dessa exceção — sem ela, com
+apenas o compêndio Sci-Fi ativo (o caso normal, Drakens só existe nesse
+livro), o candidato único faz o código sair antes de
+`applyAncestryVariantAdjustments`, que é onde mora o bloco genérico
+`if (key in AncestryVariantRegistry.scifiVariantDrivenKeys)` que lê o
+`grupoVariante` do registro e troca FORTE por Arma de Sopro (Fogo) na
+opção "Dragão". Cair fora antes disso deixa a troca de Variante sem
+efeito na exibição.
+
+Só que, ao investigar isso, apareceu um achado bem maior: **das 19
+raças em `scifiVariantDrivenKeys`, só Drakens e Elementais* estavam na
+lista de exceção — as outras ~12 raças exclusivas do Sci-Fi (sem
+entrada em nenhum outro livro, então sempre "candidato único" no caso
+normal de personagem) não estavam: Centaux, Ferais, Florans,
+Gelatinoides, Mímicos, Mineradores Genéticos, Oráculos, Possessores,
+Robôs, Seres Sintéticos, Soldados Genéticos, Yetis.** (*Elementais na
+verdade usa um mecanismo próprio — `selecoes`/`FIXED_PACKAGE`, não
+`grupoVariante` — resolvido por um bloco dedicado `key == "ELEMENTAIS"`
+que fica fora do conjunto `scifiVariantDrivenKeys` de propósito.)
+
+Conferido contra o registro: várias dessas raças têm troca de traço de
+verdade até na opção "Padrão" (ex.: Centaux "Padrão" define
+MOVIMENTAÇÃO vezes=1 pra poder virar vezes=2 em "Gazela"; Possessores
+"Padrão" remove NOÇÃO DO PERIGO; Mineradores Genéticos "Padrão" injeta
+FORTE que "Zero G" depois troca por Adaptação Gravitacional). Com o bug,
+todas essas trocas silenciosamente não aconteciam na camada de exibição
+(Resumo/PDF/Ver Detalhes) sempre que só o compêndio Sci-Fi estava
+ativo — que é o caso normal de uso.
+
+**Correção aplicada**: a lista de exceção deixou de enumerar nomes de
+raça um por um e passou a checar pertencimento ao próprio registro
+(`key in AncestryVariantRegistry.scifiVariantDrivenKeys`), a mesma
+fonte de verdade que já era usada no bloco de aplicação genérica logo
+abaixo — sem checagem de nome, sem `.keyify()` como "solução", só
+verificação de que a raça está cadastrada no lote genérico. Como
+Elfos/Humanos/Aquarianos/Avianos/Rakashanos/Insetoides também
+pertencem a esse conjunto mas existem em vários livros (Básico,
+Fantasia, etc.), a checagem ficou condicionada a `origem` ser
+`SCI_FI`/`FC` (mesmo guard já usado logo abaixo, na branch de múltiplos
+candidatos) — sem isso, um Elfo do Básico com candidato único caía por
+engano na config Sci-Fi do registro e perdia o traço Ágil da raça base
+(pego por `CriadorStateFullFlowTest` durante a verificação, corrigido
+antes de fechar a rodada).
+
+### Verificação
+
+Rodei no harness (`/tmp/ktbig`) toda a bateria de testes que toca
+`CriadorState`/resolução de raça — 19 arquivos, ~150 testes no total
+(`ScifiAncestryVariantSyncTest` 19, `CriadorStateFullFlowTest` 3,
+`CriadorStateElementaisVariantTest` 2, `CriadorStateArmaNaturalEscalavelTest`
+3, `CriadorStateArmaDeSoproTest` 3, `CriadorStateDemonioArcanoTest` 4,
+`CriadorStateKirinSignTest` 11, `CriadorStateRacialTraitDrivenAttributesTest`
+11, `CriadorStateTransmorfosPoderTest` 2, `CriadorStateDiminutoEquipmentTest`
+6, `CriadorStateDiminutoRaceSwitchTest` 3, `ModifierEngineAdgAncestryTest`
+4, `ModifierEngineCidadeSolVaporTest` 1, `Phase0CriticalFlowsTest` 5,
+`ResolveAncestrySpecificAdjustmentsUseCaseTest` 33,
+`ResolveAncestryVariantPackageUseCaseTest` 12, `SummaryUtilsTest` 17,
+`RacialTraitAuditFormatterTest` 8, `ValidateRequirementsUseCaseTagsTest`
+5, `EquipamentoFormattersDiminutoTest` 5) — todos passando depois do
+ajuste do guard de origem. `scripts/phase6_reliability_gate.sh` passou
+(só o WARN pré-existente de tamanho de arquivo).
+
+### Humanos "Pacotes Culturais" (Fantasia): já está certo — o relatório da rodada anterior citou o lugar errado
+
+Reconferido o código: `CriadorState.applyAncestryVariantAdjustments()`,
+bloco `canonicalOriginKey(base.origem) == "FANTASIA" && key.contains
+("HUMANO")`, já **não** constrói os traços de Povo do Mar/Senhores dos
+Cavalos na mão — ele lê `AncestryVariantRegistry.get("HUMANOS",
+"FANTASIA")?.grupoVariante` e resolve via
+`resolveAncestryVariantPackageUseCase.resolve(...)`, mesmo mecanismo
+genérico de Terracota/Umvee/Elementais (comentário no próprio código já
+registra isso: "Variante de verdade... não mais um subsistema
+dedicado"). O que eu tinha listado no wipe como "hardcode" era só a
+condição de despacho `key.contains("HUMANO")` — que decide *qual*
+entrada do registro buscar, não como resolver os traços. Esse mesmo
+formato de despacho por nome (`if (ancKey.contains("RAÇA"))` levando a
+uma leitura genérica do registro) se repete em todo canto — Terracota,
+Umvee, Elementais, Quadroides, Humanos Sci-Fi Minerador — não é
+exclusivo de Humanos e não é o problema que o usuário apontou.
+**Nenhuma mudança de mecânica necessária aqui**; o único item pendente
+de verdade é a ideia, ainda maior, de trocar esses despachos por nome
+por uma busca direto no registro por `(id, livro)" — ver seção "Próximos
+passos" abaixo.
+
+### Descoberta: o "traço de alvo escolhido pelo jogador" já existe, genérico, para Força/Vigor/Agilidade
+
+Investigando o pedido do usuário de generalizar Meio-Orc (Força-ou-
+Vigor à escolha) usando o mesmo desenho do Signo do Humano Arte da
+Guerra, encontrei que **esse mecanismo genérico já existe e já
+funciona** — só não documentado como tal. Em `CriadorState`
+(atributoBaseRacial, por volta da linha 5402): qualquer raça cujo
+`habilidades[]` contenha um dos ids `ENDURECIDO`, `PRIMITIVO` ou
+`MINERADOR_ATRIBUTO` ativa um bloco que lê um state compartilhado
+(`humanoMineradorAtributo`) pra saber qual atributo (Força/Vigor, ou
+Força/Vigor/Agilidade se o traço for `PRIMITIVO`) o jogador escolheu, e
+aplica o dado d6 no atributo certo. Esse único mecanismo já cobre **3
+raças de livros diferentes**: Meio-Orc (Fantasia, id `ENDURECIDO`),
+Feral (Arte da Guerra, id `PRIMITIVO`), Humano "Minerador" (Sci-Fi, id
+`MINERADOR_ATRIBUTO`) — disparado por id do traço, não por nome de
+raça, com uma validação extra pra evitar que uma escolha "Agilidade"
+sobreviva à troca de Feral pra Meio-Orc/Minerador (que não têm essa
+opção).
+
+Dois pontos a corrigir, de baixo risco, quando essa frente for
+retomada: (1) o nome do campo de state (`humanoMineradorAtributo`) é
+enganoso — sugere que é exclusivo do Humano Minerador, mas é
+compartilhado pelas 3 raças; merece um nome genérico (ex.:
+`atributoEscolhidoRaca`). (2) `isFeralAdgSelecionado()` (usado pela UI
+pra decidir quando mostrar o seletor de 3 opções) checa por nome
+(`ancestralidade.keyify() == "FERAL"`) em vez de checar a presença do
+traço `PRIMITIVO` em `habilidades[]`, que seria consistente com o resto
+do mecanismo. Nenhuma das duas é um bug — são só limpeza de nome/
+consistência, adiadas pra não misturar com a investigação desta rodada.
+
+Esse achado é a base concreta pra atender o pedido do usuário de
+generalizar Herança (Meio-Elfo), a troca Adaptável/Antecedente Arcano
+(Meio-Demônio) e os Signos de Nascença (Humano Arte da Guerra) num
+único mecanismo "seleção que vive na raça" — ver "Próximos passos".
+
+### Monstro Heroico (Horror) e Tropos (Arte da Guerra): já são "templates" separados de raça, não hardcode a corrigir
+
+O usuário havia levantado a hipótese de que eu estivesse confundindo
+Monstro Heroico com raça/variante, e pediu pra conferir a definição no
+livro de Horror. Não há PDF dos livros neste repositório — a fonte de
+verdade disponível é o próprio dado que o app já usa
+(`horror_monstros.json`), e ele confirma exatamente o que o usuário
+descreveu: cada monstro (Anjo, Demônio, Fantasma, Lobisomem, Monstro de
+Retalhos, Múmia, Revivido, Vampiro) só carrega `atributos_bonus` (passos
+extras sobre os atributos que a raça de base já tem) e `habilidades`/
+`complicacoes` adicionais — nenhuma entrada tem `categoria`,
+`pontosRaciaisEsperados`, `livros` ou `especieId`, os campos que toda
+raça de `ancestralidades.json` tem. Ou seja, o próprio schema já marca
+Monstro Heroico como algo estruturalmente diferente de raça — não tem
+orçamento racial próprio nem é selecionável como ancestralidade.
+
+E, no código, essa separação já está implementada corretamente:
+`tipoMonstroSelecionado` é um campo de state **separado** de
+`ancestralidade` (`CriadorState.kt`, ~579) — o jogador escolhe uma
+ancestralidade normalmente e, se `modoMonstroAtivo`, escolhe também um
+`MonstroTemplate` por cima. O mesmo padrão já existe para Tropos:
+`tropoSelecionado` também é um campo separado de `ancestralidade`, com
+alguns comportamentos específicos por id do tropo (`tropo_protagonista`,
+`tropo_samurai`, `tropo_elementalista` — checados por id, não por nome,
+já seguindo a regra que o usuário pediu). **A arquitetura de "template
+aplicado sobre uma raça" já existe e já é usada por Monstro Heroico e
+Tropo** — não é um hardcode a eliminar.
+
+O único item pendente de fato nessa área (baixa prioridade, mesmo
+balde do "Fases 30-31" de Atributo/Perícia Aumentada genérico já
+registrado em rodadas anteriores): `monstroAtributoTraitIds()`
+(`CriadorState.kt`, ~5337) traduz `atributosBonus` do Monstro pra ids
+fixos por combinação (`"FORCA" -> if (passos>=2) "MUITO_FORTE" else
+"FORTE"`) — não é hardcode de nome de raça/monstro, é o mesmo padrão de
+"um id por combinação de atributo+intensidade" que já existe em outros
+lugares do catálogo (`RacialTraitPointCatalog.EFEITOS`) e no criador de
+raça customizada. Fica registrado como candidato a generalizar junto
+com a migração de Atributo/Perícia Aumentada, não como algo urgente.
+
+A ideia do usuário de unificar Monstro Heroico e Tropo num sistema
+único de "Template" é uma proposta de arquitetura válida (os dois já
+têm a mesma forma: um id selecionado à parte da raça, que injeta
+bônus/traços por cima) — mas, como os dois já funcionam corretamente e
+já são id-driven, isso é uma refatoração de organização de código, não
+uma correção de bug. Registrado como possível trabalho futuro, não
+teve prioridade nesta rodada.
+
+### Próximos passos (registrados, não implementados nesta rodada)
+
+1. **Generalizar a "seleção que vive na raça"**: usar o mesmo desenho
+   já validado pra Meio-Orc/Feral/Minerador (id do traço decide que a
+   raça tem escolha; a escolha em si mora num campo de state genérico)
+   para: Signos de Nascença do Humano Arte da Guerra (13 opções + "sem
+   Signo" — e, junto disso, consertar o bug real já identificado em
+   `totalSpPool`, que hoje faz `ancestralidade.keyify().contains
+   ("HUMANO")` pra conceder os +3 pontos de perícia do "sem Signo" em
+   vez de ler o `PERICIA_POINTS_BONUS` genérico que já existe pra
+   qualquer raça nova), Herança do Meio-Elfo (Atributo Aumentado ou
+   Adaptável), e a troca Adaptável/Antecedente Arcano (Demônio) do
+   Meio-Demônio. Provavelmente é onde `SelectionType.TARGET_ATTRIBUTE_
+   OR_SKILL` (hoje sem nenhuma raça usando) finalmente ganha uma
+   implementação real.
+2. **Renomear `humanoMineradorAtributo`** pra um nome que não sugira
+   exclusividade do Humano Minerador (ex.: `atributoEscolhidoRaca`), e
+   trocar `isFeralAdgSelecionado()` por uma checagem do traço
+   `PRIMITIVO` em vez do nome da raça.
+3. **Risco de colisão de id entre livros** (raça com o mesmo nome em
+   livros diferentes, ex.: Humano em Básico/Fantasia/Sci-Fi/Horror,
+   Elfo do Pathfinder com mecânica diferente dos outros Elfos): o
+   registro já resolve isso na prática via chave composta
+   `(ancestralidadeId, livro)` em `AncestryVariantRegistry.get()` — não
+   por `.keyify()` de nome. O que falta é levar essa mesma composição
+   pros pontos de despacho em `CriadorState`/`ResolveAncestrySpecific
+   AdjustmentsUseCase`, que hoje decidem "qual raça é essa" por um
+   `if (key.contains("NOME"))` e só depois buscam no registro pelo id —
+   nenhuma colisão real encontrada até agora (os `if` são checados em
+   sequência com `return` antecipado), mas a estrutura ficaria mais
+   robusta buscando direto por `(id, livro ativo)` em vez de por
+   substring de nome. Não implementado nesta rodada — é uma
+   refatoração maior que toca todos os despachos de uma vez, arriscada
+   demais pra fazer sem checar raça por raça.
+4. Migração de Atributo/Perícia Aumentada pra id genérico
+   (`ATTRIBUTE_BOOST`/`targetRef`/`value`) — já registrada em rodadas
+   anteriores, ainda pendente. `monstroAtributoTraitIds()` do Monstro
+   Heroico entra no mesmo balde.

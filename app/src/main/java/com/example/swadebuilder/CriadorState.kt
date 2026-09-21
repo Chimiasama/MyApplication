@@ -753,7 +753,7 @@ class CriadorState {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
 
-        // Toda raça de candidato único, EXCETO Umvee e Meio-Demônio, mantém o
+        // Toda raça de candidato único, EXCETO as listadas abaixo, mantém o
         // curto-circuito original: sai aqui sem passar por
         // applyAncestryVariantAdjustments. Umvee precisa passar por ele mesmo
         // tendo um candidato só — o Dom da Natureza "Gatoruja" injeta
@@ -763,29 +763,44 @@ class CriadorState {
         // mora a troca Adaptável/Antecedente Arcano (Demônio) por
         // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
         // jogador escolhendo o AA (bug real, raça sempre ficava travada em
-        // Adaptável). Elementais e Drakens (Sci-Fi) também precisam passar —
-        // é onde MUITO_FORTE/RESISTENCIA (Elementais Padrão) viram
-        // FORMA_DE_ENERGIA (Ar, Fogo ou Água), e onde FORTE (Drakens Padrão)
-        // é removido pra "Dragão"; sem isso a Força de ambas ficava
-        // hardcoded por nome de raça em vez de vir de habilidades[] (bug
-        // real, corrigido a pedido do usuário). Humanos e Descendente
-        // Elemental (Fantasia) também precisam passar — é onde os Pacotes
-        // Culturais (Povo do Mar/Senhores dos Cavalos) trocam Adaptável
-        // pelos traços do pacote, e onde o elemento escolhido troca a
-        // Resistência Ambiental genérica pela específica; como
-        // `mergedAncestralidades` já dedupa por origem (só sobra 1 entrada
-        // de "Humanos"/"Descendente Elemental" quando apenas o compêndio de
-        // Fantasia está ativo — o caso normal de criação de personagem, um
-        // livro por vez), esses candidatos chegam aqui como candidato único
-        // na prática, não só quando vários livros estão ativos ao mesmo
-        // tempo — cair fora antes de applyAncestryVariantAdjustments deixava
-        // o Pacote Cultural inteiro sem efeito (bug real relatado pelo
-        // usuário: Senhores dos Cavalos não concedia nada e Adaptável
-        // continuava presente). Já o Meio-Elfo do Pathfinder (também
-        // candidato único) depende do contrário — de sair aqui — pra NÃO
-        // entrar no ramo Herança/Adaptável de applyAncestryVariantAdjustments,
-        // pensado pra variante Meio-Elfo de outros livros
-        // (CriadorStateRacialTraitDrivenAttributesTest).
+        // Adaptável).
+        // Toda raça em AncestryVariantRegistry.scifiVariantDrivenKeys (19 no
+        // total: Rakashanos, Aquarianos, Avianos, Elfos, Humanos, Centaux,
+        // Drakens, Ferais, Florans, Gelatinoides, Insetoides, Mímicos,
+        // Mineradores Genéticos, Oráculos, Possessores, Quadroides, Soldados
+        // Genéticos, Yetis, Robôs, Seres Sintéticos) também precisa passar —
+        // é o mesmo bloco genérico (linha ~1311 abaixo) que lê o "grupoVariante"
+        // do registro e troca/adiciona os traços de habilidades[] conforme a
+        // opção selecionada (ex.: FORTE vira ARMA DE SOPRO em Drakens
+        // "Dragão", NOÇÃO DO PERIGO some no Possessores "Energia", MOVIMENTAÇÃO
+        // sobe de vezes=1 pra vezes=2 no Centaux "Gazela"). A maioria dessas
+        // raças só existe em UM livro (Sci-Fi) — sem entrada em outro
+        // compêndio para "empatar", elas chegam aqui como candidato único no
+        // caso normal de personagem (um livro por vez), então cair fora antes
+        // de applyAncestryVariantAdjustments deixava a troca de Variante
+        // inteira sem efeito na exibição (achado ao investigar por que só
+        // Drakens/Elementais estavam na lista de exceção enquanto as outras
+        // ~12 raças do mesmo lote — Ferais, Florans, Gelatinoides, Mímicos,
+        // Mineradores Genéticos, Oráculos, Possessores, Robôs, Seres
+        // Sintéticos, Soldados Genéticos, Yetis, Centaux — não; checagem por
+        // pertencimento ao registro, não por uma lista crescente de nomes
+        // literais). Humanos e Descendente Elemental (Fantasia) também
+        // precisam passar — é onde os Pacotes Culturais (Povo do Mar/Senhores
+        // dos Cavalos) trocam Adaptável pelos traços do pacote, e onde o
+        // elemento escolhido troca a Resistência Ambiental genérica pela
+        // específica; como `mergedAncestralidades` já dedupa por origem (só
+        // sobra 1 entrada de "Humanos"/"Descendente Elemental" quando apenas
+        // o compêndio de Fantasia está ativo — o caso normal de criação de
+        // personagem, um livro por vez), esses candidatos chegam aqui como
+        // candidato único na prática, não só quando vários livros estão
+        // ativos ao mesmo tempo — cair fora antes de
+        // applyAncestryVariantAdjustments deixava o Pacote Cultural inteiro
+        // sem efeito (bug real relatado pelo usuário: Senhores dos Cavalos
+        // não concedia nada e Adaptável continuava presente). Já o Meio-Elfo
+        // do Pathfinder (também candidato único) depende do contrário — de
+        // sair aqui — pra NÃO entrar no ramo Herança/Adaptável de
+        // applyAncestryVariantAdjustments, pensado pra variante Meio-Elfo de
+        // outros livros (CriadorStateRacialTraitDrivenAttributesTest).
         // Meio-Elfos com o traço "Herança" (Básico/Fantasia/Horror/Super) também
         // precisa passar — é onde "Herança" é trocada por "Ágil" (Agilidade d6)
         // ou "Adaptável" conforme meioElfoAgil. Sem isso, quando só um livro com
@@ -804,7 +819,30 @@ class CriadorState {
 
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental && !ehMeioElfoComHeranca(candidates.first())) {
+        // Elementais (Sci-Fi) fica fora de scifiVariantDrivenKeys de propósito
+        // (ver comentário de AncestryVariantRegistry.scifiVariantDrivenKeys):
+        // resolve por `selecoes`/FIXED_PACKAGE (bloco dedicado `key ==
+        // "ELEMENTAIS"` mais abaixo em applyAncestryVariantAdjustments), não
+        // por `grupoVariante` como as 19 raças do lote genérico — por isso
+        // precisa da própria entrada aqui, checagem por nome mesmo (ainda não
+        // há um marcador genérico no registro pra distinguir os dois formatos
+        // sem duplicar a leitura da config). Ambas as checagens abaixo exigem
+        // origem FC/SCI_FI (mesmo guard de `withVariant` logo adiante) —
+        // Elfos, Humanos, Aquarianos etc. também estão em
+        // scifiVariantDrivenKeys, mas seu candidato do Básico/Fantasia/Horror
+        // não deve entrar aqui (o bloco genérico é específico do livro
+        // Sci-Fi; sem esse guard, um Elfo do Básico com candidato único caía
+        // no `AncestryVariantRegistry.get(key, "SCI_FI")` por engano e perdia
+        // o traço Ágil da raça base — achado ao rodar CriadorStateFullFlowTest
+        // depois desta mudança).
+        val candidatoEhScifiOuFc = candidates.first().origem == "FC" || candidates.first().origem == "SCI_FI"
+        val precisaPassarPorAjusteDeVariante = key.contains("UMVEE") ||
+            key.contains("MEIO-DEMONIO") ||
+            (candidatoEhScifiOuFc && key == "ELEMENTAIS") ||
+            (candidatoEhScifiOuFc && key in AncestryVariantRegistry.scifiVariantDrivenKeys) ||
+            isFantasiaHumanoOuDescElemental ||
+            ehMeioElfoComHeranca(candidates.first())
+        if (candidates.size == 1 && !precisaPassarPorAjusteDeVariante) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
