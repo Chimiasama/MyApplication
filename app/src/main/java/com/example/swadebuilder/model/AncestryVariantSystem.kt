@@ -62,7 +62,19 @@ enum class SelectionType {
  * narrativo, ex.: "Garras", "Visão no Escuro"), o id ainda existe — só não
  * bate com nenhuma chave de EFEITOS, exatamente como já acontecia com
  * habilidades sem efeito mecânico. */
-data class TraitAddition(val nome: String, val id: String, val vezes: Int = 1)
+data class TraitAddition(
+    val nome: String,
+    val id: String,
+    val vezes: Int = 1,
+    // Override pra traços puramente de bookkeeping orçamentário — sem efeito
+    // mecânico próprio, só um ajuste de pontos pra fechar o total de uma opção
+    // de Variante contra outra (ex.: Elementais "Ar, Fogo ou Água" trocando
+    // Forte+Resistência, 6 pts, por Forma de Energia, 4 pts, precisa de +2 pra
+    // fechar igual à opção "Padrão"). 0/false preserva o comportamento de
+    // sempre: pontos vêm de RacialTraitPointCatalog via `id`, traço visível.
+    val pontos: Int = 0,
+    val invisivel: Boolean = false
+)
 
 /** Id + contagem de compras de um traço empilhável (ver RacialTraitPointCatalog.
  * VEZES_MAX) já resolvido por Variante/Seleção — a versão "sem nome de

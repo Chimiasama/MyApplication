@@ -2097,3 +2097,104 @@ com 2 traços, um repetido em outra raça — só o não-repetido é marcado).
 não compila no harness (Compose UI) — balanceamento de chaves/parênteses
 conferido (0/0, sem mudança) e leitura cruzada do novo bloco. Fica pro CI
 confirmar a compilação.
+
+## Vigésima oitava rodada — projeto "traço genérico em vez de id por combinação": plano e Rodada 1 (Elementais)
+
+Pedido do dono do projeto: parar de vez com traços de raça oficiais
+resolvidos por `if` hardcoded de nome de raça/id fixo por combinação
+(atributo aumentado, perícia aumentada, Toque Venenoso, Garras/Chifres/
+Mordida, Diminuto, Vantagem Inata etc.) e migrar pra um modelo onde o
+traço é genérico e a escolha de intensidade/variante vira dado, com o
+custo calculado — não um id novo por combinação. Antes de tocar em
+código, investiguei 4 pontos específicos levantados pelo dono do projeto:
+
+- **VEZES_MAX (teto de compra de traço empilhável) já é respeitado.**
+  Script conferindo as 112 raças oficiais contra `RacialTraitPointCatalog
+  .VEZES_MAX`: zero violações. O picker de criação (`stackPickerTarget`,
+  `SettingsDialog.kt`) já limita as opções ao `vezesMax` do catálogo —
+  não dá pra escolher "Resistente x5" hoje, a lista só mostra até 3.
+- **`ArmaNatural.escalavel` já modela corretamente a diferença Garra vs
+  Mordida/Chifre com Artista Marcial/Brigão** (regra do livro: só armas
+  de impacto tipo garra escalam). Conferido dado real: Centauros "Cascos"
+  → `escalavel: true` (o próprio texto do traço já cita Artista Marcial);
+  Minotauros/Infernais "Chifres", Drakens "Cabeça Dura", Insetoides
+  "Mordida" → `escalavel: false`. Consumo genérico em `CriadorState.kt:
+  2308` (`if (arma.escalavel && (hasMartialArtist || hasBrawler))`), sem
+  checar nome de raça. Nada a corrigir aqui.
+- **Toque Venenoso já tem a fórmula de composição documentada em
+  comentário**, mas implementada como 10 ids fixos (produto cartesiano de
+  4 severidades × 2 entregas) em vez de 2 escolhas combináveis: base
+  Moderado(1)/Nocauteador(+1)/Paralisante(+2)/Letal(+3) + entrega Corpo a
+  Corpo(+0)/Cuspir(+2) — Letal+Cuspidor fecha nos 6 pontos que o dono do
+  projeto lembrava. Confirma o pedido: "escolher o grau de efeito, depois
+  escolher se cospe à distância" — vira a Fase 32 do plano (grupos de
+  escolha com custo).
+- **Garra tem custo-base diferente de Mordida pro mesmo dano/PA** (Garra
+  2 pts, Mordida 1 pt) — não é a mesma tabela reaproveitada com nome
+  diferente; cada família de arma natural (Garra/Mordida/Chifre) tem sua
+  própria tabela-base, confirmada contra o texto de cada uma antes de
+  generalizar (não assumida).
+- **Elementais (Sci-Fi) tinha hardcode real, confirmado com precisão.**
+  `CriadorState.applyAncestryVariantAdjustments()` tinha um
+  `if (key == "ELEMENTAIS" && variant != "Padrão")` construindo
+  `RacialAbility` na mão pra trocar Muito Forte+Resistência por Forma de
+  Energia — enquanto `AncestryVariantRegistry.elementaisScifi()` já
+  existia com os 2 pacotes (`padrao`/`ar_fogo_ou_agua`) só que **vazios**
+  de propósito, com comentário admitindo que não eram lidos. Descendente
+  Elemental (Fantasia), o caso irmão, já fazia certo — pacotes preenchidos
+  de verdade, resolvidos pelo caminho genérico.
+
+### Implementado nesta rodada: Elementais (Sci-Fi) migrado pro registro
+
+- **`AncestryVariantRegistry.elementaisScifi()`**: pacote `ar_fogo_ou_agua`
+  preenchido com `tracosParaRemoverPorNome = listOf("MUITO FORTE",
+  "RESISTÊNCIA +2")` e `tracosParaAdicionar` com Forma de Energia +
+  "Ajuste de Orçamento (Forma de Energia)" (fecha os 2 pontos que faltam
+  entre remover 6 e ganhar só 4 de Forma de Energia — mesmo valor de
+  sempre, só que agora dado, não construído na hora).
+- **`TraitAddition`** (`AncestryVariantSystem.kt`) ganhou dois campos
+  opcionais, com default preservando 100% do comportamento anterior pras
+  outras ~20 raças que já usam essa classe: `pontos: Int = 0` (override
+  de custo pra traço de bookkeeping puro, sem entrada em
+  RacialTraitPointCatalog) e `invisivel: Boolean = false`.
+- **`CriadorState.kt`**: o `if (key == "ELEMENTAIS" && variant !=
+  "Padrão")` virou um bloco que chama
+  `resolveAncestryVariantPackageUseCase.resolve(ancestralidadeId=
+  "ELEMENTAIS", livro="SCI_FI", ...)` — mesmo motor único já usado por
+  `scifiVariantDrivenKeys` (Drakens e outras 18 raças) — e aplica
+  `tracosParaRemoverPorNome`/`tracosParaAdicionar` do pacote resolvido.
+  Zero `RacialAbility` construída na mão; a condição que sobra
+  (`key == "ELEMENTAIS"`) só decide QUANDO ler o pacote "ar_fogo_ou_agua"
+  em vez do "padrao", nunca QUAIS traços trocam.
+
+### Verificação
+
+2 testes novos (`CriadorStateElementaisVariantTest`): Padrão mantém Muito
+Forte/Resistência sem Forma de Energia; "Ar, Fogo ou Água" troca os dois
+por Forma de Energia (visível) + Ajuste de Orçamento (invisível, 2 pts,
+`resolvedPontos()` confirmado). Os 19 testes já existentes de
+`ScifiAncestryVariantSyncTest` (Drakens, Centaux, Aquarianos, Ferais,
+Mímicos, Avianos, Umvee, Elementais Padrão etc.) continuam passando sem
+nenhuma mudança — zero regressão nas 18 outras raças que passam pelo
+mesmo motor. `scripts/phase6_reliability_gate.sh` passou.
+
+### Plano completo (fases seguintes, não implementadas ainda)
+
+Documento de trabalho combinado com o dono do projeto ao vivo no chat —
+resumo das fases pendentes: (29) mesma varredura de hardcode-por-nome
+pra Umvee/Meio-Demônio; (30-31) migrar ids de Atributo/Perícia Aumentada
+(`RESISTENTE`/`AGIL`/`FORTE`/`MUITO_*` etc.) pro par genérico
+`ATTRIBUTE_BOOST`/`SKILL_BOOST`+`targetRef`+`value`, Básico primeiro
+depois Fantasia — cuidado identificado: `RacialCaracteristicasResolver`
+tem 2 loops que resolvem efeito por caminhos diferentes
+(`resolvedTraitId()` vs `hab.id` direto), migrar sem marcar a entrada
+`invisivel=true` (convenção já usada por toda entrada sintética
+`ATTRIBUTE_BOOST` existente) duplicaria a linha em "Características";
+(32) desenhar `RacialTraitEffect`-like "grupos de escolha com custo" pra
+Toque Venenoso (fórmula já mapeada: severidade + entrega); (33) migrar
+Garras/Mordida/Chifre pra esse sistema, respeitando que cada família tem
+tabela-base própria (não confirmada ainda: Chifres pode ter uma terceira
+tabela diferente de Garra/Mordida); (34) auditoria completa do sistema de
+Variantes, listando toda raça que ainda usa exceção nomeada tipo a lista
+em `CriadorState.kt:807` (`!key.contains("UMVEE") && ... && key !=
+"ELEMENTAIS" && key != "DRAKENS"...`).

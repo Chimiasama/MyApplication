@@ -824,27 +824,26 @@ object AncestryVariantRegistry {
     // --- Elementais (Sci-Fi): apesar de ter "Padrão" entre as opções (o que
     // normalmente indicaria Variante), o usuário confirmou que este é o caso
     // excepcional: é Seleção de elemento mesmo (todo elemental É de algum
-    // elemento, igual ao Descendente Elemental de Fantasia) — só foi
-    // implementado no sistema de variante antigo por falta de alternativa na
-    // época. Efeitos idênticos aos que já existiam no "when" fixo de
-    // ResolveAncestrySpecificAdjustmentsUseCase: Padrão mantém Forte e
-    // Resistência +2 (a raça é de pedra/terra, física e resistente); Ar,
-    // Fogo ou Água troca os dois por Forma de Energia (o corpo já não é mais
-    // sólido nem musculoso). ---
+    // elemento, igual ao Descendente Elemental de Fantasia). Efeitos
+    // idênticos ao que o livro descreve: Padrão mantém Forte e Resistência
+    // +2 (a raça é de pedra/terra, física e resistente); Ar, Fogo ou Água
+    // troca os dois por Forma de Energia (o corpo já não é mais sólido nem
+    // musculoso).
+    //
     // Elementais é candidato único em ancestralidades.json (só existe no
-    // Sci-Fi), então cai fora de getAncestralidadeDef() antes de chegar a ler
-    // este registro pro caminho genérico de scifiVariantDrivenKeys (ver o
-    // curto-circuito de candidato único lá, e a exceção específica que
-    // Elementais ganhou nele) — os pacotes abaixo, portanto, não são
-    // resolvidos/aplicados por esse caminho genérico. A troca real
-    // Padrão↔"Ar, Fogo ou Água" (MUITO_FORTE + RESISTENCIA vira FORMA_DE_ENERGIA
-    // + um traço invisível de ajuste de orçamento) mora direto num bloco
-    // dedicado em CriadorState.applyAncestryVariantAdjustments(), que já entra
-    // em habilidades[] de verdade — mesmo padrão de exceção que Umvee/
-    // Meio-Demônio usam. Mantido com `selecoes`/FIXED_PACKAGE (em vez de
-    // `grupoVariante`) só pra preservar o rótulo "Seleção:" já exibido em
-    // AncestralidadesSection (isSelecaoPura), sem trocas paralelas de
-    // conteúdo mecânico que já não são lidas por ninguém.
+    // Sci-Fi) e não faz parte de `scifiVariantDrivenKeys` (não tem
+    // `grupoVariante`, é Seleção pura) — mas CriadorState
+    // .applyAncestryVariantAdjustments() lê estes `pacotesFixos` de verdade
+    // via ResolveAncestryVariantPackageUseCase.resolve(), no mesmo padrão
+    // (tracosParaRemoverPorNome/tracosParaAdicionar) que as raças de
+    // scifiVariantDrivenKeys usam — zero `if` de nome de raça decidindo QUAIS
+    // traços trocam, só QUANDO trocar (a condição de qual pacote escolher
+    // ainda lê `key == "ELEMENTAIS"`, mas o conteúdo do pacote mora aqui).
+    // "Ajuste de Orçamento (Forma de Energia)" fecha a diferença de pontos
+    // entre remover Forte+Resistência (6 pts) e ganhar só Forma de Energia
+    // (4 pts) — sem efeito mecânico próprio, só bookkeeping (ver
+    // TraitAddition.pontos/invisivel), pra manter as duas opções em
+    // pontosRaciaisEsperados = 2, igual sempre foi.
     private fun elementaisScifi(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ELEMENTAIS",
         livro = "SCI_FI",
@@ -855,7 +854,19 @@ object AncestryVariantRegistry {
                 tipo = SelectionType.FIXED_PACKAGE,
                 pacotesFixos = listOf(
                     FixedPackageOption("padrao", "Padrão", ResolvedTraitPackage()),
-                    FixedPackageOption("ar_fogo_ou_agua", "Ar, Fogo ou Água", ResolvedTraitPackage())
+                    FixedPackageOption(
+                        "ar_fogo_ou_agua", "Ar, Fogo ou Água",
+                        ResolvedTraitPackage(
+                            tracosParaRemoverPorNome = listOf("MUITO FORTE", "RESISTÊNCIA +2"),
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Forma de Energia", "FORMA_DE_ENERGIA"),
+                                TraitAddition(
+                                    "Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA",
+                                    pontos = 2, invisivel = true
+                                )
+                            )
+                        )
+                    )
                 )
             )
         )

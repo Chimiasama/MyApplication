@@ -1129,41 +1129,42 @@ class CriadorState {
             }
         }
 
-        // Elementais (Sci-Fi): MUITO_FORTE (Força d8) e RESISTENCIA +2 são
-        // habilidades base em ancestralidades.json, representando a opção
-        // "Padrão". A opção "Ar, Fogo ou Água" troca as duas por Forma de
-        // Energia (livro: "Elementais do ar, fogo e água têm Forma de
-        // Energia em vez de Forte e Resistência") — Força cai pra d4 puro,
-        // sem nenhum traço de atributo (resolvido pelo loop genérico de
-        // AtributoStep em atributoBaseRacial(), sem hardcode de nome de
-        // raça). Isso tira 6 pontos da raça (MUITO_FORTE=4 + RESISTENCIA+2=2)
-        // e Forma de Energia sozinha só repõe 4, então um traço invisível
-        // sem efeito mecânico nenhum (id não cadastrado em EFEITOS, cai em
-        // Nenhum) fecha os 2 pontos que faltam pra manter o total da
-        // variante igual ao de Padrão (ambos em pontosRaciaisEsperados = 2).
-        if (key == "ELEMENTAIS" && variant != "Padrão") {
-            removeByIdOrName("MUITO_FORTE", "MUITO FORTE")
-            removeByIdOrName("RESISTENCIA", "RESISTÊNCIA +2")
-            if (newHabilidades.none { it.id == "FORMA_DE_ENERGIA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Forma de Energia",
-                        descricao = "Elementais de ar, fogo ou água trocam Forte e Resistência por Forma de Energia.",
-                        id = "FORMA_DE_ENERGIA",
-                        category = "racial_trait_positive"
-                    )
+        // Elementais (Sci-Fi): a troca Padrão↔"Ar, Fogo ou Água" (Forte+
+        // Resistência vira Forma de Energia + ajuste de orçamento) mora nos
+        // dados de AncestryVariantRegistry.elementaisScifi() — este bloco só
+        // decide QUANDO ler o pacote "ar_fogo_ou_agua" em vez do "padrao"
+        // (vazio, mantém a raça base como está), no mesmo padrão de
+        // ResolveAncestryVariantPackageUseCase.resolve() já usado por
+        // scifiVariantDrivenKeys logo abaixo — nenhum traço é mais
+        // construído aqui à mão.
+        if (key == "ELEMENTAIS") {
+            val elementoAnswer = if (variant != "Padrão") {
+                com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "elementais_scifi_elemento",
+                    fixedPackageChoiceId = "ar_fogo_ou_agua"
                 )
-            }
-            if (newHabilidades.none { it.id == "AJUSTE_FORMA_DE_ENERGIA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Ajuste de Orçamento (Forma de Energia)",
-                        descricao = "",
-                        id = "AJUSTE_FORMA_DE_ENERGIA",
-                        pontos = 2,
-                        invisivel = true
+            } else null
+            val elementaisPack = resolveAncestryVariantPackageUseCase.resolve(
+                ancestralidadeId = "ELEMENTAIS",
+                livro = "SCI_FI",
+                variantOptionId = null,
+                selectionAnswers = listOfNotNull(elementoAnswer)
+            )
+            elementaisPack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
+            elementaisPack.tracosParaAdicionar.forEach { traco ->
+                if (newHabilidades.none { it.id == traco.id }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = traco.nome,
+                            descricao = "",
+                            id = traco.id,
+                            category = "racial_trait_positive",
+                            vezes = traco.vezes,
+                            pontos = traco.pontos,
+                            invisivel = traco.invisivel
+                        )
                     )
-                )
+                }
             }
         }
 
