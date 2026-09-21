@@ -40,7 +40,6 @@ class ResolveAncestryRacialPackageUseCase(
         val vantagensRaciais: List<String>,
         val desvantagensRaciais: List<String>,
         val naturalArmorFromRace: Int,
-        val forceArmorZero: Boolean,
         val elementalAction: ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction,
         val anotacoesToAdd: List<String> = emptyList(),
         // Ids mecânicos reais (+ contagem de compras, ver
@@ -220,7 +219,6 @@ class ResolveAncestryRacialPackageUseCase(
             vantagensRaciais = vantagensRaciais,
             desvantagensRaciais = desvantagensRaciais,
             naturalArmorFromRace = ancestrySpecificAdjustments.naturalArmorFromRace,
-            forceArmorZero = ancestrySpecificAdjustments.forceArmorZero,
             elementalAction = ancestrySpecificAdjustments.elementalAction,
             anotacoesToAdd = ancestrySpecificAdjustments.anotacoesToAdd,
             racialTraitIds = racialTraitIds

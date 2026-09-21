@@ -5928,12 +5928,6 @@ class CriadorState {
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
-        // `racialPackage.forceArmorZero` resetava o `armadura` manual (var
-        // mutableIntStateOf) que existia antes daqui — mas nada no app nunca
-        // escrevia outro valor nele (sempre 0), então esse reset já era um
-        // no-op em todas as raças, mesmo nas ~poucas com forceArmorZero=false.
-        // `armadura` virou computado a partir de `equipamentosComprados` (ver
-        // declaração), não sobra estado pra resetar aqui.
 
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {

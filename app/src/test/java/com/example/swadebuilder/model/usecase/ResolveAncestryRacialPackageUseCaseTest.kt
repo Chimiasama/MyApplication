@@ -73,7 +73,6 @@ class ResolveAncestryRacialPackageUseCaseTest {
         )
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertTrue(result.forceArmorZero)
         assertTrue(result.selectedAdvantages.isEmpty())
     }
 

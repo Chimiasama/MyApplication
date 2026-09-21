@@ -90,8 +90,8 @@ object AncestryVariantRegistry {
     // 1 reconfiguração de cenário), migradas de ResolveAncestrySpecificAdjustmentsUseCase
     // (bloco `if (isSciFiActive) { if (ancKey == "X") ... }`). Mesmo padrão do
     // lote piloto: cada opção carrega só as ADIÇÕES/REMOÇÕES de traços — a
-    // Armadura Natural (quando difere de 0, ex.: Sáurios/Insetoides) e o
-    // `forceArmorZero` seguem como exceção pontual na camada de wiring
+    // Armadura Natural (quando difere de 0, ex.: Sáurios/Insetoides) segue
+    // como exceção pontual na camada de wiring
     // (ResolveAncestrySpecificAdjustmentsUseCase), igual ao Umvee Pedregoso.
 
     private fun rakashanos(): AncestryVariantConfig = AncestryVariantConfig(

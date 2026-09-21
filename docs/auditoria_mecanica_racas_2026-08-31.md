@@ -2560,3 +2560,32 @@ teve prioridade nesta rodada.
    (`ATTRIBUTE_BOOST`/`targetRef`/`value`) — já registrada em rodadas
    anteriores, ainda pendente. `monstroAtributoTraitIds()` do Monstro
    Heroico entra no mesmo balde.
+
+### Adendo (mesmo dia): `forceArmorZero` removido — era campo morto
+
+Pergunta do usuário, direto sobre o achado do Akaimimi: já que toda
+raça começa com armadura zero, por que existiria um campo pra "forçar"
+esse zero? Boa pergunta — a resposta estava num comentário já presente
+no próprio `CriadorState.kt` (linha ~5931, escrito numa rodada
+anterior): `forceArmorZero` resetava um `armadura` mutável que existia
+antes de uma refatoração anterior, mas ninguém nunca escrevia outro
+valor nele (sempre 0), então o reset já era um no-op *para todas as
+raças*, não só Akaimimi. Depois que `armadura` virou uma propriedade
+computada a partir de `equipamentosComprados`, não sobrou nem estado
+pra resetar. Confirmei que o campo é lido e repassado entre dois
+`Result` (`ResolveAncestrySpecificAdjustmentsUseCase` →
+`ResolveAncestryRacialPackageUseCase`) e teve valor testado em ~8
+asserts, mas **nunca é lido em nenhum lugar depois disso** — puramente
+morto.
+
+Removido por completo (campo do `data class Result` nas duas classes,
+as 21 atribuições `forceArmorZero = true/false,` em
+`ResolveAncestrySpecificAdjustmentsUseCase`, a atribuição em
+`ResolveAncestryRacialPackageUseCase`, o comentário morto em
+`CriadorState.kt`, e os 8 asserts nos dois arquivos de teste que só
+verificavam esse valor sem checar nada mais). `naturalArmorFromRace`
+sozinho já é a fonte de verdade de armadura racial. Nenhuma mudança de
+comportamento — só remoção de estado sem consumidor. 152 testes
+rodados no harness (mesma bateria da seção anterior + os 2 arquivos de
+`usecase` completos) — todos passando. `scripts/phase6_reliability_gate.sh`
+passou.

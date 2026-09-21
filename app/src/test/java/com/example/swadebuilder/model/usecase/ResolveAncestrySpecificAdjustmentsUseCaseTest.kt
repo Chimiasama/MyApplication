@@ -14,7 +14,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("SAURIOS", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
         assertEquals(listOf(TraitAddition("PRONTIDÃO", "PRONTIDAO")), result.ensureAutomaticAdvantages)
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
@@ -32,7 +31,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("GOLENS", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
         assertTrue(result.ensureAutomaticAdvantages.isEmpty())
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
@@ -43,7 +41,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("DRACONIANOS", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
         assertTrue(result.ensureAutomaticAdvantages.isEmpty())
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
@@ -54,7 +51,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("INSETOIDES", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
         assertEquals(listOf(TraitAddition("GARRAS", "GARRAS")), result.ensureAutomaticAdvantages)
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
@@ -72,7 +68,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ),
             result.ensureRacialDisadvantages
         )
-        assertTrue(result.forceArmorZero)
     }
 
     @Test
@@ -99,7 +94,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             listOf(TraitAddition("ANTECEDENTE ARCANO (DEMÔNIO)", "ANTECEDENTE_ARCANO_DEMONIO")),
             result.ensureAutomaticAdvantages
         )
-        assertTrue(result.forceArmorZero)
     }
 
     @Test
@@ -523,7 +517,6 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("QUALQUER", null)
 
         assertEquals(0, result.naturalArmorFromRace)
-        assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
