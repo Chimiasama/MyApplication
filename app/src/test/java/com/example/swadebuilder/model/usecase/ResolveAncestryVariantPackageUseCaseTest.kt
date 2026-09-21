@@ -123,17 +123,13 @@ class ResolveAncestryVariantPackageUseCaseTest {
 
         // MUITO_FORTE (Força d8) e RESISTENCIA +2 são habilidades base da
         // raça em ancestralidades.json ("Padrão" é o default, nada extra a
-        // adicionar) — os pacotes fixos deste registro ficaram vazios de
-        // propósito porque Elementais é candidato único e nunca passa pelo
-        // caminho genérico que os leria (scifiVariantDrivenKeys); a troca
-        // real Padrão↔"Ar, Fogo ou Água" mora em
-        // CriadorState.applyAncestryVariantAdjustments, direto em
-        // habilidades[].
+        // adicionar) — o pacote fixo "padrao" deste registro continua vazio
+        // de propósito (não há nada a trocar quando a opção é a base).
         assertEquals(emptyList<TraitAddition>(), result.tracosParaAdicionar)
     }
 
     @Test
-    fun `elementais ar fogo ou agua tambem nao injeta traco por aqui`() {
+    fun `elementais ar fogo ou agua injeta Forma de Energia mais o ajuste de orcamento`() {
         val result = useCase.resolve(
             ancestralidadeId = "ELEMENTAIS",
             livro = "SCI_FI",
@@ -143,8 +139,19 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        // Ver comentário do teste "padrao" acima.
-        assertEquals(emptyList<TraitAddition>(), result.tracosParaAdicionar)
+        // Migrado na Rodada 28 (CriadorState.applyAncestryVariantAdjustments
+        // parou de construir RacialAbility na mão e passou a ler este mesmo
+        // pacote) — o registro agora carrega o dado de verdade: troca
+        // Muito Forte+Resistência por Forma de Energia, fechando o
+        // orçamento com o ajuste invisível de +2 pts.
+        assertEquals(
+            listOf(
+                TraitAddition("Forma de Energia", "FORMA_DE_ENERGIA"),
+                TraitAddition("Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA", pontos = 2, invisivel = true)
+            ),
+            result.tracosParaAdicionar
+        )
+        assertEquals(listOf("MUITO FORTE", "RESISTÊNCIA +2"), result.tracosParaRemoverPorNome)
     }
 
     @Test

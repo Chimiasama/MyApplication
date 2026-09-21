@@ -265,17 +265,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
         // MUITO_FORTE (Força d8) e RESISTENCIA +2 já vêm de habilidades[] na
         // raça base (ancestralidades.json) — "Padrão" é o estado default, sem
-        // nada a adicionar por cima. A troca real pra "Ar, Fogo ou Água"
-        // (remover os dois, adicionar Forma de Energia + o ajuste de
-        // orçamento invisível) mora em CriadorState.applyAncestryVariantAdjustments,
-        // não neste use case nem em AncestryVariantRegistry.elementaisScifi()
-        // (mantido só pro rótulo "Seleção:" da UI).
+        // nada a adicionar por cima (pacote "padrao" continua vazio de
+        // propósito em AncestryVariantRegistry.elementaisScifi()).
         assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
         assertEquals(0, result.naturalArmorFromRace)
     }
 
     @Test
-    fun `elementais scifi ar fogo ou agua nao injeta traco por aqui`() {
+    fun `elementais scifi ar fogo ou agua injeta Forma de Energia mais o ajuste de orcamento`() {
         val result = useCase.execute(
             anc = "ELEMENTAIS",
             descendenteElementalSelecionado = null,
@@ -284,11 +281,23 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        // Ver comentário do teste "padrao" acima — a troca de MUITO_FORTE/
-        // RESISTENCIA por Forma de Energia é feita direto em habilidades[]
-        // por CriadorState.applyAncestryVariantAdjustments, não por este
-        // use case.
-        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
+        // Migrado na Rodada 28: AncestryVariantRegistry.elementaisScifi() tem
+        // os traços de verdade agora (troca Muito Forte+Resistência por
+        // Forma de Energia, mesmo padrão de buildResultFromVariantRegistry()
+        // já usado por Drakens e as outras 18 raças de
+        // scifiVariantDrivenKeys) — ensureAutomaticAdvantages é o canal que
+        // alimenta ModifierEngine/orçamento direto (ver racialTraitIds em
+        // ResolveAncestryRacialPackageUseCase), em paralelo à mutação de
+        // habilidades[] que CriadorState.applyAncestryVariantAdjustments faz
+        // pra exibição (Resumo/PDF/Ver Detalhes) — mesmo par que já existe
+        // pras 19 raças de scifiVariantDrivenKeys, não uma duplicação nova.
+        assertEquals(
+            listOf(
+                TraitAddition("Forma de Energia", "FORMA_DE_ENERGIA"),
+                TraitAddition("Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA", pontos = 2, invisivel = true)
+            ),
+            result.ensureAutomaticAdvantages
+        )
         assertEquals(0, result.naturalArmorFromRace)
     }
 

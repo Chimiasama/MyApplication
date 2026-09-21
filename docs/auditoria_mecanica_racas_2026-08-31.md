@@ -2252,3 +2252,52 @@ anterior a esta, também passa por `extrairArmasNaturais()`) continuam
 passando sem nenhuma mudança — confirma que o fallback `hab.id` não
 quebrou a Arma de Sopro dos Draconianos. `scripts/phase6_reliability_gate
 .sh` passou. Os dois JSONs re-parseados com sucesso depois da edição.
+
+## Trigésima rodada — CI vermelho: 2 testes presos no comportamento antigo dos Elementais
+
+O CI do commit da Rodada 28 (Elementais) deu `build failure` de verdade —
+não achei isso no harness local porque só rodei `ScifiAncestryVariantSyncTest`
+(o arquivo que eu já conhecia); não procurei por TODOS os arquivos de
+teste que mencionam "ELEMENTAIS" antes de considerar a rodada fechada.
+Lição: daqui pra frente, `grep -rl` pelo nome da raça em `app/src/test`
+inteiro antes de fechar qualquer rodada que mexa em resolução de raça.
+
+Os 2 testes que quebraram (`ResolveAncestrySpecificAdjustmentsUseCaseTest`
+e `ResolveAncestryVariantPackageUseCaseTest`) tinham nome e comentário
+dizendo explicitamente "elementais... nao injeta traco por aqui" —
+fixavam o comportamento ANTIGO (pacotes vazios de propósito) que a
+Rodada 28 corrigiu por decisão do dono do projeto. Não é regressão: a
+falha confirma que o pacote passou a alimentar `ensureAutomaticAdvantages`
+de verdade, exatamente como pretendido.
+
+Investigado antes de mexer nos testes: existe um SEGUNDO caminho, já
+existente antes da Rodada 28 e não tocado por ela, que também lê
+`AncestryVariantRegistry` — `ResolveAncestrySpecificAdjustmentsUseCase
+.buildResultFromVariantRegistry()` (usado pelas 19 raças de
+`scifiVariantDrivenKeys`, ex. Drakens) monta `ensureAutomaticAdvantages
+= resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar`
+— **exatamente o mesmo padrão** que o bloco dedicado dos Elementais já
+usava (linha ~270 do mesmo arquivo, escrito numa rodada anterior a
+esta auditoria, preparado esperando o registro ser populado). Confirmei
+que isso não é duplicação: `ensureAutomaticAdvantages`/`racialTraitIds`
+alimenta `ModifierEngine` direto (efeito mecânico numérico), enquanto
+`CriadorState.applyAncestryVariantAdjustments` mutando `habilidades[]`
+alimenta a exibição (Resumo/PDF/Ver Detalhes/Modo Auditoria) — os dois
+caminhos já coexistem pras 19 raças de `scifiVariantDrivenKeys` sem
+problema (os 19 testes de `ScifiAncestryVariantSyncTest` continuam
+passando), Elementais só passou a seguir o mesmo padrão.
+
+Atualizados os 2 testes pra afirmar o valor novo e correto
+(`[TraitAddition(Forma de Energia, FORMA_DE_ENERGIA), TraitAddition
+(Ajuste de Orçamento..., AJUSTE_FORMA_DE_ENERGIA, pontos=2,
+invisivel=true)]`), com comentário explicando a ligação com o padrão
+de `scifiVariantDrivenKeys`. Nenhuma mudança de código de produção
+nesta rodada — só os 2 testes.
+
+### Verificação
+
+Os 2 arquivos de teste inteiros rodados no harness (45 testes no total
+entre os dois, não só os 2 que mudaram) — todos passando.
+`grep -rl "ELEMENTAIS"` em todo `app/src/test` confirma que não sobra
+nenhum outro teste pendente sobre a raça. `scripts/phase6_reliability_gate
+.sh` passou.
