@@ -2008,3 +2008,92 @@ validado por balanceamento de chaves/parênteses (0/0 antes e depois, sem
 mudança) e leitura cruzada dos pontos alterados (import, estado do
 toggle, catálogo carregado, switch, branch dentro do painel "Ver
 detalhes"). Fica pro CI confirmar a compilação.
+
+## Vigésima sétima rodada — corrige falso-positivo de "hardcode" no Modo Auditoria e adiciona "exclusivo desta raça"
+
+Pergunta do dono do projeto: os traços que ele mandou criar como
+"invisíveis" — específicos de uma raça só, pra balancear ou dar um poder
+sem equivalente em outro livro — ficam identificados na auditoria, ou
+o modo novo confunde eles com sujeira de hardcode?
+
+Investigando pra responder direito, achei duas coisas:
+
+1. **`RacialAbility.invisivel` não é o campo que ele está descrevendo.**
+   Toda ocorrência real de `invisivel: true` no código hoje (grep em
+   `ancestralidades.json` + `*.kt`) é de outra natureza: uma entrada
+   sintética escondida da UI porque já aparece em outro lugar (ex.:
+   `ATTRIBUTE_BOOST`/`SKILL_BOOST` espelhando um bônus já mostrado na aba
+   de Atributos/Perícias, ou `GRANTED_EDGE`/`RACIAL_HINDRANCE` sintéticos
+   de uma Variante custom) ou um ajuste de orçamento sem narrativa própria
+   (`AJUSTE_FORMA_DE_ENERGIA`). Nenhuma tem a ver com "traço de
+   balanceamento exclusivo de uma raça" — não é o mesmo conceito.
+
+2. **O conceito real ("só essa raça tem") existe nos dados, mas não
+   estava marcado em lugar nenhum** — e pior: o Modo Auditoria que acabei
+   de entregar tinha um bug de verdade por causa disso. Rodando um script
+   contra `ancestralidades.json` (112 raças, 180 ids distintos de
+   traço): **122 ids são usados por exatamente 1 raça** — a maioria são
+   traços bem específicos (ex.: "Magia Gnômica" do Gnomo, "Carismático"
+   dos Transmorfos, "Obsessivos" do Gnomo). Desses, **49 não têm entrada
+   em `basico_habilidades_raciais.json` nem `RacialTraitPointCatalog
+   .LABEL`/`EFEITOS`** — exatamente o padrão que o formatador da rodada
+   anterior rotulava como "⚠ possível sujeira de hardcode". Só que
+   **todos os 49, sem exceção, TÊM entrada em `RacialTraitPointCatalog
+   .CUSTOS`** (custo calibrado à mão, alguns com comentário tipo
+   `"CARISMATICO" to 2, // oficial: vantagem_racial` ou `"MAGIA_GNOMICA"
+   to 1, // Gnomo (Pathfinder) fecha com pontosRaciaisEsperados=4 só com
+   este valor`) — ou seja, são traços PROPOSITAIS e calibrados, não
+   sujeira. Rodando o mesmo script checando também CUSTOS: **zero ids
+   ficam realmente sem nenhum match** em todo o catálogo oficial. O
+   formatador da rodada anterior geraria um falso-positivo de "hardcode"
+   pra essas 49 entradas legítimas — bug corrigido nesta rodada, antes de
+   virar confusão pro dono do projeto durante a auditoria de verdade.
+
+Implementado em `RacialTraitAuditFormatter.kt`:
+
+- Novo degrau na cadeia de definição, entre "efeito mecânico bruto" e o
+  aviso de hardcode: se o id está em `RacialTraitPointCatalog.CUSTOS`
+  (mesmo sem LABEL/catálogo oficial), mostra `"Traço específico desta
+  raça, sem nome genérico reaproveitável — custo calibrado no catálogo
+  interno (+X pts), sem equivalente direto no livro de criação"` em vez
+  do aviso de sujeira. O aviso de hardcode agora só dispara quando o id
+  não bate em NADA (catálogo oficial, LABEL, EFEITOS, nem CUSTOS) —
+  situação que hoje não ocorre pra nenhuma raça oficial, mas fica de
+  guarda pra qualquer coisa nova que entrar sem passar por
+  `RacialTraitPointCatalog`.
+- Nova função `calcularIdsExclusivos(todasAsRacas: List<RacialModifier>)`:
+  varre `habilidades[].id` de todas as raças e retorna os ids usados por
+  exatamente uma — é só contagem estrutural, não tenta adivinhar se
+  existe lógica hardcoded amarrada ao id em outro arquivo Kotlin (isso
+  exigiria buscar o id pelo resto do código-fonte, fora do escopo desta
+  função). `formatar()` ganhou um parâmetro opcional `idsExclusivos` que,
+  quando o id da habilidade bate, soma a etiqueta `exclusivo-desta-raça`
+  no cabeçalho de auditoria — ao lado de, não substituindo, a etiqueta
+  `invisível(UI)` (renomeada de `invisível` pra deixar claro que é sobre
+  a UI, não sobre exclusividade).
+- `AncestralidadesSection.kt`: `idsExclusivosPorRaca` computado uma vez
+  (`remember(state.listaAncestralidadesJson)`) e passado pro formatador.
+
+**Limitação que fica registrada, não resolvida**: "exclusivo desta raça"
+é só contagem de dados — não confirma se existe uma Vantagem/poder de
+verdade concedido por lógica hardcoded amarrada a esse id específico em
+algum `UseCase`/`CriadorState.kt` (esses hardcodes tendem a checar o
+NOME da raça, não o id do traço — ex.: o `ensureAdvantageNames =
+listOf("CARISMÁTICO")` da rodada 23 fica dentro de um `if (raça ==
+TRANSMORFOS)`, sem nenhuma referência ao id `CARISMATICO` em si). Não
+existe hoje um jeito automático de responder "este id específico aciona
+algum grant hardcoded em outro arquivo" — só busca manual por raça.
+
+### Verificação
+
+3 testes novos + os 5 anteriores (8 no total em
+`RacialTraitAuditFormatterTest`), todos passando no harness standalone:
+id real (`CARISMATICO`) com custo em CUSTOS mas sem LABEL/catálogo não
+vira mais aviso de hardcode; etiqueta `exclusivo-desta-raça` aparece só
+quando o id está no mapa passado; `calcularIdsExclusivos` só marca ids
+usados por exatamente 1 das raças de entrada (testado com uma raça
+com 2 traços, um repetido em outra raça — só o não-repetido é marcado).
+`scripts/phase6_reliability_gate.sh` passou. `AncestralidadesSection.kt`
+não compila no harness (Compose UI) — balanceamento de chaves/parênteses
+conferido (0/0, sem mudança) e leitura cruzada do novo bloco. Fica pro CI
+confirmar a compilação.

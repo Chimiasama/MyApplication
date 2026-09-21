@@ -59,11 +59,23 @@ class RacialTraitAuditFormatterTest {
     }
 
     @Test
-    fun `id totalmente sem catalogo e sem efeito vira aviso de hardcode`() {
+    fun `id totalmente sem catalogo, CUSTOS nem efeito vira aviso de hardcode`() {
         val hab = RacialAbility(nome = "Nome Qualquer", descricao = "", id = "ID_INEXISTENTE_QUALQUER")
         val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
         assertTrue(linhas[0].contains("SEM CATÁLOGO"))
         assertTrue(linhas[0].contains("Nome Qualquer"))
+    }
+
+    @Test
+    fun `id sem catalogo oficial e sem LABEL, mas com custo calibrado em CUSTOS, NAO vira aviso de hardcode`() {
+        // "CARISMATICO" (Transmorfos) é um caso real: sem entrada genérica em
+        // basico_habilidades_raciais.json nem LABEL, mas com custo calibrado em
+        // RacialTraitPointCatalog.CUSTOS — é um traço bem específico da raça, não sujeira.
+        val hab = RacialAbility(nome = "Carismático (racial)", descricao = "", id = "CARISMATICO")
+        val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
+        assertTrue(!linhas[0].contains("SEM CATÁLOGO"))
+        assertTrue(linhas[0].contains("Traço específico desta raça"))
+        assertTrue(linhas[0].contains("+2 pts"))
     }
 
     @Test
@@ -72,5 +84,34 @@ class RacialTraitAuditFormatterTest {
         val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
         assertTrue(linhas[0].contains("x3"))
         assertTrue(linhas[0].contains("+3 pts"))
+    }
+
+    @Test
+    fun `id exclusivo de uma raca ganha a etiqueta no cabecalho`() {
+        val hab = RacialAbility(nome = "Magia Gnômica", descricao = "", id = "MAGIA_GNOMICA")
+        val semExclusividade = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
+        assertTrue(!semExclusividade[0].contains("exclusivo-desta-raça"))
+
+        val comExclusividade = RacialTraitAuditFormatter.formatar(
+            listOf(hab), catalogoOficial, mapOf("MAGIA_GNOMICA" to "Gnomo")
+        )
+        assertTrue(comExclusividade[0].contains("exclusivo-desta-raça"))
+    }
+
+    @Test
+    fun `calcularIdsExclusivos so marca ids usados por exatamente uma raca`() {
+        val racaA = RacialModifier(
+            nome = "Raça A",
+            habilidades = listOf(
+                RacialAbility(nome = "Traço Comum", descricao = "", id = "COMUM"),
+                RacialAbility(nome = "Traço Só de A", descricao = "", id = "SO_A")
+            )
+        )
+        val racaB = RacialModifier(
+            nome = "Raça B",
+            habilidades = listOf(RacialAbility(nome = "Traço Comum", descricao = "", id = "COMUM"))
+        )
+        val exclusivos = RacialTraitAuditFormatter.calcularIdsExclusivos(listOf(racaA, racaB))
+        assertEquals(mapOf("SO_A" to "Raça A"), exclusivos)
     }
 }

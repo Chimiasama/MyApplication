@@ -156,6 +156,13 @@ fun AncestralidadesSection(
             context.loadJsonAsset<List<HabilidadeCriacao>>("basico_habilidades_raciais.json")
         }.getOrElse { emptyList() }
     }
+    // Ids usados por só 1 raça em todo o catálogo — ver RacialTraitAuditFormatter
+    // .calcularIdsExclusivos: diferente de RacialAbility.invisivel (que marca algo escondido
+    // da UI por outro motivo), essa é a etiqueta "traço de balanceamento/narrativa exclusivo
+    // desta raça" que o modo auditoria mostra.
+    val idsExclusivosPorRaca: Map<String, String> = remember(state.listaAncestralidadesJson) {
+        RacialTraitAuditFormatter.calcularIdsExclusivos(state.listaAncestralidadesJson)
+    }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
@@ -1252,7 +1259,7 @@ fun AncestralidadesSection(
                                                 color = MaterialTheme.colorScheme.tertiary
                                             )
                                             Spacer(Modifier.height(2.dp))
-                                            RacialTraitAuditFormatter.formatar(habilidadesResolvidas, catalogoOficialHabilidades)
+                                            RacialTraitAuditFormatter.formatar(habilidadesResolvidas, catalogoOficialHabilidades, idsExclusivosPorRaca)
                                                 .forEach { linha ->
                                                     Text(
                                                         text = "• $linha",
