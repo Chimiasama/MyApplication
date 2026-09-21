@@ -1788,3 +1788,140 @@ dinheiro do personagem não é deduzido automaticamente ao comprar
 equipamento; concessão automática de verdade (Antecedente Arcano + poder/
 super poder) pra traços de raça customizada criados via "Super Poderes"/
 "Poder" — hoje só registram o traço, não concedem nada ao personagem.
+
+## Vigésima quarta rodada — Super Poderes redundantes com traços de raça
+
+Pedido: comparar os 92 Super Poderes (`super_poderes.json`) com os 115
+traços de `basico_habilidades_raciais.json` (catálogo usado tanto pelo
+picker "Super Poderes (2+X)" quanto pelo novo "Poder") e tirar do
+seletor de Super Poderes qualquer um que a raça já cubra por outro
+traço — evitar pagar duas vezes pela mesma coisa (ex.: Super Poder
+Resistência quando já existe o traço racial `RESISTENCIA`).
+
+### Grupo A — excluído do seletor (34 itens, confirmados pelo texto do
+livro, não só pelo nome)
+
+| Super Poder | Traço racial equivalente |
+|---|---|
+| Ações Adicionais | Ação Adicional / Ações Adicionais (Maior) |
+| Alcance | Alcance (+1) |
+| Andar nas Paredes | Andar nas Paredes |
+| Aparar | Aparar (+1) |
+| Aquático | Aquático / Semi-Aquático |
+| Armadura | Armadura (+2) |
+| Ataque Corpo a Corpo | Garras / Mordida / Chifres |
+| Ataque de Longa Distância | Arma de Sopro |
+| Atordoar | Atordoar |
+| Aumentar/Reduzir Característica | Aumento de Atributo |
+| Bônus de Perícia | Bônus de Perícia (+1/+2) |
+| Camaleão (Grupo B) | Camuflagem (Adaptável) — muda de cor pra se camuflar, mesmo efeito |
+| Cavar | Cavar |
+| Construto | Construto |
+| Espacial | Espacial |
+| Imune a Doenças/Venenos | Imunidade a Doenças ou Venenos |
+| Interface | Interface |
+| Invisibilidade | Invisibilidade (Translúcido/Total) |
+| Membros Extras | Membros Extras |
+| Morto-vivo | Morto-Vivo |
+| Movimentação | Movimentação Aumentada (+2) |
+| Mudança de Forma | Mudança de Forma |
+| Não dorme | Redução de Sono — texto do Super Poder é literalmente "precisa de metade do tempo normal de sono", igual à descrição do traço |
+| Não respira | Não Respira |
+| Regeneração | Regeneração / Regeneração Maior |
+| Resistência Ambiental | Resistência Ambiental |
+| Resistência | Resistência (+1) |
+| Robusto | Robusto |
+| Salto | Saltador |
+| Sem Órgãos Vitais | Sem Órgãos Vitais |
+| Sentidos Aprimorados | Sentidos Aguçados (Visão/Audição/Olfato) |
+| Supervantagem | Vantagem Inata (Novato/Experiente/Veterano/Heroico) — texto "garante uma Vantagem... independente do Estágio" é a mesma coisa |
+| Telepatia | Telepatia |
+| Veneno | Toque Venenoso (Moderado/Paralisante/Projetado/Letal) |
+| Voo | Voo (Mov 6/12/24) |
+
+Implementado em `SettingsDialog.kt`: novo conjunto top-level
+`SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL` (nomes normalizados via
+`keyify()`) e `superPoderesCatalogParaTracoRacial` (o catálogo já
+filtrado), usado só no dialog do picker do traço "Super Poderes (2+X)".
+Escopo restrito de propósito: não toca em `state.listaSuperPoderes`
+(compra normal de Super Poderes por um personagem, `SuperPoderesSection.kt`)
+nem em `superPoderesParaModificador` (gerenciamento de Modificador de
+Poder do Mestre, que precisa continuar enxergando o catálogo completo
+mesmo pros Super Poderes agora escondidos do picker racial).
+
+### Grupo B — decisão do dono do projeto
+
+- **Camaleão**: excluído (foi pro Grupo A acima) — mesmo efeito de
+  `camuflagem_2`.
+- **Crescimento** e **Encolhimento**: mantidos selecionáveis, de
+  propósito. Mudar de Tamanho ativamente/temporariamente (ex.: um gnomo
+  que vira uma versão grande de si mesmo) é mecânica e narrativamente
+  diferente de já nascer com Tamanho +1 ou Diminuto — ambos os traços
+  raciais são permanentes/passivos, os Super Poderes são um efeito que o
+  personagem aciona.
+
+### Grupo C — sem sobreposição com traço racial, revisado por outro
+tipo de id (55 itens; segue selecionável, listado aqui só como
+levantamento, nenhuma mudança de código)
+
+A maioria (22 itens) não bate com nenhum outro id do app: Absorção,
+Anular, Balançar, Campo de Força, Controlar Máquinas, Controle de
+Clima, Controle de Energia, Controle de Matéria, Decompor, Duplicação,
+Escanear, Escudo Mental, Furacão, Gênio, Infecção, Má Sorte, Mau
+Funcionamento, Não envelhece, Precisão mortal, Servos, Terremoto,
+Transmissão, Veículo.
+
+Os outros 33 batem com uma **Magia (Poder)** ou uma **Vantagem** de
+nome igual/parecido — o mesmo padrão que Campo de Dano, citado no
+pedido:
+
+| Super Poder | Bate com | Observação |
+|---|---|---|
+| Campo de Dano | Poder "Campo de Dano" | dano menor, área um pouco diferente, mesmo conceito — exemplo citado no pedido |
+| Curar | Poder "Cura" | idem: um personagem com o traço "Poder" já pode escolher Cura como o poder concedido |
+| Cegar | Poder "Cegar" | |
+| Enredar | Poder "Enredar" | |
+| Explodir | Poder "Explosão" | |
+| Falar Idioma | Poder "Falar Idioma" | |
+| Ilusão | Poder "Ilusão" | |
+| Leitura de Objeto | Poder "Leitura de Objeto" | |
+| Leitura Mental | Poder "Leitura Mental" | racial `telepatia` é diferente (comunicação, não ler pensamento) |
+| Lentidão | Poder "Morosidade/Velocidade" | metade do poder (lado "morosidade") |
+| Velocidade | Poder "Morosidade/Velocidade" | outra metade do mesmo poder (lado "velocidade") |
+| Medo | Poder "Medo" | |
+| Obscurecer | Poder "Iluminar/Obscurecer" | metade do poder |
+| Telecinese | Poder "Telecinese" | |
+| Teleporte | Poder "Teleporte" | |
+| Intangibilidade | Poder "Intangibilidade" + parcialmente `forma_energia` (racial) | racial só cobre imunidade a dano físico/projétil, não atravessar paredes |
+| Possessão | Poder "Fantoche" | efeito parecido (controlar outro corpo), nome diferente |
+| Companheiro Animal | Poder "Amigo das Feras" | |
+| Controle de Animal | Poder "Amigo das Feras" | mesmo Poder cobre os dois Super Poderes |
+| Controle Mental | Poderes "Fantoche"/"Limpeza Mental" | parcial, nenhum dos dois é idêntico |
+| Empurrar | Poder "Rajada" | parcial (Rajada também causa dano) |
+| Forma Alternativa | Traço racial + Super Poder "Mudança de Forma" | mecânica de se transformar em algo específico, redundante com o par acima |
+| Mimetismo | Traço racial "Camuflagem"/"Mudança de Forma" | parcial (imitar voz/aparência, não cor) |
+| Destemido | Vantagem "Destemido" | e o traço racial "Vantagem Inata (Novato)" já permite conceder essa Vantagem de qualquer nome, Destemido incluso |
+| Esquiva | Vantagem "Esquiva" | mesma lógica do item acima |
+| Reflexos Aprimorados | Vantagem "Reflexos Rápidos" | |
+| Não Come | Parcialmente coberto pelos traços Construto/Morto-Vivo/Robô | esses já embutem "não precisa comer" dentro de um pacote maior; não existe um traço isolado só pra isso |
+| Perceptivo | Cluster racial Sentidos Aguçados/Infravisão/Visão 360° | cada traço racial é específico (um sentido, uma condição); o Super Poder é um bônus genérico de Perceber |
+| Superatributo | Traço racial "Aumento de Atributo" | versão mais forte do mesmo conceito (excede o máximo normal) |
+| Superperícia | Traço racial "Perícia Racial (d4/d6)" | versão mais forte do mesmo conceito (excede d12) |
+| Superciência | Traços "Poder Inato"/"Super Poderes" (Antecedente Arcano) | é um Antecedente Arcano alternativo — não dá pra simplesmente excluir sem também remover uma opção legítima, precisa de decisão específica |
+| Superfeitiçaria | idem | idem |
+
+Nenhum desses foi tirado do seletor — ficam pra próxima decisão, caso
+o dono do projeto queira que o traço "Poder" (que já restringe a
+poderes de Novato) absorva parte desse papel em vez do Super Poder
+equivalente aparecer solto no seletor de Super Poderes.
+
+### Verificação
+
+`scripts/phase6_reliability_gate.sh` passou (mesmo WARN de sempre sobre
+o tamanho de `CriadorState.kt`, não relacionado a esta mudança).
+`SettingsDialog.kt` não compila no harness standalone (Compose UI) —
+validado por balanceamento de chaves (0, igual antes e depois) e de
+parênteses (+8, igual antes e depois — a mudança não introduziu
+desbalanceamento novo), além de leitura cruzada dos 3 pontos afetados
+(constante, catálogo filtrado, ponto de uso no dialog). Fica pro CI
+confirmar a compilação.

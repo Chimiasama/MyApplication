@@ -254,6 +254,25 @@ suspend fun findSavedCharactersUsingCustomItem(
 }
 
 
+// Super Poderes (super_poderes.json) que o traço racial "Super Poderes (2+X)" não deveria
+// oferecer, porque a raça já tem um jeito próprio de conceder o mesmo efeito (via
+// basico_habilidades_raciais.json) — comprar de novo pelo Super Poder seria pagar duas vezes
+// pela mesma coisa. Conferido contra o texto de cada Super Poder (não só o nome): ex. "Não
+// dorme" descreve "metade do tempo normal de sono", igual ao traço "Redução de Sono";
+// "Supervantagem" concede "uma Vantagem... independente do Estágio", igual aos traços
+// "Vantagem Inata (Novato/Experiente/.../Heroico)". "Camaleão" (Grupo B) entra aqui também —
+// muda de cor pra se camuflar, igual ao traço "Camuflagem (Adaptável)" — mas "Crescimento" e
+// "Encolhimento" ficam de fora de propósito: mudar de tamanho ativamente (efeito temporário) é
+// diferente de já nascer com Tamanho +1/Diminuto.
+private val SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL: Set<String> = setOf(
+    "Ações Adicionais", "Alcance", "Andar nas Paredes", "Aparar", "Aquático", "Armadura",
+    "Ataque Corpo a Corpo", "Ataque de Longa Distância", "Atordoar", "Aumentar/Reduzir Característica",
+    "Bônus de Perícia", "Camaleão", "Cavar", "Construto", "Espacial", "Imune a Doenças/Venenos",
+    "Interface", "Invisibilidade", "Membros Extras", "Morto-vivo", "Movimentação", "Mudança de Forma",
+    "Não dorme", "Não respira", "Regeneração", "Resistência Ambiental", "Resistência", "Robusto",
+    "Salto", "Sem Órgãos Vitais", "Sentidos Aprimorados", "Supervantagem", "Telepatia", "Veneno", "Voo"
+).mapTo(mutableSetOf()) { it.keyify() }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -773,6 +792,16 @@ fun CustomContentManageDialog(
                             runCatching {
                                 context.loadJsonAsset<List<com.example.swadebuilder.model.SuperPoder>>("super_poderes.json")
                             }.getOrElse { emptyList() }
+                        }
+                        // Catálogo restrito ao seletor do traço "Super Poderes (2+X)": exclui os
+                        // Super Poderes que a raça já cobre por outro traço (ver
+                        // SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL) — não afeta a compra normal
+                        // de Super Poderes por um personagem (SuperPoderesSection.kt usa
+                        // state.listaSuperPoderes, um catálogo separado) nem o gerenciamento de
+                        // Modificador de Poder logo abaixo (superPoderesParaModificador), que
+                        // continua enxergando o catálogo completo.
+                        val superPoderesCatalogParaTracoRacial: List<com.example.swadebuilder.model.SuperPoder> = remember(superPoderesCatalog) {
+                            superPoderesCatalog.filterNot { it.nome.keyify() in SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL }
                         }
                         var superPoderRacialPickerTarget by remember {
                             mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
@@ -3046,7 +3075,7 @@ fun CustomContentManageDialog(
                                 text = {
                                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                                         Text(
-                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido.",
+                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido. Super Poderes que a raça já cobre por outro traço (Resistência, Armadura, Voo etc.) não aparecem aqui.",
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(bottom = 8.dp)
@@ -3057,7 +3086,7 @@ fun CustomContentManageDialog(
                                             label = { Text("Filtrar Super Poder") },
                                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                                         )
-                                        superPoderesCatalog
+                                        superPoderesCatalogParaTracoRacial
                                             .filter { it.nome.contains(filterSuperPoderText, ignoreCase = true) }
                                             .forEach { poder ->
                                                 val custoPoder = primeiroCustoSuperPoder(poder.custoBase)
