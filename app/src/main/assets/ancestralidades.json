@@ -4443,10 +4443,10 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Recebe uma Vantagem Novato extra, como um humano comum.",
+        "descricao": "Recebe uma Vantagem Novato extra, como um humano comum, ou pode abrir mão dela para adquirir o Antecedente Arcano (Demônio) diluído.",
         "category": "racial_trait_positive",
-        "id": "ADAPTAVEL",
-        "descricaoLite": "Ganha de graça uma Vantagem adicional de nível Novato."
+        "id": "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO",
+        "descricaoLite": "Ganha de graça uma Vantagem adicional de nível Novato, ou troca por Antecedente Arcano (Demônio) diluído."
       }
     ],
     "livros": [

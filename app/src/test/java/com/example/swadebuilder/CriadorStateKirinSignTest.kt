@@ -31,11 +31,42 @@ class CriadorStateKirinSignTest {
 
     @Test
     fun `kirin trata sorte como vantagem automatica do signo`() {
-        val state = CriadorState().apply {
-            compendioArteDaGuerraAtivo = true
-            ancestralidade = "HUMANOS"
-            signoAdgSelecionado = "Kirin"
-        }
+        val state = CriadorState()
+        // O guard do bônus de Kirin é por id do traço "ADAPTAVEL_OU_SIGNO" em
+        // habilidades[] (não mais por nome de raça) — precisa de uma
+        // ancestralidade injetada com esse traço, igual ao teste "signo
+        // nenhum" abaixo.
+        val humanosAdg = RacialModifier(
+            nome = "HUMANOS",
+            habilidades = listOf(
+                RacialAbility(nome = "Adaptável ou Signo", descricao = "", id = "adaptavel_ou_signo")
+            ),
+            origem = "ARTE_DA_GUERRA"
+        )
+        state.updateGameData(
+            GameDataSnapshot(
+                listaComplicacoes = emptyList<Complicacao>(),
+                listaCoracoesCrystal = emptyList<CrystalHeart>(),
+                listaAncestralidadesJson = listOf(humanosAdg),
+                listaMonstroTemplates = emptyList<MonstroTemplate>(),
+                listaAtributos = emptyList(),
+                mapaAtributosDisplay = emptyMap(),
+                listaPericias = emptyList<Pericia>(),
+                mapaPericias = emptyMap(),
+                mapaAtributosDescricao = emptyMap(),
+                listaVantagens = emptyList<Vantagem>(),
+                listaPoderes = emptyList<Poder>(),
+                listaTropos = emptyList<Tropo>(),
+                listaEquipamentos = emptyList<EquipamentoItem>(),
+                equipamentoCategorias = emptyList<EquipamentoCategoria>(),
+                superequipCategorias = emptyList<EquipamentoCategoria>(),
+                listaSuperPoderes = emptyList<SuperPoder>(),
+                arcanoInfo = emptyList()
+            )
+        )
+        state.compendioArteDaGuerraAtivo = true
+        state.ancestralidade = "HUMANOS"
+        state.signoAdgSelecionado = "Kirin"
 
         val sorte = sorte()
         state.vantagensSelecionadas.add(sorte)

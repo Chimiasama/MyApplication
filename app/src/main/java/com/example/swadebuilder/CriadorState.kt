@@ -807,15 +807,22 @@ class CriadorState {
         // Meio-Elfo está ativo (candidato único), a escolha nunca surtia efeito:
         // marcar "Agilidade d6" ficava sem aplicar (bug real relatado pelo
         // usuário — Agilidade continuava em d4 mesmo com a opção marcada).
-        // A checagem é pelo traço "HERANCA" em si (não só pelo nome/!Pathfinder):
-        // o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO" no nome, mas tem
-        // "Flexibilidade" em vez de "Herança" — sem esse traço presente, cai fora
-        // e mantém o curto-circuito original (senão a troca Herança/Adaptável
-        // seria injetada nele também, mesmo sem ele ter Herança pra começar).
+        // A checagem é só pelo traço "HERANCA" em si, sem depender do nome da
+        // raça: o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO" no nome,
+        // mas tem "Flexibilidade" em vez de "Herança" — como esse id nunca
+        // aparece em nenhuma outra raça carregada (conferido contra
+        // ancestralidades.json), a checagem de id sozinha já garante que só
+        // Meio-Elfo Básico/Fantasia/Horror/Super entra aqui, sem precisar
+        // repetir o nome da raça.
         fun ehMeioElfoComHeranca(candidato: RacialModifier): Boolean =
-            (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) &&
-                !key.contains("PATHFINDER") &&
-                candidato.habilidades.any { it.id?.keyify() == "HERANCA" }
+            candidato.habilidades.any { it.id?.keyify() == "HERANCA" }
+
+        // Mesmo padrão do Meio-Elfo acima, mas pro traço "ADAPTAVEL_OU_
+        // ANTECEDENTE_ARCANO_DEMONIO" do Meio-Demônio (Cidade do Sol a
+        // Vapor) — escolha entre Adaptável e Antecedente Arcano (Demônio)
+        // diluído. Id exclusivo dessa raça, sem precisar checar o nome.
+        fun temEscolhaMeioDemonio(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" }
 
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
@@ -837,7 +844,7 @@ class CriadorState {
         // depois desta mudança).
         val candidatoEhScifiOuFc = candidates.first().origem == "FC" || candidates.first().origem == "SCI_FI"
         val precisaPassarPorAjusteDeVariante = key.contains("UMVEE") ||
-            key.contains("MEIO-DEMONIO") ||
+            temEscolhaMeioDemonio(candidates.first()) ||
             (candidatoEhScifiOuFc && key == "ELEMENTAIS") ||
             (candidatoEhScifiOuFc && key in AncestryVariantRegistry.scifiVariantDrivenKeys) ||
             isFantasiaHumanoOuDescElemental ||
@@ -872,7 +879,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("MEIO-DEMONIO")) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
@@ -1088,10 +1095,16 @@ class CriadorState {
         // Disfarce Demoníaco — ver isStageBasedArcanoVariant e
         // ArcaneConfig.SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS) — como sua
         // habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
-        // Meio-Elfo acima, mas sem interação com atributos.
-        if (key.contains("MEIO-DEMONIO")) {
+        // Meio-Elfo acima (escolha por id do traço "ADAPTAVEL_OU_ANTECEDENTE_
+        // ARCANO_DEMONIO", não por nome de raça), mas sem interação com
+        // atributos.
+        if (base.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" }) {
             val newHabilidades = base.habilidades.toMutableList()
-            newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }
+            newHabilidades.removeAll {
+                it.id == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" ||
+                    it.id == "ADAPTAVEL" ||
+                    it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO"
+            }
 
             if (meioDemonioAA) {
                 if (newHabilidades.none { it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }) {
@@ -2863,7 +2876,7 @@ class CriadorState {
 
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
-            ancestralidade.keyify().contains("HUMANO") &&
+            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true &&
             signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             v.id == "sorte"
 
@@ -3543,8 +3556,9 @@ class CriadorState {
             }
         }
 
-        // Arte da Guerra - Signos (only for Humans)
-        if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
+        // Arte da Guerra - Signos: por id do traço "ADAPTAVEL_OU_SIGNO", não
+        // por nome de raça (mesmo padrão do resto do mecanismo de Signo).
+        if (compendioArteDaGuerraAtivo && currentDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true) {
             val signId = signoIdFromNome(signoAdgSelecionado)
             if (signId != null) {
                 // Lebre: Cura d6
@@ -4618,9 +4632,7 @@ class CriadorState {
             // Traço genérico de raça (oficial ou criado no editor de conteúdo
             // customizado, ver RacialTraitEffect.PericiaPoolBonus) que dá/tira
             // Pontos de Perícia — soma de todas as habilidades[] com esse
-            // efeito. Humano (Império San) "Pontos de Perícia" continua com o
-            // +3 hardcoded abaixo (id não migrado pra não mexer numa raça já
-            // testada), mas qualquer raça nova pode usar isso.
+            // efeito. Qualquer raça nova pode usar isso.
             val bonusPontosPericia = currentAncestryDef?.habilidades
                 ?.sumOf { hab ->
                     val tid = hab.resolvedTraitId()
@@ -4636,8 +4648,20 @@ class CriadorState {
                 // Base: 12 points
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
-                val isHuman = ancestralidade.keyify().contains("HUMANO")
-                val base = 12 + (if (isHuman && signoIdFromNome(signoAdgSelecionado) == "NENHUM") 3 else 0) + bonusPontosPericia
+                //
+                // O traço "Pontos de Perícia" (id PONTOS_DE_PERICIA) já
+                // representa esse +3 no livro, mas fica sempre presente em
+                // habilidades[] (calibra o orçamento fixo de 3 pontos da raça
+                // — ver ADAPTAVEL_OU_SIGNO/SIGNOS_DE_NASCENCA no mesmo pacote,
+                // RacialTraitPointCatalog), independente do Signo escolhido —
+                // por isso não passa por bonusPontosPericia (que somaria +3
+                // sempre, mesmo com um Signo real selecionado). O efeito de
+                // verdade só se aplica com "Nenhum" — checado aqui por id do
+                // traço "ADAPTAVEL_OU_SIGNO" (marca a raça que tem a escolha
+                // Signo/Adaptável), não pelo nome da raça.
+                val temEscolhaDeSigno = currentAncestryDef?.habilidades
+                    ?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true
+                val base = 12 + (if (temEscolhaDeSigno && signoIdFromNome(signoAdgSelecionado) == "NENHUM") 3 else 0) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -4685,7 +4709,9 @@ class CriadorState {
         // ficam de fora desta conta.
         val bonusFromChiEdges = 4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
-        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
+        val temEscolhaDeSignoParaChi = currentAncestryDef?.habilidades
+            ?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true
+        val bonusFromSign = if (compendioArteDaGuerraAtivo && temEscolhaDeSignoParaChi && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
         // Complicação "Bloqueio Interno" (docs/swade_adg, id bloqueio_interno):
         // substitui a fórmula padrão "2 + metade do dado de Espírito" da Reserva de
@@ -5207,7 +5233,7 @@ class CriadorState {
 
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
-            ancestralidade.keyify().contains("HUMANO") &&
+            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true &&
             signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             vantagem.id == "sorte"
         if (kirinSorteAutomatica) {
@@ -5472,8 +5498,9 @@ class CriadorState {
         // applyAncestryVariantAdjustments), então não precisa comparar o nome da
         // raça nem reler descendenteElementalSelecionado aqui.
 
-        // Arte da Guerra - Signos (only for Humans)
-        if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
+        // Arte da Guerra - Signos: por id do traço "ADAPTAVEL_OU_SIGNO", não
+        // por nome de raça (mesmo padrão do resto do mecanismo de Signo).
+        if (compendioArteDaGuerraAtivo && currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true) {
             val signId = signoIdFromNome(signoAdgSelecionado)
             val attrKey = a.keyify()
             if (signId != null) {

@@ -539,7 +539,10 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && item.nome.contains("Humano", ignoreCase = true)) {
+                            // Por id do traço "ADAPTAVEL_OU_SIGNO", não por nome de raça —
+                            // mesmo padrão de isMeioOrc/isMeioElfo/isMeioDemonio acima.
+                            val temSigno = item.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }
+                            if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && temSigno) {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Signo de Nascença:", style = MaterialTheme.typography.labelMedium)
 
@@ -620,7 +623,11 @@ fun AncestralidadesSection(
                                 // Pathfinder também casa com o nome, mas tem "Flexibilidade" (atributo
                                 // à escolha livre) em vez desta Herança Élfica/Humana.
                                 val isMeioElfo = item.habilidades.any { it.id?.keyify() == "HERANCA" }
-                                val isMeioDemonio = item.nome.keyify() == "MEIO-DEMONIO"
+                                // Por id do traço, não por nome de raça — mesmo padrão de
+                                // isMeioOrc/isMeioElfo acima.
+                                val isMeioDemonio = item.habilidades.any {
+                                    it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"
+                                }
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.

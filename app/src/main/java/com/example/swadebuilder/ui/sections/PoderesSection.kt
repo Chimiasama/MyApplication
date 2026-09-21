@@ -1014,10 +1014,19 @@ fun PoderesSection(
                                 }
                         ) {
                             Column(Modifier.padding(8.dp)) { // Compact internal padding
+                                // Por id do traço (ver applyAncestryVariantAdjustments em
+                                // CriadorState), não por nome de raça: Meio-Demônio troca o
+                                // marcador "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" por
+                                // "ANTECEDENTE_ARCANO_DEMONIO_MEIO" ou "ADAPTAVEL" conforme
+                                // a escolha do jogador.
+                                val ehMeioDemonio = state.currentAncestryDef?.habilidades?.any {
+                                    it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" ||
+                                        it.id == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"
+                                } == true
                                 val ppExibicao = if (
                                     state.compendioCidadeSolVaporAtivo &&
                                     arcKey == "DEMONIO" &&
-                                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
+                                    ehMeioDemonio &&
                                     poder.id == "disfarce_demoniaco"
                                 ) {
                                     "2"

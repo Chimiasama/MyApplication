@@ -467,6 +467,7 @@ object RacialTraitPointCatalog {
         "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
         "ADAPTAVEL" to 2, // oficial: adaptavel
         "ADAPTAVEL_OU_SIGNO" to 2, // mesmo efeito de Adaptável
+        "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" to 2, // Meio-Demônio (Cidade do Sol a Vapor) — mesmo efeito de Adaptável
         "AGIL" to 2, // oficial: aumento_atributo
         "ALMOFADINHA" to -1, // oficial: complicacao_racial_menor
         "ALTA_TECNOLOGIA" to -2, // oficial: complicacao_racial_maior

@@ -2589,3 +2589,140 @@ comportamento — só remoção de estado sem consumidor. 152 testes
 rodados no harness (mesma bateria da seção anterior + os 2 arquivos de
 `usecase` completos) — todos passando. `scripts/phase6_reliability_gate.sh`
 passou.
+
+## Trigésima segunda rodada
+
+Continuação direta da Trigésima primeira: terminar a generalização de
+Signo (Humano Arte da Guerra) + Herança (Meio-Elfo) + Meio-Demônio antes
+de partir para o desenho do sistema de Template (Monstro Heroico/Tropo),
+por pedido explícito do usuário.
+
+### Descoberta inicial: o "mecanismo genérico" de Signo/Herança já existe — faltava só terminar de aplicá-lo
+
+Antes de desenhar algo novo, mapeei o que já está correto:
+
+- A maior parte da mecânica de Signo (Boi/Força, Dragão/Espírito, Macaco/
+  Astúcia, Urso/Vigor, Lebre/Cura, Garça, Serpente) já compara por `signId`
+  (o id do Signo, via `signoIdFromNome()`), não por nome de raça.
+- Herança (Meio-Elfo) e a escolha do Meio-Demônio já são id-driven no ponto
+  de decisão principal (`base.habilidades.any { it.id == "HERANCA" }`).
+- O que sobrava de hardcode-por-nome era a **guarda** ao redor desses
+  blocos — `ancestralidade.keyify().contains("HUMANO")` repetido em 7
+  lugares diferentes de `CriadorState.kt` (mais 2 na UI), decidindo *se*
+  o bloco de Signo deveria rodar, não *qual* Signo aplicar.
+
+Achei o marcador certo já pronto no próprio JSON do livro: Humano
+(Império San) carrega, sempre, um traço `ADAPTAVEL_OU_SIGNO` ("Você pode
+optar por não escolher um signo de nascença... começar como um humano
+padrão com Adaptável") — e `temAdaptavel()` já usava esse id pra decidir
+se a raça tem Adaptável disponível. Bastou reaproveitar esse mesmo id
+como guarda em todo o resto do mecanismo, em vez de reinventar algo.
+
+### O que foi corrigido
+
+**Guardas de Signo (Humano Arte da Guerra)** — trocado
+`ancestralidade.keyify().contains("HUMANO")`/`ancKey.contains("HUMANO")`
+por `habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }` em:
+`totalSpPool` (o bug real de verdade: os +3 pontos de perícia do Signo
+"Nenhum"), `reservaChi` (bônus de Chi do Kirin), as duas cópias de
+`kirinSorteAutomatica` (`isVantagemAutomatica`/`podeRemoverVantagem`),
+o loop de perícia (`periciaStartRawInternal`) e o de atributo
+(`atributoBaseRacial`), e o gate do picker de Signo na UI
+(`AncestralidadesSection.kt`).
+
+Sobre o `totalSpPool`: investiguei se dava pra ir além e religar o
+próprio traço `PONTOS_DE_PERICIA` ao mecanismo genérico
+`bonusPontosPericia`/`PericiaPoolBonus` (que já existe e já é usado por
+outras raças) — mas descobri que isso quebraria a contabilidade de
+pontos da raça: `PONTOS_DE_PERICIA` (custo 1), `ADAPTAVEL_OU_SIGNO`
+(custo 2) e `SIGNOS_DE_NASCENCA` (custo 0, "placeholder de Seleção")
+somam juntos os 3 pontos que `pontosRaciaisEsperados=3` espera, e ficam
+**sempre presentes** em habilidades[] independente do Signo escolhido —
+é assim que o livro calibra o valor da raça, não uma coisa que deveria
+oscilar por escolha do jogador. Se eu removesse/reinjetasse esse traço
+dinamicamente (como faço com HERANCA), o "valor de livro" da raça usado
+pelo editor de Variante custom (`ResolveVariantPointBudgetUseCase.
+valorTotalDe`) oscilaria entre 2 e 3 pontos dependendo do Signo ativo —
+uma inconsistência nova, pior que a que eu estaria corrigindo. Por isso
+o cálculo do bônus de +3 continua sendo uma conta à parte de
+`bonusPontosPericia` (não duplica — cada um cobre um caso diferente),
+só que agora decidida por id do traço, não por nome da raça.
+
+**Meio-Demônio (Cidade do Sol a Vapor)**: essa raça não tinha nenhum
+traço-marcador próprio — a JSON só carregava `"id": "ADAPTAVEL"`, o
+mesmo id genérico usado por dezenas de outras raças, sem como distinguir
+"Meio-Demônio precisa da escolha AA/Adaptável" de "qualquer outra raça
+com Adaptável simples". Segui o mesmo padrão já usado pelo livro pra
+Humano ADG: troquei o id desse traço, só para Meio-Demônio, para
+`ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO` (nome de exibição continua
+"Adaptável" — só o id interno mudou) e cadastrei o custo (2, igual
+Adaptável) em `RacialTraitPointCatalog.CUSTOS`. Com o marcador
+existindo, troquei por id em: o despacho de
+`applyAncestryVariantAdjustments` (que resolve a escolha de verdade),
+a exceção de "candidato único" e o gatilho `withVariant` em
+`getAncestralidadeDef()` (novo helper `temEscolhaMeioDemonio()`, mesmo
+padrão do já existente `ehMeioElfoComHeranca()`), o picker da UI em
+`AncestralidadesSection.kt`, e o ajuste de exibição de custo de Poder em
+`PoderesSection.kt`. `ValidateScenarioRulesUseCase` (regra que bloqueia
+comprar manualmente o Antecedente Arcano de sangue puro) ficou de fora
+de propósito — essa função só recebe o nome da raça como `String`, não a
+`RacialModifier` inteira, e mudar a assinatura pra carregar habilidades[]
+seria um refactor maior do que o escopo desta rodada pede.
+
+**Limpeza correlata**: `ehMeioElfoComHeranca()` tinha uma checagem de
+nome (`key.contains("MEIO-ELFOS")`) redundante com a checagem do traço
+"HERANCA" — conferido contra `ancestralidades.json` que esse id nunca
+aparece em nenhuma raça além de Meio-Elfo (Básico/Fantasia/Horror/
+Super), então a checagem de nome nunca mudava o resultado. Removida.
+
+### Por que isso importa de verdade (não é só estética)
+
+Achei um caso onde a checagem por nome já tinha ficado **desatualizada**
+por conta própria: `atributoMaxRawNaCriacao()` (traço `MENTE_PRIMITIVA`
+do Feral) já é checado por id, do lado dele, há algum tempo — prova de
+que o padrão "id, não nome" já era seguido em partes do arquivo antes
+desta rodada; só faltava terminar de aplicá-lo no que sobrou de Signo/
+Meio-Demônio.
+
+### Verificação
+
+Dois testes precisavam de ajuste — não porque o comportamento mudou,
+mas porque construíam o `CriadorState` sem passar pela ancestralidade
+mockada de verdade (só setavam `ancestralidade = "HUMANOS"` como string
+solta, sem `habilidades[]`), então o novo guard por id não tinha o que
+checar:
+
+- `CriadorStateKirinSignTest.kt` ("kirin trata sorte como vantagem
+  automatica do signo") — passou a montar um `RacialModifier` com
+  `ADAPTAVEL_OU_SIGNO`, igual ao teste "signo nenhum" que já existia no
+  mesmo arquivo (mesmo padrão, só replicado pro primeiro teste).
+- `CriadorStateMeioDemonioTest.kt` (5 testes) — o mock `meioDemonio()`
+  trocou `id = "ADAPTAVEL"` por `id = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_
+  DEMONIO"`, batendo com a mudança real no JSON.
+
+`grep -rl` em `app/src/test` por `signoAdgSelecionado`, `MEIO-DEMONIO`,
+`meioDemonioAA`, `totalSpPool` e `reservaChi` confirmou não sobrar mais
+nenhum outro teste dependente do comportamento antigo (os que sobraram
+— `ApplyAncestryChangeCoordinatorUseCaseTest`, `RebuildSkillStacksUseCaseTest`
+— não instanciam `CriadorState`, então não são afetados).
+
+Rodei no harness (`/tmp/ktbig`) os 22 arquivos de teste relevantes —
+157 testes no total — todos passando, incluindo os dois recém-corrigidos.
+`scripts/phase6_reliability_gate.sh` passou (só o WARN pré-existente de
+tamanho de arquivo). As duas mudanças de UI (`AncestralidadesSection.kt`,
+`PoderesSection.kt`) não são compiláveis no harness (Compose) — validadas
+por leitura + balanceamento de chaves/parênteses, e ficam pro CI confirmar
+a compilação de verdade.
+
+### O que ficou de fora desta rodada (registrado, não esquecido)
+
+- **Umvee** ("Dons da Natureza") continua com despacho por nome
+  (`key.contains("UMVEE")`) — não tem traço-marcador equivalente a
+  `ADAPTAVEL_OU_SIGNO`/`HERANCA` hoje. Mesmo padrão de generalização
+  poderia se aplicar, não foi pedido nesta rodada.
+- **`ValidateScenarioRulesUseCase`** (bloqueio de compra manual do AA de
+  sangue puro por Meio-Demônio) continua por nome — `Input` só carrega
+  `ancestralidade: String`, não a raça resolvida inteira.
+- A migração de Atributo/Perícia Aumentada pra id genérico
+  (`ATTRIBUTE_BOOST`) e a unificação Monstro Heroico/Tropo continuam
+  pendentes das rodadas anteriores.
