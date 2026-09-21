@@ -38,7 +38,7 @@ class CriadorStateMeioDemonioTest {
             // Id marcador da escolha (não mais o "ADAPTAVEL" genérico) — ver
             // applyAncestryVariantAdjustments em CriadorState: dispara pelo
             // traço em si, não pelo nome da raça, mesmo padrão de HERANCA
-            // (Meio-Elfo) e ADAPTAVEL_OU_SIGNO (Humano Arte da Guerra).
+            // (Meio-Elfo) e SIGNOS_DE_NASCENCA (Humano Arte da Guerra).
             RacialAbility(
                 nome = "Adaptável",
                 descricao = "",

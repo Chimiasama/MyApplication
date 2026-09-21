@@ -32,14 +32,16 @@ class CriadorStateKirinSignTest {
     @Test
     fun `kirin trata sorte como vantagem automatica do signo`() {
         val state = CriadorState()
-        // O guard do bônus de Kirin é por id do traço "ADAPTAVEL_OU_SIGNO" em
+        // O guard do bônus de Kirin é por id do traço "SIGNOS_DE_NASCENCA" em
         // habilidades[] (não mais por nome de raça) — precisa de uma
         // ancestralidade injetada com esse traço, igual ao teste "signo
-        // nenhum" abaixo.
+        // nenhum" abaixo. O traço "Reserva de Chi +1"/Sorte do Kirin em si
+        // vem de AncestryVariantRegistry.humanoArteDaGuerraSignos() via
+        // applyAncestryVariantAdjustments, não precisa ser mockado aqui.
         val humanosAdg = RacialModifier(
             nome = "HUMANOS",
             habilidades = listOf(
-                RacialAbility(nome = "Adaptável ou Signo", descricao = "", id = "adaptavel_ou_signo")
+                RacialAbility(nome = "Signos de Nascença", descricao = "", id = "SIGNOS_DE_NASCENCA")
             ),
             origem = "ARTE_DA_GUERRA"
         )
@@ -107,9 +109,9 @@ class CriadorStateKirinSignTest {
             nome = "HUMANOS",
             habilidades = listOf(
                 RacialAbility(
-                    nome = "Adaptável ou Signo",
+                    nome = "Signos de Nascença",
                     descricao = "",
-                    id = "adaptavel_ou_signo"
+                    id = "SIGNOS_DE_NASCENCA"
                 )
             ),
             origem = "ARTE_DA_GUERRA"

@@ -58,7 +58,8 @@ object AncestryVariantRegistry {
         meioElfoHeranca("FANTASIA"),
         meioElfoHeranca("HORROR"),
         meioElfoHeranca("SUPER"),
-        meioDemonio()
+        meioDemonio(),
+        humanoArteDaGuerraSignos()
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -1150,6 +1151,195 @@ object AncestryVariantRegistry {
                                 )
                             ),
                             vantagensGratisIds = listOf("aa_demonio_meio_demonio")
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Humano (Império San, Arte da Guerra): Signos de Nascença. Seleção
+    // de pacote fixo, 1 de 14 opções (13 signos + "Nenhum") — mesmo formato
+    // de Terracota/Umvee, só maior. A raça base carrega só o traço
+    // "SIGNOS_DE_NASCENCA" (custo 0, o texto de referência com os 13
+    // signos), sempre presente independente da escolha — ele é o marcador
+    // usado pelas guardas em CriadorState (nunca por nome de raça). Cada
+    // opção abaixo é o que a raça REALMENTE concede quando ativa; "Nenhum"
+    // é o único caso onde a raça tem Adaptável + Pontos de Perícia — as
+    // outras 13 removem esses dois de vez (não fazem sentido pra quem tem
+    // um Signo de verdade).
+    //
+    // Cobertura mecânica: cada opção só carrega os efeitos que JÁ TÊM um
+    // gancho mecânico real no app (aumento de atributo/perícia, Vantagem
+    // concedida, bônus de Reserva de Chi — tudo generalizado nesta mesma
+    // rodada). Bônus puramente situacionais que o livro descreve mas que
+    // nenhuma parte do app aplica automaticamente a uma rolagem específica
+    // (Tigre inteiro; a penalidade de Finalização da Tartaruga; o d4+1 sem
+    // treino do Macaco; a redução de Exausto do Urso; os +1 pontuais de
+    // Basabasa/Boi/Dragão/Raposa em perícias específicas; o uso de Bene da
+    // Lebre; os efeitos percentuais/de diferença do Jogar-ou-Performance da
+    // Serpente) ficam de fora do pacote (sem custo fabricado pra "fechar" a
+    // conta) e documentados em `anotacoes` — o validador de orçamento por
+    // opção (ValidateAncestryOptionBudgetsUseCase) vai mostrar essas opções
+    // abaixo de pontosRaciaisEsperados=3, de propósito: é um retrato honesto
+    // do que já está implementado, não um "quase lá" escondido atrás de um
+    // ajuste de pontos inventado. Garça soma 4 (acima de 3) pelo motivo
+    // oposto: os 3 efeitos dela (Aparar, Acrobacia, Atletismo) JÁ têm gancho
+    // mecânico pronto e reaproveitado (nenhum inventado), e o livro
+    // aparentemente não calibra os Signos entre si com o mesmo rigor que
+    // Terracota/Meio-Elfo — sinais de conteúdo, não bugs de código.
+    private fun humanoArteDaGuerraSignos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "HUMANOS",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "signo_de_nascenca",
+                rotulo = "Escolha o Signo de Nascença",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        id = "nenhum",
+                        nome = "Nenhum",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Adaptável", "ADAPTAVEL"),
+                                TraitAddition("Pontos de Perícia", "PONTOS_DE_PERICIA")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "basabasa",
+                        nome = "Basabasa",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Atraente (Vantagem concedida)", "ATRAENTE"),
+                                TraitAddition(
+                                    "Bônus de Perícia (+1): Provocar ou Intimidar (à escolha)",
+                                    "BONUS_PERICIA_1"
+                                )
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "boi",
+                        nome = "Boi",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Força d6 (Boi)", "FORTE"),
+                                TraitAddition("Bônus de Perícia (+1): Atletismo (esforço físico)", "BONUS_PERICIA_1")
+                            ),
+                            anotacoes = listOf(
+                                "Com a Vantagem Brutamontes, o bônus de Atletismo vale para toda rolagem, não só esforço físico — ainda não modelado automaticamente."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "tigre",
+                        nome = "Tigre",
+                        pacote = ResolvedTraitPackage(
+                            anotacoes = listOf(
+                                "Alcance de Comando +4 quadros, +1 em testes de Medo e -1 no resultado da Tabela de Medo (cumulativo com Corajoso) — nenhum efeito numérico modelado ainda."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "lebre",
+                        nome = "Lebre",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Cura d6 (Lebre)", "LEBRE_CURA")),
+                            anotacoes = listOf(
+                                "1x por aventura, pode gastar um Bene pra tratar um Ferimento até 4 dias depois como se ainda estivesse na Hora de Ouro — ainda não modelado."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "garca",
+                        nome = "Garça",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Aparar +1 (Garça)", "APARAR"),
+                                TraitAddition("Acrobacia d4 (Garça)", "GARCA_ACROBACIA"),
+                                TraitAddition("Atletismo d6 (Garça)", "GARCA_ATLETISMO")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "serpente",
+                        nome = "Serpente",
+                        pacote = ResolvedTraitPackage(
+                            anotacoes = listOf(
+                                "Jogar d6 OU Performance d6 (à escolha do jogador, ver CriadorState.signoSerpentePericiaEscolhida — não modelado como Seleção estruturada porque o alvo muda por jogador). Bônus de +1/-1 na diferença de Jogar e os percentuais alterados de Performance ainda não modelados."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "dragao",
+                        nome = "Dragão",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Espírito d6 (Dragão)", "ESPIRITUAL"),
+                                TraitAddition(
+                                    "Bônus de Perícia (+1): Conhecimento Geral (situação desconhecida)",
+                                    "BONUS_PERICIA_1"
+                                )
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "kirin",
+                        nome = "Kirin",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Sorte (Vantagem concedida)", "SORTE"),
+                                TraitAddition("Reserva de Chi +1 (Kirin)", "KIRIN_CHI")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "macaco",
+                        nome = "Macaco",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Astúcia d6 (Macaco)", "ASTUCIA")),
+                            anotacoes = listOf(
+                                "Perícias não treinadas de Astúcia rolam d4+1 em vez do padrão (sem valer pro dado selvagem) — ainda não modelado."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "raposa",
+                        nome = "Raposa",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Elevar a Moral (Vantagem concedida)", "ELEVAR_O_MORAL"),
+                                TraitAddition("Bônus de Perícia (+1): Persuadir", "BONUS_PERICIA_1")
+                            ),
+                            anotacoes = listOf("+1 na Tabela de Reação ainda não modelado.")
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "lobo",
+                        nome = "Lobo",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Elo Comum (Vantagem concedida)", "ELO_COMUM")),
+                            anotacoes = listOf("+1 na Reação Inicial da Tabela de Reação ainda não modelado.")
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "tartaruga",
+                        nome = "Tartaruga",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Resistência +1 (Tartaruga)", "RESISTENCIA")),
+                            anotacoes = listOf(
+                                "Quem tentar a manobra Finalização contra este personagem sofre -1 no ataque e no dano — ainda não modelado."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "urso",
+                        nome = "Urso",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Vigor d6 (Urso)", "VIGOROSO")),
+                            anotacoes = listOf("Penalidade de Exausto reduzida pra -1 em vez de -2 — ainda não modelada.")
                         )
                     )
                 )

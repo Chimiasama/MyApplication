@@ -824,6 +824,13 @@ class CriadorState {
         fun temEscolhaMeioDemonio(candidato: RacialModifier): Boolean =
             candidato.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" }
 
+        // Mesmo padrão acima, pro traço "SIGNOS_DE_NASCENCA" do Humano
+        // (Império San, Arte da Guerra) — id exclusivo dessa raça (só ela
+        // carrega esse traço em ancestralidades.json), sem precisar checar
+        // o nome.
+        fun temSignoDeNascenca(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
+
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
         // Elementais (Sci-Fi) fica fora de scifiVariantDrivenKeys de propósito
@@ -845,6 +852,7 @@ class CriadorState {
         val candidatoEhScifiOuFc = candidates.first().origem == "FC" || candidates.first().origem == "SCI_FI"
         val precisaPassarPorAjusteDeVariante = key.contains("UMVEE") ||
             temEscolhaMeioDemonio(candidates.first()) ||
+            temSignoDeNascenca(candidates.first()) ||
             (candidatoEhScifiOuFc && key == "ELEMENTAIS") ||
             (candidatoEhScifiOuFc && key in AncestryVariantRegistry.scifiVariantDrivenKeys) ||
             isFantasiaHumanoOuDescElemental ||
@@ -879,7 +887,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected)) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected) || temSignoDeNascenca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
@@ -1131,6 +1139,48 @@ class CriadorState {
                             descricao = "Recebe uma Vantagem Novato extra, como um humano comum.",
                             id = "ADAPTAVEL",
                             category = "racial_trait_positive"
+                        )
+                    )
+                }
+            }
+            return base.copy(habilidades = newHabilidades)
+        }
+
+        // Humano (Império San, Arte da Guerra) — Signos de Nascença: mesmo
+        // padrão de Terracota/Umvee/Elementais, lido de
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos() em vez de uma
+        // cadeia de "if (signId == 'BOI')" na mão. A raça base só carrega o
+        // traço "SIGNOS_DE_NASCENCA" (marcador + texto de referência,
+        // sempre presente) — tudo que uma opção específica concede
+        // (Adaptável + Pontos de Perícia pra "Nenhum", Força d6 pro Boi,
+        // etc.) é resolvido aqui e reaplicado a cada troca de Signo, nunca
+        // acumulado de uma escolha anterior.
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
+        ) {
+            val signoOptionId = signoIdFromNome(signoAdgSelecionado)?.lowercase()
+            val signoAnswer = com.example.swadebuilder.model.SelectionAnswer(
+                selectionId = "signo_de_nascenca",
+                fixedPackageChoiceId = signoOptionId
+            )
+            val resolved = resolveAncestryVariantPackageUseCase.resolve(
+                ancestralidadeId = "HUMANOS",
+                livro = "ARTE_DA_GUERRA",
+                variantOptionId = null,
+                selectionAnswers = listOf(signoAnswer)
+            )
+            val newHabilidades = base.habilidades
+                .filter { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
+                .toMutableList()
+            resolved.tracosParaAdicionar.forEach { traco ->
+                if (newHabilidades.none { it.id == traco.id }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = traco.nome,
+                            descricao = "",
+                            id = traco.id,
+                            category = "racial_trait_positive",
+                            vezes = traco.vezes
                         )
                     )
                 }
@@ -2880,7 +2930,7 @@ class CriadorState {
 
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
-            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true &&
+            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" } == true &&
             signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             v.id == "sorte"
 
@@ -3560,28 +3610,22 @@ class CriadorState {
             }
         }
 
-        // Arte da Guerra - Signos: por id do traço "ADAPTAVEL_OU_SIGNO", não
-        // por nome de raça (mesmo padrão do resto do mecanismo de Signo).
-        if (compendioArteDaGuerraAtivo && currentDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true) {
-            val signId = signoIdFromNome(signoAdgSelecionado)
-            if (signId != null) {
-                // Lebre: Cura d6
-                if (signId == "LEBRE" && perKey == "CURAR") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                // Garça: Acrobacia d4, Atletismo +1 die type (from base)
-                if (signId == "GARCA") {
-                    if (perKey == "ACROBACIA") modifiedBase = maxOf(modifiedBase, 4)
-                    if (perKey == "ATLETISMO") modifiedBase = maxOf(modifiedBase, 6) // Base d4 -> d6
-                }
-                // Serpente: Jogar OR Performance d6
-                if (signId == "SERPENTE") {
-                    val chosen = signoSerpentePericiaEscolhida.keyify()
-                    if (perKey == chosen) {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    }
-                }
-                // Macaco: Unskilled d4+1 (Not represented in start raw)
+        // Arte da Guerra - Signo Serpente: Jogar OU Performance d6, à escolha
+        // do jogador (signoSerpentePericiaEscolhida) — o único Signo cujo
+        // efeito de perícia muda de ALVO por jogador, então não dá pra
+        // modelar como um traço fixo em habilidades[] (os outros Signos com
+        // efeito de perícia — Lebre, Garça — já vêm de lá, ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos(), e são lidos
+        // pelo loop genérico de PericiaStep logo acima). Guardado pelo traço
+        // "SIGNOS_DE_NASCENCA" (não por nome de raça), mesmo padrão do resto
+        // do mecanismo de Signo.
+        if (compendioArteDaGuerraAtivo &&
+            currentDef?.habilidades?.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" } == true &&
+            signoIdFromNome(signoAdgSelecionado) == "SERPENTE"
+        ) {
+            val chosen = signoSerpentePericiaEscolhida.keyify()
+            if (perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 
@@ -4653,19 +4697,15 @@ class CriadorState {
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
                 //
-                // O traço "Pontos de Perícia" (id PONTOS_DE_PERICIA) já
-                // representa esse +3 no livro, mas fica sempre presente em
-                // habilidades[] (calibra o orçamento fixo de 3 pontos da raça
-                // — ver ADAPTAVEL_OU_SIGNO/SIGNOS_DE_NASCENCA no mesmo pacote,
-                // RacialTraitPointCatalog), independente do Signo escolhido —
-                // por isso não passa por bonusPontosPericia (que somaria +3
-                // sempre, mesmo com um Signo real selecionado). O efeito de
-                // verdade só se aplica com "Nenhum" — checado aqui por id do
-                // traço "ADAPTAVEL_OU_SIGNO" (marca a raça que tem a escolha
-                // Signo/Adaptável), não pelo nome da raça.
-                val temEscolhaDeSigno = currentAncestryDef?.habilidades
-                    ?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true
-                val base = 12 + (if (temEscolhaDeSigno && signoIdFromNome(signoAdgSelecionado) == "NENHUM") 3 else 0) + bonusPontosPericia
+                // O traço "Pontos de Perícia" (id PONTOS_DE_PERICIA) só entra
+                // em habilidades[] quando o Signo "Nenhum" está ativo — ver
+                // AncestryVariantRegistry.humanoArteDaGuerraSignos() e
+                // CriadorState.applyAncestryVariantAdjustments() — e não
+                // mais como traço permanente da raça, independente da
+                // escolha (bug real corrigido nesta rodada). Por isso o +3
+                // já vem sozinho de bonusPontosPericia, sem precisar de
+                // nenhum "if" aqui: nas outras 13 opções o traço nem existe.
+                val base = 12 + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -4713,9 +4753,16 @@ class CriadorState {
         // ficam de fora desta conta.
         val bonusFromChiEdges = 4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
-        val temEscolhaDeSignoParaChi = currentAncestryDef?.habilidades
-            ?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true
-        val bonusFromSign = if (compendioArteDaGuerraAtivo && temEscolhaDeSignoParaChi && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
+        // Kirin (Signo de Nascença, Humano Arte da Guerra) só injeta o
+        // traço "KIRIN_CHI" em habilidades[] quando é o Signo ativo (ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos()) — lido aqui
+        // genericamente por RacialTraitEffect.ChiReserveBonus, mesmo padrão
+        // de bonusPontosPericia acima, sem precisar de "if (signId == X)".
+        val bonusFromSign = currentAncestryDef?.habilidades
+            ?.sumOf { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.ChiReserveBonus) efeito.valor else 0
+            } ?: 0
 
         // Complicação "Bloqueio Interno" (docs/swade_adg, id bloqueio_interno):
         // substitui a fórmula padrão "2 + metade do dado de Espírito" da Reserva de
@@ -5045,12 +5092,13 @@ class CriadorState {
             return true
         }
 
-        // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
-        if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
-            if (signoAdgSelecionado == null || signoIdFromNome(signoAdgSelecionado) == "NENHUM") {
-                return true
-            }
-        }
+        // Arte da Guerra Human: Signo "Nenhum" concede Adaptável — não é mais
+        // um caso especial aqui, o traço "ADAPTAVEL" já sai de habilidades[]
+        // via applyAncestryVariantAdjustments quando "Nenhum" é a opção
+        // ativa (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()),
+        // então o check genérico lá em cima já reflete isso, mesmo padrão do
+        // Pacote Cultural de Humanos (Fantasia) citado no comentário do topo
+        // desta função.
 
         return false
     }
@@ -5237,7 +5285,7 @@ class CriadorState {
 
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
-            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true &&
+            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" } == true &&
             signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             vantagem.id == "sorte"
         if (kirinSorteAutomatica) {
@@ -5502,26 +5550,13 @@ class CriadorState {
         // applyAncestryVariantAdjustments), então não precisa comparar o nome da
         // raça nem reler descendenteElementalSelecionado aqui.
 
-        // Arte da Guerra - Signos: por id do traço "ADAPTAVEL_OU_SIGNO", não
-        // por nome de raça (mesmo padrão do resto do mecanismo de Signo).
-        if (compendioArteDaGuerraAtivo && currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" } == true) {
-            val signId = signoIdFromNome(signoAdgSelecionado)
-            val attrKey = a.keyify()
-            if (signId != null) {
-                if (signId == "BOI" && attrKey == "FORCA") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                if (signId == "DRAGAO" && attrKey == "ESPIRITO") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                if (signId == "MACACO" && attrKey == "ASTUCIA") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                if (signId == "URSO" && attrKey == "VIGOR") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-            }
-        }
+        // Arte da Guerra - Signos (Boi/Dragão/Macaco/Urso: bônus de
+        // atributo): não é mais um "if" hardcoded aqui — os traços FORTE/
+        // ESPIRITUAL/ASTUCIA/VIGOROSO entram em habilidades[] via
+        // applyAncestryVariantAdjustments conforme o Signo ativo (ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos()), e o loop
+        // genérico de AtributoStep logo acima já os lê como qualquer outro
+        // traço racial — mesmo padrão do Povo da Montanha logo abaixo.
 
         // Povo da Montanha (Pacote Cultural de Humanos, Fantasia): Vigor d6 não
         // é mais um "if" hardcoded aqui — o id POVO_MONTANHA_VIGOR entra em

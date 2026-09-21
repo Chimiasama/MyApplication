@@ -109,6 +109,12 @@ sealed class RacialTraitEffect {
     // editor de Traço Racial (SettingsDialog.kt).
     data class PericiaPoolBonus(val valor: Int) : RacialTraitEffect()
     data class AtributoPoolBonus(val valor: Int) : RacialTraitEffect()
+    // Bônus fixo na Reserva de Chi inicial (Arte da Guerra) — mesma ideia de
+    // ResistenciaBonus/PassoBonus, só que pro alvo "reservaChi" em
+    // CriadorState, que já lê os outros bônus fixos (Terracota "Chi
+    // Reduzido") genericamente por id. Existe pra Kirin (Signo de Nascença,
+    // Humano Arte da Guerra) parar de ser um "if" hardcoded.
+    data class ChiReserveBonus(val valor: Int) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
 
@@ -169,6 +175,33 @@ object RacialTraitPointCatalog {
         // RacialTraitPointCatalog, mas o dado de perícia em si nunca era
         // concedido por faltar aqui).
         "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar"),
+
+        // Signos de Nascença (Humano Arte da Guerra, AncestryVariantRegistry.
+        // humanoArteDaGuerraSignos()): ids próprios de cada Signo com efeito
+        // de perícia inicial — não reaproveitam ids de outra raça porque o
+        // texto de exibição precisa ser específico ("Cura d6 (Lebre)" etc.).
+        // Lebre: "toque natural (Cura d6)".
+        "LEBRE_CURA" to RacialTraitEffect.PericiaStep("Curar"),
+        // Garça: "d4 em Acrobacia" — passos=0 é de propósito (Acrobacia não é
+        // perícia básica; sem o traço o piso seria 0/destreinada, com o
+        // traço vira d4 — mesma fórmula "4 + passos*2" das outras
+        // PericiaStep, só que o piso já É o d4 em si, não um aumento acima
+        // dele).
+        "GARCA_ACROBACIA" to RacialTraitEffect.PericiaStep("Acrobacia", passos = 0),
+        // Garça: "aumentam Atletismo em um tipo de dado" (d4 base -> d6).
+        "GARCA_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"),
+        // Kirin: "+1 em sua Reserva de Chi inicial".
+        "KIRIN_CHI" to RacialTraitEffect.ChiReserveBonus(1),
+        // "Nenhum" (sem Signo): "começam com 15 pontos de perícia, em vez dos
+        // 12 padrão". Só entra em habilidades[] pela opção "Nenhum" do
+        // Signo (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()) —
+        // antes ficava sempre presente na raça, independente do Signo
+        // escolhido, e o +3 era um "if" hardcoded à parte em
+        // CriadorState.totalSpPool (bug real, corrigido nesta rodada); agora
+        // que o traço só existe quando "Nenhum" está ativo, religar ao
+        // mecanismo genérico de bonusPontosPericia não soma mais errado pras
+        // outras 13 opções.
+        "PONTOS_DE_PERICIA" to RacialTraitEffect.PericiaPoolBonus(3),
 
         // Humanos (Fantasia) - Pacotes Culturais: cada opção de Variante
         // concede um piso de atributo/perícia igual a qualquer outra raça —
@@ -466,7 +499,6 @@ object RacialTraitPointCatalog {
         // usa. Migrado pra ACAO_ADICIONAL_FISICA, ver comentário lá embaixo.
         "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
         "ADAPTAVEL" to 2, // oficial: adaptavel
-        "ADAPTAVEL_OU_SIGNO" to 2, // mesmo efeito de Adaptável
         "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" to 2, // Meio-Demônio (Cidade do Sol a Vapor) — mesmo efeito de Adaptável
         "AGIL" to 2, // oficial: aumento_atributo
         "ALMOFADINHA" to -1, // oficial: complicacao_racial_menor
@@ -515,6 +547,14 @@ object RacialTraitPointCatalog {
         "ASTUCIA" to 2, // oficial: aumento_atributo
         "ASTUTO" to 2, // oficial: aumento_atributo
         "ATRAENTE" to 2, // oficial: vantagem_racial
+        // Signos de Nascença (Humano Arte da Guerra) que concedem uma
+        // Vantagem de graça — a concessão de verdade continua vindo de
+        // CriadorState.SIGNO_VANTAGENS_AUTOMATICAS (já por id, não por
+        // nome); estes ids só documentam o custo/exibição da mesma escolha
+        // no registro (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()
+        // — categoria "racial_trait_positive", nunca "racial_edge", pra não
+        // conceder a Vantagem uma segunda vez por resolvedVantagensGratis()).
+        "ELEVAR_O_MORAL" to 2, // oficial: vantagem_racial (Raposa)
         "AVERSAO_ANIMAL" to -1, // sem equivalente oficial, penalidade situacional
         "AZARADO" to -2, // Complicação Maior no catálogo real (complicacoes.json) — a severidade "Menor" anotada em ancestralidades.json pra Nekomimi não existe pra essa Complicação, corrigido pra bater com o catálogo
         "BAIXA_GRAVIDADE_AGIL" to 2, // oficial: aumento_atributo — sintético (Humanos Sci-Fi "Baixa Gravidade"), Agilidade d4->d6
@@ -597,6 +637,7 @@ object RacialTraitPointCatalog {
         "DOENTE_MAIOR" to -2,
         "DONS_DA_NATUREZA" to 0, // placeholder de Seleção (Umvee/Feral escolhem 1 de 6 dons; o dom resolvido é que pontua)
         "DURAO" to 2, // oficial: aumento_atributo
+        "ELO_COMUM" to 2, // oficial: vantagem_racial (Lobo, Signo de Nascença — ver ATRAENTE acima)
         "EM_FORMA" to 2, // oficial: aumento_atributo
         "ENDURECIDO" to 2, // oficial: aumento_atributo (escolha entre Força/Vigor)
         "ESGUIOS" to -3, // oficial penalidade_atributo_1 (-1 Vigor = -2) + -1 Resistência (~-1) combinados
@@ -674,6 +715,10 @@ object RacialTraitPointCatalog {
         "GARRAS" to 3,
         "GARRAS_MAIORES_SEM_PA" to 3,
         "GARRAS_MAIORES" to 4,
+        // Garça (Signo de Nascença, Humano Arte da Guerra) — ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos().
+        "GARCA_ACROBACIA" to 1, // livro: "d4 em Acrobacia" — pericia_racial_d4
+        "GARCA_ATLETISMO" to 2, // livro: "aumentam Atletismo em um tipo de dado" — aumento_pericia_d6
         "GELATINOSO" to 2, // oficial: gelatinoso_2 — tier base (metade do dano de queda/colisão)
         "GELATINOSO_MAIOR" to 3, // mesmo trecho: também atravessa grades/aberturas como Terreno Difícil
         "GUIADO" to -2, // oficial: complicacao_racial_maior
@@ -696,7 +741,11 @@ object RacialTraitPointCatalog {
         "INTEGRADO_A_NATUREZA" to 2, // oficial: pericia_racial_d6 (Sobrevivência d6)
         "INTELIGENCIA" to 2, // oficial: aumento_atributo
         "INTIMIDANTE" to 1, // oficial: pericia_racial_d4 (Intimidar d4, teto ampliado)
+        // Kirin/Lebre (Signos de Nascença, Humano Arte da Guerra) — ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos().
+        "KIRIN_CHI" to 1, // livro: "+1 em sua Reserva de Chi inicial" — mesmo tier de RESISTENCIA (+1/compra)
         "LEAL" to -1, // oficial: complicacao_racial_menor
+        "LEBRE_CURA" to 2, // livro: "toque natural (Cura d6)" — pericia_racial_d6
         "LENTO" to -1, // oficial: movimentacao_reduzida_1
         "LIMITACOES_TECNICAS" to -1, // sem equivalente oficial, restrição narrativa (Técnicas de Chi)
         "MAGIA_ELFICA" to 1, // sem equivalente oficial, utilidade defensiva estreita

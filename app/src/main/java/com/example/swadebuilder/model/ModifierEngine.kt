@@ -307,7 +307,11 @@ object ModifierEngine {
                     is RacialTraitEffect.ArmaduraBonus -> Unit
                     is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao, vezes) }
                     is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum,
-                    is RacialTraitEffect.PericiaPoolBonus, is RacialTraitEffect.AtributoPoolBonus -> Unit
+                    is RacialTraitEffect.PericiaPoolBonus, is RacialTraitEffect.AtributoPoolBonus,
+                    // Reserva de Chi não vira Modifier aqui — CriadorState.reservaChi já
+                    // lê este mesmo efeito por id direto de habilidades[], mesmo padrão
+                    // de PericiaPoolBonus/AtributoPoolBonus acima.
+                    is RacialTraitEffect.ChiReserveBonus -> Unit
                 }
             }
 

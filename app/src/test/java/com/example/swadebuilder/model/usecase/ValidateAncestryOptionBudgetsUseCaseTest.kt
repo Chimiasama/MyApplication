@@ -214,4 +214,36 @@ class ValidateAncestryOptionBudgetsUseCaseTest {
         assertTrue(results.all { it.dentroDoOrcamento })
         assertTrue(results.all { it.saldo == 2 })
     }
+
+    // Humano (Império San, Arte da Guerra): 14 opções de Signo de Nascença
+    // (13 signos + Nenhum). Conteúdo real do registro — confirma a
+    // calibração descrita no comentário de
+    // AncestryVariantRegistry.humanoArteDaGuerraSignos(): "Nenhum" fecha
+    // exatamente em 3 (o orçamento de livro), Garça soma 4 (os 3 efeitos
+    // dela já têm gancho mecânico pronto, o livro não parece calibrar os
+    // Signos entre si com o mesmo rigor que Terracota/Meio-Elfo), Tartaruga
+    // fica em 1 e Tigre em 0 (nenhum efeito situacional modelado ainda —
+    // achado real, não bug de código).
+    @Test
+    fun `humano arte da guerra real - nenhum fecha em 3, garca fica acima, tigre em 0`() {
+        val base = RacialModifier(
+            nome = "HUMANOS",
+            habilidades = listOf(
+                RacialAbility(nome = "Signos de Nascença", descricao = "", id = "SIGNOS_DE_NASCENCA")
+            ),
+            origem = "ARTE_DA_GUERRA",
+            pontosRaciaisEsperados = 3
+        )
+        val config = AncestryVariantRegistry.get("HUMANOS", "ARTE_DA_GUERRA")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(14, results.size)
+        assertEquals(3, results.first { it.optionId == "nenhum" }.saldo)
+        assertEquals(3, results.first { it.optionId == "kirin" }.saldo)
+        assertEquals(4, results.first { it.optionId == "garca" }.saldo)
+        assertEquals(1, results.first { it.optionId == "tartaruga" }.saldo)
+        assertEquals(0, results.first { it.optionId == "tigre" }.saldo)
+        assertEquals(0, results.first { it.optionId == "serpente" }.saldo)
+    }
 }

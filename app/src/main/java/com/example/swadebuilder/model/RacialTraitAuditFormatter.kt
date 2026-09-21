@@ -130,6 +130,7 @@ object RacialTraitAuditFormatter {
         is RacialTraitEffect.Composite -> efeito.efeitos.joinToString(" + ") { formatEfeito(it) }
         is RacialTraitEffect.PericiaPoolBonus -> "Pontos de Perícia ${sinal(efeito.valor)}"
         is RacialTraitEffect.AtributoPoolBonus -> "Pontos de Atributo ${sinal(efeito.valor)}"
+        is RacialTraitEffect.ChiReserveBonus -> "Reserva de Chi ${sinal(efeito.valor)}"
         RacialTraitEffect.Nenhum -> "sem efeito numérico cadastrado"
     }
 

@@ -539,9 +539,9 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            // Por id do traço "ADAPTAVEL_OU_SIGNO", não por nome de raça —
+                            // Por id do traço "SIGNOS_DE_NASCENCA", não por nome de raça —
                             // mesmo padrão de isMeioOrc/isMeioElfo/isMeioDemonio acima.
-                            val temSigno = item.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }
+                            val temSigno = item.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
                             if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && temSigno) {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Signo de Nascença:", style = MaterialTheme.typography.labelMedium)

@@ -2872,3 +2872,164 @@ o escopo desta rodada.
   a rodada anterior.
 - Suite completa rodada no harness (24 arquivos, 170 testes) — todos
   passando. `scripts/phase6_reliability_gate.sh` passou.
+
+### Peça 3: Humano (Império San, Arte da Guerra) — as 14 opções de Signo de Nascença migradas
+
+Pedido explícito do usuário: migrar as 14 opções (13 Signos + Nenhum)
+pro mesmo formato de Seleção da Peça 2, no mesmo espírito de
+Terracota/Umvee/Elementais/Meio-Elfo — sem hardcode por nome de raça, e
+sem fabricar efeitos mecânicos que o app não modela ainda só pra fechar
+o orçamento de pontos "bonito".
+
+**Raiz do bug original** (motivo de toda a Peça 1/discussão): o Humano
+do Arte da Guerra vinha em `ancestralidades.json` com DOIS traços
+permanentes em `habilidades[]` — `ADAPTAVEL_OU_SIGNO` (0 pts,
+placeholder) e `PONTOS_DE_PERICIA` (1 pt, sempre presente,
+concedendo +3 pontos de perícia). O `+3` era só concedido de verdade
+por um `if` avulso em `CriadorState.totalSpPool` checando
+`signoIdFromNome(...) == "NENHUM"` — ou seja, o traço "sempre presente"
+e o `if` avulso tinham que concordar entre si pra não vazar pontos, e
+religar `PONTOS_DE_PERICIA` ao mecanismo genérico de bônus (que lê
+direto de `habilidades[]`) teria somado +3 pontos de perícia pras
+OUTRAS 13 opções também, já que o traço nunca saía da lista.
+
+**Correção na raiz**: removidos `ADAPTAVEL_OU_SIGNO` e
+`PONTOS_DE_PERICIA` de `ancestralidades.json` — a raça agora só carrega
+o marcador `SIGNOS_DE_NASCENCA` (0 pts, o card de referência dos 13
+Signos). `AncestryVariantRegistry.humanoArteDaGuerraSignos()`
+(`ancestralidadeId="HUMANOS"`, `livro="ARTE_DA_GUERRA"`, mesma
+convenção de literal compartilhado que `humanoFantasia()` já usava —
+não é derivado de `nome.keyify()`) registra um `SelectionDef` único
+(`id="signo_de_nascenca"`, `FIXED_PACKAGE`) com as 14
+`FixedPackageOption`s. `CriadorState.applyAncestryVariantAdjustments()`
+ganhou um bloco gated por
+`base.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }`
+(nunca por nome de raça) que resolve a opção ativa
+(`signoIdFromNome(signoAdgSelecionado)`) via
+`resolveAncestryVariantPackageUseCase.resolve()` e injeta os traços
+reais da opção em `habilidades[]`, substituindo o marcador — agora
+`PONTOS_DE_PERICIA` só existe na lista quando "Nenhum" é a opção ativa,
+e o `PericiaPoolBonus(3)` genérico soma certo sem `if` avulso.
+
+**4 blocos de hardcode em `CriadorState.kt` colapsados nos laços
+genéricos já existentes** (em vez de removidos sem substituição — o
+efeito continua existindo, só que lido do catálogo/registro em vez de
+craveted em `if`):
+- `periciaStartRawInternal`: Lebre/Garça viravam `if (signId == "LEBRE")`/
+  `"GARCA"` — removidos, cobertos pelo laço genérico de `PericiaStep`.
+  Só sobrou o ajuste de Serpente (efeito de escolha do jogador, sem
+  gancho mecânico modelado — fica ad hoc de propósito, ver abaixo).
+- `atributoBaseRacial`: bloco de `if (signId == "BOI"/"DRAGAO"/"MACACO"/
+  "URSO")` removido — coberto pelo laço genérico de `AtributoStep`
+  (mesmo padrão que já cobria "Povo da Montanha").
+- `totalSpPool`: `if (temEscolhaDeSigno && signoIdFromNome(...) ==
+  "NENHUM") 15 else 12` removido — agora é só
+  `12 + bonusPontosPericia` (genérico), porque `PONTOS_DE_PERICIA` só
+  está em `habilidades[]` quando "Nenhum" está ativo.
+- `reservaChi`: `if (signo == "KIRIN") +1` avulso trocado por um laço
+  genérico que soma `RacialTraitEffect.ChiReserveBonus` (tipo NOVO no
+  `sealed class`, criado nesta rodada — junta-se a `PericiaPoolBonus`/
+  `AtributoPoolBonus` como efeito lido direto por uma propriedade
+  computada do `CriadorState`, sem gerar `Modifier` — por isso também
+  precisou de um branch `Unit` em `ModifierEngine.aplicarEfeito` e um
+  branch de texto em `RacialTraitAuditFormatter.formatEfeito`, os dois
+  só pra manter os `when` exaustivos).
+- `temAdaptavel()`: branch especial "Arte da Guerra: 'Nenhum' concede
+  Adaptável" removido — agora Adaptável só aparece quando a opção
+  "Nenhum" injeta o traço `ADAPTAVEL` de verdade em `habilidades[]`.
+
+**Calibração das 14 opções** (cada uma comparada contra o texto oficial
+em `ancestralidades.json`/livro, sem inventar custo pra fechar em 3
+"bonito" — anotada via `anotacoes` quando um efeito do livro não tem
+gancho mecânico no app ainda):
+- `nenhum`: Adaptável (2) + Pontos de Perícia (1) = **3**, fecha.
+- `basabasa`: Atraente/Vantagem concedida (2) + Perícia +1 Provocar-ou-
+  Intimidar (1) = **3**, fecha.
+- `boi`: Força d6 (2) + Perícia +1 Atletismo situacional (1) = **3**,
+  fecha (anotação: falta a interação com Brutamontes).
+- `tigre`: **0** — nenhum dos 3 efeitos do livro tem gancho mecânico no
+  app ainda (achado real, documentado, não fabricado).
+- `lebre`: Cura d6 (2) — **2** (anotação: falta o "Bene extra na Hora
+  de Ouro").
+- `garca`: Aparar +1 (1) + Acrobacia d4 (1) + Atletismo d6 (2) = **4**
+  — acima do orçamento de propósito: os 3 efeitos já têm gancho
+  mecânico pronto no catálogo, e o livro não parece calibrar os Signos
+  entre si com o mesmo rigor de Terracota/Meio-Elfo. Confirmado por
+  teste (`saldo=4`, `dentroDoOrcamento=false`), não escondido.
+- `serpente`: **0** — efeito é escolha do jogador a cada uso (troca de
+  perícia), sem representação estática em `habilidades[]`; mecanismo
+  ad hoc mantido em `CriadorState` (fora do escopo desta migração).
+- `dragao`: Espírito d6 (2) + Perícia +1 Conhecimento Geral situacional
+  (1) = **3**, fecha.
+- `kirin`: Sorte/Vantagem concedida (2) + Reserva de Chi +1 (1) = **3**,
+  fecha — o "Bene extra por sessão" do livro já é coberto de verdade
+  pela Vantagem Sorte real (concedida via `SIGNO_VANTAGENS_AUTOMATICAS`,
+  ver abaixo).
+- `macaco`: Astúcia d6 (2) — **2** (anotação: falta o bônus de d4+1 em
+  testes sem perícia).
+- `raposa`: Elevar o Moral/Vantagem concedida (2) + Perícia +1 Persuadir
+  (1) = **3**, fecha (anotação: falta o bônus de Reação).
+- `lobo`: Elo Comum/Vantagem concedida (2) — **2** (anotação: falta o
+  bônus de Reação Inicial).
+- `tartaruga`: Resistência +1 (1) — **1** (anotação: falta a penalidade
+  de Finalização — o maior gap conhecido do conjunto).
+- `urso`: Vigor d6 (2) — **2** (anotação: falta a redução de Exausto).
+
+**`SIGNO_VANTAGENS_AUTOMATICAS` (CriadorState, mapa Signo→Vantagem pra
+Basabasa/Raposa/Lobo/Kirin) deixado intocado de propósito** — já é
+id-driven (não hardcode por nome), e roteá-lo pela nova injeção em
+`habilidades[]` arriscaria conceder a mesma Vantagem duas vezes (uma
+pelo mapa, outra pelo `resolvedVantagensGratis()` lendo o traço
+injetado) sem nenhum teste pegar isso na hora — mesma lógica de
+cautela já aplicada ao Meio-Demônio na Peça 2.
+
+**Achado registrado, não corrigido** (fora do escopo): `SummaryUtils.kt`
+(`calcAparar()`, pipeline separado de geração de resumo/PDF, opera em
+cima de `MeuPersonagem`, não em `CriadorState`/`ModifierEngine`) tem sua
+PRÓPRIA checagem `CriadorState.signoIdFromNome(personagem
+.signoAdgSelecionado) == "GARCA"` pra aplicar o mesmo Aparar +1 da
+Garça. Já é id-based (não viola a regra de "sem hardcode por nome"),
+mas é uma implementação duplicada e paralela que pode dessincronizar da
+versão em `CriadorState`/`ModifierEngine` se uma das duas mudar sem a
+outra. `SummaryUtilsTest` já cobre esse caminho e continuou passando
+(pipeline isolado, não afetado pelas mudanças desta rodada). Anotado
+aqui como debt conhecido, não mexido.
+
+**Limpeza**: removida a entrada morta `"ADAPTAVEL_OU_SIGNO" to 2` de
+`RacialTraitPointCatalog.CUSTOS` (confirmado por busca: 0 raças em
+`ancestralidades.json` ou testes ainda referenciam esse id depois da
+migração).
+
+### Verificação (Peça 3)
+
+- Novo arquivo de teste (`CriadorStateSignoDeNascencaTest`, 7 testes):
+  Nenhum concede Adaptável + 15 pontos de perícia; Boi não concede
+  Adaptável/pontos extra e sobe Força pra d6; trocar Boi→Dragão não
+  deixa Força vazando e sobe Espírito corretamente; Kirin soma +1 na
+  Reserva de Chi vs. baseline sem Signo; Lebre começa com Curar d6;
+  Garça fecha Acrobacia d4/Atletismo d6/tem o traço `APARAR`; Tigre não
+  quebra nada mesmo sem efeito numérico modelado.
+- 1 novo teste em `ValidateAncestryOptionBudgetsUseCaseTest` usando o
+  conteúdo REAL do registro: confirma as 14 opções, `nenhum`=3,
+  `kirin`=3, `garca`=4 (acima, de propósito), `tartaruga`=1, `tigre`=0,
+  `serpente`=0.
+- 2 mocks desatualizados em `CriadorStateKirinSignTest` (ainda usavam o
+  marcador antigo `adaptavel_ou_signo`) corrigidos pro novo
+  `SIGNOS_DE_NASCENCA`.
+- Suite completa rodada no harness (24 arquivos, 194 testes) — todos
+  passando, incluindo os 3 testes de `CriadorStateFullFlowTest` que só
+  resolvem `ancestralidades.json` de verdade quando rodados a partir da
+  raiz do repo. `scripts/phase6_reliability_gate.sh` passou (mesmo WARN
+  pré-existente de tamanho de `CriadorState.kt`, sem regressão nova).
+
+### Pendente pra próxima rodada
+
+- **Peça 4** (Variante Customizada escopada a uma única opção dentro de
+  uma raça — ex.: customizar só o Signo Dragão mantendo os outros 13
+  oficiais) — ainda só desenho, não implementada.
+- **Generalizar pra raças de escolha de atributo** (Minerador Genético/
+  Meio-Orc/Feral — Força-ou-Vigor(-ou-Agilidade)) — pedido explícito do
+  usuário na mesma mensagem que pediu a migração dos 14 Signos, ainda
+  não iniciado. Exige finalmente implementar
+  `SelectionType.TARGET_ATTRIBUTE_OR_SKILL`, que existe no enum desde
+  rodada anterior mas nunca foi usado por nenhuma raça.
