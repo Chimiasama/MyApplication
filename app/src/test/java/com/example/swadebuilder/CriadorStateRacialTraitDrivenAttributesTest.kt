@@ -225,4 +225,22 @@ class CriadorStateRacialTraitDrivenAttributesTest {
 
         assertEquals(6, state.periciaStartRaw("FERAL", perceber))
     }
+
+    // Bug real achado na auditoria de migração de Atributo/Perícia Aumentada:
+    // faltava `passos = 0` no efeito de BRINCALHAO (RacialTraitPointCatalog.EFEITOS)
+    // — sem isso o loop genérico (4 + passos*2, default passos=1) calculava
+    // Provocar d6, não d4, apesar do texto do livro embutido em
+    // ancestralidades.json ("O Araiguma recebe Provocar d4 (1)") e do custo já
+    // cadastrado (1pt = tier pericia_racial_d4, nunca bateu com d6/2pt).
+    @Test
+    fun `brincalhao (Araiguma) concede Provocar d4, nao d6`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotWith(listOf(racaComTraco("ARAIGUMA (GUAXINIM)", "BRINCALHAO"))))
+        state.ancestralidade = "ARAIGUMA (GUAXINIM)"
+        state.compendioArteDaGuerraAtivo = true
+
+        val provocar = Pericia(nome = "Provocar", atributo = "ESPIRITO", basica = false)
+
+        assertEquals(4, state.periciaStartRaw("ARAIGUMA (GUAXINIM)", provocar))
+    }
 }

@@ -96,7 +96,16 @@ class ResolveVariantPointBudgetUseCase {
         // mesma lógica de custo que o editor de Variante custom já usa.
         internal fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem {
             val id = habilidade.id?.let { it.ifBlank { null } }
-            val efeito = RacialTraitPointCatalog.efeitoDe(id)
+            // Efeito/custo pelo id RESOLVIDO (traitId ?: id — ver resolvedTraitId()),
+            // não pelo id cru: mesmo padrão já usado por RacialAbility.resolvedPontos()/
+            // RacialTraitAuditFormatter/AncestralidadeCatalogBudgetTest. Sem isso, um
+            // traço migrado pro par genérico ATTRIBUTE_BOOST/SKILL_BOOST (traitId
+            // parametrizado + targetRef/value, id mantido só pra identidade/auditoria)
+            // resolvia pra `Nenhum` aqui assim que o id bruto saísse do catálogo —
+            // `id` continua sendo o que identifica/remove o traço (habilidadeId
+            // abaixo), só o CÁLCULO passa a olhar o par genérico quando presente.
+            val resolvedId = habilidade.resolvedTraitId().ifBlank { null }
+            val efeito = RacialTraitPointCatalog.efeitoDe(resolvedId, habilidade.targetRef, habilidade.value)
             val vezes = habilidade.vezes.coerceAtLeast(1)
             // Traços EMPILHÁVEIS (ver RacialTraitPointCatalog.VEZES_MAX) mostram
             // e cobram o valor final (ex.: "Resistência +2", 2 pontos), não o
@@ -130,7 +139,12 @@ class ResolveVariantPointBudgetUseCase {
             // Variante ignorava o valor calibrado e usava o genérico do id.
             return VariantBudgetItem(
                 label = label,
-                custo = RacialTraitPointCatalog.custoDe(id, severity = habilidade.severity, pontos = habilidade.pontos) * vezes,
+                custo = RacialTraitPointCatalog.custoDe(
+                    resolvedId,
+                    value = habilidade.value,
+                    severity = habilidade.severity,
+                    pontos = habilidade.pontos
+                ) * vezes,
                 habilidadeId = id
             )
         }

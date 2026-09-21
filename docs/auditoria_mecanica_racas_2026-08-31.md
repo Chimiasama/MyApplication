@@ -3577,3 +3577,127 @@ rodada 36 está fechada: todas as raças identificadas migraram pro
 sistema de Seleção genérico, e os candidatos restantes foram
 conferidos individualmente e confirmados como corretamente fora de
 escopo, não esquecidos.
+
+## Trigésima nona rodada — backlog antigo: migração de Atributo/Perícia Aumentada pro par genérico; 1 bug real achado (Araiguma "Brincalhão")
+
+Item de backlog registrado desde a rodada 28/31 ("migrar ids de
+Atributo/Perícia Aumentada pro par genérico `ATTRIBUTE_BOOST`/
+`SKILL_BOOST`+`targetRef`+`value`, Básico primeiro depois Fantasia"),
+nunca priorizado até agora. Escopo real acabou maior do que o
+estimado na hora de perguntar pro usuário ("todos os livros" — 8
+livros, dezenas de raças): 27 ids ao todo, não só os ~18 de Atributo.
+Feito com o usuário confirmando escopo completo; a unificação
+Monstro Heroico/Tropo (outro item do mesmo backlog) foi conferida e
+descartada a pedido do usuário — os dois sistemas já funcionam
+corretamente hoje, sem bug, então a reorganização não valia o risco.
+
+### O que foi migrado
+
+- **15 ids de Atributo** (`AtributoStep`): `AGIL`, `ASTUCIA`, `ASTUTO`,
+  `DURAO`, `EM_FORMA`, `ESPIRITUAL`, `ESPIRITUOSO`,
+  `FELIZES_POR_NATUREZA`, `FORCA_SOBRENATURAL`, `FORTE`,
+  `INTELIGENCIA`, `MUITO_FORTE`, `MUITO_RESISTENTE`, `RESISTENTE`,
+  `VIGOROSO` — 48 entradas em `ancestralidades.json`, 27 raças, todos
+  os 8 livros. `id` mantido (identidade/auditoria/testes), ganharam
+  `traitId="ATTRIBUTE_BOOST"` + `targetRef=<atributo>` +
+  `value=<passos>`.
+- **12 ids de Perícia** (`PericiaStep`): `CAES_DE_GUARDA`,
+  `INTEGRADO_A_NATUREZA`, `PESFIRMES`, `SENTIDOS_AGUCADOS`,
+  `SENTIDOS_APRIMORADOS`, `SENTIDOS_APURADOS`, `SORRATEIRO`,
+  `TRAPALHOES_TRAVESSOS`, `CONHECIMENTO_GERAL`, `DICAS_CULTURAIS`,
+  `BRINCANDO_COM_O_DESTINO`, `BRINCALHAO` — 18 entradas, 11 raças.
+  Achado no caminho: várias custam só 1pt (não os 2pt padrão de
+  `SKILL_BOOST` com `value=1`) porque o livro dá desconto quando a
+  perícia concedida já é "Perícia Básica" (`pericias.json`) — Perceber/
+  Atletismo/Furtividade/Conhecimento Geral começam de graça, então
+  subir pra d6 vale menos que numa perícia não-básica. A fórmula
+  genérica de `custoDe("SKILL_BOOST", ...)` não sabe disso (não olha
+  se a perícia é básica) — as 8 entradas afetadas
+  (`CAES_DE_GUARDA`/`PESFIRMES`/`SENTIDOS_*`/`SORRATEIRO`/
+  `TRAPALHOES_TRAVESSOS`/`CONHECIMENTO_GERAL`) ganharam `pontos=1`
+  explícito no JSON — mesmo escape-hatch (override) que
+  `resolvedPontos()`/`custoDe()` já priorizam antes de cair na fórmula
+  do id, usado antes só por Mordida/Garras com PA calibrado à mão.
+- **6 `TraitAddition` injetados por Seleção/Variante**
+  (`AncestryVariantRegistry.kt`): `SOLIDO_COMO_ROCHA` (Descendente
+  Elemental), `POVO_MONTANHA_VIGOR`, `NOMADES_DESERTO_SOBREVIVENCIA`,
+  `POVO_MAR_ATLETISMO`, `POVO_MAR_NAVEGAR`, `SENHORES_CAVALOS_CAVALGAR`
+  (Humanos Fantasia, Pacotes Culturais) — mesmo tratamento.
+
+### Deliberadamente fora desta rodada
+
+- **Ids ligados a Signo de Nascença** (`LEBRE_CURA`, `GARCA_ACROBACIA`,
+  `GARCA_ATLETISMO`, `KIRIN_CHI`, `PONTOS_DE_PERICIA`): o usuário pediu
+  pra ver uma LISTA antes de mexer em Signos especificamente — não
+  tocados aqui, ficam pro próximo pedido.
+- **`FE`** ("Fé"): tem entrada no catálogo mas nenhuma raça usa esse id
+  hoje (conferido contra `ancestralidades.json`) — nada pra migrar.
+- **Limpeza do catálogo** (remover as entradas antigas de
+  `EFEITOS`/`CUSTOS` depois de migrado): decidido NÃO fazer. 8 dos ids
+  de Atributo (`FORTE`, `MUITO_FORTE`, `RESISTENTE`,
+  `MUITO_RESISTENTE`, `AGIL`, `MUITO_AGIL`, `ESPIRITUAL`, `ASTUCIA`)
+  continuam sendo emitidos como ids soltos por
+  `monstroAtributoTraitIds()` (Monstro Heroico) — remover quebraria
+  esse caminho, que é um consumidor legítimo e separado, não uma raça.
+  Os outros ids migrados também ficaram com a entrada antiga viva:
+  virou código morto pras raças reais (que agora resolvem pelo par
+  genérico), mas `CriadorStateRacialTraitDrivenAttributesTest`
+  constrói raças sintéticas com esses ids soltos de propósito (testa o
+  mecanismo do catálogo em si) — remover exigiria reescrever esses
+  testes pra zero ganho funcional.
+
+### Bug real achado no caminho: Araiguma "Brincalhão" concedia Provocar d6, não d4
+
+Ao migrar `BRINCALHAO`, o texto oficial embutido no JSON ("O Araiguma
+recebe Provocar d4 (1)") e o custo já cadastrado (1pt = tier
+`pericia_racial_d4`) não batiam com o efeito calculado: `EFEITOS`
+tinha `PericiaStep("Provocar")` sem `passos=0` explícito, caindo no
+default `passos=1` — o loop genérico (`4 + passos*2`) calculava d6,
+não d4. Provocar não é Perícia Básica (conferido em `pericias.json`),
+então não é caso do desconto explicado acima — era d4 mesmo, sem
+ambiguidade, um bug de calibração pré-existente (não relacionado à
+migração em si, só descoberto por ela). Corrigido (`passos = 0`
+explícito) e coberto por teste novo
+(`CriadorStateRacialTraitDrivenAttributesTest`, "brincalhao (Araiguma)
+concede Provocar d4, nao d6") — sem isso, Araiguma dava metade a mais
+de perícia inicial do que o livro concede.
+
+### Fix conexo: `ResolveVariantPointBudgetUseCase.habilidadeComoItem` ignorava `traitId`/`targetRef`/`value`
+
+Achado ao investigar por que migrar os ids não bastava: essa função
+(orçamento do editor de Variante Customizada e de
+`ValidateAncestryOptionBudgetsUseCase.itensRemovidosDoPacote`) chamava
+`RacialTraitPointCatalog.efeitoDe(habilidade.id)` — só o `id` cru, sem
+`resolvedTraitId()` nem `targetRef`/`value` — diferente do padrão já
+correto em `RacialAbility.resolvedPontos()`/
+`RacialTraitAuditFormatter`/`AncestralidadeCatalogBudgetTest`. Sem
+corrigir, um traço migrado pro par genérico resolvia pra `Nenhum`
+aqui assim que a entrada antiga do catálogo saísse de uso — o editor
+de Variante mostraria custo 0 pra remover, por exemplo, "Ágil" de um
+Elfo migrado. Corrigido pra usar `resolvedTraitId()` + passar
+`targetRef`/`value` pra `efeitoDe()`/`custoDe()`, mesmo padrão do
+resto do app; `habilidadeId` (usado pra casar remoção por id) continua
+sendo o `id` cru, não o resolvido — só o CÁLCULO de efeito/custo
+mudou. De quebra, isso também corrige (nunca exercitado até agora)
+qualquer outro traço parametrizado com `value` não-padrão que passasse
+por essa função — conferido que nenhuma raça hoje tinha esse caso
+além das minhas próprias entradas novas.
+
+### Verificação
+
+- Novo teste em `CriadorStateRacialTraitDrivenAttributesTest` (agora
+  13 testes): Araiguma/Brincalhão concede Provocar d4.
+- Suite completa (29 arquivos, 219 testes) — `AncestralidadeCatalogBudgetTest`
+  (varre a soma de TODAS as raças do catálogo real) continua fechando
+  certo pras 38 raças/entradas tocadas, confirmando que os overrides de
+  `pontos` preservaram exatamente os custos já calibrados.
+  `ValidateAncestryOptionBudgetsUseCaseTest` continua passando,
+  confirmando que o fix de `habilidadeComoItem` não alterou nenhum
+  orçamento de Seleção/Variante já existente.
+  `scripts/phase6_reliability_gate.sh` passou (mesmo WARN pré-existente
+  de tamanho de `CriadorState.kt`, sem regressão nova).
+
+Pendente, explicitamente fora desta rodada: os ids de Signo de
+Nascença (ver acima) e o outro item de backlog ainda aberto
+("robustecer despacho por `(id, livro)` em vez de substring de
+nome").

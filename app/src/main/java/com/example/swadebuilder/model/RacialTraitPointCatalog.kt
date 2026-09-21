@@ -174,7 +174,16 @@ object RacialTraitPointCatalog {
         // achado dos três de cima (custoDe já cobrava o ponto certo via
         // RacialTraitPointCatalog, mas o dado de perícia em si nunca era
         // concedido por faltar aqui).
-        "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar"),
+        //
+        // Bug real achado na rodada de migração de Atributo/Perícia Aumentada
+        // (backlog): faltava `passos = 0` aqui — sem isso o loop genérico
+        // (4 + passos*2, passos default=1) calculava d6, não d4, apesar do
+        // texto do livro (embutido em ancestralidades.json: "O Araiguma
+        // recebe Provocar d4 (1)") e do custo já cadastrado (1pt = tier
+        // pericia_racial_d4, nunca bateu com d6 = pericia_racial_d6/2pt).
+        // Provocar não é Perícia Básica (pericias.json), então não é caso de
+        // "básica com desconto" — é d4 mesmo, sem ambiguidade.
+        "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar", passos = 0),
 
         // Signos de Nascença (Humano Arte da Guerra, AncestryVariantRegistry.
         // humanoArteDaGuerraSignos()): ids próprios de cada Signo com efeito

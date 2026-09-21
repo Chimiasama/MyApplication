@@ -962,7 +962,14 @@ object AncestryVariantRegistry {
                     ),
                     FixedPackageOption(
                         "terra", "Terra",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("SÓLIDO COMO ROCHA", "SOLIDO_COMO_ROCHA")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition(
+                                    "SÓLIDO COMO ROCHA", "SOLIDO_COMO_ROCHA",
+                                    traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor", value = 1
+                                )
+                            )
+                        )
                     )
                 )
             )
@@ -1036,7 +1043,12 @@ object AncestryVariantRegistry {
                     id = "nomades_do_deserto",
                     nome = "Nômades do Deserto",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("Sobrevivência d6", "NOMADES_DESERTO_SOBREVIVENCIA")),
+                        tracosParaAdicionar = listOf(
+                            TraitAddition(
+                                "Sobrevivência d6", "NOMADES_DESERTO_SOBREVIVENCIA",
+                                traitId = "SKILL_BOOST", targetRef = "Sobrevivência", value = 1
+                            )
+                        ),
                         tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Frio)", "FRAQUEZA_AMBIENTAL_FRIO")),
                         vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Calor)", "RESISTENCIA_AMBIENTAL_CALOR"))
                     )
@@ -1045,7 +1057,12 @@ object AncestryVariantRegistry {
                     id = "povo_da_montanha",
                     nome = "Povo da Montanha",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("Vigor d6", "POVO_MONTANHA_VIGOR")),
+                        tracosParaAdicionar = listOf(
+                            TraitAddition(
+                                "Vigor d6", "POVO_MONTANHA_VIGOR",
+                                traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor", value = 1
+                            )
+                        ),
                         tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Calor)", "FRAQUEZA_AMBIENTAL_CALOR")),
                         vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Frio)", "RESISTENCIA_AMBIENTAL_FRIO"))
                     )
@@ -1055,8 +1072,14 @@ object AncestryVariantRegistry {
                     nome = "Povo do Mar",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("Atletismo d6", "POVO_MAR_ATLETISMO"),
-                            TraitAddition("Navegar d6", "POVO_MAR_NAVEGAR")
+                            TraitAddition(
+                                "Atletismo d6", "POVO_MAR_ATLETISMO",
+                                traitId = "SKILL_BOOST", targetRef = "Atletismo", value = 1
+                            ),
+                            TraitAddition(
+                                "Navegar d6", "POVO_MAR_NAVEGAR",
+                                traitId = "SKILL_BOOST", targetRef = "Navegar", value = 1
+                            )
                         )
                     ),
                     selecoes = listOf(
@@ -1088,7 +1111,12 @@ object AncestryVariantRegistry {
                     id = "senhores_dos_cavalos",
                     nome = "Senhores dos Cavalos",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("Cavalgar d6", "SENHORES_CAVALOS_CAVALGAR"))
+                        tracosParaAdicionar = listOf(
+                            TraitAddition(
+                                "Cavalgar d6", "SENHORES_CAVALOS_CAVALGAR",
+                                traitId = "SKILL_BOOST", targetRef = "Cavalgar", value = 1
+                            )
+                        )
                     ),
                     selecoes = listOf(
                         SelectionDef(
