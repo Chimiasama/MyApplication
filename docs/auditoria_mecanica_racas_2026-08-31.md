@@ -2726,3 +2726,93 @@ a compilação de verdade.
 - A migração de Atributo/Perícia Aumentada pra id genérico
   (`ATTRIBUTE_BOOST`) e a unificação Monstro Heroico/Tropo continuam
   pendentes das rodadas anteriores.
+
+## Trigésima terceira rodada (planejamento) — desenho de "opções validadas" + Variante por opção
+
+Discussão com o usuário sobre por que religar `PONTOS_DE_PERICIA` ao
+mecanismo genérico de bônus quebraria a contabilidade de pontos do
+Humano (Império San) (ver rodada anterior) levou a um redesenho maior,
+puxado pelo próprio usuário. Registrado aqui antes de começar a
+implementar, como pedido.
+
+### O problema de fundo
+
+O sistema de Seleção (`AncestryVariantConfig`/`SelectionDef`/
+`VariantOption`) já sabe modelar "a raça oferece um menu de opções,
+cada uma com seu pacote de traços" — é o que já funciona pra Terracota
+(Voto/Obrigação), Umvee (6 Dons da Natureza), Elementais (elemento),
+Quadroides (Habilidoso). O que **não existe** é validação por opção: o
+único cálculo de orçamento (`ResolveVariantPointBudgetUseCase`) soma
+`habilidades[]` como uma lista plana e permanente, sem noção de "isso é
+o pacote da opção A" vs "isso é o pacote da opção B". É por isso que
+tentar religar `PONTOS_DE_PERICIA` ao mecanismo genérico quebrava: o
+traço ficava sempre presente na lista plana, então a soma nunca refletia
+"só a opção ativa".
+
+### O desenho acordado (3 peças, nessa ordem)
+
+1. **Validador por opção**: para cada opção (`VariantOption`/
+   `FixedPackageOption`) de uma raça, resolver o pacote completo daquela
+   opção (traços comuns da raça, se houver, + o que a opção
+   adiciona/remove) e comparar a soma contra `pontosRaciaisEsperados` —
+   reaproveitando `ResolveVariantPointBudgetUseCase.resolve()`, que já
+   faz exatamente essa conta pro editor de Variante custom, só que
+   alimentado pelos itens de CADA opção em vez das escolhas manuais de
+   um mestre. Se uma opção específica não fechar, o aviso aponta só
+   ela — nunca a raça inteira.
+
+2. **Migrar Signo (Humano Arte da Guerra), Herança (Meio-Elfo) e a
+   escolha do Meio-Demônio pro sistema de Seleção de verdade**, com um
+   conceito único de "id da opção ativa agora" (hoje cada um guarda a
+   escolha do jogador do seu próprio jeito — `signoAdgSelecionado`,
+   `meioElfoAgil`, `meioDemonioAA` — sem um formato comum). Depois da
+   migração, `PONTOS_DE_PERICIA` (custo 1, valor fixo +3 — ver nota
+   abaixo) só existe dentro do pacote da opção "Nenhum", nunca nas
+   outras 13; o leitor genérico de bônus de perícia passa a funcionar
+   sem precisar de nenhuma guarda por id de "a raça tem a escolha",
+   porque o traço simplesmente não está presente fora da opção certa.
+   Fecha o histórico da Sigla usando o mesmo motor que já resolve
+   Terracota/Umvee/Elementais, eliminando os `if (signId == "X")`
+   espalhados em `CriadorState.kt` que hoje ainda constroem o efeito na
+   mão em vez de ler do registro.
+
+   Nota sobre o traço de +3: confirmado com o usuário que ele **não**
+   deve usar o mecanismo genérico parametrizável (`PERICIA_POINTS_
+   BONUS` + `value` livre, pensado pro criador de conteúdo escolher
+   qualquer valor) — o +3 é uma regra fixa do livro, não um parâmetro.
+   Continua como um id próprio e fixo (mesmo efeito por baixo,
+   `PericiaPoolBonus`, mas com o valor cravado no catálogo pelo id, não
+   editável).
+
+3. **Variante Customizada escopada por uma opção específica**: hoje uma
+   Variante custom de raça (`CustomAncestryVariant`) enxerga a raça
+   como uma coisa só — não tem como um mestre criar uma Variante que
+   sobrescreve só o Signo Dragão, por exemplo, mantendo as outras 13
+   opções oficiais. O desenho: a Variante custom ganha um campo
+   opcional "id da opção que ela sobrescreve"; vazio = comportamento
+   atual (aplica em cima da raça toda, como hoje); preenchido = só se
+   aplica quando a opção ativa bate com esse id, e as demais opções
+   continuam 100% oficiais. Só fica barato de construir depois da peça
+   2, porque precisa de um jeito único de perguntar "qual é a opção
+   ativa agora" que funcione pra qualquer raça de Seleção, não um
+   mecanismo à parte por raça.
+
+### Ordem de execução
+
+1. Validador por opção (pequeno, testável isolado).
+2. Migrar Herança (Meio-Elfo, 2 opções) e a escolha do Meio-Demônio
+   (2 opções) pro formato de Seleção — mecânica de cada lado já está
+   correta hoje, só falta empacotar como `SelectionDef`/`VariantOption`.
+   Baixo risco, prova o desenho de ponta a ponta.
+3. Migrar Signo (Humano Arte da Guerra, 14 opções — 13 signos + Nenhum)
+   pro mesmo formato — trabalho grande, cada opção precisa ser
+   conferida contra o texto do livro (já embutido em
+   `ancestralidades.json`), comparável ou maior que a rodada dos
+   Elementais (que teve só 2 opções).
+4. Variante Customizada escopada por opção — depois que 1-3 estiverem
+   testados e no ar.
+
+Itens mais antigos do backlog (migração de Atributo/Perícia Aumentada
+genérico, unificação Monstro Heroico/Tropo, robustecer o despacho por
+`(id, livro)` em vez de substring de nome) continuam registrados nas
+rodadas anteriores, sem prioridade nesta.
