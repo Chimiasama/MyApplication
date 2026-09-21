@@ -46,6 +46,17 @@ class AncestralidadeCatalogBudgetTest {
      * do escopo deste teste). Identificado batendo cada raça aqui contra
      * `AncestryVariantRegistry.kt` (toda raça com `ancestralidadeId` cadastrado lá que também
      * aparecia como mismatch nesta varredura).
+     *
+     * "Humano (Império San)" entrou aqui na migração do Signo de Nascença
+     * (14 opções, ver docs/auditoria_mecanica_racas_2026-08-31.md,
+     * rodada 33): a raça base no catálogo só carrega o traço-marcador
+     * "SIGNOS_DE_NASCENCA" (0 pts, card de referência dos 13 Signos) — o
+     * orçamento de 3 pontos só fecha depois que
+     * `AncestryVariantRegistry.humanoArteDaGuerraSignos()` resolve QUAL
+     * Signo está ativo (ver `ValidateAncestryOptionBudgetsUseCaseTest`,
+     * que já confere as 14 opções isoladamente contra esse mesmo
+     * orçamento — este teste aqui só varre o catálogo estático, sem
+     * resolver Seleção nenhuma).
      */
     private val racasComTracosInjetadosDinamicamente = setOf(
         "FERAIS" to "SCI_FI",
@@ -53,7 +64,8 @@ class AncestralidadeCatalogBudgetTest {
         "GELATINOIDES" to "SCI_FI",
         "INSETOIDES" to "SCI_FI",
         "MÍMICOS" to "SCI_FI",
-        "UMVEE (FILHOS DA LUA)" to "ARTE_DA_GUERRA"
+        "UMVEE (FILHOS DA LUA)" to "ARTE_DA_GUERRA",
+        "HUMANO (IMPÉRIO SAN)" to "ARTE_DA_GUERRA"
     )
 
     private fun catalogFile(): File {

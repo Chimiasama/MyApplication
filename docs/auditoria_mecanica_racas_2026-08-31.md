@@ -3180,3 +3180,26 @@ resolvida de verdade.
 - Migrar Meio-Demônio pro `resolveMarkedSelection` genérico — agora
   tecnicamente seguro (o bloqueio original não existe mais), mas não
   pedido nesta rodada.
+
+### Correção de CI: gap na verificação da rodada 33 (Signo)
+
+O CI do PR pegou um teste real que o harness local (`/tmp/ktbig`) não
+cobre — `AncestralidadeCatalogBudgetTest`, que varre TODAS as raças do
+catálogo estático (`ancestralidades.json` puro, sem resolver Seleção
+nenhuma) e confere que cada uma fecha sozinha contra seu próprio
+`pontosRaciaisEsperados`. A remoção de `ADAPTAVEL_OU_SIGNO`/
+`PONTOS_DE_PERICIA` do Humano (Império San) na rodada 33 (Peça 3) é
+CORRETA pro app em runtime (o orçamento fecha depois que
+`AncestryVariantRegistry` resolve o Signo ativo — já confirmado pelos
+testes de `ValidateAncestryOptionBudgetsUseCaseTest`), mas deixa o
+catálogo ESTÁTICO somando 0 em vez de 3 — exatamente a mesma situação
+já documentada pra Ferais/Florans/Gelatinoides/Insetoides/Mímicos/Umvee
+(raças cujo total só fecha com a Variante ativa). Faltava só adicionar
+"Humano (Império San)"/ARTE_DA_GUERRA à lista de exceções documentada
+(`racasComTracosInjetadosDinamicamente`) do teste — feito agora.
+Achado real de CI, não hipotético (`soma=0, esperado=3` no log da
+Actions), gap de cobertura no meu processo de verificação local (esse
+teste específico nunca tinha sido copiado pro harness `/tmp/ktbig`) —
+corrigido e a suíte completa (25 arquivos + este, 200 testes) rodou de
+novo, incluindo este teste especificamente contra o JSON real, sem
+falhas.
