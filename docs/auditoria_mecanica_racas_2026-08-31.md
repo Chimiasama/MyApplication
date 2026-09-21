@@ -1871,7 +1871,7 @@ Escanear, Escudo Mental, Furacão, Gênio, Infecção, Má Sorte, Mau
 Funcionamento, Não envelhece, Precisão mortal, Servos, Terremoto,
 Transmissão, Veículo.
 
-Os outros 33 batem com uma **Magia (Poder)** ou uma **Vantagem** de
+Os outros 32 batem com uma **Magia (Poder)** ou uma **Vantagem** de
 nome igual/parecido — o mesmo padrão que Campo de Dano, citado no
 pedido:
 
@@ -1910,10 +1910,34 @@ pedido:
 | Superciência | Traços "Poder Inato"/"Super Poderes" (Antecedente Arcano) | é um Antecedente Arcano alternativo — não dá pra simplesmente excluir sem também remover uma opção legítima, precisa de decisão específica |
 | Superfeitiçaria | idem | idem |
 
-Nenhum desses foi tirado do seletor — ficam pra próxima decisão, caso
-o dono do projeto queira que o traço "Poder" (que já restringe a
-poderes de Novato) absorva parte desse papel em vez do Super Poder
-equivalente aparecer solto no seletor de Super Poderes.
+Nesta rodada esses 32 saíram do seletor também, por decisão do dono do
+projeto: junto com o próprio traço "Poder" (Antecedente Arcano + Magia
+de Novato, ver rodada anterior), não faz sentido oferecer duas vezes o
+mesmo conceito por dois mecanismos diferentes. Caso especial:
+**Superciência** e **Superfeitiçaria** — mesmo sendo balanceados num
+cenário de Supers (onde todo mundo é super poderoso), como Antecedente
+Arcano alternativo pra criação de raça eles são, pela própria descrição,
+versões bem mais fortes que um Antecedente Arcano normal; concentrado
+numa raça só (em vez de espalhado entre super-heróis), isso desbalancearia
+demais — então ficam de fora, mesmo custando a opção "legítima" que
+tinha sido citada como ressalva na rodada anterior.
+
+Somando aos 34 do Grupo A (+ Camaleão do Grupo B), o seletor de Super
+Poderes racial ficou só com os **25 itens** que sobraram sem nenhuma
+sobreposição encontrada (23 do levantamento da rodada anterior mais
+Crescimento e Encolhimento, mantidos do Grupo B): Absorção, Anular,
+Balançar, Campo de Força, Controlar Máquinas, Controle de Clima,
+Controle de Energia, Controle de Matéria, **Crescimento**, Decompor,
+Duplicação, **Encolhimento**, Escanear, Escudo Mental, Furacão, Gênio,
+Infecção, Má Sorte, Mau Funcionamento, Não envelhece, Precisão mortal,
+Servos, Terremoto, Transmissão, Veículo. Conferido por script (ver
+Verificação) contra o conjunto de exclusão real do código — bate certo.
+
+Implementado ampliando o mesmo conjunto `SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL`
+em `SettingsDialog.kt` (agora com um segundo bloco de nomes, comentado
+separadamente do Grupo A) — nenhuma outra mudança de código, o filtro em
+`superPoderesCatalogParaTracoRacial` já cobria qualquer nome adicionado
+ao conjunto.
 
 ### Verificação
 
@@ -1922,6 +1946,7 @@ o tamanho de `CriadorState.kt`, não relacionado a esta mudança).
 `SettingsDialog.kt` não compila no harness standalone (Compose UI) —
 validado por balanceamento de chaves (0, igual antes e depois) e de
 parênteses (+8, igual antes e depois — a mudança não introduziu
-desbalanceamento novo), além de leitura cruzada dos 3 pontos afetados
-(constante, catálogo filtrado, ponto de uso no dialog). Fica pro CI
-confirmar a compilação.
+desbalanceamento novo), e por script Python conferindo os 67 nomes do
+conjunto de exclusão contra `super_poderes.json` (sem typo, sem
+duplicata, todos existentes) e contando os 25 que sobraram
+selecionáveis. Fica pro CI confirmar a compilação.

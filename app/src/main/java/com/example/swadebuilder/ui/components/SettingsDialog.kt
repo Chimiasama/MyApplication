@@ -264,13 +264,30 @@ suspend fun findSavedCharactersUsingCustomItem(
 // muda de cor pra se camuflar, igual ao traço "Camuflagem (Adaptável)" — mas "Crescimento" e
 // "Encolhimento" ficam de fora de propósito: mudar de tamanho ativamente (efeito temporário) é
 // diferente de já nascer com Tamanho +1/Diminuto.
+//
+// Segundo bloco: Super Poderes sem traço racial idêntico, mas com uma Magia (Poder) ou
+// Vantagem de nome igual/parecido já cobrindo o mesmo conceito (ex. "Campo de Dano" tem a
+// Magia "Campo de Dano"; "Destemido" tem a Vantagem "Destemido") — o traço "Poder" já cobre
+// esse caso de outro jeito (Antecedente Arcano + a Magia certa, restrito a Novato). Inclui
+// "Superciência"/"Superfeitiçaria": mesmo sendo balanceados pra um cenário de Supers, onde
+// todo mundo é super poderoso, como Antecedente Arcano alternativo pra criação de raça eles
+// são versões muito mais fortes que o normal — dá uma distorção grande demais concentrada
+// numa raça só, então ficam de fora.
 private val SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL: Set<String> = setOf(
+    // Grupo A: mesmo efeito de um traço racial
     "Ações Adicionais", "Alcance", "Andar nas Paredes", "Aparar", "Aquático", "Armadura",
     "Ataque Corpo a Corpo", "Ataque de Longa Distância", "Atordoar", "Aumentar/Reduzir Característica",
     "Bônus de Perícia", "Camaleão", "Cavar", "Construto", "Espacial", "Imune a Doenças/Venenos",
     "Interface", "Invisibilidade", "Membros Extras", "Morto-vivo", "Movimentação", "Mudança de Forma",
     "Não dorme", "Não respira", "Regeneração", "Resistência Ambiental", "Resistência", "Robusto",
-    "Salto", "Sem Órgãos Vitais", "Sentidos Aprimorados", "Supervantagem", "Telepatia", "Veneno", "Voo"
+    "Salto", "Sem Órgãos Vitais", "Sentidos Aprimorados", "Supervantagem", "Telepatia", "Veneno", "Voo",
+    // Grupo C: coberto por uma Magia (Poder) ou Vantagem de nome igual/parecido
+    "Campo de Dano", "Curar", "Cegar", "Enredar", "Explodir", "Falar Idioma", "Ilusão",
+    "Leitura de Objeto", "Leitura Mental", "Lentidão", "Velocidade", "Medo", "Obscurecer",
+    "Telecinese", "Teleporte", "Intangibilidade", "Possessão", "Companheiro Animal",
+    "Controle de Animal", "Controle Mental", "Empurrar", "Forma Alternativa", "Mimetismo",
+    "Destemido", "Esquiva", "Reflexos Aprimorados", "Não Come", "Perceptivo", "Superatributo",
+    "Superperícia", "Superciência", "Superfeitiçaria"
 ).mapTo(mutableSetOf()) { it.keyify() }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -3075,7 +3092,7 @@ fun CustomContentManageDialog(
                                 text = {
                                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                                         Text(
-                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido. Super Poderes que a raça já cobre por outro traço (Resistência, Armadura, Voo etc.) não aparecem aqui.",
+                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido. Super Poderes já cobertos por outro traço racial, Magia ou Vantagem (Resistência, Armadura, Voo, Cura, Destemido etc.) não aparecem aqui.",
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(bottom = 8.dp)
