@@ -65,7 +65,8 @@ object AncestryVariantRegistry {
         meioOrc(),
         feralArteDaGuerra(),
         kitsunemimiArteDaGuerra(),
-        gnomoPathfinder()
+        gnomoPathfinder(),
+        usagimimiArteDaGuerra()
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -1480,10 +1481,11 @@ object AncestryVariantRegistry {
 
     // --- Gnomo (Pathfinder): "Obsessivos" — escolhe 1 perícia baseada em
     // Astúcia (dentre as do próprio livro Pathfinder) pra começar em d4.
-    // Lista estática (mesma ideia de Meio-Orc Força/Vigor) em vez de "livre
-    // entre todas as perícias de Astúcia" — o livro já enumera um conjunto
-    // finito por edição, então não precisa do picker "qualquer perícia"
-    // (esse sim ainda pendente, ver Usagimimi "Definido pelo Ofício").
+    // Lista estática (mesma ideia de Meio-Orc Força/Vigor), gerada a partir
+    // de todas as perícias de Astúcia cadastradas em pericias.json com
+    // "PATHFINDER" nos livros (12 no total — a rodada 36 migrou isso com
+    // essa lista faltando "Provocar" por engano; corrigido na rodada 37 ao
+    // conferir contra o catálogo real, não de memória).
     private fun gnomoPathfinder(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "GNOMO",
         livro = "PATHFINDER",
@@ -1496,7 +1498,7 @@ object AncestryVariantRegistry {
                 targetOptions = listOf(
                     "Conhecimento de Batalha", "Ciência", "Conhecimento Acadêmico",
                     "Conhecimento Geral", "Conjurar", "Consertar", "Curar", "Jogar",
-                    "Ocultismo", "Perceber", "Sobrevivência"
+                    "Ocultismo", "Perceber", "Provocar", "Sobrevivência"
                 ),
                 defaultTargetChoice = "Conhecimento Acadêmico",
                 // passos=0: mesmo caso de Kitsunemimi acima — "d4" é o
@@ -1504,6 +1506,43 @@ object AncestryVariantRegistry {
                 passos = 0,
                 injectionTemplate = "{alvo} d4 (Obsessivos)",
                 marcadorTraitId = "OBSESSIVOS"
+            )
+        )
+    )
+
+    // --- Usagimimi (Coelho, Arte da Guerra): "Definido pelo Ofício" —
+    // escolhe 1 perícia dentre TODAS as da Arte da Guerra (exceto
+    // Idiomas/Jutsu, que não são perícias "normais" pra esse efeito) pra
+    // começar em d6 — não d4: o livro já concede o patamar treinado direto
+    // (`passos=1`, o default de SelectionDef, então nem precisa declarar).
+    // Lista de 29 perícias gerada a partir de pericias.json (livros
+    // contendo "ARTE_DA_GUERRA", nome não começando com "Idiomas"/"Jutsu")
+    // — a UI antiga já mostrava exatamente esse conjunto calculado em tempo
+    // de execução (`state.listaPericias.filter{...}`); virou lista estática
+    // aqui, mesmo padrão de Kitsunemimi/Gnomo (achado real da rodada 36: um
+    // "picker de qualquer perícia" preocupava por ser ilimitado, mas o
+    // livro já restringe a um conjunto finito e pequeno o bastante pra
+    // enumerar, igual às outras duas raças).
+    private fun usagimimiArteDaGuerra(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "USAGIMIMI (COELHO)",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "usagimimi_definido_pelo_oficio",
+                rotulo = "Definido pelo Ofício",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.SKILL,
+                targetOptions = listOf(
+                    "Acrobacia", "Atirar", "Atletismo", "Cavalgar", "Ciência",
+                    "Conhecimento Acadêmico", "Conhecimento Geral", "Conhecimento de Batalha",
+                    "Consertar", "Convenção", "Curar", "Dirigir", "Foco", "Furtividade",
+                    "Intimidar", "Jogar", "Ladinagem", "Lutar", "Navegar", "Ocultismo",
+                    "Ofício", "Perceber", "Performance", "Persuadir", "Pesquisar",
+                    "Pilotar", "Provocar", "Sobrevivência", "Transição"
+                ),
+                defaultTargetChoice = "Conhecimento Acadêmico",
+                injectionTemplate = "{alvo} d6 (Definido pelo Ofício)",
+                marcadorTraitId = "DEFINIDO_PELO_OFICIO"
             )
         )
     )

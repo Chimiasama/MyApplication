@@ -833,14 +833,17 @@ class CriadorState {
 
         // Mesmo padrão acima, pra Seleção TARGET_ATTRIBUTE_OR_SKILL de
         // Meio-Orc (ENDURECIDO, Fantasia), Feral (PRIMITIVO, Arte da
-        // Guerra), Kitsunemimi (PREPARADO, Arte da Guerra) e Gnomo
-        // (OBSESSIVOS, Pathfinder) — ids exclusivos dessas raças, sem
-        // precisar checar o nome. Nenhuma delas tem origem que já força
+        // Guerra), Kitsunemimi (PREPARADO, Arte da Guerra), Gnomo
+        // (OBSESSIVOS, Pathfinder) e Usagimimi (DEFINIDO_PELO_OFICIO, Arte
+        // da Guerra) — ids exclusivos dessas raças, sem precisar checar o
+        // nome. Nenhuma delas tem origem que já força
         // `applyAncestryVariantAdjustments` incondicionalmente (só FC/
         // SCI_FI fazem isso logo abaixo).
         fun temEscolhaDeAtributoOuPericia(candidato: RacialModifier): Boolean =
             candidato.habilidades.any {
-                it.id?.keyify() in setOf("ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS")
+                it.id?.keyify() in setOf(
+                    "ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO"
+                )
             }
 
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
@@ -1362,6 +1365,29 @@ class CriadorState {
                 answer = com.example.swadebuilder.model.SelectionAnswer(
                     selectionId = "gnomo_obsessivos",
                     targetChoice = gnomoPericiaEscolhida
+                )
+            )
+        }
+
+        // Usagimimi (Coelho, Arte da Guerra): Definido pelo Ofício — escolhe
+        // 1 perícia (do conjunto de perícias da AdG, exceto Idiomas/Jutsu)
+        // pra começar em d6 (passos=1, não "d4" como Kitsunemimi/Gnomo — o
+        // livro já concede o patamar treinado direto). Restrição de Tropo
+        // ligada à opção "Transição" (isUsagimimiTransicaoRestrictionActive)
+        // continua vivendo em selecionarPericiaUsagimimi, fora daqui — não é
+        // um efeito de Seleção, é compatibilidade entre escolhas do
+        // personagem, minha função aqui só resolve o traço mecânico em si.
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "DEFINIDO_PELO_OFICIO" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "DEFINIDO_PELO_OFICIO",
+                ancestralidadeId = "USAGIMIMI (COELHO)",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "usagimimi_definido_pelo_oficio",
+                    targetChoice = usagimimiPericiaEscolhida
                 )
             )
         }
@@ -3867,14 +3893,15 @@ class CriadorState {
             ?.toSet()
             ?: emptySet()
 
-        // Gnomo (Obsessivos) e Kitsunemimi (Preparado): escolha de perícia à
-        // escolha do jogador — não é mais um "if" hardcoded aqui.
-        // applyAncestryVariantAdjustments (resolveMarkedSelection, Seleção
-        // TARGET_ATTRIBUTE_OR_SKILL) já injeta o traço real (traitId=
-        // SKILL_BOOST + targetRef=a perícia escolhida) em habilidades[]
-        // conforme gnomoPericiaEscolhida/kitsunemimiPericiaEscolhida, e o
-        // laço genérico de PericiaStep logo acima já o lê como qualquer
-        // outro traço racial — mesmo padrão de Endurecido/Primitivo.
+        // Gnomo (Obsessivos), Kitsunemimi (Preparado) e Usagimimi (Definido
+        // pelo Ofício): escolha de perícia à escolha do jogador — não é mais
+        // um "if" hardcoded aqui. applyAncestryVariantAdjustments
+        // (resolveMarkedSelection, Seleção TARGET_ATTRIBUTE_OR_SKILL) já
+        // injeta o traço real (traitId=SKILL_BOOST + targetRef=a perícia
+        // escolhida) em habilidades[] conforme gnomoPericiaEscolhida/
+        // kitsunemimiPericiaEscolhida/usagimimiPericiaEscolhida, e o laço
+        // genérico de PericiaStep logo acima já o lê como qualquer outro
+        // traço racial — mesmo padrão de Endurecido/Primitivo.
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
@@ -3889,14 +3916,6 @@ class CriadorState {
         // todo Umvee, sempre concedido independente do dom escolhido.
         if (habilidadeIdsPericia.contains("PERCEBER_D6") && perKey == "PERCEBER") {
             modifiedBase = maxOf(modifiedBase, 6)
-        }
-
-        // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
-        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO")) {
-            val chosen = usagimimiPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
         }
 
         // Piso "sem Tropo": raça + Monstro + Signo + Pacote Cultural — só isso

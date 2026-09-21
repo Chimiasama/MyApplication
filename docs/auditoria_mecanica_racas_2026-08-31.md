@@ -3417,3 +3417,86 @@ de passagem. Adiamento consciente e documentado, não esquecimento.
 
 Pendente, explicitamente fora desta rodada: migração de Usagimimi
 (ver acima, precisa de nova capacidade de UI).
+
+## Trigésima sétima rodada — Usagimimi migrado (o adiamento da rodada 36 estava errado) + 2 bugs de UI achados ao revisar o próprio trabalho
+
+Ao preparar a migração de Usagimimi que a rodada 36 tinha adiado,
+reli a lista real de perícias da Arte da Guerra em `pericias.json`
+em vez de confiar na memória do "picker de qualquer perícia" —
+achado: não são "todas as perícias do jogo" (isso sim precisaria de
+um catálogo filtrado tipo Anões Ciber), são só as da Arte da Guerra
+menos Idiomas/Jutsu — **29 no total**, um conjunto perfeitamente
+enumerável, exatamente igual ao que o dropdown antigo (dinâmico,
+calculado de `state.listaPericias.filter{...}`) já mostrava. O
+adiamento da rodada 36 estava errado nesse ponto específico; a
+restrição de Tropo (`isUsagimimiTransicaoRestrictionActive`,
+inalterada) nunca foi o bloqueio de verdade.
+
+### Bug real #1 — UI duplicada pra Kitsunemimi e Gnomo
+
+Revisando `AncestralidadesSection.kt` de novo antes de mexer em
+Usagimimi, achei que os NOVOS seletores genéricos de Kitsunemimi/
+Gnomo (adicionados na rodada 36) foram só ACRESCENTADOS — os blocos
+antigos, com dropdown próprio (`if (item.nome.keyify().contains("KITSUNEMIMI"))`
+etc.), continuavam lá, mais abaixo no arquivo. Resultado: as duas
+raças mostrariam DOIS seletores de perícia idênticos na tela (ambos
+escrevendo no mesmo campo de estado, então sem corromper dado — só
+UI redundante/confusa). Achado ao reler o próprio código depois de
+"terminado", não relatado por ninguém. Corrigido removendo os 2
+blocos antigos por completo.
+
+### Bug real #2 — lista de Gnomo (Obsessivos) faltando "Provocar"
+
+Comparando o dropdown antigo do Gnomo (dinâmico:
+`periciasFiltradasPorCompendio.filter { atributo=="ASTUCIA" && ... }`)
+contra a lista estática nova da rodada 36, faltava "Provocar" — as
+12 perícias de Astúcia do Pathfinder em `pericias.json` são
+Conhecimento de Batalha/Ciência/Conhecimento Acadêmico/Conhecimento
+Geral/Conjurar/Consertar/Curar/Jogar/Ocultismo/Perceber/**Provocar**/
+Sobrevivência; a rodada 36 só cadastrou 11, escrita de memória em vez
+de conferida contra o catálogo. Corrigido em
+`AncestryVariantRegistry.gnomoPathfinder()`.
+
+### Usagimimi migrado
+
+Mesmo padrão de Kitsunemimi/Gnomo, mas com uma diferença mecânica
+real: o traço concede d6 DIRETO (não "d4, perícia destreinada" como
+os outros dois) — `passos=1` (o default de `SelectionDef`, nem
+precisa declarar), confirmado batendo o orçamento de pontos
+(`DEFINIDO_PELO_OFICIO`=2pt em `RacialTraitPointCatalog.CUSTOS`,
+igual a `custoDe("SKILL_BOOST", passos=1)=2`, e a soma de
+`pontosRaciaisEsperados=3` do Usagimimi em `ancestralidades.json`
+bate com 2+2+1-2 dos 4 traços da raça). `AncestryVariantRegistry.usagimimiArteDaGuerra()`
+com as 29 opções; `CriadorState` ganhou o bloco gateado por
+`habilidadeIds.any { it.id?.keyify() == "DEFINIDO_PELO_OFICIO" }` +
+`resolveMarkedSelection`, e o `if` avulso antigo em
+`periciaStartRawInternal` foi removido, mesmo padrão de Kitsunemimi/
+Gnomo. `temEscolhaDeAtributoOuPericia` estendida com
+`DEFINIDO_PELO_OFICIO`. `selecionarPericiaUsagimimi()` (a função
+pública que a UI chama) e `isUsagimimiTransicaoRestrictionActive()`
+NÃO foram tocadas — a restrição de Tropo ligada à opção "Transição"
+continua funcionando exatamente como antes, só a resolução MECÂNICA
+do traço (o "que perícia ganha d6") passou a vir do sistema de
+Seleção. Na UI, o dropdown antigo (dinâmico, calculado a cada
+recomposição) virou o mesmo `AtributoEscolhidoPicker` genérico das
+outras raças, gateado por `marcadorTraitId == "DEFINIDO_PELO_OFICIO"`.
+
+### Verificação
+
+- 3 testes novos em `CriadorStatePericiaEscolhidaTest` (agora 6 no
+  total): Usagimimi com "Provocar" escolhido começa em d6 (não d4,
+  confirma o `passos=1`); trocar de perícia não deixa a anterior
+  vazando; escolher "Transição" ativa
+  `isUsagimimiTransicaoRestrictionActive()` (confirma que a
+  migração não tocou nesse mecanismo).
+- Suite completa (29 arquivos, 218 testes) e
+  `scripts/phase6_reliability_gate.sh` passando (mesmo WARN
+  pré-existente de tamanho de `CriadorState.kt`, sem regressão nova).
+- `AncestralidadesSection.kt` revisado manualmente linha a linha de
+  novo (balanceamento de chaves conferido por script à parte, já que
+  o arquivo não compila no harness puro-JVM).
+
+Com isso, as 5 raças com "opções" (não Variante) identificadas na
+varredura da rodada 36 — Meio-Orc, Feral, Kitsunemimi, Gnomo e
+Usagimimi — estão todas no sistema de Seleção genérico. Não ficou
+nada pendente desta frente.

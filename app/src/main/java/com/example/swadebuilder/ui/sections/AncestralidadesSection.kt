@@ -1006,6 +1006,27 @@ fun AncestralidadesSection(
                                         )
                                     }
 
+                                // Usagimimi (Definido pelo Ofício): mesmo seletor genérico,
+                                // lista de 29 perícias da Arte da Guerra — gateado pelo
+                                // traço-marcador "DEFINIDO_PELO_OFICIO" (ver
+                                // AncestryVariantRegistry.usagimimiArteDaGuerra()).
+                                // selecionarPericiaUsagimimi continua recebendo
+                                // feedbackMessages — a restrição de Tropo por causa da opção
+                                // "Transição" (isUsagimimiTransicaoRestrictionActive) mora só
+                                // ali, não faz parte do seletor genérico em si.
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "DEFINIDO_PELO_OFICIO" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.usagimimiPericiaEscolhida,
+                                            onSelecionar = {
+                                                state.selecionarPericiaUsagimimi(it, feedbackMessages)
+                                                onUserFeedback()
+                                            }
+                                        )
+                                    }
+
                                 // Meio-Elfos: escolha entre Herança Élfica (traço "AGIL", Agilidade d6)
                                 // e Herança Humana (traço "ADAPTAVEL", Vantagem de Estágio Novato à
                                 // escolha) — opção da própria raça padrão, não uma Variante de mestre.
@@ -1114,106 +1135,6 @@ fun AncestralidadesSection(
                                                 onSelect = {
                                                     val error = state.selecionarHumanoFantasiaSelecaoAninhada(valor)
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (isSelected && state.compendioPathfinderAtivo && item.nome.keyify().contains("GNOMO")) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Perícia Obsessiva (Astúcia):", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-                                val smartsSkills = state.periciasFiltradasPorCompendio
-                                    .filter {
-                                        val key = it.nome.keyify()
-                                        it.atributo == "ASTUCIA" &&
-                                        !key.contains("IDIOMAS") &&
-                                        (!compendioPathfinderAtivo || (key != "ALQUIMIA" && key != "CIENCIA ESTRANHA"))
-                                    }
-                                    .sortedBy { it.nome }
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.gnomoPericiaEscolhida ?: "Selecionar Perícia")
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        smartsSkills.forEach { skill ->
-                                            DropdownMenuItem(
-                                                text = { Text(skill.nome) },
-                                                onClick = {
-                                                    state.selecionarPericiaGnomo(skill.nome)
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-
-
-                            if (isSelected && item.nome.keyify().contains("KITSUNEMIMI")) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Perícia Preparada:", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-                                val allowedSkills = listOf(
-                                    "Conhecimento Acadêmico",
-                                    "Convenção",
-                                    "Intimidar",
-                                    "Pesquisar",
-                                    "Provocar"
-                                )
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.kitsunemimiPericiaEscolhida ?: "Selecionar Perícia")
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        allowedSkills.forEach { skillName ->
-                                            DropdownMenuItem(
-                                                text = { Text(skillName) },
-                                                onClick = {
-                                                    state.selecionarPericiaKitsunemimi(skillName)
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (isSelected && item.nome.keyify().contains("USAGIMIMI")) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Perícia Definida pelo Ofício (d6):", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-                                val adgSkills = state.listaPericias
-                                    .filter {
-                                        val key = it.nome.keyify()
-                                        it.origem == "ARTE_DA_GUERRA" &&
-                                            !key.startsWith("IDIOMAS") &&
-                                            !key.startsWith("JUTSU")
-                                    }
-                                    .map { it.nome }
-                                    .distinctBy { it.keyify() }
-                                    .sortedBy { it }
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.usagimimiPericiaEscolhida ?: "Selecionar Perícia")
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        adgSkills.forEach { skillName ->
-                                            DropdownMenuItem(
-                                                text = { Text(skillName) },
-                                                onClick = {
-                                                    state.selecionarPericiaUsagimimi(skillName, feedbackMessages)
-                                                    expanded = false
-                                                    onUserFeedback()
                                                 }
                                             )
                                         }
