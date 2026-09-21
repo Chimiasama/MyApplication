@@ -134,7 +134,15 @@ data class ArmaNatural(
     val nome: String,
     val dano: String,
     val pa: Int = 0,
-    // Se Artista Marcial/Brigão aumenta o tipo de dado desta arma (regra do
-    // livro: só armas de "impacto" tipo garras escalam, mordida não).
-    val escalavel: Boolean = false
-)
+    // Id do traço/Vantagem que concedeu esta arma (ex.: "GARRAS_SEM_PA",
+    // "CHIFRES", "garras_demonio") — única fonte de verdade pra saber se ela
+    // escala com Artista Marcial/Brigão (regra do livro: só armas de
+    // "impacto" tipo garra escalam, mordida/chifre não — ver
+    // RacialTraitPointCatalog.armaNaturalEscalavel()). Nunca mais um
+    // booleano `escalavel` solto por raça/instância: sem esse campo pra
+    // setar, não tem como uma raça nova "errar" o valor — o traço que já
+    // concede a arma é quem decide, pelo próprio id.
+    val id: String? = null
+) {
+    val escalavel: Boolean get() = RacialTraitPointCatalog.armaNaturalEscalavel(id)
+}

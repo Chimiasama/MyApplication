@@ -180,14 +180,12 @@
           {
             "nome": "Mordida",
             "dano": "For+d6",
-            "pa": 2,
-            "escalavel": false
+            "pa": 2
           },
           {
             "nome": "Garras",
             "dano": "For+d6",
-            "pa": 2,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -370,8 +368,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },

@@ -383,7 +383,7 @@ object AncestryVariantRegistry {
                             TraitAddition("ARMADURA +2", "ARMADURA"),
                             TraitAddition("GARRAS", "GARRAS")
                         ),
-                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Garras", dano = "For+d4", pa = 2, escalavel = true)),
+                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Garras", dano = "For+d4", pa = 2, id = "GARRAS")),
                         naturalArmor = 2
                     )
                 ),

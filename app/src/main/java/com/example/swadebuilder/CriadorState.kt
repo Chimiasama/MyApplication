@@ -1196,7 +1196,7 @@ class CriadorState {
                             id = "GARRAS_SEM_PA",
                             category = "racial_trait_positive",
                             armasNaturais = listOf(
-                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, escalavel = true)
+                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, id = "GARRAS_SEM_PA")
                             )
                         )
                     )
@@ -2331,7 +2331,12 @@ class CriadorState {
         // palavra-chave, o dano/PA de cada arma já vem pronto de
         // ancestralidades.json.
         ancestralidadeObj.habilidades.forEach { hab ->
-            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
+            // ancestralidades.json não repete o id do traço dentro de cada
+            // ArmaNatural (ele já mora em `hab.id`) — sem esse fallback,
+            // ArmaNatural.escalavel (derivado do id, ver RacialTraitPointCatalog
+            // .armaNaturalEscalavel()) nunca acharia nada e toda arma natural de
+            // raça oficial cairia como não-escalável, mesmo Garras de verdade.
+            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma.copy(id = arma.id ?: hab.id)) }
         }
 
         // Arma de Sopro (Draconianos, livro Fantasia): "causa 2d6 de dano em um Modelo
@@ -2365,7 +2370,7 @@ class CriadorState {
         // Monstro Heroico (horror_monstros.json).
         getMonstroSelecionado()?.let { monstro ->
             monstro.habilidades.forEach { hab ->
-                hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
+                hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma.copy(id = arma.id ?: hab.id)) }
             }
         }
 

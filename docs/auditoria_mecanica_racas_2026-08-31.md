@@ -2198,3 +2198,57 @@ tabela diferente de Garra/Mordida); (34) auditoria completa do sistema de
 Variantes, listando toda raça que ainda usa exceção nomeada tipo a lista
 em `CriadorState.kt:807` (`!key.contains("UMVEE") && ... && key !=
 "ELEMENTAIS" && key != "DRAKENS"...`).
+
+## Vigésima nona rodada — `ArmaNatural.escalavel` deixa de ser booleano solto
+
+Revisão do dono do projeto na Rodada 28: "Garra escala com Artista
+Marcial/Brigão, Chifre não" estava certo como REGRA, mas errado como
+IMPLEMENTAÇÃO — `escalavel` era um campo `Boolean` livre, setado por
+instância em cada `armasNaturais[]` de `ancestralidades.json`/
+`horror_monstros.json` (28 + 3 ocorrências). Nada garantia que o valor
+batesse com o tipo real da arma — Centauros "Cascos" tinha
+`escalavel: true` vinculado à RAÇA, quando deveria vir do id `GARRAS_
+SEM_PA` (a mesma família de Garras de qualquer outra raça), exatamente
+como o dono do projeto apontou: "nada que vincule na raça... é o traço
+que tem que definir".
+
+Conferido antes de mexer: as 28+3 ocorrências já estavam 100%
+consistentes por id (`GARRAS*` sempre `true`, `CHIFRES*`/`MORDIDA*`/
+`CANINOS` sempre `false`) — não havia bug de dado hoje, só risco
+estrutural (nada impede uma raça nova errar o valor).
+
+Implementado:
+
+- **`ArmaNatural`** (`MonstroTemplate.kt`) perdeu o parâmetro `escalavel:
+  Boolean` do construtor — ganhou `id: String?` (o id do traço/Vantagem
+  que concedeu a arma) e `escalavel` virou uma `val` computada:
+  `get() = RacialTraitPointCatalog.armaNaturalEscalavel(id)`. Sem campo
+  pra setar, não tem como setar errado.
+- **`RacialTraitPointCatalog.armaNaturalEscalavel(id)`** (novo): única
+  fonte de verdade — família `GARRAS`/`GARRAS_SEM_PA`/`GARRAS_MAIORES`/
+  `GARRAS_MAIORES_SEM_PA` = escalável; qualquer outro id (ou `null`) =
+  não escalável.
+- **`ancestralidades.json`/`horror_monstros.json`**: removidas as 28+3
+  ocorrências de `"escalavel": true/false` de dentro de `armasNaturais[]`
+  (script Python com regex, validado por `json.loads()` antes/depois de
+  salvar — diff conferido linha a linha, só as linhas de `escalavel`
+  saíram). Como os objetos `armasNaturais[]` do JSON não repetem o id do
+  traço (ele mora só no objeto pai), `CriadorState.extrairArmasNaturais()`
+  ganhou um fallback nos dois pontos que leem `hab.armasNaturais`
+  (raça e Monstro Heroico): `arma.copy(id = arma.id ?: hab.id)`.
+- Os 3 `ArmaNatural(...)` construídos direto em Kotlin (Umvee "Ápice",
+  Insetoides "Padrão" via `AncestryVariantRegistry`, Insetoides "Vespa")
+  trocaram `escalavel = true/false` por `id = "GARRAS_SEM_PA"`/`"GARRAS"`/
+  nada (Ferrão não é família Garra, comportamento idêntico ao de antes).
+
+### Verificação
+
+5 testes novos: `armaNaturalEscalavel()` cobrindo Garra/Chifre/Mordida/
+null; Cascos do Centauro (id `GARRAS_SEM_PA`, sem nenhum booleano
+declarado na raça) escalam de For+d4 pra For+d6 com Artista Marcial;
+Chifres do Minotauro (id `CHIFRES_MAIORES`) permanecem For+d6 mesmo com
+Artista Marcial. Os 3 testes de `CriadorStateArmaDeSoproTest` (rodada
+anterior a esta, também passa por `extrairArmasNaturais()`) continuam
+passando sem nenhuma mudança — confirma que o fallback `hab.id` não
+quebrou a Arma de Sopro dos Draconianos. `scripts/phase6_reliability_gate
+.sh` passou. Os dois JSONs re-parseados com sucesso depois da edição.

@@ -318,8 +318,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -333,8 +332,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -404,8 +402,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -608,8 +605,7 @@
           {
             "nome": "Cascos",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -729,8 +725,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 2,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -744,8 +739,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1087,8 +1081,7 @@
           {
             "nome": "Chifres",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1186,8 +1179,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1364,8 +1356,7 @@
           {
             "nome": "Chifres",
             "dano": "For+d6",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1642,8 +1633,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 2,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -1657,8 +1647,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1798,8 +1787,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1813,8 +1801,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1855,8 +1842,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 2,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -1877,8 +1863,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1963,8 +1948,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2033,8 +2017,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2404,8 +2387,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -2419,8 +2401,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2490,8 +2471,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2749,8 +2729,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -2764,8 +2743,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2874,8 +2852,7 @@
           {
             "nome": "Cabeça Dura",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -3973,8 +3950,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -4322,8 +4298,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -5175,8 +5150,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -5190,8 +5164,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -5261,8 +5234,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },

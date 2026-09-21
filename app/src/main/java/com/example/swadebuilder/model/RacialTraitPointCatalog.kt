@@ -1020,4 +1020,19 @@ object RacialTraitPointCatalog {
     // raça, em vez da tag manual solta "arma_de_sopro".
     fun temArmaDeSopro(habilidades: List<RacialAbility>?): Boolean =
         habilidades?.any { it.resolvedTraitId().keyify() == "ARMA_DE_SOPRO" } ?: false
+
+    // Famílias de Arma Natural que escalam com Artista Marcial/Brigão (regra do livro:
+    // "dano por punhos/garras em mais um tipo de dado" só vale pra garras — mordida,
+    // chifre e cascos batem forte, mas não são a mesma categoria de golpe desarmado que
+    // essas Vantagens aprimoram). Única fonte de verdade — ver ArmaNatural.escalavel em
+    // MonstroTemplate.kt: o campo não é mais um booleano solto setável por raça, é sempre
+    // derivado do id do traço/Vantagem que concedeu a arma, então não tem como uma raça
+    // nova "errar" o valor (achado real: Centauros "Cascos" tinha o booleano true
+    // vinculado à raça, quando deveria vir do id GARRAS_SEM_PA como qualquer outra
+    // Garra — a raça em si não deveria carregar essa decisão).
+    private val ARMAS_NATURAIS_ESCALAVEIS: Set<String> = setOf(
+        "GARRAS", "GARRAS_SEM_PA", "GARRAS_MAIORES", "GARRAS_MAIORES_SEM_PA"
+    )
+
+    fun armaNaturalEscalavel(id: String?): Boolean = id?.keyify() in ARMAS_NATURAIS_ESCALAVEIS
 }
