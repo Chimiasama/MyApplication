@@ -157,6 +157,21 @@ class CriadorStateRacialTraitDrivenAttributesTest {
         assertTrue(state.temAdaptavel())
     }
 
+    // Nenhum teste existente cobria o ramo meioElfoAgil=true de verdade (só
+    // o Adaptável acima) — fechado agora que a troca Herança/Ágil passou a
+    // ler de AncestryVariantRegistry.meioElfoHeranca() em vez de ser
+    // construída na mão em applyAncestryVariantAdjustments.
+    @Test
+    fun `heranca concede Agilidade d6 quando meioElfoAgil esta ligado`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotWith(listOf(racaComTraco("MEIO-ELFOS", "HERANCA"))))
+        state.ancestralidade = "MEIO-ELFOS"
+        state.meioElfoAgil = true
+
+        assertEquals(6, state.atributoMinRaw("Agilidade"))
+        assertFalse(state.temAdaptavel())
+    }
+
     @Test
     fun `meio-elfo pathfinder com flexibilidade (sem heranca) nao deve ser tratado como adaptavel`() {
         // Antes desse fix, ancestralidade.contains("MEIO-ELFO") por si só já

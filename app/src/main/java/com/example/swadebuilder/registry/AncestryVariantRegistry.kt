@@ -53,7 +53,12 @@ object AncestryVariantRegistry {
         robos(),
         seresSinteticos(),
         descendenteElemental(),
-        humanoFantasia()
+        humanoFantasia(),
+        meioElfoHeranca("BASICO"),
+        meioElfoHeranca("FANTASIA"),
+        meioElfoHeranca("HORROR"),
+        meioElfoHeranca("SUPER"),
+        meioDemonio()
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -1060,6 +1065,91 @@ object AncestryVariantRegistry {
                                     )
                                 )
                             )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Meio-Elfo (Básico/Fantasia/Horror/Super): Seleção de pacote fixo
+    // (Herança Élfica x Herança Humana), mesmo formato de Terracota — a
+    // raça carrega o traço "HERANCA" como placeholder (custo 2, igual às
+    // duas opções abaixo, então o valor de livro da raça não muda seja qual
+    // for a escolha), e cada opção troca esse placeholder pelo traço
+    // resolvido de verdade. As 4 entradas (uma por livro) compartilham o
+    // mesmo conteúdo através desta função — evita duplicar o pacote 4 vezes
+    // e o risco de as cópias saírem do sincronismo. Meio-Elfo do Pathfinder
+    // fica de fora de propósito: tem "Flexibilidade" (atributo livre à
+    // escolha) em vez de "Herança", raça mecanicamente diferente que só
+    // compartilha o nome de exibição.
+    private fun meioElfoHeranca(livro: String): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MEIO-ELFOS",
+        livro = livro,
+        selecoes = listOf(
+            SelectionDef(
+                id = "meio_elfo_heranca",
+                rotulo = "Escolha a Herança",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        id = "agil",
+                        nome = "Herança Élfica (Agilidade d6)",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("HERANCA"),
+                            tracosParaAdicionar = listOf(TraitAddition("Ágil", "AGIL"))
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "adaptavel",
+                        nome = "Herança Humana (Adaptável)",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("HERANCA"),
+                            tracosParaAdicionar = listOf(TraitAddition("Adaptável", "ADAPTAVEL"))
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Meio-Demônio (Cidade do Sol a Vapor): mesmo formato do Meio-Elfo
+    // acima, só que o placeholder é "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_
+    // DEMONIO" (custo 2, igual Adaptável — ver RacialTraitPointCatalog) e as
+    // opções são Adaptável x Antecedente Arcano (Demônio) diluído
+    // (aa_demonio_meio_demonio — mesmo id de vantagem já usado em
+    // ResolveAncestrySpecificAdjustmentsUseCase, não um clone novo).
+    private fun meioDemonio(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MEIO-DEMONIO",
+        livro = "CIDADE_SOL_VAPOR",
+        selecoes = listOf(
+            SelectionDef(
+                id = "meio_demonio_traco",
+                rotulo = "Escolha o Traço Racial",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        id = "adaptavel",
+                        nome = "Adaptável",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"),
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Adaptável", "ADAPTAVEL")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "antecedente_arcano",
+                        nome = "Antecedente Arcano (Demônio)",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"),
+                            vantagensGratisParaAdicionar = listOf(
+                                TraitAddition(
+                                    "Antecedente Arcano (Demônio)",
+                                    "ANTECEDENTE_ARCANO_DEMONIO_MEIO"
+                                )
+                            ),
+                            vantagensGratisIds = listOf("aa_demonio_meio_demonio")
                         )
                     )
                 )

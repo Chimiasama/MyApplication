@@ -1057,29 +1057,33 @@ class CriadorState {
         // Escolha por id do traço "HERANCA" (Básico/Fantasia/Horror/Super Meio-Elfos),
         // não por nome de raça — o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO"
         // no nome, mas tem "Flexibilidade" em vez de Herança, então nunca entra aqui.
+        // Lido de AncestryVariantRegistry.meioElfoHeranca() (mesmo padrão de
+        // Terracota/Umvee/Elementais) em vez de construir os traços na mão —
+        // as 4 entradas do registro (uma por livro) compartilham o mesmo
+        // pacote, então não tem como as opções saírem de sincronismo entre
+        // Básico/Fantasia/Horror/Super.
         if (base.habilidades.any { it.id?.keyify() == "HERANCA" }) {
+            val herancaAnswer = com.example.swadebuilder.model.SelectionAnswer(
+                selectionId = "meio_elfo_heranca",
+                fixedPackageChoiceId = if (meioElfoAgil) "agil" else "adaptavel"
+            )
+            val resolved = resolveAncestryVariantPackageUseCase.resolve(
+                ancestralidadeId = "MEIO-ELFOS",
+                livro = canonicalOriginKey(base.origem),
+                variantOptionId = null,
+                selectionAnswers = listOf(herancaAnswer)
+            )
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
-
-            if (meioElfoAgil) {
-                if (newHabilidades.none { it.id == "AGIL" }) {
+            resolved.tracosParaAdicionar.forEach { traco ->
+                if (newHabilidades.none { it.id == traco.id }) {
                     newHabilidades.add(
                         com.example.swadebuilder.model.RacialAbility(
-                            nome = "Ágil",
-                            descricao = "Meio-elfos ágeis começam com d6 em Agilidade em vez de d4. Isso aumenta a Agilidade máxima para d12+1.",
-                            id = "AGIL",
-                            category = "racial_trait_positive"
-                        )
-                    )
-                }
-            } else {
-                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Adaptável",
-                            descricao = "Meio-elfos adaptáveis começam com uma Vantagem de Estágio Novato à sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
-                            id = "ADAPTAVEL",
-                            category = "racial_trait_positive"
+                            nome = traco.nome,
+                            descricao = "",
+                            id = traco.id,
+                            category = "racial_trait_positive",
+                            vezes = traco.vezes
                         )
                     )
                 }

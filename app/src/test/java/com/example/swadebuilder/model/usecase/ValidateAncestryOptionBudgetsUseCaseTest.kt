@@ -10,6 +10,7 @@ import com.example.swadebuilder.model.SelectionType
 import com.example.swadebuilder.model.TraitAddition
 import com.example.swadebuilder.model.VariantGroup
 import com.example.swadebuilder.model.VariantOption
+import com.example.swadebuilder.registry.AncestryVariantRegistry
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -161,5 +162,56 @@ class ValidateAncestryOptionBudgetsUseCaseTest {
         val results = useCase.execute(base, config)
 
         assertTrue(results.isEmpty())
+    }
+
+    // Conteúdo real do registro (não sintético) — confere que
+    // AncestryVariantRegistry.meioElfoHeranca() está calibrado certo contra
+    // o mesmo pacote base que ancestralidades.json carrega pro Meio-Elfo do
+    // Básico (Forasteiro Menor -1, Herança 2, Visão no Escuro 1 = 2, o
+    // padrão de livro).
+    @Test
+    fun `meio-elfo real fecha nas duas opcoes de heranca`() {
+        val base = RacialModifier(
+            nome = "MEIO-ELFOS",
+            habilidades = listOf(
+                RacialAbility(nome = "Forasteiro", descricao = "", id = "FORASTEIRO", severity = "Menor"),
+                RacialAbility(nome = "Herança", descricao = "", id = "HERANCA"),
+                RacialAbility(nome = "Visão no Escuro", descricao = "", id = "VISAO_NO_ESCURO")
+            ),
+            origem = "BASICO"
+        )
+        val config = AncestryVariantRegistry.get("MEIO-ELFOS", "BASICO")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == 2 })
+    }
+
+    // Idem pro Meio-Demônio (Cidade do Sol a Vapor): raça base só com o
+    // marcador ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO (2 pts, orçamento
+    // padrão de livro) — as duas opções (Adaptável/Antecedente Arcano)
+    // custam o mesmo (GRANTED_EDGE = 2), então nenhuma desbalanceia a raça.
+    @Test
+    fun `meio-demonio real fecha nas duas opcoes de traco racial`() {
+        val base = RacialModifier(
+            nome = "MEIO-DEMONIO",
+            habilidades = listOf(
+                RacialAbility(
+                    nome = "Adaptável",
+                    descricao = "",
+                    id = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"
+                )
+            ),
+            origem = "CIDADE_SOL_VAPOR"
+        )
+        val config = AncestryVariantRegistry.get("MEIO-DEMONIO", "CIDADE_SOL_VAPOR")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == 2 })
     }
 }

@@ -2816,3 +2816,59 @@ Itens mais antigos do backlog (migração de Atributo/Perícia Aumentada
 genérico, unificação Monstro Heroico/Tropo, robustecer o despacho por
 `(id, livro)` em vez de substring de nome) continuam registrados nas
 rodadas anteriores, sem prioridade nesta.
+
+### Peça 2 (parcial): Meio-Elfo migrado pro registro; Meio-Demônio só cadastrado
+
+Cadastrado `AncestryVariantRegistry.meioElfoHeranca(livro)` (4 entradas,
+uma por livro — Básico/Fantasia/Horror/Super — todas geradas pela mesma
+função, pra não deixar as cópias saírem de sincronismo) e
+`AncestryVariantRegistry.meioDemonio()` (Cidade do Sol a Vapor).
+Conferido contra `ancestralidades.json`: as 4 entradas de Meio-Elfo têm
+`habilidades[]` idênticas (Forasteiro Menor -1, Herança 2, Visão no
+Escuro 1 = 2, o orçamento padrão), então uma função só realmente serve
+às quatro sem perder nada.
+
+`CriadorState.applyAncestryVariantAdjustments()` migrado de verdade pro
+Meio-Elfo: em vez de construir "Ágil"/"Adaptável" na mão, agora chama
+`resolveAncestryVariantPackageUseCase.resolve()` com a resposta de
+Seleção (`meio_elfo_heranca` → `agil` ou `adaptavel`), mesmo padrão já
+usado por Terracota/Umvee/Elementais.
+
+**Meio-Demônio ficou só cadastrado no registro, sem migrar a
+aplicação** — decisão deliberada, não esquecimento. Investigando a
+fundo descobri que o Antecedente Arcano dele é concedido de verdade por
+um caminho diferente de todo o resto: `ApplyAncestryChangeCoordinatorUseCase`
+lê `resolvedVantagensGratis()` direto de `habilidades[]` (o traço com
+`traitId=GRANTED_EDGE` + `targetRef="aa_demonio_meio_demonio"`) pra
+alimentar `ancestryGrantedAdvantages` — não existe nenhum bloco pra
+Meio-Demônio em `ResolveAncestrySpecificAdjustmentsUseCase` (confirmado
+por grep), então esse é o ÚNICO ponto que concede a Vantagem de
+verdade. O laço genérico que já uso pra outras raças
+(`vantagensGratisParaAdicionar` → `addIfAbsent(traco, "racial_edge")`)
+não seta `targetRef`, só `id` — usar ele aqui trocaria silenciosamente
+o alvo da concessão de "aa_demonio_meio_demonio" (o id real da
+Vantagem) pra "ANTECEDENTE_ARCANO_DEMONIO_MEIO" (o id do traço, que não
+existe no catálogo de Vantagens), quebrando a concessão real sem
+nenhum teste acusar na hora — só na prática, com o jogador vendo a
+Vantagem não aparecer. Preferi manter a construção manual, já correta
+e coberta pelos 5 testes de `CriadorStateMeioDemonioTest`, e deixar só
+o cadastro no registro (que já serve o validador) — migrar a aplicação
+de verdade exigiria primeiro resolver esse descompasso entre
+`vantagensGratisParaAdicionar`/`vantagensGratisIds` e o par
+id+targetRef que `resolvedVantagensGratis()` espera, o que é maior que
+o escopo desta rodada.
+
+### Verificação
+
+- Novo teste (`CriadorStateRacialTraitDrivenAttributesTest`): nenhum
+  teste existente cobria de verdade o ramo `meioElfoAgil=true` — só o
+  `false`/Adaptável. Fechado agora, confirmando Agilidade d6 pela
+  leitura do registro.
+- 2 novos testes em `ValidateAncestryOptionBudgetsUseCaseTest` usando o
+  conteúdo REAL do registro (não sintético) pra Meio-Elfo e
+  Meio-Demônio — confirmam que as duas opções de cada um fecham contra
+  o orçamento padrão (2), pegando de quebra que
+  `ANTECEDENTE_ARCANO_DEMONIO_MEIO` já tinha custo cadastrado (2) desde
+  a rodada anterior.
+- Suite completa rodada no harness (24 arquivos, 170 testes) — todos
+  passando. `scripts/phase6_reliability_gate.sh` passou.
