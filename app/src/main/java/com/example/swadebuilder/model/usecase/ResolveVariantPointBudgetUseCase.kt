@@ -91,7 +91,10 @@ class ResolveVariantPointBudgetUseCase {
         // já usa (ver RacialCaracteristicasResolver). Sem id reconhecido, cai no
         // nome cru do livro, que é como esses ~200 traços já vinham antes deste
         // catálogo existir.
-        private fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem {
+        // internal (não private): reaproveitado por ValidateAncestryOptionBudgetsUseCase
+        // pra achar o custo de itens removidos por uma opção de Seleção/Variante,
+        // mesma lógica de custo que o editor de Variante custom já usa.
+        internal fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem {
             val id = habilidade.id?.let { it.ifBlank { null } }
             val efeito = RacialTraitPointCatalog.efeitoDe(id)
             val vezes = habilidade.vezes.coerceAtLeast(1)
