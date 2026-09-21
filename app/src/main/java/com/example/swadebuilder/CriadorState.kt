@@ -921,10 +921,58 @@ class CriadorState {
      * currentAncestryDef — passa a refletir a Variante automaticamente, sem precisar tocar em
      * ResolveAncestrySpecificAdjustmentsUseCase.
      */
+    /**
+     * Id da opção de Seleção ATIVA agora nesta raça (ex.: "boi"/"nenhum" pro
+     * Signo, "voto"/"obrigacao" pro Terracota), ou `null` se a raça não tem
+     * Seleção do tipo FIXED_PACKAGE nenhuma. Usado só por
+     * [applyCustomAncestryVariantIfSelected] pra decidir se uma Variante
+     * Customizada escopada a uma opção específica (`CustomAncestryVariant
+     * .opcaoAlvoId`) se aplica agora — ver Peça 4 do plano em
+     * docs/auditoria_mecanica_racas_2026-08-31.md.
+     *
+     * `base` aqui já é o RacialModifier RESOLVIDO (depois de
+     * `applyAncestryVariantAdjustments`) — pra raças cujo marcador
+     * desaparece depois de resolvido (Herança, Meio-Demônio — ao contrário
+     * do Signo, que mantém `SIGNOS_DE_NASCENCA` visível de propósito), não
+     * dá pra detectar "esta raça tem essa Seleção" olhando `base.habilidades`
+     * de novo. Por isso as 3 raças com campo de estado próprio (não
+     * compartilhado via `AncestryVariantRegistry`) são despachadas por
+     * nome aqui — não é o mesmo tipo de hardcode que o resto da auditoria
+     * eliminou (não decide COMPORTAMENTO mecânico por nome, só qual campo
+     * de estado ler pra montar um id de UI). As demais (Terracota, Umvee,
+     * Elementais e qualquer outra Seleção FIXED_PACKAGE cadastrada) casam
+     * o texto de `resolveSciFiVariantSelectionFor` contra os nomes das
+     * opções do registro, sem nome de raça nenhum.
+     */
+    private fun currentSelectionOptionId(base: RacialModifier): String? {
+        val key = base.nome.keyify()
+        val origemKey = canonicalOriginKey(base.origem)
+        return when {
+            key == "MEIO-ELFOS" -> if (meioElfoAgil) "agil" else "adaptavel"
+            key == "HUMANOS" && origemKey == "ARTE_DA_GUERRA" ->
+                signoIdFromNome(signoAdgSelecionado)?.lowercase() ?: "nenhum"
+            key == "MEIO-DEMONIO" -> if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
+            else -> {
+                val config = AncestryVariantRegistry.get(key, origemKey) ?: return null
+                val fixedPackageDef = config.selecoes
+                    .firstOrNull { it.tipo == com.example.swadebuilder.model.SelectionType.FIXED_PACKAGE }
+                    ?: return null
+                val opcaoTexto = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return null
+                fixedPackageDef.pacotesFixos?.firstOrNull { it.nome.equals(opcaoTexto, ignoreCase = true) }?.id
+            }
+        }
+    }
+
     private fun applyCustomAncestryVariantIfSelected(base: RacialModifier): RacialModifier {
         val variantId = customVarianteRacialSelecionadaId ?: return base
         val variant = listaVariantesRaciaisCustom.firstOrNull { it.id == variantId } ?: return base
         if (variant.ancestralidadeId != base.nome.keyify()) return base
+        // Escopada a uma opção específica (Peça 4): só se aplica quando a
+        // opção ativa agora bate com a que a Variante sobrescreve — as
+        // demais opções da mesma raça continuam 100% oficiais. `null` (não
+        // escopada) preserva o comportamento de sempre: aplica em cima da
+        // raça toda, qualquer que seja a opção ativa.
+        if (variant.opcaoAlvoId != null && variant.opcaoAlvoId != currentSelectionOptionId(base)) return base
 
         val tracosRemovidosKeys = variant.tracosRemovidosIds.map { it.keyify() }.toSet()
         val newHabilidades = base.habilidades.filterNot { hab ->

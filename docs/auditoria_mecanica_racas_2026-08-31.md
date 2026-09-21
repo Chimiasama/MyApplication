@@ -3203,3 +3203,76 @@ teste específico nunca tinha sido copiado pro harness `/tmp/ktbig`) —
 corrigido e a suíte completa (25 arquivos + este, 200 testes) rodou de
 novo, incluindo este teste especificamente contra o JSON real, sem
 falhas.
+
+## Trigésima quinta rodada — Peça 4: Variante Customizada escopada a uma opção de Seleção
+
+Última peça do plano original (ver rodada 33, "Ordem de execução",
+item 4): até aqui, uma Variante Customizada de raça
+(`CustomAncestryVariant`) só sabia sobrescrever a raça INTEIRA — não
+tinha como o mestre criar uma Variante que muda só o Signo Dragão do
+Humano Arte da Guerra, mantendo os outros 13 oficiais. Implementado
+exatamente como desenhado na rodada 33: campo opcional "id da opção
+que ela sobrescreve"; vazio = comportamento de sempre (raça inteira);
+preenchido = só se aplica quando a opção ativa bate com esse id.
+
+### Modelo e mecanismo
+
+`CustomAncestryVariant.opcaoAlvoId: String? = null` (NOVO) — o id de
+uma `FixedPackageOption` de `AncestryVariantRegistry` (ex.: `"dragao"`,
+`"voto"`). `CriadorState.currentSelectionOptionId(base)` (NOVO,
+privado): responde "qual é o id da opção ATIVA agora nesta raça" —
+Meio-Elfo/Signo/Meio-Demônio (campo de estado próprio, não
+compartilhado via registro) despachados por nome aqui, único lugar
+desta rodada onde isso acontece — não decide comportamento MECÂNICO
+por nome (isso continua proibido), só qual campo ler pra montar um id
+de UI; as demais raças com Seleção `FIXED_PACKAGE` (Terracota, Umvee,
+Elementais, e qualquer outra cadastrada no futuro) resolvidas
+genericamente casando o texto de `resolveSciFiVariantSelectionFor`
+contra os nomes das opções do registro, sem nome de raça nenhum.
+`applyCustomAncestryVariantIfSelected()` ganhou um gate de uma linha:
+`if (variant.opcaoAlvoId != null && variant.opcaoAlvoId != currentSelectionOptionId(base)) return base`
+— a Variante simplesmente não se aplica quando a opção ativa não bate,
+sem precisar o jogador desmarcá-la ao trocar de opção.
+
+### UI (`SettingsDialog.kt`, criação da Variante)
+
+Quando a raça base escolhida tem uma Seleção `FIXED_PACKAGE`
+cadastrada, aparece um seletor "Escopo desta Variante:" (Toda a raça,
+ou uma das opções nomeadas). Escopada a uma opção, a lista "Remover da
+raça base" passa a incluir os traços da PRÓPRIA opção (ex.: "Espírito
+d6 (Dragão)"), não só os da raça estática — sem isso não dava pra
+sobrescrever nada que a opção concede, só a raça base como um todo
+(que pro Humano Arte da Guerra é só o marcador `SIGNOS_DE_NASCENCA`,
+0 pontos). O orçamento de pontos da Variante também passa a partir do
+saldo RESOLVIDO da opção (reaproveitando
+`ValidateAncestryOptionBudgetsUseCase`, o mesmo cálculo que já valida
+cada opção isolada — ver Peça 1), não do total plano da raça base:
+pro Dragão isso são 3 pontos de partida, não 0. `AncestralidadesSection.kt`
+ganhou um aviso ("Escopo: só se aplica quando 'Dragão' estiver
+ativo.") sob o seletor de Variante Custom, pra o mestre não se
+surpreender ao trocar de Signo e ver a Variante "sumir" sem
+desmarcá-la.
+
+### Verificação
+
+- Novo `CriadorStateCustomVariantScopedOptionTest` (4 testes): Variante
+  escopada ao Dragão aplica quando Dragão está ativo; NÃO aplica
+  quando outro Signo (Boi) está ativo, e a opção Boi continua 100%
+  oficial (Força d6 do signo, sem interferência); uma Variante SEM
+  escopo (`opcaoAlvoId=null`) continua aplicando pra qualquer opção,
+  igual sempre foi (regressão coberta); trocar de Dragão pra outro
+  Signo desativa a Variante escopada automaticamente, sem precisar
+  desmarcá-la.
+- `SettingsDialog.kt`/`AncestralidadesSection.kt` não entram no
+  harness local (dependem de Compose/Material3 real, que o harness
+  puro-JVM não tem) — revisadas manualmente linha a linha (imports,
+  tipos, balanceamento de chaves) em vez de compiladas; o mecanismo em
+  si (`CriadorState`/modelo), que É testável, tem cobertura completa.
+- Suite completa (27 arquivos, 204 testes) e
+  `scripts/phase6_reliability_gate.sh` passando (mesmo WARN
+  pré-existente de tamanho de `CriadorState.kt`, sem regressão nova).
+
+Com isso, as 4 peças do plano original da rodada 33 estão completas.
+Pendente, não pedido em nenhuma rodada: migrar Meio-Demônio pro
+`resolveMarkedSelection` genérico (tecnicamente seguro desde a rodada
+34, nunca pedido).

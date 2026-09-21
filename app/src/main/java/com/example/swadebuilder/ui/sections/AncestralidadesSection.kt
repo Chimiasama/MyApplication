@@ -917,6 +917,29 @@ fun AncestralidadesSection(
                                         }
                                     }
 
+                                    // Peça 4: Variante escopada a uma opção específica (ex.: só o
+                                    // Signo Dragão) — só se aplica de verdade quando essa opção
+                                    // estiver ativa (ver CriadorState.currentSelectionOptionId());
+                                    // hint pro mestre não se surpreender ao trocar de opção e ver a
+                                    // Variante "sumir" sem precisar desmarcá-la.
+                                    val opcaoAlvoNome = selectedCustomVariant?.opcaoAlvoId?.let { alvoId ->
+                                        val itemLivro = item.origens.firstOrNull() ?: "BASICO"
+                                        AncestryVariantRegistry.get(item.nome.keyify(), itemLivro)
+                                            ?.selecoes
+                                            ?.firstOrNull { it.tipo == SelectionType.FIXED_PACKAGE }
+                                            ?.pacotesFixos
+                                            ?.firstOrNull { it.id == alvoId }
+                                            ?.nome
+                                    }
+                                    if (opcaoAlvoNome != null) {
+                                        Spacer(Modifier.height(2.dp))
+                                        Text(
+                                            text = "Escopo: só se aplica quando \"$opcaoAlvoNome\" estiver ativo.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.tertiary
+                                        )
+                                    }
+
                                     if (selectedCustomVariant != null && selectedCustomVariant.descricao.isNotBlank()) {
                                         Spacer(Modifier.height(4.dp))
                                         Text(

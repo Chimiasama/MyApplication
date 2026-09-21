@@ -33,7 +33,19 @@ data class CustomAncestryVariant(
     /** Complicações (complicacoes.json) adicionadas, com a severidade escolhida quando a Complicação permite Menor ou Maior. */
     val complicacoesAdicionadas: List<CustomVariantComplicacaoEscolhida> = emptyList(),
     /** Quando true, ignora a exigência de fechar exato em ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO. */
-    val semLimiteDePontos: Boolean = false
+    val semLimiteDePontos: Boolean = false,
+    /**
+     * Escopa esta Variante a UMA opção específica de Seleção da raça base
+     * (ex.: só o Signo Dragão do Humano Arte da Guerra, id "dragao"; ou só
+     * o Voto do Terracota, id "voto") — o id de uma `FixedPackageOption` de
+     * `AncestryVariantRegistry`. `null` (padrão) preserva o comportamento
+     * de sempre: aplica em cima da raça inteira, qualquer que seja a opção
+     * ativa. Preenchido: só se aplica quando a opção ativa agora bate com
+     * este id (ver `CriadorState.currentSelectionOptionId()`); as demais
+     * opções da mesma raça continuam 100% oficiais, sem essa Variante
+     * interferir nelas.
+     */
+    val opcaoAlvoId: String? = null
 )
 
 @Serializable

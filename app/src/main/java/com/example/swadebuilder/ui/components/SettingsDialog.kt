@@ -793,6 +793,10 @@ fun CustomContentManageDialog(
                         var showVarianteComplicacaoPickDialog by remember { mutableStateOf(false) }
                         var varianteComplicacaoComoMaiorEscolhido by remember { mutableStateOf(false) }
                         var varianteSemLimite by remember { mutableStateOf(false) }
+                        // Peça 4 (ver docs/auditoria_mecanica_racas_2026-08-31.md): escopa a
+                        // Variante a uma opção de Seleção específica da raça base (ex.: só o
+                        // Signo Dragão) — null = raça inteira, como sempre.
+                        var varianteOpcaoAlvoId by remember { mutableStateOf<String?>(null) }
 
                         val baseRacialCatalog: List<com.example.swadebuilder.model.HabilidadeCriacao> = remember {
                             runCatching {
@@ -1750,9 +1754,90 @@ fun CustomContentManageDialog(
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
                                                     } else {
-                                                        val habilidadeItems = remember(varianteBaseRaca) {
-                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
+                                                        // Peça 4: se a raça base tem uma Seleção de pacote fixo
+                                                        // cadastrada (ex.: os 14 Signos do Humano Arte da Guerra,
+                                                        // Voto/Obrigação do Terracota), deixa escopar esta Variante a
+                                                        // UMA opção específica em vez da raça inteira — as demais
+                                                        // opções continuam 100% oficiais mesmo com a Variante ativa.
+                                                        val opcoesDeSelecao = remember(varianteBaseRaca) {
+                                                            com.example.swadebuilder.registry.AncestryVariantRegistry
+                                                                .get(varianteBaseRaca.nome.keyify(), canonicalOriginKey(varianteBaseRaca.origem))
+                                                                ?.selecoes
+                                                                ?.firstOrNull { it.tipo == com.example.swadebuilder.model.SelectionType.FIXED_PACKAGE }
+                                                                ?.pacotesFixos
+                                                                .orEmpty()
+                                                        }
+                                                        val escopoAtual = opcoesDeSelecao.firstOrNull { it.id == varianteOpcaoAlvoId }
+
+                                                        if (opcoesDeSelecao.isNotEmpty()) {
+                                                            var showEscopoDialog by remember { mutableStateOf(false) }
+                                                            Text("Escopo desta Variante:", style = MaterialTheme.typography.labelMedium)
+                                                            OutlinedButton(
+                                                                onClick = { showEscopoDialog = true },
+                                                                modifier = Modifier.fillMaxWidth()
+                                                            ) {
+                                                                Text(escopoAtual?.nome ?: "Toda a raça (padrão)")
+                                                            }
+                                                            Text(
+                                                                text = if (escopoAtual != null) {
+                                                                    "Só se aplica quando \"${escopoAtual.nome}\" estiver ativo — as outras opções continuam oficiais."
+                                                                } else {
+                                                                    "Aplica em cima da raça inteira, qualquer que seja a opção ativa."
+                                                                },
+                                                                style = MaterialTheme.typography.bodySmall,
+                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                            )
+                                                            if (showEscopoDialog) {
+                                                                AlertDialog(
+                                                                    onDismissRequest = { showEscopoDialog = false },
+                                                                    title = { Text("Escopo da Variante") },
+                                                                    text = {
+                                                                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                                                    varianteOpcaoAlvoId = null
+                                                                                    showEscopoDialog = false
+                                                                                }.padding(vertical = 6.dp),
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Text("Toda a raça (padrão)", style = MaterialTheme.typography.bodyMedium)
+                                                                            }
+                                                                            opcoesDeSelecao.forEach { opcao ->
+                                                                                Row(
+                                                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                                                        varianteOpcaoAlvoId = opcao.id
+                                                                                        showEscopoDialog = false
+                                                                                    }.padding(vertical = 6.dp),
+                                                                                    verticalAlignment = Alignment.CenterVertically
+                                                                                ) {
+                                                                                    Text(opcao.nome, style = MaterialTheme.typography.bodyMedium)
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    confirmButton = {
+                                                                        TextButton(onClick = { showEscopoDialog = false }) { Text("Fechar") }
+                                                                    }
+                                                                )
+                                                            }
+                                                            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                                                        }
+
+                                                        // Escopada a uma opção: os traços REMOVÍVEIS incluem os da
+                                                        // própria opção (ex.: Espírito d6 do Dragão), não só os da
+                                                        // raça base estática — sem isso não dava pra sobrescrever
+                                                        // nada que a opção concede, só a raça base como um todo.
+                                                        val habilidadeItems = remember(varianteBaseRaca, escopoAtual) {
+                                                            val baseItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
                                                                 .filter { it.habilidadeId != null }
+                                                            val opcaoItems = escopoAtual?.pacote?.tracosParaAdicionar.orEmpty().map { traco ->
+                                                                com.example.swadebuilder.model.usecase.VariantBudgetItem(
+                                                                    label = com.example.swadebuilder.model.RacialTraitPointCatalog.LABEL[traco.id.keyify()] ?: traco.nome,
+                                                                    custo = com.example.swadebuilder.model.RacialTraitPointCatalog.custoDe(traco.id, pontos = traco.pontos),
+                                                                    habilidadeId = traco.id
+                                                                )
+                                                            }
+                                                            (baseItems + opcaoItems).distinctBy { it.habilidadeId }
                                                         }
 
                                                         val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
@@ -1773,8 +1858,23 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
 
-                                                        val valorBaseRaca = remember(varianteBaseRaca) {
-                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca)
+                                                        // Escopada a uma opção: o orçamento de partida é o saldo
+                                                        // RESOLVIDO dessa opção (ex.: os 3 pontos do Dragão, não os
+                                                        // 0 do marcador estático SIGNOS_DE_NASCENCA na raça base) —
+                                                        // mesmo cálculo que ValidateAncestryOptionBudgetsUseCase já
+                                                        // usa pra validar cada opção isolada.
+                                                        val valorBaseRaca = remember(varianteBaseRaca, escopoAtual) {
+                                                            val viaOpcao = escopoAtual?.let {
+                                                                com.example.swadebuilder.registry.AncestryVariantRegistry
+                                                                    .get(varianteBaseRaca.nome.keyify(), canonicalOriginKey(varianteBaseRaca.origem))
+                                                                    ?.let { config ->
+                                                                        com.example.swadebuilder.model.usecase.ValidateAncestryOptionBudgetsUseCase()
+                                                                            .execute(varianteBaseRaca, config)
+                                                                            .firstOrNull { resultado -> resultado.optionId == escopoAtual.id }
+                                                                    }
+                                                            }
+                                                            viaOpcao?.saldo
+                                                                ?: com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca)
                                                         }
                                                         val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
@@ -2433,7 +2533,8 @@ fun CustomContentManageDialog(
                                                                 tracosAdicionados = varianteTracosAdicionados,
                                                                 vantagensAdicionadasIds = varianteVantagensAdicionadas,
                                                                 complicacoesAdicionadas = varianteComplicacoesAdicionadas,
-                                                                semLimiteDePontos = varianteSemLimite
+                                                                semLimiteDePontos = varianteSemLimite,
+                                                                opcaoAlvoId = varianteOpcaoAlvoId
                                                             )
                                                             tags.forEach { tag -> customStorageManager.addVarianteRacial(context, tag, newVariant) }
                                                             state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom + newVariant
@@ -2444,6 +2545,7 @@ fun CustomContentManageDialog(
                                                             varianteVantagensAdicionadas = emptyList()
                                                             varianteComplicacoesAdicionadas = emptyList()
                                                             varianteSemLimite = false
+                                                            varianteOpcaoAlvoId = null
                                                         }
                                                     }
                                                 }
@@ -2965,6 +3067,7 @@ fun CustomContentManageDialog(
                                                 modifier = Modifier.fillMaxWidth().clickable {
                                                     varianteBaseRacaId = raca.nome.keyify()
                                                     varianteTracosRemovidos = emptyList()
+                                                    varianteOpcaoAlvoId = null
                                                     showVarianteBaseRacaDialog = false
                                                 }.padding(vertical = 6.dp),
                                                 verticalAlignment = Alignment.CenterVertically
