@@ -3,7 +3,7 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
