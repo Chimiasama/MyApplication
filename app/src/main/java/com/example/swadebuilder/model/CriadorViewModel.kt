@@ -222,6 +222,7 @@ class CriadorViewModel(
             compendioCidadeSolVaporAtivo = false,
             compendioWiseguysAtivo = false,
             modoMonstroAtivo = false,
+            modoTroposHabilitadoManualmente = false,
             usarEspecializacoesDePericia = false,
             grandesResponsabilidades = false,
             regraMultiplosIdiomas = false,
@@ -247,6 +248,7 @@ class CriadorViewModel(
         val currentCompendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
         val currentCompendioWiseguysAtivo = state.compendioWiseguysAtivo
         val currentModoMonstroAtivo = state.modoMonstroAtivo
+        val currentModoTroposHabilitadoManualmente = state.modoTroposHabilitadoManualmente
         val currentUsarEspecializacoesDePericia = state.usarEspecializacoesDePericia
         val currentGrandesResponsabilidades = state.grandesResponsabilidades
         val currentRegraMultiplosIdiomas = state.regraMultiplosIdiomas
@@ -272,6 +274,7 @@ class CriadorViewModel(
             compendioCidadeSolVaporAtivo = currentCompendioCidadeSolVaporAtivo,
             compendioWiseguysAtivo = currentCompendioWiseguysAtivo,
             modoMonstroAtivo = currentModoMonstroAtivo,
+            modoTroposHabilitadoManualmente = currentModoTroposHabilitadoManualmente,
             usarEspecializacoesDePericia = currentUsarEspecializacoesDePericia,
             grandesResponsabilidades = currentGrandesResponsabilidades,
             regraMultiplosIdiomas = currentRegraMultiplosIdiomas,
@@ -391,6 +394,7 @@ class CriadorViewModel(
             compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
             compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
             modoMonstroAtivo = flags.modoMonstroAtivo,
+            modoTroposHabilitadoManualmente = flags.modoTroposHabilitadoManualmente,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades,
             optRegraFama = flags.optRegraFama,
@@ -432,6 +436,7 @@ class CriadorViewModel(
         compendioCidadeSolVaporAtivo: Boolean = false,
         compendioWiseguysAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
+        modoTroposHabilitadoManualmente: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
         regraMultiplosIdiomas: Boolean = false,
@@ -462,6 +467,8 @@ class CriadorViewModel(
         state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) state.listaMonstroTemplates.firstOrNull()?.id else null
+        state.modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente
+        state.tropoEscolhasFeitas.clear()
         state.grandesResponsabilidades = grandesResponsabilidades
         state.soldadoCargaAtivo = true
         state.regraMultiplosIdiomas = regraMultiplosIdiomas

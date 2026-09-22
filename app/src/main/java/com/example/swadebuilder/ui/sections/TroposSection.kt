@@ -99,7 +99,10 @@ fun TroposSection(
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
-    if (!state.compendioArteDaGuerraAtivo) return
+    // Livros com o sistema de Tropo ligado manualmente (ver CriadorState.modoTroposAtivo)
+    // também usam esta seção — não é mais exclusiva do Arte da Guerra (só ele obriga a
+    // escolha de um Tropo; os demais o oferecem como regra opcional, ver TelaInicial).
+    if (!state.modoTroposAtivo) return
 
     val tropos = remember(listaTropos) { listaTropos }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo

@@ -7872,6 +7872,7 @@ class CriadorState {
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
+                modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
                 grandesResponsabilidades = grandesResponsabilidades,
                 nasceUmHeroi = nasceUmHeroi,
@@ -7947,6 +7948,7 @@ class CriadorState {
                 ciberneticosInstalados = ciberneticosInstalados.toList(),
                 coracaoCrystalId = coracaoCrystalSelecionado?.id,
                 tropoSelecionadoId = tropoSelecionado?.id,
+                tropoEscolhasFeitas = tropoEscolhasFeitas.toMap(),
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
                 retratoFileName = portraitFileName,
@@ -8070,6 +8072,7 @@ class CriadorState {
         isNpcExibicao = flags.isNpcExibicao
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
+        modoTroposHabilitadoManualmente = flags.modoTroposHabilitadoManualmente
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
         grandesResponsabilidades = flags.grandesResponsabilidades
 
@@ -8362,6 +8365,10 @@ class CriadorState {
 
         tropoSelecionado = snapshot.selecoes.tropoSelecionadoId?.let { id ->
             listaTropos.firstOrNull { it.id == id }
+        }
+        tropoEscolhasFeitas.apply {
+            clear()
+            putAll(snapshot.selecoes.tropoEscolhasFeitas)
         }
         vantagensAutomaticasDoTropo.apply {
             clear()

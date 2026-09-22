@@ -846,7 +846,8 @@ class MainActivity : ComponentActivity() {
                                                 nasceUmHeroi, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
-                                                optRegraMechas, optRegraCiberneticos, optVariantesDeRaca ->
+                                                optRegraMechas, optRegraCiberneticos, optVariantesDeRaca,
+                                                modoTroposHabilitadoManualmente ->
 
                                     creationSession++
 
@@ -866,6 +867,7 @@ class MainActivity : ComponentActivity() {
                                         compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
+                                        modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         regraMultiplosIdiomas = multiplosIdiomas,
                                         optRegraFama = optRegraFama,

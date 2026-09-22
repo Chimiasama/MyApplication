@@ -45,6 +45,10 @@ data class SnapshotFlags(
     val modoOficialAtivo: Boolean = false,
     val modoMonstroAtivo: Boolean,
     val tipoMonstroSelecionado: String?,
+    // Checkbox "usar sistema de Tropos" pra livros que não sejam Arte da Guerra (que já é
+    // sempre obrigatório — ver CriadorState.modoTroposAtivo). Default false pra saves salvos
+    // antes desse campo existir.
+    val modoTroposHabilitadoManualmente: Boolean = false,
     val usarEspecializacoesDePericia: Boolean,
     val grandesResponsabilidades: Boolean,
     val nasceUmHeroi: Boolean,
@@ -141,6 +145,10 @@ data class SnapshotSelecoes(
     val equipamentosComprados: List<EquipamentoItem> = emptyList(),
     val coracaoCrystalId: String? = null,
     val tropoSelecionadoId: String? = null,
+    // TropoEscolha.id -> opção escolhida (ex.: Kensai "qual arma"). Default vazio pra saves
+    // salvos antes do sistema de TropoEscolha existir — CriadorState.tropoEscolhaAtual já
+    // cai pro `padrao` da escolha quando não tem entrada aqui.
+    val tropoEscolhasFeitas: Map<String, String> = emptyMap(),
     val vantagensTropoAutomaticas: List<String> = emptyList(),
     val tecnicasIniciaisTropo: Int = 0,
     val retratoFileName: String? = null,
