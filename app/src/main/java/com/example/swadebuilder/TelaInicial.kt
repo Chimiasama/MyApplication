@@ -87,7 +87,6 @@ fun TelaInicial(
         compendioArteDaGuerraAtivo: Boolean,
         compendioCidadeSolVaporAtivo: Boolean,
         compendioWiseguysAtivo: Boolean,
-        modoMonstroAtivo: Boolean,
         nasceUmHeroi: Boolean,
         especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
@@ -125,7 +124,6 @@ fun TelaInicial(
 
     // Horror
     var optCompendioHorror by rememberSaveable { mutableStateOf(false) }
-    var optModoMonstro by rememberSaveable { mutableStateOf(false) }
 
     // Fantasy
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
@@ -133,9 +131,10 @@ fun TelaInicial(
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
-    // Checkbox "usar sistema de Tropos" pra livros que não sejam Arte da Guerra (sempre
-    // obrigatório lá) nem Horror (já tem o próprio "Monstros Heróis" — ver optModoMonstro,
-    // ainda não unificado com este toggle) — ver CriadorState.modoTroposAtivo.
+    // Checkbox "usar sistema de Tropos" pra qualquer livro que não seja Arte da Guerra
+    // (sempre obrigatório lá) — ver CriadorState.modoTroposAtivo. Pra Horror, é a MESMA
+    // checkbox que antes era "Monstros Heróis" (Monstro Heroico virou Tropo — rodada 44),
+    // só com rótulo contextual (ver o SimpleCheckRow mais abaixo).
     var optModoTropos by rememberSaveable { mutableStateOf(false) }
     var optRegraFama by rememberSaveable { mutableStateOf(false) }
     var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
@@ -173,7 +172,6 @@ fun TelaInicial(
         optMaisPontosPericias = true
         optNasceUmHeroi = false
         optGrandesResponsabilidades = false
-        optModoMonstro = false
         optModoTropos = false
         optRegraFama = false
         optRegraRiqueza = false
@@ -196,7 +194,6 @@ fun TelaInicial(
         optRegraMechas = preset.defaultRegraMechas
         optRegraCiberneticos = preset.defaultRegraCiberneticos
         optGrandesResponsabilidades = preset.defaultGrandesResponsabilidades
-        optModoMonstro = preset.defaultModoMonstro
     }
 
     fun getActiveBookPresetId(): String {
@@ -417,7 +414,6 @@ fun TelaInicial(
                 optCompendioArteDaGuerra,
                 optCompendioCidadeSolVapor,
                 optCompendioWiseguys,
-                optModoMonstro,
                 optNasceUmHeroi,
                 optEspecializacaoPer,
                 optSemPontosPoder,
@@ -744,23 +740,18 @@ fun TelaInicial(
                             )
                         }
 
-                        if (optCompendioHorror) {
+                        // Arte da Guerra já obriga o sistema de Tropo (fica de fora daqui).
+                        // Monstro Heroico (Horror) virou um Tropo de verdade (rodada 44) — a
+                        // antiga checkbox dedicada "Monstros Heróis" é a MESMA checkbox de
+                        // qualquer outro livro, só com rótulo contextual.
+                        if (!optCompendioArteDaGuerra) {
                             SimpleCheckRow(
-                                title = "Monstros Heróis",
-                                description = "Jogar como vampiro, lobisomem, etc.",
-                                checked = optModoMonstro,
-                                onCheckedChange = { optModoMonstro = it }
-                            )
-                        }
-
-                        // Arte da Guerra já obriga o sistema de Tropo (fica de fora daqui);
-                        // Horror tem o próprio "Monstros Heróis" acima (ainda não unificado
-                        // com este toggle) — sobra oferecer o sistema como regra opcional
-                        // pros demais livros, pra criar Tropos próprios do cenário.
-                        if (!optCompendioArteDaGuerra && !optCompendioHorror) {
-                            SimpleCheckRow(
-                                title = "Usar sistema de Tropos",
-                                description = "Habilita a aba de Tropos (arquétipos opcionais do personagem).",
+                                title = if (optCompendioHorror) "Monstros Heróis" else "Usar sistema de Tropos",
+                                description = if (optCompendioHorror) {
+                                    "Jogar como vampiro, lobisomem, etc."
+                                } else {
+                                    "Habilita a aba de Tropos (arquétipos opcionais do personagem)."
+                                },
                                 checked = optModoTropos,
                                 onCheckedChange = { optModoTropos = it }
                             )

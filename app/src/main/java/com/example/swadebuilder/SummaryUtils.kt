@@ -4,13 +4,13 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
-import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitEffect
 import com.example.swadebuilder.model.RacialTraitPointCatalog
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.keyify
@@ -310,11 +310,23 @@ fun buildAncestralidadeDisplay(
 // SHARED SUMMARY BUILDER (Used by ResumoSection.kt)
 // =================================================================================================
 
+/**
+ * Nome do Tropo selecionado, pronto pra exibição, ou string vazia se nenhum — cobre tanto
+ * Tropo de Arte da Guerra quanto Monstro Heroico (Horror, virou Tropo — rodada 44), com
+ * rótulo contextual conforme `Tropo.categoria` (mesmo padrão que "Coração: X" já usa nos
+ * mesmos três lugares: Resumo em tela, resumo em texto e cabeçalho do PDF).
+ */
+fun tropoDisplaySuffix(personagem: MeuPersonagem, listaTropos: List<Tropo>): String {
+    val tropo = listaTropos.firstOrNull { it.id == personagem.tropoSelecionadoId } ?: return ""
+    val label = if (tropo.categoria == "MONSTRO") "Monstro" else "Tropo"
+    return " ($label: ${tropo.nome})"
+}
+
 fun buildSummaryLines(
     personagem: MeuPersonagem,
     allAdvantages: List<Vantagem>,
     listaAncestralidades: List<RacialModifier>,
-    listaMonstros: List<MonstroTemplate>,
+    listaTropos: List<Tropo>,
     listaComplicacoes: List<Complicacao>,
     listaAtributos: List<String>,
     mapaAtributosDisplay: Map<String, String>,
@@ -382,10 +394,7 @@ fun buildSummaryLines(
         .trim()
         .toFancyTitleCase()
 
-    val monstroNome = if (personagem.modoMonstroAtivo) {
-        val tipoNome = listaMonstros.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
-        " (Monstro: $tipoNome)"
-    } else ""
+    val monstroNome = tropoDisplaySuffix(personagem, listaTropos)
 
     fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
         val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }

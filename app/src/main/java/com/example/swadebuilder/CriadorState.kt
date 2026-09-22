@@ -577,8 +577,6 @@ class CriadorState {
     var modoOficialAtivo by mutableStateOf(false)
     var modoLivre by mutableStateOf(false)
     var isNpcExibicao by mutableStateOf(false)
-    var modoMonstroAtivo by mutableStateOf(false)
-    var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si (ex.:
@@ -667,64 +665,29 @@ class CriadorState {
         return keys
     }
 
-    fun getMonstroSelecionado(): MonstroTemplate? {
-        if (!modoMonstroAtivo || tipoMonstroSelecionado == null) return null
-        return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }
-    }
-
-    fun aplicarTipoMonstro(novoId: String?): List<String> {
-        val feedback = mutableListOf<String>()
-
-        val monstroAnterior = getMonstroSelecionado()
-        tipoMonstroSelecionado = novoId
-        val monstroNovo = getMonstroSelecionado()
-
-        if (modoMonstroAtivo) {
-            // Vantagens grátis do Template de Monstro Heroico (ex.: Monstro de
-            // Retalhos possui Furioso e Resistência Arcana de graça — não é
-            // escolha do jogador, é o template quem concede, via traço
-            // vinculado em habilidades[] — traitId=GRANTED_EDGE/category=
-            // racial_edge, mesmo padrão de Ancestralidade). Usa o mesmo
-            // mecanismo (vantagensRaciais) que uma Ancestralidade usa pros
-            // próprios grants automáticos, só que a fonte aqui é o monstro.
-            val grantsAnteriores = monstroAnterior?.resolvedVantagensGratis().orEmpty()
-            val grantsNovos = monstroNovo?.resolvedVantagensGratis().orEmpty()
-            val novasKeys = grantsNovos.map { it.keyify() }
-            grantsAnteriores
-                .filterNot { it.keyify() in novasKeys }
-                .forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
-            grantsNovos.forEach { grant ->
-                if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
-                    vantagensRaciais.add(grant)
-                }
+    /**
+     * Remove automaticamente Vantagens travadas a um Tropo específico
+     * (`requisitos.templatesRequired`, ex.: MONSTRUOSAS do Horror — generaliza pra qualquer
+     * categoria, não só MONSTRUOSAS, ver rodada 44) que não batem mais com o Tropo recém
+     * selecionado (ou nenhum). Chamada de dentro de `selecionarTropo()` — antes disso era
+     * lógica exclusiva de `aplicarTipoMonstro()` (apagada: Monstro Heroico virou Tropo de
+     * verdade), agora genérica sobre `tropoSelecionado?.id` em vez de `tipoMonstroSelecionado`.
+     */
+    private fun removerVantagensIncompativeisComTropo(novoTropo: Tropo?, feedbackMessages: MutableList<String>) {
+        val novoTropoIdKey = novoTropo?.id?.keyify()
+        vantagensSelecionadas
+            .filter { it.requisitos.templatesRequired.isNotEmpty() }
+            .filter { v ->
+                val required = v.requisitos.templatesRequired.map { it.keyify() }
+                novoTropoIdKey == null || novoTropoIdKey !in required
             }
-
-            val selectedTemplateKey = novoId?.keyify()
-            val toRemove = vantagensSelecionadas
-                .filter { it.categoria == Categoria.MONSTRUOSAS }
-                .filter { it.requisitos.templatesRequired.isNotEmpty() }
-                .filter { v ->
-                    val required = v.requisitos.templatesRequired.map { it.keyify() }
-                    selectedTemplateKey == null || selectedTemplateKey !in required
-                }
-                .toList()
-
-            toRemove.forEach { vantagem ->
+            .toList()
+            .forEach { vantagem ->
                 var refundMessage: String? = null
                 venderVantagem(vantagem) { msg -> refundMessage = msg }
                 val suffix = refundMessage?.let { " $it" } ?: ""
-                feedback.add("Vantagem '${vantagem.nome}' removida automaticamente por incompatibilidade com o tipo de monstro selecionado.$suffix")
+                feedbackMessages.add("Vantagem '${vantagem.nome}' removida automaticamente por incompatibilidade com o Tropo selecionado.$suffix")
             }
-        }
-
-        recalcularPontosAtributo(feedback)
-        rebuildAllPericiaStacks(feedback)
-
-        if (feedback.isNotEmpty()) {
-            anotacoes += "\n• " + feedback.joinToString("\n• ")
-        }
-
-        return feedback
     }
 
     /**
@@ -1801,17 +1764,21 @@ class CriadorState {
     }
 
     fun isAttributeFreeForMonster(attr: String): Boolean {
-        if (!modoMonstroAtivo) return false
+        // Monstro Heroico virou Tropo (categoria="MONSTRO", ver rodada 44) — deriva do
+        // Tropo selecionado em vez de tipoMonstroSelecionado/MonstroTemplate.atributosBonus
+        // direto. Antes: lista fixa (Agilidade/Força/Vigor) que só batia com os templates
+        // Lobisomem/Monstro de Retalhos/Múmia/Vampiro. Anjo, Demônio, Fantasma e Revivido
+        // bonificam Espírito (ou nem tocam os 3 atributos da lista), e ficavam sem o
+        // benefício — ou ganhavam à toa em atributos que o template escolhido nem
+        // bonifica. Agora deriva de habilidadesDoTropoResolvidas (ATTRIBUTE_BOOST real).
+        if (tropoSelecionado?.categoria != "MONSTRO") return false
         val key = attr.keyify()
-        // Antes: lista fixa (Agilidade/Força/Vigor) que só batia com os templates
-        // Lobisomem/Monstro de Retalhos/Múmia/Vampiro. Anjo, Demônio, Fantasma e
-        // Revivido bonificam Espírito (ou nem tocam os 3 atributos da lista), e
-        // ficavam sem o benefício — ou ganhavam à toa em atributos que o
-        // template escolhido nem bonifica. Agora deriva do template selecionado.
         val validAttrKeys = setOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         if (key !in validAttrKeys) return false
-        val monstro = getMonstroSelecionado() ?: return false
-        return monstro.atributosBonus.keys.any { it.keyify() == key }
+        return habilidadesDoTropoResolvidas.any { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == key
+        }
     }
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
@@ -2735,12 +2702,11 @@ class CriadorState {
             )
         }
 
-        // Monster Natural Weapons: mesma leitura estruturada, pro Template de
-        // Monstro Heroico (horror_monstros.json).
-        getMonstroSelecionado()?.let { monstro ->
-            monstro.habilidades.forEach { hab ->
-                hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma.copy(id = arma.id ?: hab.id)) }
-            }
+        // Tropo Natural Weapons: mesma leitura estruturada — cobre tanto Arte da Guerra
+        // quanto Monstro Heroico (Horror, virou Tropo — ver rodada 44), já que os dois usam
+        // o mesmo formato RacialAbility.armasNaturais em habilidades[].
+        habilidadesDoTropoResolvidas.forEach { hab ->
+            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma.copy(id = arma.id ?: hab.id)) }
         }
 
         // Variant Natural Weapons: armas que só existem numa Variante
@@ -3859,18 +3825,17 @@ class CriadorState {
             }
         }
 
-        // Template de Monstro Heroico (Horror): mesma leitura genérica de
-        // atributos_bonus que o atributo usa (ver monstroAtributoTraitIds), só
-        // que aqui o único caso real é "Fe" — a perícia Fé, id "FE" no mesmo
-        // RacialTraitPointCatalog (RacialTraitEffect.PericiaStep). Passos segue
-        // a mesma convenção do resto do app: cada passo é um tipo de dado acima
-        // de d4 (1 passo = d6, 2 passos = d8...).
-        getMonstroSelecionado()?.let { monstro ->
-            val bonusEntry = monstro.atributosBonus.entries.firstOrNull {
-                it.key.keyify() == perKey
-            }
-            if (bonusEntry != null) {
-                modifiedBase = maxOf(modifiedBase, 4 + 2 * bonusEntry.value)
+        // Monstro Heroico (Horror, virou Tropo — ver rodada 44): mesma leitura genérica de
+        // habilidadesDoTropoResolvidas que o atributo usa logo abaixo, só que aqui o único
+        // caso real é "Fé" (paraTropo() converte pra SKILL_BOOST/targetRef="Fé"). Fica ANTES
+        // do corte de pisoSemTropo — não é bônus relativo de Tropo tipo Arte da Guerra, é
+        // traço inerente da criatura (igual raça), que PODE esticar o teto da perícia.
+        if (tropoSelecionado?.categoria == "MONSTRO") {
+            habilidadesDoTropoResolvidas.forEach { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
+                    modifiedBase = maxOf(modifiedBase, 4 + efeito.passos * 2)
+                }
             }
         }
 
@@ -5690,7 +5655,6 @@ class CriadorState {
             valoresAtributos = valoresAtributos.mapValues { it.value.intValue },
             pericias = periciasComIdiomas(),
             rawTotalPericia = { rawTotal(it) },
-            tipoMonstroSelecionado = tipoMonstroSelecionado,
             cartaSelvagem = cartaSelvagem,
             complicacoesSelecionadas = complicacoesSelecionadas.toMap(),
             // "Uma vez por Estágio" sem acumular Estágios pulados: compara só o que já foi
@@ -5772,30 +5736,6 @@ class CriadorState {
         }
     }
 
-    /**
-     * Traduz `MonstroTemplate.atributosBonus` (mapa "atributo -> passos", ex.:
-     * Anjo tem Força:2/Vigor:2) para ids já existentes em
-     * `RacialTraitPointCatalog.EFEITOS` — os mesmos que uma Ancestralidade real
-     * usaria para o mesmo efeito (ex.: Força +2 é "MUITO_FORTE", o id que
-     * qualquer raça com Força +2 também usaria). Isso evita reimplementar o
-     * cálculo de "quantos passos de dado" num segundo lugar: o Monstro apenas
-     * contribui com ids pro mesmo catálogo que a raça já usa.
-     *
-     * A entrada "Fe" (perícia Fé, não atributo) fica de fora — é tratada em
-     * periciaStartRawInternal, que também usa o id "FE" do mesmo catálogo.
-     */
-    private fun monstroAtributoTraitIds(monstro: MonstroTemplate): Set<String> =
-        monstro.atributosBonus.mapNotNull { (atributo, passos) ->
-            when (atributo.keyify()) {
-                "FORCA" -> if (passos >= 2) "MUITO_FORTE" else "FORTE"
-                "VIGOR" -> if (passos >= 2) "MUITO_RESISTENTE" else "RESISTENTE"
-                "AGILIDADE" -> if (passos >= 2) "MUITO_AGIL" else "AGIL"
-                "ESPIRITO" -> "ESPIRITUAL"
-                "ASTUCIA" -> "ASTUCIA"
-                else -> null
-            }
-        }.toSet()
-
     private fun atributoBaseRacial(a: String, includeTropo: Boolean = true): Int {
         // Piso racial vem só de habilidades[] (ATTRIBUTE_BOOST/AtributoStep, ver
         // loop abaixo) — RacialModifier não carrega mais um mapa `atributos`
@@ -5813,15 +5753,10 @@ class CriadorState {
         // habilidades[] da raça (já com os ajustes de variante aplicados por
         // applyAncestryVariantAdjustments/getAncestralidadeDef) em vez de comparar
         // o nome da raça — assim o bônus segue o traço, não o rótulo da raça.
-        //
-        // O Template de Monstro Heroico (Horror) entra no MESMO conjunto de ids —
-        // não é raça nem variante de raça, é uma camada adicional que se soma à
-        // ancestralidade escolhida (ver monstroAtributoTraitIds). Assim o loop
-        // abaixo nem precisa saber que "monstro" existe: só vê ids de traço.
-        val habilidadeIds = (currentAncestryDef?.habilidades
+        val habilidadeIds = currentAncestryDef?.habilidades
             ?.mapNotNull { it.id?.keyify() }
             ?.toSet()
-            ?: emptySet()) + (getMonstroSelecionado()?.let { monstroAtributoTraitIds(it) } ?: emptySet())
+            ?: emptySet()
 
         // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
         // está presente): o traço só precisa estar na raça, quem diz QUAL
@@ -5841,6 +5776,22 @@ class CriadorState {
             val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
                 modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
+            }
+        }
+
+        // Monstro Heroico (Horror, virou Tropo — ver rodada 44): não é raça nem variante de
+        // raça, é uma camada adicional que se soma à ancestralidade escolhida (ex.: Elfo +
+        // Vampiro) — paraTropo() já converte atributos_bonus em ATTRIBUTE_BOOST/targetRef=
+        // atributo/value=passos, mesma unidade que o loop de raça acima. Fica ANTES do corte
+        // de pisoSemTropo (categoria=="MONSTRO" só entra aqui, nunca no loop relativo de
+        // Tropo mais abaixo) — não é bônus relativo de Tropo tipo Arte da Guerra, é traço
+        // inerente da criatura que PODE esticar o teto do atributo, igual raça.
+        if (tropoSelecionado?.categoria == "MONSTRO") {
+            habilidadesDoTropoResolvidas.forEach { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                    modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
+                }
             }
         }
 
@@ -6526,9 +6477,9 @@ class CriadorState {
             if (!atendeTodasAsTags) return false
         }
 
-        // Template Monstruoso
+        // Vantagem travada a um Tropo específico (templatesRequired) — ver rodada 44.
         if (v.requisitos.templatesRequired.isNotEmpty()) {
-            val selected = tipoMonstroSelecionado
+            val selected = tropoSelecionado?.id
             if (selected == null || selected !in v.requisitos.templatesRequired) {
                 return false
             }
@@ -7356,6 +7307,7 @@ class CriadorState {
         }
 
         tropoSelecionado = novoTropo
+        removerVantagensIncompativeisComTropo(novoTropo, feedbackMessages)
 
         if (novoTropo != null) {
             novoTropo.ganhaAoComprar.forEach { vantId ->
@@ -7870,8 +7822,6 @@ class CriadorState {
                 optRegraFama = optRegraFama,
                 optVariantesDeRacaAtivo = optVariantesDeRacaAtivo,
                 modoOficialAtivo = modoOficialAtivo,
-                modoMonstroAtivo = modoMonstroAtivo,
-                tipoMonstroSelecionado = tipoMonstroSelecionado,
                 modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
                 grandesResponsabilidades = grandesResponsabilidades,
@@ -8071,7 +8021,6 @@ class CriadorState {
         modoLivre = flags.modoLivre
         isNpcExibicao = flags.isNpcExibicao
         modoOficialAtivo = flags.modoOficialAtivo
-        modoMonstroAtivo = flags.modoMonstroAtivo
         modoTroposHabilitadoManualmente = flags.modoTroposHabilitadoManualmente
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
         grandesResponsabilidades = flags.grandesResponsabilidades
@@ -8101,7 +8050,6 @@ class CriadorState {
         obesoBonusSize = flags.obesoBonusSize
         obesoMalusMov = flags.obesoMalusMov
         bonusPoderExtra = flags.bonusPoderExtra
-        tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
 
         // Restore sign automatic advantages logic

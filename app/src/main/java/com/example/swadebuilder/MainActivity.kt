@@ -407,7 +407,8 @@ class MainActivity : ComponentActivity() {
                                     request.especieId,
                                     request.ancestralidadeAtual,
                                     secoesIncluidas,
-                                    arcanoInfo = request.arcanoInfo
+                                    arcanoInfo = request.arcanoInfo,
+                                    listaTropos = request.tropos
                                 ) { msg ->
                                     scope.launch {
                                         snackHost.showSnackbar(msg)
@@ -842,7 +843,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo,
                                                 nasceUmHeroi, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
@@ -866,7 +867,6 @@ class MainActivity : ComponentActivity() {
                                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                                         compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                        modoMonstroAtivo = modoMonstroAtivo,
                                         modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         regraMultiplosIdiomas = multiplosIdiomas,
@@ -999,7 +999,8 @@ class MainActivity : ComponentActivity() {
                                                     especieId = state.currentAncestryDef?.especieId,
                                                     ancestralidadeAtual = state.currentAncestryDef,
                                                     availableSections = secoesPdfDisponiveis(personagem),
-                                                    arcanoInfo = criadorViewModel.gameDataStore.getArcanoInfoMap()
+                                                    arcanoInfo = criadorViewModel.gameDataStore.getArcanoInfoMap(),
+                                                    tropos = criadorViewModel.gameDataStore.getTropos()
                                                 )
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
@@ -1069,5 +1070,7 @@ private data class PdfExportRequest(
     // Ancestralidade já resolvida (state.currentAncestryDef) — ver produzirEExibirFichaPdf.
     val ancestralidadeAtual: com.example.swadebuilder.model.RacialModifier?,
     val availableSections: Set<FichaPdfSecao>,
-    val arcanoInfo: Map<String, Triple<Int, Int, String>>
+    val arcanoInfo: Map<String, Triple<Int, Int, String>>,
+    // Catálogo de Tropos — ver produzirEExibirFichaPdf.
+    val tropos: List<com.example.swadebuilder.model.Tropo> = emptyList()
 )

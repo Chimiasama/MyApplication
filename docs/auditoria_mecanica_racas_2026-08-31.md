@@ -4474,3 +4474,130 @@ corrigidos nesta rodada.** Recomendação pro usuário: essa fusão de seleção
 (ou um ambiente com Gradle/Android SDK funcional) antes/depois, já que
 toca save/load e PDF — dois caminhos que este ambiente não consegue
 verificar sozinho.
+
+## Quadragésima quinta rodada — fusão de seleção Monstro Heroico ↔ Tropo (o que a rodada 44 tinha deixado pendente)
+
+Pedido do usuário: "Replica o monstro herói no modelo tropo. Vamos refazer
+do zero ele mas usando tropos. Daí apaga o original... Não se preocupe com
+personagens salvos pois ainda estou desenvolvendo o app, isso não é um
+problema. Mas as coisas devem sim aparecer no pdf, etc." — remove
+explicitamente o bloqueio que fez a rodada 44 recuar (compatibilidade de
+save), então esta rodada termina a fusão de verdade.
+
+### Levantamento antes de mexer
+
+Antes de tocar em qualquer linha, mapeei os ~20 arquivos que liam
+`modoMonstroAtivo`/`tipoMonstroSelecionado`/`getMonstroSelecionado()`
+diretamente, e conferi caso a caso se `paraTropo()` (já pronta da rodada
+44) preserva o efeito de cada um:
+
+- **Bônus de atributo/perícia do Monstro Heroico (ex.: Vampiro Força+2/
+  Vigor+2) precisavam continuar esticando o TETO do atributo**, igual
+  raça — diferente do bônus de Tropo de Arte da Guerra, que nunca estica
+  o teto (regra da rodada 43, a pedido do usuário). Confirmado com
+  `atributoBaseRacial()`/`periciaStartRawInternal()`: o bônus de Monstro
+  precisava entrar ANTES do corte de `pisoSemTropo`, não no laço genérico
+  de Tropo que já existia (que entra DEPOIS, de propósito). Resolvido com
+  um bloco novo, condicionado a `tropoSelecionado?.categoria == "MONSTRO"`,
+  lido de `habilidadesDoTropoResolvidas` mas posicionado igual a um traço
+  de raça — `paraTropo()` já converte `atributos_bonus` pro mesmo
+  `ATTRIBUTE_BOOST`/`SKILL_BOOST` genérico, só precisava ler no lugar
+  certo.
+- **Risco real verificado, não hipotético**: o mecanismo antigo do
+  `ModifierEngine` tinha um fallback por NOME (não só por id) — qualquer
+  string em `sources`/`sourceKeys` que batesse com uma chave de
+  `RacialTraitPointCatalog.EFEITOS` contava. Rodei um script conferindo as
+  38 habilidades + todas as complicações dos 8 templates do
+  `horror_monstros.json` contra as 58 chaves de `EFEITOS`: só um match —
+  Múmia "Lento", que a rodada 44 já tinha vinculado explicitamente
+  (`traitId=PACE_CHANGE`). Confirmado: nenhum efeito mecânico real dependia
+  desse fallback por nome sem eu saber. Sem essa verificação eu teria
+  apagado o bloco às cegas.
+- **`Vantagem.requisitos.templatesRequired`** (o gate que restringe uma
+  Vantagem MONSTRUOSAS a um template específico) é checado em NADA MENOS
+  QUE 4 lugares independentes: `ContentVisibility.kt` (visibilidade da
+  categoria inteira), `VantagensSection.kt` (filtro por id específico,
+  Fase 6), `ValidateRequirementsUseCase.kt`/`RequirementValidator.kt`
+  (validação de compra na criação E no Progresso/XP) e um quarto, direto
+  dentro de `CriadorState.kt` (uma função de validação bespoke própria).
+  Todos os 4 trocaram `tipoMonstroSelecionado`/`getMonstroSelecionado()`
+  por `tropoSelecionado?.id`/`tropoSelecionado?.categoria == "MONSTRO"`.
+
+### O que foi apagado (o original, de verdade)
+
+`CriadorState.modoMonstroAtivo`/`tipoMonstroSelecionado`/
+`getMonstroSelecionado()`/`aplicarTipoMonstro()`, `TipoMonstroSection.kt`
+(arquivo inteiro), `MainSection.MONSTRO`, a checkbox dedicada "Monstros
+Heróis" em `TelaInicial.kt`, `MeuPersonagem.modoMonstroAtivo`/
+`tipoMonstroSelecionado`, `SnapshotFlags.modoMonstroAtivo`/
+`tipoMonstroSelecionado` (aproveitando a autorização do usuário — sem
+compatibilidade de save pra manter, os dois campos saíram limpo, não só
+"parou de escrever").
+
+### O que ficou no lugar
+
+- **`DataLoader.kt`**: `MonstroTemplate.paraTropo()` agora entra de
+  verdade no `listaTropos` carregado (`horrorTropos =
+  localListaMonstroTemplates.map { it.paraTropo() }`), junto dos Tropos de
+  Arte da Guerra/Crystal Heart — a mesma lista, o mesmo pool, sem
+  mecanismo separado.
+- **`CriadorState.selecionarTropo()`** passa a ser o ÚNICO caminho de
+  seleção — cobre ADG e Horror igual. Ganhou
+  `removerVantagensIncompativeisComTropo()` (generalização da poda que
+  `aplicarTipoMonstro()` fazia só pra MONSTRUOSAS: agora funciona pra
+  QUALQUER categoria com `templatesRequired`, a pedido original do
+  usuário de generalizar isso).
+- **`isAttributeFreeForMonster()`** (usado no fluxo de Progresso/XP pra
+  permitir subir um atributo que o Monstro bonifica sem gastar o "slot"
+  normal) agora deriva de `tropoSelecionado?.categoria == "MONSTRO"` +
+  `habilidadesDoTropoResolvidas`, não mais de `MonstroTemplate.atributosBonus`
+  direto.
+- **Armas naturais** (`extrairArmasNaturais()`): o bloco "Monster Natural
+  Weapons" virou "Tropo Natural Weapons", lendo
+  `habilidadesDoTropoResolvidas` — cobre Monstro E qualquer futuro Tropo
+  de Arte da Guerra com arma natural, sem duplicar o laço.
+- **Gate de visibilidade de Vantagem MONSTRUOSAS (Fase 6, finalmente)**:
+  `ContentVisibility.kt` agora checa `tropoSelecionado?.categoria ==
+  "MONSTRO"` (só aparece com um Tropo de Monstro de verdade selecionado,
+  não só o livro ativo — a reclamação original do usuário, lá no início
+  deste projeto); `VantagensSection.kt` generalizou o filtro por
+  `templatesRequired` pra qualquer categoria, não só MONSTRUOSAS.
+- **PDF/Resumo (pedido explícito do usuário)**: criei
+  `tropoDisplaySuffix()` (SummaryUtils.kt) — função única compartilhada
+  pelos 3 lugares que hoje mostram "Tipo de Monstro: X"/"Tropo: X"
+  (Resumo em tela, resumo em texto compartilhável, cabeçalho do PDF de
+  verdade). O cabeçalho do PDF (`ResumoPdfReferenciador.kt`) GANHOU essa
+  linha — antes o Monstro Heroico nunca aparecia no PDF gerado, só no
+  resumo dentro do app; achado real ao levantar onde `modoMonstroAtivo`
+  era lido, não pedido à parte. `listaTropos` foi encanado por
+  `produzirEExibirFichaPdf`/`gerarFichaEmPdf`/`drawHeader` (parâmetro novo,
+  default vazio, não quebra chamador antigo) e por `PdfExportRequest` em
+  `MainActivity.kt`.
+
+### Verificação
+
+Compilado e testado via o harness standalone de sempre — precisei somar
+`RequirementValidator.kt`/`CreationPreset.kt`/`CharacterRevisionManager.kt`
+(+ testes) ao harness (eram Kotlin puro, só não tinham entrado ainda).
+Achei e corrigi, só de COMPILAR (não hipotético): dois campos
+`tropoSelecionadoId` duplicados que eu mesmo introduzi por engano — em
+`ValidateSelectionUseCase.Context` e em `CriadorState.validationContext`
+já existia um `tropoSelecionadoId` de uma rodada anterior (ADG) que eu não
+tinha visto antes de "renomear" `tipoMonstroSelecionado` pro mesmo nome;
+o compilador pegou os dois na hora (`conflicting declarations`/`argument
+already passed`). Removido o duplicado, mantido o original. Reescrevi
+`CriadorStateMonsterFreeAttributeTest.kt` pra usar `selecionarTropo()` +
+`paraTropo()` em vez do mecanismo apagado. 295 testes, gate phase6 ok.
+
+### O que ficou de fora desta rodada, por escolha, não por bloqueio
+
+`TroposSection.kt`/`TelaInicial.kt`/`MainActivity.kt`/`UnifiedScreen.kt`/
+`VantagensSection.kt`/`ResumoSection.kt`/`ResumoPdfReferenciador.kt`/
+`ProgressosDialog.kt`/`SettingsDialog.kt` são Compose/Android — revisados
+linha por linha manualmente (inclusive contagem de parâmetros posicionais
+em todo `onCriarNovo`/destructuring lambda, ponto de risco real desde a
+rodada 44), mas não compilados de verdade neste ambiente (sem Gradle
+Android funcional). Fase 7 (criação customizada de Tropo em
+SettingsDialog) e o Modo Auditoria de Tropo continuam pendentes, sem
+relação direta com este pedido. `crystal_tropos.json` (achado obsoleto,
+Fase 8) e a rodada final de regressão completa também seguem para depois.

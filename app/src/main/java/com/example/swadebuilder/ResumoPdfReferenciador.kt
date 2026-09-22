@@ -28,6 +28,7 @@ import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.sections.asText
 import com.example.swadebuilder.ui.sections.pesoTextoComDiminuto
@@ -108,8 +109,6 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(this),
         armaduraForcaMinimaPorLocal = this.armaduraPorLocal().mapValues { it.value.forcaMinima },
         modoSupers = this.modoSupers,
-        modoMonstroAtivo = this.modoMonstroAtivo,
-        tipoMonstroSelecionado = this.tipoMonstroSelecionado,
         superPontosTotais = this.superPontosTotais,
         superPontosDisponiveis = this.superPontosDisponiveis,
         superNivelCampanha = this.superNivelCampanha,
@@ -212,6 +211,11 @@ suspend fun produzirEExibirFichaPdf(
     // usado só pra exibir a reserva total de PP no cabeçalho de cada Antecedente Arcano
     // (ver buildPoderesBlocks); default vazio não quebra chamadores antigos.
     arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap(),
+    // Catálogo de Tropos (GameDataStore.getTropos()) — só pra resolver o nome de exibição de
+    // `personagem.tropoSelecionadoId` no cabeçalho (ver drawHeader); cobre tanto Tropo de
+    // Arte da Guerra quanto Monstro Heroico (Horror, virou Tropo — rodada 44). Default vazio
+    // não quebra chamador antigo (cabeçalho só não mostra a linha de Tropo).
+    listaTropos: List<Tropo> = emptyList(),
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -248,7 +252,8 @@ suspend fun produzirEExibirFichaPdf(
                 especieId,
                 ancestralidadeAtual,
                 secoesIncluidas,
-                arcanoInfo = arcanoInfo
+                arcanoInfo = arcanoInfo,
+                listaTropos = listaTropos
             )
 
             val uri: Uri = FileProvider.getUriForFile(
@@ -933,7 +938,9 @@ fun gerarFichaEmPdf(
     // Ver produzirEExibirFichaPdf.
     ancestralidadeAtual: RacialModifier? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
-    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
+    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap(),
+    // Ver produzirEExibirFichaPdf.
+    listaTropos: List<Tropo> = emptyList()
 ) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -1073,7 +1080,7 @@ fun gerarFichaEmPdf(
             val headerRect = RectF(margin, margin, w - margin, margin + headerH)
             // Estatísticas derivadas (Aparar, Resistência, etc.) agora vão dentro do
             // próprio cabeçalho, no vão entre o nome e o retrato — ver drawHeader.
-            drawHeader(canvas, headerRect, personagem, theme, portrait, especieId)
+            drawHeader(canvas, headerRect, personagem, theme, portrait, especieId, listaTropos)
 
             // Atributos em uma faixa horizontal (em vez de empilhados na coluna
             // esquerda) — ocupa bem menos altura, sobrando espaço pro resto da página 1.
@@ -1504,7 +1511,7 @@ fun getPdfTheme(themeName: String): PdfTheme {
 }
 
 // Helpers reused from previous implementation
-fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?, especieId: String? = null) {
+fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?, especieId: String? = null, listaTropos: List<Tropo> = emptyList()) {
     // ... (Same logic as before)
     val paint = Paint().apply {
         color = theme.headerBackground
@@ -1633,7 +1640,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
 
     canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
     val ancestralidadeTitulo = buildAncestralidadeDisplay(p, especieId = especieId)
-    canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
+    val tropoSuffixTexto = tropoDisplaySuffix(p, listaTropos)
+    canvas.drawText("$ancestralidadeTitulo$tropoSuffixTexto - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
     if (p.coracaoCrystalSelecionado != null) {
         val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(p.coracaoCrystalSelecionado.nome) else p.coracaoCrystalSelecionado.nome

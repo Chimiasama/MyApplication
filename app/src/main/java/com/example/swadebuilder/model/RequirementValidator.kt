@@ -251,7 +251,7 @@ object RequirementValidator {
                     pericias = state.periciasComIdiomas(),
                     rawTotalPericia = { state.rawTotal(it) },
                     ancestralidadeDef = state.currentAncestryDef,
-                    tipoMonstroSelecionado = state.tipoMonstroSelecionado,
+                    tropoSelecionadoId = state.tropoSelecionado?.id,
                     cartaSelvagem = state.cartaSelvagem,
                     getBestPericia = { state.getBestPericia(it) }
                 )

@@ -27,7 +27,6 @@ class ValidateSelectionUseCaseTest {
             valoresAtributos = mapOf("FORCA" to 6, "AGILIDADE" to 6, "VIGOR" to 6, "ASTUCIA" to 6, "ESPIRITO" to 6),
             pericias = emptyList(),
             rawTotalPericia = { 0 },
-            tipoMonstroSelecionado = null,
             cartaSelvagem = true,
             complicacoesSelecionadas = emptyMap(),
             ppPurchasesThisRank = 0,

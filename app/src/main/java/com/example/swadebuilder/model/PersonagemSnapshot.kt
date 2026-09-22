@@ -43,8 +43,6 @@ data class SnapshotFlags(
     val optRegraFama: Boolean = false,
     val optVariantesDeRacaAtivo: Boolean = false,
     val modoOficialAtivo: Boolean = false,
-    val modoMonstroAtivo: Boolean,
-    val tipoMonstroSelecionado: String?,
     // Checkbox "usar sistema de Tropos" pra livros que não sejam Arte da Guerra (que já é
     // sempre obrigatório — ver CriadorState.modoTroposAtivo). Default false pra saves salvos
     // antes desse campo existir.

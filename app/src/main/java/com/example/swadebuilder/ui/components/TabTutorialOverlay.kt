@@ -32,11 +32,7 @@ private val tabTutorials: Map<MainSection, TabTutorialContent> = mapOf(
     ),
     MainSection.TROPOS to TabTutorialContent(
         title = "Aba Tropos",
-        body = "Selecione o Topo (estilo de combate) do personagem, usado pelas regras do compêndio Arte da Guerra."
-    ),
-    MainSection.MONSTRO to TabTutorialContent(
-        title = "Aba Monstro",
-        body = "Defina o tipo de monstro e os traços especiais dele, ao criar uma criatura em vez de um personagem comum."
+        body = "Selecione o Tropo (arquétipo) do personagem — obrigatório no Arte da Guerra, e também onde se escolhe o tipo de Monstro Heroico no Horror."
     ),
     MainSection.COMPLICACOES to TabTutorialContent(
         title = "Aba Complicações",

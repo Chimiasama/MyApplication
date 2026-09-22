@@ -1264,7 +1264,7 @@ fun CustomContentManageDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
-                                                    val availableAdvCategories = remember(state.listaVantagens, selectedBookTags, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoMonstroAtivo, state.modoSupers) {
+                                                    val availableAdvCategories = remember(state.listaVantagens, selectedBookTags, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoSupers) {
                                                         val baseCategories = mutableSetOf(
                                                             Categoria.ANTECEDENTE,
                                                             Categoria.COMBATE,
@@ -1287,7 +1287,7 @@ fun CustomContentManageDialog(
                                                         if ("DEADLANDS" in selectedBookTags || state.compendioDeadlandsAtivo) {
                                                             baseCategories.addAll(listOf(Categoria.ATORMENTADO, Categoria.ANCESTRALIDADE))
                                                         }
-                                                        if ("HORROR" in selectedBookTags || state.compendioHorrorAtivo || state.modoMonstroAtivo) {
+                                                        if ("HORROR" in selectedBookTags || state.compendioHorrorAtivo) {
                                                             baseCategories.add(Categoria.MONSTRUOSAS)
                                                         }
                                                         if (state.modoSupers) {

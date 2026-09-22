@@ -19,7 +19,6 @@ data class CreationPreset(
     val defaultRegraMechas: Boolean = false,
     val defaultRegraCiberneticos: Boolean = false,
     val defaultGrandesResponsabilidades: Boolean = false,
-    val defaultModoMonstro: Boolean = false,
     val defaultCompendioFantasia: Boolean = false,
     val defaultCompendioPathfinder: Boolean = false,
     val defaultCompendioDeadlands: Boolean = false,

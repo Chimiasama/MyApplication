@@ -206,7 +206,7 @@ fun ProgressosDialog(
             (spentHere + 1 - lastLegendaryAttrRaiseAt) >= legendaryProgressInterval
 
     val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
-            (remainingBaseAttrs > 0 || canRaiseLegendaryExtra || state.modoMonstroAtivo)
+            (remainingBaseAttrs > 0 || canRaiseLegendaryExtra || state.tropoSelecionado?.categoria == "MONSTRO")
     val needsMoreProgressForLegendaryAttr = isLendarioStage && remainingBaseAttrs <= 0 && !canRaiseLegendaryExtra
 
     // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────

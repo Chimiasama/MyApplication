@@ -99,29 +99,12 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
-            // Template de Monstro Heroico (Horror): NÃO é raça nem variante de
-            // raça — é uma camada de traços que se soma à ancestralidade
-            // escolhida (ex.: Elfo + Vampiro). Por isso entra aqui como mais uma
-            // fonte de nomes de traço, junto das da raça, em vez de qualquer
-            // caminho específico por "qual monstro é esse": os checks abaixo
-            // (hasMortoVivo, hasLentoRacial, hasVelocidadeRacial etc.) reagem à
-            // presença do traço, não à identidade do monstro ou da raça.
-            val monstro = state.getMonstroSelecionado()
-            val monstroSources = monstro?.let { m ->
-                m.habilidades.map { it.nome } +
-                    // Complicações do monstro vêm como frase completa
-                    // ("Lento: Movimentação reduzida em 1..."); só o rótulo
-                    // antes dos ":" interessa pros checks por nome/id.
-                    m.complicacoes.map { it.substringBefore(":").trim() }
-            } ?: emptyList()
-
             val rawSources =
                 anc.habilidades.map { it.nome } +
                     state.vantagensRaciais +
                     state.vantagensAutomaticas +
                     state.desvantagensRaciais +
-                    state.desvantagensAutomaticas +
-                    monstroSources
+                    state.desvantagensAutomaticas
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
                 val allTraitKeys = (
@@ -221,11 +204,11 @@ object ModifierEngine {
                 .forEach { hab ->
                     registrarCompra(hab.resolvedTraitId(), hab.vezes)
                 }
-            // Habilidades do Monstro Heroico não passam pela filtragem de
-            // variante de raça acima, então entram sem restrição.
-            // MonstroHabilidade não tem campo `vezes` (nenhum Template do
-            // Horror hoje concede um traço EMPILHÁVEL) — sempre 1 compra.
-            monstro?.habilidades?.forEach { registrarCompra(it.id, 1) }
+            // Monstro Heroico (Horror, virou Tropo — rodada 44) não entra mais aqui: seus
+            // traços (habilidades[] e complicações vinculadas) já são cobertos pelo laço
+            // genérico de habilidadesDoTropoResolvidas logo abaixo, com id real (verificado
+            // caso a caso na migração — nenhum traço de Monstro Heroico dependia de match por
+            // NOME contra este `sources`/`sourceKeys`, só o id explícito que já tinha).
             // Traços de Variante/Seleção (Centaux Gazela, Drakens/Mímicos/
             // Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) que chegam
             // como texto solto em vantagensRaciais/desvantagensRaciais (ver
@@ -378,13 +361,11 @@ object ModifierEngine {
             }
         }
 
-        // 4.5 Monster templates: Resistência (Morto-Vivo) e Passo (Velocidade,
-        // Lento) do Template de Monstro Heroico agora são resolvidos dentro do
-        // bloco "2. Ancestralidade" acima, pelos mesmos checks por nome/id de
-        // traço que a ancestralidade usa (hasMortoVivo, hasVelocidadeRacial,
-        // hasLentoRacial) — o monstro só entra como mais uma fonte de nomes em
-        // `sources`/`monstroSources`, não como um `if (monstro.id == ...)`
-        // separado por monstro.
+        // 4.5 Monster templates: Monstro Heroico virou Tropo (rodada 44) — Resistência
+        // (Morto-Vivo), Passo (Velocidade, Lento) etc. são resolvidos pelo mesmo laço
+        // genérico de habilidadesDoTropoResolvidas que Arte da Guerra usa (ver "Sistema de
+        // Tropo genérico" logo acima, dentro do bloco "2. Ancestralidade"), não mais por um
+        // caminho específico de Monstro Heroico.
 
         // 5. Powers / Other
         if (state.bonusResFromPower != 0) {

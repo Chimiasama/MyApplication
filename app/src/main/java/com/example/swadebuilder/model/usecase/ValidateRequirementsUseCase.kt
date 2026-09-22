@@ -15,7 +15,7 @@ class ValidateRequirementsUseCase {
         val pericias: List<Pericia>,
         val rawTotalPericia: (Pericia) -> Int,
         val ancestralidadeDef: RacialModifier?,
-        val tipoMonstroSelecionado: String?,
+        val tropoSelecionadoId: String?,
         val cartaSelvagem: Boolean,
         // Resolve o nome de um requisito para a "melhor" perícia equivalente do personagem
         // (ex.: em Arte da Guerra, um requisito de "Lutar nível X" deve poder ser satisfeito
@@ -101,9 +101,9 @@ class ValidateRequirementsUseCase {
             if (!atendeTodasAsTags) return false
         }
 
-        // 13c) Template Monstruoso
+        // 13c) Vantagem travada a um Tropo específico (ex.: MONSTRUOSAS do Horror — ver rodada 44)
         if (v.requisitos.templatesRequired.isNotEmpty()) {
-            val selected = input.tipoMonstroSelecionado
+            val selected = input.tropoSelecionadoId
             if (selected == null || selected !in v.requisitos.templatesRequired) {
                 return false
             }

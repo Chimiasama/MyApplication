@@ -221,7 +221,6 @@ class CriadorViewModel(
             compendioArteDaGuerraAtivo = false,
             compendioCidadeSolVaporAtivo = false,
             compendioWiseguysAtivo = false,
-            modoMonstroAtivo = false,
             modoTroposHabilitadoManualmente = false,
             usarEspecializacoesDePericia = false,
             grandesResponsabilidades = false,
@@ -247,7 +246,6 @@ class CriadorViewModel(
         val currentCompendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
         val currentCompendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
         val currentCompendioWiseguysAtivo = state.compendioWiseguysAtivo
-        val currentModoMonstroAtivo = state.modoMonstroAtivo
         val currentModoTroposHabilitadoManualmente = state.modoTroposHabilitadoManualmente
         val currentUsarEspecializacoesDePericia = state.usarEspecializacoesDePericia
         val currentGrandesResponsabilidades = state.grandesResponsabilidades
@@ -273,7 +271,6 @@ class CriadorViewModel(
             compendioArteDaGuerraAtivo = currentCompendioArteDaGuerraAtivo,
             compendioCidadeSolVaporAtivo = currentCompendioCidadeSolVaporAtivo,
             compendioWiseguysAtivo = currentCompendioWiseguysAtivo,
-            modoMonstroAtivo = currentModoMonstroAtivo,
             modoTroposHabilitadoManualmente = currentModoTroposHabilitadoManualmente,
             usarEspecializacoesDePericia = currentUsarEspecializacoesDePericia,
             grandesResponsabilidades = currentGrandesResponsabilidades,
@@ -393,7 +390,6 @@ class CriadorViewModel(
             compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
             compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
             compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
-            modoMonstroAtivo = flags.modoMonstroAtivo,
             modoTroposHabilitadoManualmente = flags.modoTroposHabilitadoManualmente,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades,
@@ -435,7 +431,6 @@ class CriadorViewModel(
         compendioArteDaGuerraAtivo: Boolean = false,
         compendioCidadeSolVaporAtivo: Boolean = false,
         compendioWiseguysAtivo: Boolean = false,
-        modoMonstroAtivo: Boolean = false,
         modoTroposHabilitadoManualmente: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
@@ -465,8 +460,6 @@ class CriadorViewModel(
         state.optRegraFama = optRegraFama
         state.optVariantesDeRacaAtivo = optVariantesDeRacaAtivo
         state.famaManual = 0
-        state.modoMonstroAtivo = modoMonstroAtivo
-        state.tipoMonstroSelecionado = if (modoMonstroAtivo) state.listaMonstroTemplates.firstOrNull()?.id else null
         state.modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente
         state.tropoEscolhasFeitas.clear()
         state.grandesResponsabilidades = grandesResponsabilidades

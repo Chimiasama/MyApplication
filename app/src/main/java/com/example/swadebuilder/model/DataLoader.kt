@@ -434,7 +434,7 @@ object DataLoader {
             cached.map { it.exibido() }
         } else emptyList()
 
-        val localListaTropos = adgTropos + chTropos
+        val adgAndChTropos = adgTropos + chTropos
 
         val complicationVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
@@ -510,6 +510,14 @@ object DataLoader {
         } else {
             emptyList()
         }
+
+        // Monstro Heroico virou um Tropo de verdade (ver docs/auditoria_mecanica_racas_
+        // 2026-08-31.md, rodada 44): cada MonstroTemplate do Horror entra no mesmo pool de
+        // Tropo selecionável que Arte da Guerra/Crystal Heart, via a mesma conversão
+        // MonstroTemplate.paraTropo() (Fase 2). Não existe mais um mecanismo de seleção
+        // separado — CriadorState.tropoSelecionado/selecionarTropo() cobre os três livros.
+        val horrorTropos = localListaMonstroTemplates.map { it.paraTropo() }
+        val localListaTropos = adgAndChTropos + horrorTropos
 
         // 11. Mapas Raciais: removidos (racialAttrMinMap/racialSkillStartMap liam
         // RacialModifier.atributos/pericias, os mapas numéricos estáticos que

@@ -45,7 +45,7 @@ class ValidateRequirementsUseCaseTagsTest {
             pericias = emptyList<Pericia>(),
             rawTotalPericia = { 0 },
             ancestralidadeDef = ancDef,
-            tipoMonstroSelecionado = null,
+            tropoSelecionadoId = null,
             cartaSelvagem = false
         )
 

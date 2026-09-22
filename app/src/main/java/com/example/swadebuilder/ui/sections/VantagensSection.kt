@@ -200,7 +200,7 @@ fun VantagensContent(
         state.compendioFantasiaAtivo,
         state.compendioHorrorAtivo,
         state.compendioSciFiAtivo,
-        state.modoMonstroAtivo,
+        state.tropoSelecionado,
         state.compendioPathfinderAtivo,
         state.compendioDeadlandsAtivo,
         state.compendioCrystalHeartAtivo,
@@ -313,20 +313,19 @@ fun VantagensContent(
     val filteredListGlobal = remember(
         listaVantagensAtivas,
         state.modoSupers,
-        state.modoMonstroAtivo,
-        state.tipoMonstroSelecionado,
+        state.tropoSelecionado,
         hasProfissional,
         filter,
         multiplosAAHabilitados
     ) {
         listaVantagensAtivas.filter { vant ->
-            // Monster mode: for MONSTRUOSAS, only show matching template edges + generic ones (without template)
-            if (state.modoMonstroAtivo && vant.categoria == Categoria.MONSTRUOSAS) {
-                val requiredTemplates = vant.requisitos.templatesRequired.map { it.keyify() }
-                if (requiredTemplates.isNotEmpty()) {
-                    val selectedTemplate = state.tipoMonstroSelecionado?.keyify()
-                    if (selectedTemplate == null || selectedTemplate !in requiredTemplates) return@filter false
-                }
+            // Vantagem travada a um Tropo específico (requisitos.templatesRequired — ex.:
+            // MONSTRUOSAS do Horror, mas generaliza pra qualquer categoria custom com o mesmo
+            // requisito — ver rodada 44): só aparece quando o Tropo selecionado bate.
+            val requiredTemplates = vant.requisitos.templatesRequired.map { it.keyify() }
+            if (requiredTemplates.isNotEmpty()) {
+                val selectedTropoId = state.tropoSelecionado?.id?.keyify()
+                if (selectedTropoId == null || selectedTropoId !in requiredTemplates) return@filter false
             }
 
             // Professional/Specialist Dependency

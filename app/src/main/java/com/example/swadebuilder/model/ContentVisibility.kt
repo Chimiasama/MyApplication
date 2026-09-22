@@ -125,9 +125,14 @@ private fun CriadorState.evaluateVantagemVisibility(
 
     // 2. Specific Item Logic (Forbidden items within an active setting)
 
-    // Monstrous Advantages (Horror) - Require Monster Rule
-    if (vant.categoria == Categoria.MONSTRUOSAS && !modoMonstroAtivo) {
-        return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_mode")
+    // Vantagens MONSTRUOSAS (Horror) só aparecem quando um Tropo de Monstro Heroico de
+    // verdade está selecionado (rodada 44: Monstro Heroico virou Tropo) — não basta o
+    // livro/sistema de Tropo estar ligado. O filtro por id específico (ex.: "Furioso" só
+    // pro Monstro de Retalhos) fica à parte, em `vant.requisitos.templatesRequired` (ver
+    // VantagensSection.kt) — aqui é só o corte "categoria inteira exige algum Tropo de
+    // Monstro selecionado, mesmo pras Vantagens sem id de template específico".
+    if (vant.categoria == Categoria.MONSTRUOSAS && tropoSelecionado?.categoria != "MONSTRO") {
+        return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_tropo")
     }
 
     // Sci-Fi Cybernetics Check

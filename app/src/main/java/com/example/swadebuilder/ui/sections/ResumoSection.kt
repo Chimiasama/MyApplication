@@ -261,10 +261,13 @@ fun SummaryContent(
 
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
-    val monstroInfo = if (state.modoMonstroAtivo) {
-        val tipoNome = state.listaMonstroTemplates.find { it.id == state.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
-        "\nTipo de Monstro: $tipoNome"
-    } else ""
+    // Tropo selecionado (cobre Arte da Guerra e Monstro Heroico do Horror, que virou Tropo —
+    // ver rodada 44) — lido direto de state.tropoSelecionado, sem precisar de lookup por id
+    // num catálogo externo (a UI já tem o objeto resolvido).
+    val monstroInfo = state.tropoSelecionado?.let { tropo ->
+        val label = if (tropo.categoria == "MONSTRO") "Tipo de Monstro" else "Tropo"
+        "\n$label: ${tropo.nome}"
+    } ?: ""
 
     val ancestralidadeDisplay = buildString {
         append("$ancestralidadeValue$monstroInfo")
@@ -516,7 +519,7 @@ private fun rememberSummarySections(state: CriadorState, viewModel: CriadorViewM
         personagem = personagem,
         allAdvantages = allAdvantages,
         listaAncestralidades = viewModel.gameDataStore.getAncestralidades(),
-        listaMonstros = viewModel.gameDataStore.getMonstroTemplates(),
+        listaTropos = viewModel.gameDataStore.getTropos(),
         listaComplicacoes = viewModel.gameDataStore.getComplicacoes(),
         listaAtributos = viewModel.gameDataStore.getAtributos(),
         mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),

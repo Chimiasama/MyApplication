@@ -21,7 +21,7 @@ class SummaryUtilsTest {
             Pericia("Lutar", "AGILIDADE", true)
         )
         val listaAncestralidades = emptyList<com.example.swadebuilder.model.RacialModifier>()
-        val listaMonstros = emptyList<com.example.swadebuilder.model.MonstroTemplate>()
+        val listaTropos = emptyList<com.example.swadebuilder.model.Tropo>()
         val listaComplicacoes = emptyList<com.example.swadebuilder.model.Complicacao>()
         val listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         val mapaAtributosDisplay = listaAtributos.associateWith { it }
@@ -47,7 +47,7 @@ class SummaryUtilsTest {
             personagem = personagem,
             allAdvantages = emptyList(),
             listaAncestralidades = listaAncestralidades,
-            listaMonstros = listaMonstros,
+            listaTropos = listaTropos,
             listaComplicacoes = listaComplicacoes,
             listaAtributos = listaAtributos,
             mapaAtributosDisplay = mapaAtributosDisplay,
@@ -81,7 +81,7 @@ class SummaryUtilsTest {
                 especieId = "avianos"
             )
         )
-        val listaMonstros = emptyList<com.example.swadebuilder.model.MonstroTemplate>()
+        val listaTropos = emptyList<com.example.swadebuilder.model.Tropo>()
         val listaComplicacoes = listOf(
             com.example.swadebuilder.model.Complicacao(
                 id = "habitante_de_gravidade_baixa",
@@ -120,7 +120,7 @@ class SummaryUtilsTest {
             personagem = personagem,
             allAdvantages = emptyList(),
             listaAncestralidades = listaAncestralidades,
-            listaMonstros = listaMonstros,
+            listaTropos = listaTropos,
             listaComplicacoes = listaComplicacoes,
             listaAtributos = listaAtributos,
             mapaAtributosDisplay = mapaAtributosDisplay,
@@ -158,7 +158,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -213,7 +213,7 @@ class SummaryUtilsTest {
                     especieId = "elfos"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -258,7 +258,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -299,7 +299,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = listOf(
                 com.example.swadebuilder.model.Complicacao(
                     id = "sensivel",
@@ -369,7 +369,7 @@ class SummaryUtilsTest {
                     especieId = "centaux"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -422,7 +422,7 @@ class SummaryUtilsTest {
                 )
             ),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -482,7 +482,7 @@ class SummaryUtilsTest {
                     )
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -533,7 +533,7 @@ class SummaryUtilsTest {
                     )
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -564,7 +564,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -615,7 +615,7 @@ class SummaryUtilsTest {
                     especieId = "tanukimimi"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -650,7 +650,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = listOf(
                 com.example.swadebuilder.model.Complicacao(
                     id = "FORASTEIRO",
@@ -717,7 +717,7 @@ class SummaryUtilsTest {
                     especieId = "feral"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -811,7 +811,7 @@ class SummaryUtilsTest {
                     especieId = "humano"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -875,7 +875,7 @@ class SummaryUtilsTest {
                     especieId = "saurios"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -941,7 +941,7 @@ class SummaryUtilsTest {
             personagem = personagem,
             allAdvantages = advantages,
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = complicacoes,
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),

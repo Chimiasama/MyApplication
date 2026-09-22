@@ -56,8 +56,6 @@ data class MeuPersonagem(
 
     // ===== NOVOS CAMPOS (SUPERS) =====
     val modoSupers: Boolean = false,
-    val modoMonstroAtivo: Boolean = false,
-    val tipoMonstroSelecionado: String? = null,
     val superPontosTotais: Int = 0,
     val superPontosDisponiveis: Int = 0,
     val superNivelCampanha: Int? = null,
