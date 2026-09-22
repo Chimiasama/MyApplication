@@ -405,8 +405,10 @@ class MainActivity : ComponentActivity() {
                                     request.powers,
                                     request.superPowers,
                                     request.especieId,
+                                    request.ancestralidadeAtual,
                                     secoesIncluidas,
-                                    arcanoInfo = request.arcanoInfo
+                                    arcanoInfo = request.arcanoInfo,
+                                    listaTropos = request.tropos
                                 ) { msg ->
                                     scope.launch {
                                         snackHost.showSnackbar(msg)
@@ -841,11 +843,12 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo,
                                                 nasceUmHeroi, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
-                                                optRegraMechas, optRegraCiberneticos, optVariantesDeRaca ->
+                                                optRegraMechas, optRegraCiberneticos, optVariantesDeRaca,
+                                                modoTroposHabilitadoManualmente ->
 
                                     creationSession++
 
@@ -864,7 +867,7 @@ class MainActivity : ComponentActivity() {
                                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                                         compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                        modoMonstroAtivo = modoMonstroAtivo,
+                                        modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         regraMultiplosIdiomas = multiplosIdiomas,
                                         optRegraFama = optRegraFama,
@@ -994,8 +997,10 @@ class MainActivity : ComponentActivity() {
                                                     powers = criadorViewModel.gameDataStore.getPoderes(),
                                                     superPowers = criadorViewModel.gameDataStore.getSuperPoderes(),
                                                     especieId = state.currentAncestryDef?.especieId,
+                                                    ancestralidadeAtual = state.currentAncestryDef,
                                                     availableSections = secoesPdfDisponiveis(personagem),
-                                                    arcanoInfo = criadorViewModel.gameDataStore.getArcanoInfoMap()
+                                                    arcanoInfo = criadorViewModel.gameDataStore.getArcanoInfoMap(),
+                                                    tropos = criadorViewModel.gameDataStore.getTropos()
                                                 )
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
@@ -1062,6 +1067,10 @@ private data class PdfExportRequest(
     val powers: List<Poder>,
     val superPowers: List<SuperPoder>,
     val especieId: String?,
+    // Ancestralidade já resolvida (state.currentAncestryDef) — ver produzirEExibirFichaPdf.
+    val ancestralidadeAtual: com.example.swadebuilder.model.RacialModifier?,
     val availableSections: Set<FichaPdfSecao>,
-    val arcanoInfo: Map<String, Triple<Int, Int, String>>
+    val arcanoInfo: Map<String, Triple<Int, Int, String>>,
+    // Catálogo de Tropos — ver produzirEExibirFichaPdf.
+    val tropos: List<com.example.swadebuilder.model.Tropo> = emptyList()
 )

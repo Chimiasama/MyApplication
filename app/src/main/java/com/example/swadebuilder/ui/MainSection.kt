@@ -11,7 +11,6 @@ enum class MainSection {
     RESUMO,
     PODERES,
     XP,
-    MONSTRO,
     CRYSTAL_HEART,
     MECHAS,
     CIBERNETICOS

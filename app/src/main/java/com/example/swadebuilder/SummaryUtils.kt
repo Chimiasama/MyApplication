@@ -4,11 +4,13 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
-import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitEffect
+import com.example.swadebuilder.model.RacialTraitPointCatalog
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.keyify
@@ -22,6 +24,240 @@ private fun formatRacialAnnotationDisplay(raw: String): String {
 
     val hasNarrativePunctuation = trimmed.any { it == ':' || it == ';' || it == '.' || it == '!' || it == '?' }
     return if (hasNarrativePunctuation) trimmed else trimmed.toFancyTitleCase()
+}
+
+/**
+ * Lista de "Características Raciais" (traços da própria ancestralidade, pelo skin dela —
+ * ver comentário abaixo) — usada tanto pelo Resumo (`buildSummaryLines`, que só monta a
+ * linha "Características Raciais: ...") quanto pelo PDF (`ResumoPdfReferenciador
+ * .gerarFichaEmPdf`, que desenha isso como seção própria). Extraída pra função à parte pra
+ * não duplicar essa lógica (bastante intrincada, cheia de casos por espécie) nos dois
+ * lugares — um bug corrigido aqui vale pros dois de graça.
+ */
+fun buildRacialTraitsList(
+    personagem: MeuPersonagem,
+    allAdvantages: List<Vantagem>,
+    ancestralidadeAtual: RacialModifier?,
+    ancestralidadeNomeObj: RacialModifier?,
+    especieIdAtual: String?,
+    showOfficialNames: Boolean
+): List<String> {
+    val definitionMap = allAdvantages
+        .groupBy { it.id.keyify() }
+        .mapValues { (_, candidates) ->
+            candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
+        }
+
+    val habilidadesRaciaisBaseRaw = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
+    val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
+        especieIdAtual == "avianos" &&
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify().startsWith("HABITANTE DE GRAVIDADE") }
+
+    val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
+        especieIdAtual == "aquarianos" &&
+        personagem.vantagensRaciais.any {
+            val key = it.substringBefore("(").trim().keyify()
+            key.contains("SEMI") && key.contains("AQUATIC")
+        }
+
+    val isElfosComunitario = personagem.compendioSciFiAtivo &&
+        especieIdAtual == "elfos" &&
+        personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
+
+    val isCentauxGazela = personagem.compendioSciFiAtivo &&
+        especieIdAtual == "centaux" &&
+        personagem.vantagensRaciais.any {
+            it.substringBefore("(").trim().keyify() == "MOVIMENTACAO +4"
+        }
+
+    val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
+        // Defensive normalization for variant substitution when base ancestry definition is used.
+        // If variant traits are present in character snapshot, hide replaced base traits.
+        val racialTraitKeys = personagem.vantagensRaciais
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
+        if (especieIdAtual == "aquarianos" &&
+            racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
+        ) {
+            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+        }
+
+        // Pacote Cultural de Humanos (Fantasia): Adaptável removido/Fraqueza
+        // Ambiental e Penalidade em Cavalgar adicionados não são mais um
+        // "when" hardcoded aqui — CriadorState.applyAncestryVariantAdjustments
+        // já resolve isso direto em habilidades[] da raça (Adaptável
+        // removido de verdade, traços negativos com category=
+        // "racial_trait_negative"), então `habilidadesRaciaisBaseRaw` acima
+        // (lido de `ancestralidadeAtual.habilidades`) já reflete os dois sem
+        // precisar de ajuste manual aqui.
+
+        if (isCentauxGazela) {
+            removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }
+        }
+
+        if (especieIdAtual == "mineradores_geneticos") {
+            if (personagem.vantagensRaciais.any { it.keyify() == "ADAPTACAO GRAVITACIONAL" || it.keyify() == "ADAPTAÇÃO GRAVITACIONAL" } ||
+                personagem.vantagens.any { it.keyify() == "ADAPTACAO_GRAVITACIONAL" }
+            ) {
+                removeAll { it.keyify() == "DEPENDENCIA ATMOSFERICA" || it.keyify() == "DEPENDÊNCIA ATMOSFÉRICA" || it.keyify() == "FORTE" }
+            }
+        }
+
+        if (especieIdAtual == "oraculos") {
+            if (personagem.vantagensRaciais.any { it.keyify().contains("PODERES MISTICOS (TELEPATA)") || it.keyify().contains("PODERES MÍSTICOS (TELEPATA)") } ||
+                personagem.vantagens.any { it.keyify() == "PODERES_MISTICOS" }
+            ) {
+                removeAll { it.keyify() == "NOCAO DO PERIGO" || it.keyify() == "NOÇÃO DO PERIGO" }
+            }
+        }
+
+        if (especieIdAtual == "seres_sinteticos") {
+            val hasVariantComplication = personagem.desvantagensRaciais.any {
+                val key = it.keyify()
+                key.contains("PROCURADO") || key.contains("FORASTEIRO")
+            }
+            if (hasVariantComplication) {
+                removeAll { it.keyify() == "PROGRAMADO" }
+            }
+        }
+
+        if (especieIdAtual == "soldados_geneticos") {
+            val hasZeroG = personagem.vantagensRaciais.any { it.keyify().contains("ADAPTACAO GRAVITACIONAL") }
+            if (hasZeroG) {
+                removeAll { it.keyify() == "NERVOS DE ACO" }
+            }
+        }
+    }
+
+    val habilidadesRaciais = if (especieIdAtual == "descendente_elemental") {
+        val elem = personagem.descendenteElementalSelecionado?.keyify()
+        habilidadesRaciaisBase
+            .map { it.substringBefore("(").trim() }
+            .filter {
+                val key = it.keyify()
+                when {
+                    key == "AQUATICO" -> elem == "AGUA"
+                    key == "AR INTERNO" -> elem == "AR"
+                    key == "RAPIDO" -> elem == "FOGO"
+                    key == "SOLIDO COMO ROCHA" -> elem == "TERRA"
+                    key == "RESISTENCIA AMBIENTAL" || key == "FORASTEIRO" -> true
+                    else -> true
+                }
+            }
+    } else {
+        habilidadesRaciaisBase
+    }.toMutableList().apply {
+        if (isAvianosAveRapina) {
+            removeAll { it.keyify() == "FRAGIL" || it.keyify() == "NAO SABE NADAR" }
+            if (none { it.keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }) {
+                add("Habitante de Gravidade Zero/Baixa")
+            }
+            if (none { it.keyify() == "FORMA ALIENIGENA" }) {
+                add("Forma Alienígena")
+            }
+        }
+
+        if (isAquarianosSemiaquaticos) {
+            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+            if (none { it.keyify() == "SEMIAQUATICO" }) {
+                add("Semiaquático")
+            }
+            if (none { it.keyify() == "TOQUE VENENOSO" }) {
+                add("Toque Venenoso")
+            }
+        }
+
+        if (isElfosComunitario) {
+            removeAll { it.keyify() == "DESASTRADO" }
+            if (none { it.keyify() == "COMUNITARIO" }) {
+                add("Comunitário")
+            }
+        }
+    }
+    // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
+    // Fix: Normalize IDs to Names using Ancestry Definition to prevent duplicates (e.g. "Armadura +2" vs "Armadura 2") and fix formatting (e.g. "Mordida/Garras")
+    val racialAbilityMap = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
+
+    val isAdgHuman = personagem.compendioArteDaGuerraAtivo && especieIdAtual == "humano"
+    val adgHumanSignTrait = if (isAdgHuman) {
+        val sign = personagem.signoAdgSelecionado
+        if (sign.isNullOrBlank() || sign.equals("Nenhum", ignoreCase = true)) {
+            listOf("Sem Signo")
+        } else {
+            listOf("Signo ${sign.toFancyTitleCase()}")
+        }
+    } else {
+        emptyList()
+    }
+
+    return if (isAdgHuman) {
+        adgHumanSignTrait
+    } else {
+        val isTanukimimiWithPositiveThoughts = especieIdAtual == "tanukimimi" &&
+            habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
+
+        // Toda habilidade `category == "racial_edge"` da raça concede uma Vantagem de
+        // verdade (mesmo mecanismo de `vantagensGratisEfetivas()`, RacialModifier.kt) —
+        // essa Vantagem concedida entra em `personagem.vantagensRaciais` (pelo id/
+        // targetRef, pra lógica de requisito/automação em outro lugar do app) E a
+        // habilidade em si já entra em `habilidadesRaciais` (pelo `nome`, o skin da
+        // raça pra ela, ex.: Sáurios "Sentidos Aguçados" concede a Vantagem
+        // "Prontidão"). Sem esse filtro, as duas apareciam juntas aqui ("Sentidos
+        // Aguçados, Prontidão") — só que a segunda é a MESMA coisa, só sem o skin. Só
+        // sobra em `vantagensRaciaisSemSkinEstatico` uma Vantagem concedida que NÃO
+        // vem de uma habilidade estática da própria raça (ex.: injetada em tempo de
+        // execução por uma Variante custom, sem entrada correspondente em
+        // `habilidades[]`) — essa aparece aqui do jeito normal (sem skin pra usar).
+        val vantagensCobertasPorHabilidadeEstatica = (ancestralidadeAtual ?: ancestralidadeNomeObj)
+            ?.habilidades
+            ?.filter { it.category == "racial_edge" }
+            ?.map { hab -> (hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome).keyify() }
+            ?.toSet()
+            ?: emptySet()
+        val vantagensRaciaisSemSkinEstatico = personagem.vantagensRaciais
+            .filterNot { it.keyify() in vantagensCobertasPorHabilidadeEstatica }
+
+        // isFeralWithInsanidade removido: "Insanidade" (habilidade única que
+        // mencionava Furioso E Sanguinário no texto) virou dois traços de
+        // verdade — SANGUINARIO (Complicação, habilidade própria "Insanidade
+        // (Sanguinário)") e Furioso (Vantagem real, concedida via
+        // vantagensGratis) — não tem mais duplicata pra esconder aqui, Furioso
+        // deve aparecer normalmente como qualquer outra Vantagem concedida.
+        (habilidadesRaciais + vantagensRaciaisSemSkinEstatico)
+            .filterNot { trait ->
+                isElfosComunitario && trait.keyify() == "DESASTRADO"
+            }
+            .filterNot { trait ->
+                isTanukimimiWithPositiveThoughts && trait.keyify() == "IMPULSO"
+            }
+            .filterNot { trait ->
+                isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
+            }
+            .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
+            .map { trait ->
+                val key = trait.keyify()
+                // 1. Check Advantages (Grantable Edges)
+                val vant = definitionMap[key]
+                if (vant != null) {
+                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nome.toFancyTitleCase()
+                } else {
+                    // 2. Check Racial Abilities (Definition Name)
+                    val ability = racialAbilityMap[key]
+                    if (ability != null) {
+                        // Use the display name from JSON (preserves symbols like '/')
+                        // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
+                        val formatted = formatRacialAnnotationDisplay(ability.nome)
+                        if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
+                    } else {
+                        // 3. Fallback
+                        val formatted = trait.toFancyTitleCase()
+                        if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
+                    }
+                }
+            }
+            .distinctBy { it.keyify() } // Deduplicate BY resolved name
+    }
 }
 
 fun buildAncestralidadeDisplay(
@@ -74,11 +310,23 @@ fun buildAncestralidadeDisplay(
 // SHARED SUMMARY BUILDER (Used by ResumoSection.kt)
 // =================================================================================================
 
+/**
+ * Nome do Tropo selecionado, pronto pra exibição, ou string vazia se nenhum — cobre tanto
+ * Tropo de Arte da Guerra quanto Monstro Heroico (Horror, virou Tropo — rodada 44), com
+ * rótulo contextual conforme `Tropo.categoria` (mesmo padrão que "Coração: X" já usa nos
+ * mesmos três lugares: Resumo em tela, resumo em texto e cabeçalho do PDF).
+ */
+fun tropoDisplaySuffix(personagem: MeuPersonagem, listaTropos: List<Tropo>): String {
+    val tropo = listaTropos.firstOrNull { it.id == personagem.tropoSelecionadoId } ?: return ""
+    val label = if (tropo.categoria == "MONSTRO") "Monstro" else "Tropo"
+    return " ($label: ${tropo.nome})"
+}
+
 fun buildSummaryLines(
     personagem: MeuPersonagem,
     allAdvantages: List<Vantagem>,
     listaAncestralidades: List<RacialModifier>,
-    listaMonstros: List<MonstroTemplate>,
+    listaTropos: List<Tropo>,
     listaComplicacoes: List<Complicacao>,
     listaAtributos: List<String>,
     mapaAtributosDisplay: Map<String, String>,
@@ -146,10 +394,7 @@ fun buildSummaryLines(
         .trim()
         .toFancyTitleCase()
 
-    val monstroNome = if (personagem.modoMonstroAtivo) {
-        val tipoNome = listaMonstros.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
-        " (Monstro: $tipoNome)"
-    } else ""
+    val monstroNome = tropoDisplaySuffix(personagem, listaTropos)
 
     fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
         val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
@@ -255,16 +500,27 @@ fun buildSummaryLines(
                     ?: 0
             }
 
-        val garcaParryBonus =
-            if (
-                personagem.compendioArteDaGuerraAtivo &&
-                especieIdAtual == "humano" &&
-                CriadorState.signoIdFromNome(personagem.signoAdgSelecionado) == "GARCA"
-            ) 1 else 0
+        // Bônus/penalidade de Aparar vindo de um traço racial ESTÁTICO (ex.:
+        // Garça "Aparar +1 (Garça)", id="APARAR"; Tanukimimi "Aparar Baixo",
+        // id="APARAR_BAIXO") — lido pelo mesmo catálogo genérico
+        // (RacialTraitPointCatalog.efeitoDe/ApararBonus) que ModifierEngine
+        // já usa pra qualquer raça, em vez de checar por Signo/raça
+        // específica. Antes só a Garça tinha esse bônus aqui, hardcoded por
+        // id de Signo (achado real: Tanukimimi tem o traço oposto,
+        // "APARAR_BAIXO", category=racial_trait_negative — nunca cai em
+        // `desvantagensRaciais`, então o `apararBaixoMod` acima nunca o via;
+        // esse scan genérico cobre os dois, sem precisar saber o nome de
+        // nenhuma raça).
+        val racialTraitApararBonus = (ancestralidadeAtual ?: ancestralidadeNomeObj)
+            ?.habilidades
+            ?.sumOf { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.ApararBonus) efeito.valor * hab.vezes.coerceAtLeast(1) else 0
+            } ?: 0
 
         val total =
             base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower +
-                apararBaixoMod + racialParryBonus + garcaParryBonus
+                apararBaixoMod + racialParryBonus + racialTraitApararBonus
         return total.coerceAtLeast(0)
     }
 
@@ -290,6 +546,13 @@ fun buildSummaryLines(
     val resistenciaTotal = resFinal + armadura
     val resistenciaTexto =
         if (armadura > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
+
+    // Também usado mais abaixo (desvantagensRaciaisAnotacoes) além de dentro de
+    // buildRacialTraitsList() — mantido aqui igual, cálculo puro e barato.
+    val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
+        especieIdAtual == "avianos" &&
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify().startsWith("HABITANTE DE GRAVIDADE") }
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
@@ -389,7 +652,6 @@ fun buildSummaryLines(
         personagem.mechasSelecionados.forEach { m ->
             val extras = mutableListOf<String>()
             if (m.customizacoes.blindagem_extra > 0) extras += "Blindagem +${m.customizacoes.blindagem_extra}"
-            if (m.customizacoes.propulsores) extras += "Propulsores"
             if (m.mods_instalados.isNotEmpty()) {
                 extras += "Mods: " + m.mods_instalados.joinToString { it.nome }
             }
@@ -537,210 +799,14 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciaisBaseRaw = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
-    val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
-        especieIdAtual == "avianos" &&
-        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
-        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify().startsWith("HABITANTE DE GRAVIDADE") }
-
-    val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
-        especieIdAtual == "aquarianos" &&
-        personagem.vantagensRaciais.any {
-            val key = it.substringBefore("(").trim().keyify()
-            key.contains("SEMI") && key.contains("AQUATIC")
-        }
-
-    val isElfosComunitario = personagem.compendioSciFiAtivo &&
-        especieIdAtual == "elfos" &&
-        personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
-
-    val isCentauxGazela = personagem.compendioSciFiAtivo &&
-        especieIdAtual == "centaux" &&
-        personagem.vantagensRaciais.any {
-            it.substringBefore("(").trim().keyify() == "MOVIMENTACAO +4"
-        }
-
-    val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
-        // Defensive normalization for variant substitution when base ancestry definition is used.
-        // If variant traits are present in character snapshot, hide replaced base traits.
-        val racialTraitKeys = personagem.vantagensRaciais
-            .map { it.substringBefore("(").trim().keyify() }
-            .toSet()
-        if (especieIdAtual == "aquarianos" &&
-            racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
-        ) {
-            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
-        }
-
-        if (especieIdAtual == "elfos" && racialTraitKeys.contains("COMUNITARIO")) {
-            removeAll { it.keyify() == "DESASTRADO" }
-        }
-
-        // Pacote Cultural de Humanos (Fantasia): Adaptável removido/Fraqueza
-        // Ambiental e Penalidade em Cavalgar adicionados não são mais um
-        // "when" hardcoded aqui — CriadorState.applyAncestryVariantAdjustments
-        // já resolve isso direto em habilidades[] da raça (Adaptável
-        // removido de verdade, traços negativos com category=
-        // "racial_trait_negative"), então `habilidadesRaciaisBaseRaw` acima
-        // (lido de `ancestralidadeAtual.habilidades`) já reflete os dois sem
-        // precisar de ajuste manual aqui.
-
-        if (isCentauxGazela) {
-            removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }
-        }
-
-        if (especieIdAtual == "draconianos") {
-            removeAll { it.keyify() == "ARROGANTE" }
-        }
-
-        if (especieIdAtual == "mineradores_geneticos") {
-            if (personagem.vantagensRaciais.any { it.keyify() == "ADAPTACAO GRAVITACIONAL" || it.keyify() == "ADAPTAÇÃO GRAVITACIONAL" } ||
-                personagem.vantagens.any { it.keyify() == "ADAPTACAO_GRAVITACIONAL" }
-            ) {
-                removeAll { it.keyify() == "DEPENDENCIA ATMOSFERICA" || it.keyify() == "DEPENDÊNCIA ATMOSFÉRICA" || it.keyify() == "FORTE" }
-            }
-        }
-
-        if (especieIdAtual == "oraculos") {
-            if (personagem.vantagensRaciais.any { it.keyify().contains("PODERES MISTICOS (TELEPATA)") || it.keyify().contains("PODERES MÍSTICOS (TELEPATA)") } ||
-                personagem.vantagens.any { it.keyify() == "PODERES_MISTICOS" }
-            ) {
-                removeAll { it.keyify() == "NOCAO DO PERIGO" || it.keyify() == "NOÇÃO DO PERIGO" }
-            }
-        }
-
-        if (especieIdAtual == "seres_sinteticos") {
-            val hasVariantComplication = personagem.desvantagensRaciais.any {
-                val key = it.keyify()
-                key.contains("PROCURADO") || key.contains("FORASTEIRO")
-            }
-            if (hasVariantComplication) {
-                removeAll { it.keyify() == "PROGRAMADO" }
-            }
-        }
-
-        if (especieIdAtual == "soldados_geneticos") {
-            val hasZeroG = personagem.vantagensRaciais.any { it.keyify().contains("ADAPTACAO GRAVITACIONAL") }
-            if (hasZeroG) {
-                removeAll { it.keyify() == "NERVOS DE ACO" }
-            }
-        }
-    }
-
-    val habilidadesRaciais = if (especieIdAtual == "descendente_elemental") {
-        val elem = personagem.descendenteElementalSelecionado?.keyify()
-        habilidadesRaciaisBase
-            .map { it.substringBefore("(").trim() }
-            .filter {
-                val key = it.keyify()
-                when {
-                    key == "AQUATICO" -> elem == "AGUA"
-                    key == "AR INTERNO" -> elem == "AR"
-                    key == "RAPIDO" -> elem == "FOGO"
-                    key == "SOLIDO COMO ROCHA" -> elem == "TERRA"
-                    key == "RESISTENCIA AMBIENTAL" || key == "FORASTEIRO" -> true
-                    else -> true
-                }
-            }
-    } else {
-        habilidadesRaciaisBase
-    }.toMutableList().apply {
-        if (isAvianosAveRapina) {
-            removeAll { it.keyify() == "FRAGIL" || it.keyify() == "NAO SABE NADAR" }
-            if (none { it.keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }) {
-                add("Habitante de Gravidade Zero/Baixa")
-            }
-            if (none { it.keyify() == "FORMA ALIENIGENA" }) {
-                add("Forma Alienígena")
-            }
-        }
-
-        if (isAquarianosSemiaquaticos) {
-            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
-            if (none { it.keyify() == "SEMIAQUATICO" }) {
-                add("Semiaquático")
-            }
-            if (none { it.keyify() == "TOQUE VENENOSO" }) {
-                add("Toque Venenoso")
-            }
-        }
-
-        if (isElfosComunitario) {
-            removeAll { it.keyify() == "DESASTRADO" }
-            if (none { it.keyify() == "COMUNITARIO" }) {
-                add("Comunitário")
-            }
-        }
-    }
-    // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
-    // Fix: Normalize IDs to Names using Ancestry Definition to prevent duplicates (e.g. "Armadura +2" vs "Armadura 2") and fix formatting (e.g. "Mordida/Garras")
-    val racialAbilityMap = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
-
-    val isAdgHuman = personagem.compendioArteDaGuerraAtivo && especieIdAtual == "humano"
-    val adgHumanSignTrait = if (isAdgHuman) {
-        val sign = personagem.signoAdgSelecionado
-        if (sign.isNullOrBlank() || sign.equals("Nenhum", ignoreCase = true)) {
-            listOf("Sem Signo")
-        } else {
-            listOf("Signo ${sign.toFancyTitleCase()}")
-        }
-    } else {
-        emptyList()
-    }
-
-    val allRacialTraits = if (isAdgHuman) {
-        adgHumanSignTrait
-    } else {
-        val isTanukimimiWithPositiveThoughts = especieIdAtual == "tanukimimi" &&
-            habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
-        // isFeralWithInsanidade removido: "Insanidade" (habilidade única que
-        // mencionava Furioso E Sanguinário no texto) virou dois traços de
-        // verdade — SANGUINARIO (Complicação, habilidade própria "Insanidade
-        // (Sanguinário)") e Furioso (Vantagem real, concedida via
-        // vantagensGratis) — não tem mais duplicata pra esconder aqui, Furioso
-        // deve aparecer normalmente como qualquer outra Vantagem concedida.
-        (habilidadesRaciais + personagem.vantagensRaciais)
-            .filterNot { trait ->
-                isElfosComunitario && trait.keyify() == "DESASTRADO"
-            }
-            .filterNot { trait ->
-                isTanukimimiWithPositiveThoughts && trait.keyify() == "IMPULSO"
-            }
-            .filterNot { trait ->
-                isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
-            }
-            .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
-            .map { trait ->
-                val key = trait.keyify()
-                if (especieIdAtual == "saurios" && key == "PRONTIDAO") {
-                    "Sentidos Aguçados"
-                } else {
-                    // 1. Check Advantages (Grantable Edges)
-                    val vant = definitionMap[key]
-                    if (vant != null) {
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nome.toFancyTitleCase()
-                    } else {
-                        // 2. Check Racial Abilities (Definition Name)
-                        val ability = racialAbilityMap[key]
-                        if (ability != null) {
-                            if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
-                                "Fobia - Gatos (Menor)"
-                            } else {
-                                // Use the display name from JSON (preserves symbols like '/')
-                                // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
-                                val formatted = formatRacialAnnotationDisplay(ability.nome)
-                                if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
-                            }
-                        } else {
-                            // 3. Fallback
-                            val formatted = trait.toFancyTitleCase()
-                            if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
-                        }
-                    }
-                }
-            }
-            .distinctBy { it.keyify() } // Deduplicate BY resolved name
-    }
+    val allRacialTraits = buildRacialTraitsList(
+        personagem = personagem,
+        allAdvantages = allAdvantages,
+        ancestralidadeAtual = ancestralidadeAtual,
+        ancestralidadeNomeObj = ancestralidadeNomeObj,
+        especieIdAtual = especieIdAtual,
+        showOfficialNames = showOfficialNames
+    )
 
     if (allRacialTraits.isNotEmpty()) {
         lines += "Características Raciais: ${allRacialTraits.joinToString(", ")}"

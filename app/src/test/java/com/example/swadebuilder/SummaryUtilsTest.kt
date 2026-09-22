@@ -21,7 +21,7 @@ class SummaryUtilsTest {
             Pericia("Lutar", "AGILIDADE", true)
         )
         val listaAncestralidades = emptyList<com.example.swadebuilder.model.RacialModifier>()
-        val listaMonstros = emptyList<com.example.swadebuilder.model.MonstroTemplate>()
+        val listaTropos = emptyList<com.example.swadebuilder.model.Tropo>()
         val listaComplicacoes = emptyList<com.example.swadebuilder.model.Complicacao>()
         val listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         val mapaAtributosDisplay = listaAtributos.associateWith { it }
@@ -47,7 +47,7 @@ class SummaryUtilsTest {
             personagem = personagem,
             allAdvantages = emptyList(),
             listaAncestralidades = listaAncestralidades,
-            listaMonstros = listaMonstros,
+            listaTropos = listaTropos,
             listaComplicacoes = listaComplicacoes,
             listaAtributos = listaAtributos,
             mapaAtributosDisplay = mapaAtributosDisplay,
@@ -81,7 +81,7 @@ class SummaryUtilsTest {
                 especieId = "avianos"
             )
         )
-        val listaMonstros = emptyList<com.example.swadebuilder.model.MonstroTemplate>()
+        val listaTropos = emptyList<com.example.swadebuilder.model.Tropo>()
         val listaComplicacoes = listOf(
             com.example.swadebuilder.model.Complicacao(
                 id = "habitante_de_gravidade_baixa",
@@ -120,7 +120,7 @@ class SummaryUtilsTest {
             personagem = personagem,
             allAdvantages = emptyList(),
             listaAncestralidades = listaAncestralidades,
-            listaMonstros = listaMonstros,
+            listaTropos = listaTropos,
             listaComplicacoes = listaComplicacoes,
             listaAtributos = listaAtributos,
             mapaAtributosDisplay = mapaAtributosDisplay,
@@ -158,7 +158,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -213,7 +213,7 @@ class SummaryUtilsTest {
                     especieId = "elfos"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -258,7 +258,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -299,7 +299,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = listOf(
                 com.example.swadebuilder.model.Complicacao(
                     id = "sensivel",
@@ -369,7 +369,7 @@ class SummaryUtilsTest {
                     especieId = "centaux"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -422,7 +422,7 @@ class SummaryUtilsTest {
                 )
             ),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(
@@ -444,12 +444,18 @@ class SummaryUtilsTest {
 
     @Test
     fun `buildSummaryLines aplica aparar mais um do signo garca para humanos adg`() {
+        // Garça concede Aparar +1 por um traço REAL (id="APARAR", já resolvido
+        // em habilidades[] por applyAncestryVariantAdjustments quando o Signo
+        // está ativo — mesma injeção que qualquer outra Seleção usa), lido
+        // pelo catálogo genérico (RacialTraitPointCatalog.ApararBonus) — não
+        // mais um `if` checando o id do Signo. `signoAdgSelecionado` some do
+        // fixture porque não é mais lido por calcAparar(); o que importa é a
+        // raça já vir com o traço, como currentAncestryDef traria de verdade.
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Garca",
                 pericias = mapOf("Lutar" to 4),
                 ancestralidade = "HUMANOS",
-                signoAdgSelecionado = "Garça",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
                 complicacoes = emptyList(),
@@ -466,10 +472,17 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "HUMANOS",
                     origem = "ARTE_DA_GUERRA",
-                    especieId = "humano"
+                    especieId = "humano",
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Aparar +1 (Garça)",
+                            descricao = "",
+                            id = "APARAR"
+                        )
+                    )
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -479,6 +492,57 @@ class SummaryUtilsTest {
         )
 
         assertTrue(lines.contains("Aparar: 5"))
+    }
+
+    @Test
+    fun `buildSummaryLines aplica aparar baixo de um traco racial estatico qualquer, nao so Garca`() {
+        // Prova de que o mecanismo é genérico (funciona pra QUALQUER raça com
+        // um traço ApararBonus, não só Garça): Tanukimimi tem "Aparar Baixo"
+        // (id=APARAR_BAIXO, category=racial_trait_negative) — um achado real
+        // desta migração, nunca coberto pelo `apararBaixoMod` (que só lê
+        // desvantagensRaciais, e esse traço não é uma Complicação concedida).
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Tanuki",
+                pericias = mapOf("Lutar" to 4),
+                ancestralidade = "TANUKIMIMI",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                atributos = emptyMap(),
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "TANUKIMIMI",
+                    origem = "ARTE_DA_GUERRA",
+                    especieId = "tanukimimi",
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
+                            descricao = "",
+                            id = "APARAR_BAIXO",
+                            category = "racial_trait_negative"
+                        )
+                    )
+                )
+            ),
+            listaTropos = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        assertTrue(lines.contains("Aparar: 3"))
     }
 
     @Test
@@ -500,7 +564,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -551,7 +615,7 @@ class SummaryUtilsTest {
                     especieId = "tanukimimi"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -586,7 +650,7 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = listOf(
                 com.example.swadebuilder.model.Complicacao(
                     id = "FORASTEIRO",
@@ -653,7 +717,7 @@ class SummaryUtilsTest {
                     especieId = "feral"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -747,7 +811,7 @@ class SummaryUtilsTest {
                     especieId = "humano"
                 )
             ),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),
@@ -761,6 +825,70 @@ class SummaryUtilsTest {
 
         assertEquals("Humano Signo Garça", identidade)
         assertEquals("Características Raciais: Signo Garça", racialLine)
+    }
+
+    @Test
+    fun `buildSummaryLines mostra so o skin do traco racial que concede Vantagem, sem duplicar o nome da Vantagem`() {
+        // Sáurios "Sentidos Aguçados" (id=PRONTIDAO, category=racial_edge) concede a
+        // Vantagem real "Prontidão" — o id cru "PRONTIDAO" cai em vantagensRaciais
+        // (mesmo mecanismo de RacialModifier.vantagensGratisEfetivas()), mas a linha
+        // de "Características Raciais" deve mostrar só o skin "Sentidos Aguçados" UMA
+        // vez, nunca "Sentidos Aguçados, Prontidão" — a Vantagem "Prontidão" já
+        // aparece normalmente na seção de Vantagens, não precisa repetir aqui.
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Sáurio",
+                ancestralidade = "SAURIOS",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("PRONTIDAO"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap()
+            ),
+            allAdvantages = listOf(
+                Vantagem(
+                    id = "prontidao",
+                    nome = "Prontidão",
+                    descricao = "",
+                    categoria = Categoria.COMBATE,
+                    requisitos = Requisito()
+                )
+            ),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "SAURIOS",
+                    origem = "BASICO",
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Sentidos Aguçados",
+                            descricao = "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+                            id = "PRONTIDAO",
+                            category = "racial_edge"
+                        )
+                    ),
+                    especieId = "saurios"
+                )
+            ),
+            listaTropos = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertTrue(racialLine!!.contains("Sentidos Aguçados"))
+        assertFalse("Não deveria repetir o nome da Vantagem concedida (Prontidão) numa entrada à parte", racialLine.contains("Prontidão"))
+        assertEquals(1, "Sentidos Aguçados".toRegex().findAll(racialLine).count())
     }
 
     @Test
@@ -813,7 +941,7 @@ class SummaryUtilsTest {
             personagem = personagem,
             allAdvantages = advantages,
             listaAncestralidades = emptyList(),
-            listaMonstros = emptyList(),
+            listaTropos = emptyList(),
             listaComplicacoes = complicacoes,
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
             mapaAtributosDisplay = mapOf(),

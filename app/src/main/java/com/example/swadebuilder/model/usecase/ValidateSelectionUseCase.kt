@@ -30,7 +30,6 @@ class ValidateSelectionUseCase(
         val valoresAtributos: Map<String, Int>,
         val pericias: List<Pericia>,
         val rawTotalPericia: (Pericia) -> Int,
-        val tipoMonstroSelecionado: String?,
         val cartaSelvagem: Boolean,
         val complicacoesSelecionadas: Map<Complicacao, String?>,
         val ppPurchasesThisRank: Int,
@@ -80,7 +79,7 @@ class ValidateSelectionUseCase(
                     pericias = context.pericias,
                     rawTotalPericia = context.rawTotalPericia,
                     ancestralidadeDef = context.ancestralidadeDef,
-                    tipoMonstroSelecionado = context.tipoMonstroSelecionado,
+                    tropoSelecionadoId = context.tropoSelecionadoId,
                     cartaSelvagem = context.cartaSelvagem,
                     getBestPericia = context.getBestPericia
                 )

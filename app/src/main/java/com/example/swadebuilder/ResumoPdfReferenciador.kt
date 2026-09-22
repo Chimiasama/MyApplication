@@ -26,9 +26,12 @@ import com.example.swadebuilder.model.ataquesCorpoACorpoDeSuperPoderes
 import com.example.swadebuilder.model.ataquesADistanciaDeSuperPoderes
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.sections.asText
+import com.example.swadebuilder.ui.sections.pesoTextoComDiminuto
 import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.GenericNameMapper
@@ -103,9 +106,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         pontosRestantes = this.pontosVantagem,
         naturalArmorFromRace = this.naturalArmorFromRace,
         armorBase = this.armadura,
+        passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(this),
+        armaduraForcaMinimaPorLocal = this.armaduraPorLocal().mapValues { it.value.forcaMinima },
         modoSupers = this.modoSupers,
-        modoMonstroAtivo = this.modoMonstroAtivo,
-        tipoMonstroSelecionado = this.tipoMonstroSelecionado,
         superPontosTotais = this.superPontosTotais,
         superPontosDisponiveis = this.superPontosDisponiveis,
         superNivelCampanha = this.superNivelCampanha,
@@ -199,11 +202,20 @@ suspend fun produzirEExibirFichaPdf(
     listaSuperPoderes: List<SuperPoder> = emptyList(),
     // Ver gerarFichaEmPdf.
     especieId: String? = null,
+    // Ancestralidade já resolvida (state.currentAncestryDef) — usada pra montar a seção
+    // "Habilidades Raciais" do PDF (buildRacialTraitsList, SummaryUtils.kt), mesma fonte
+    // que o Resumo já usa. Null pra raça customizada (cai no fallback por nome de sempre).
+    ancestralidadeAtual: RacialModifier? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
     // Pontos de Poder base + foco por Antecedente Arcano (GameDataStore.getArcanoInfoMap()) —
     // usado só pra exibir a reserva total de PP no cabeçalho de cada Antecedente Arcano
     // (ver buildPoderesBlocks); default vazio não quebra chamadores antigos.
     arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap(),
+    // Catálogo de Tropos (GameDataStore.getTropos()) — só pra resolver o nome de exibição de
+    // `personagem.tropoSelecionadoId` no cabeçalho (ver drawHeader); cobre tanto Tropo de
+    // Arte da Guerra quanto Monstro Heroico (Horror, virou Tropo — rodada 44). Default vazio
+    // não quebra chamador antigo (cabeçalho só não mostra a linha de Tropo).
+    listaTropos: List<Tropo> = emptyList(),
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -238,8 +250,10 @@ suspend fun produzirEExibirFichaPdf(
                 listaPoderes,
                 listaSuperPoderes,
                 especieId,
+                ancestralidadeAtual,
                 secoesIncluidas,
-                arcanoInfo = arcanoInfo
+                arcanoInfo = arcanoInfo,
+                listaTropos = listaTropos
             )
 
             val uri: Uri = FileProvider.getUriForFile(
@@ -598,9 +612,20 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         listOf(a.nome, a.alcance, a.dano, a.pa, "-", a.cdt, "-")
     }
 
+    // Força Mínima > Armas: o dado próprio da arma nunca passa do dado de Força de
+    // quem usa (livro básico), e Diminuto (livro Fantasia) soma -N fixo em cima disso
+    // — as duas contas o Resumo dentro do app já fazia (ResumoSection.kt), mas
+    // faltavam por completo no PDF (bug real relatado pelo usuário).
+    val forcaRawPdf = p.atributos["FORCA"] ?: 4
+    fun danoExibidoPdf(danoBruto: String): String {
+        val capado = com.example.swadebuilder.util.ForcaMinimaCalculator.danoLimitadoPelaForca(danoBruto, forcaRawPdf)
+            ?: danoBruto
+        return com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(capado, p.passosDiminuto)
+    }
+
     val meleeRows = ataquesSuperMelee + armasCorpoACorpo.map { w ->
         val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
-        val danoTxtMelee = w.campoTexto(w.dano)
+        val danoTxtMelee = danoExibidoPdf(w.campoTexto(w.dano))
         // Alcance aqui é o reach de arma de haste (Lança, Alabarda...), lido de
         // `observacoes` — NUNCA o campo `distancia` (curta/média/longa de arremesso/tiro,
         // que só faz sentido na tabela de Armas à Distância) nem o bônus da Vantagem
@@ -622,10 +647,16 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
     }
     val rangedRows = ataquesSuperRanged + armasADistancia.map { w ->
         val danoTxtRanged = w.campoTexto(w.dano)
+        // Só Diminuto aqui, sem o cap de dado pela Força — esse cap (danoLimitadoPelaForca)
+        // é regra só de "Armas de Combate Corpo a Corpo/Arremesso" (livro básico), não de
+        // Armas à Distância; mesma distinção que o Resumo dentro do app já faz.
+        val danoExibidoRanged = com.example.swadebuilder.util.ForcaMinimaCalculator.danoComPenalidadeDiminuto(
+            danoTxtRanged, p.passosDiminuto
+        )
         listOf(
             nomeExibido(w),
             alcanceExibido(w, w.campoTexto(w.distancia), danoTxtRanged),
-            danoTxtRanged,
+            danoExibidoRanged,
             w.campoTexto(w.pa),
             w.campoTexto(w.tiros),
             w.campoTexto(w.cdt),
@@ -633,12 +664,23 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         )
     }
     val armorRows = armaduras.map { item ->
+        // "Vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento"): peça com
+        // `local` estruturado usa a Força Mínima EFETIVA do local dela (já com o +1 passo
+        // de dado quando há uma segunda camada — ver CriadorState.armaduraPorLocal() /
+        // p.armaduraForcaMinimaPorLocal); sem `local` (equipamento customizado), cai na
+        // Força Mínima crua da própria peça. Diminuto (livro Fantasia) reduz por cima
+        // disso, mesma conta do Resumo dentro do app.
+        val forcaMinBase = item.local?.firstOrNull()?.let { p.armaduraForcaMinimaPorLocal[it] }
+            ?: item.campoTexto(item.forcaMin).takeIf { it != "-" }
+        val forcaMinExibida = com.example.swadebuilder.util.ForcaMinimaCalculator.minimoReduzidoPorDiminuto(
+            forcaMinBase, p.passosDiminuto
+        ) ?: item.campoTexto(item.forcaMin)
         listOf(
             nomeExibido(item),
             item.campoTexto(item.armadura),
             item.campoTexto(item.aparar),
             item.campoTexto(item.cobertura),
-            item.campoTexto(item.forcaMin),
+            forcaMinExibida,
             item.campoTexto(item.peso)
         )
     }
@@ -778,7 +820,6 @@ class SuperPoderCardRowBlock(private val cards: List<SuperPoderCardSpec>) : PdfB
 class MechaCardBlock(private val m: com.example.swadebuilder.model.MechaItem) : PdfBlock {
     private val extras = buildList {
         if (m.customizacoes.blindagem_extra > 0) add("Blindagem extra: +${m.customizacoes.blindagem_extra}")
-        if (m.customizacoes.propulsores) add("Propulsores instalados")
         if (m.mods_instalados.isNotEmpty()) add("Mods: " + m.mods_instalados.joinToString { it.nome })
         if (m.armas_equipadas.isNotEmpty()) add("Armas: " + m.armas_equipadas.joinToString())
         if (m.sistemas_instalados.isNotEmpty()) add("Sistemas: " + m.sistemas_instalados.joinToString())
@@ -894,8 +935,12 @@ fun gerarFichaEmPdf(
     // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
     // regra oficial por engano) ou quando o chamador não o resolveu.
     especieId: String? = null,
+    // Ver produzirEExibirFichaPdf.
+    ancestralidadeAtual: RacialModifier? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
-    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
+    arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap(),
+    // Ver produzirEExibirFichaPdf.
+    listaTropos: List<Tropo> = emptyList()
 ) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -966,6 +1011,21 @@ fun gerarFichaEmPdf(
     }
     mainQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
 
+    // Habilidades Raciais — mesma lista/lógica que o Resumo mostra na tela (Sáurios
+    // "Sentidos Aguçados", Ogros "Robusto" etc.), extraída pra SummaryUtils
+    // .buildRacialTraitsList() pra não duplicar essa lógica (bem intrincada) nos dois
+    // lugares. TextListBlock já se auto-oculta quando a lista vem vazia (raça sem
+    // traço nenhum, ou raça totalmente customizada sem habilidades[] cadastradas).
+    val racialTraits = buildRacialTraitsList(
+        personagem = personagem,
+        allAdvantages = listaVantagens,
+        ancestralidadeAtual = ancestralidadeAtual,
+        ancestralidadeNomeObj = null,
+        especieIdAtual = especieId,
+        showOfficialNames = showOfficialNames
+    )
+    mainQueue.add(object : TextListBlock("Habilidades Raciais", racialTraits) {})
+
     // Poderes agora ganham página dedicada (ver renderPoderesPages logo abaixo do loop
     // principal) — página 1 fica só com o essencial de combate/perícias.
     val isPathfinderGnome = personagem.compendioPathfinderAtivo && personagem.ancestralidade.uppercase().contains("GNOMO")
@@ -1020,7 +1080,7 @@ fun gerarFichaEmPdf(
             val headerRect = RectF(margin, margin, w - margin, margin + headerH)
             // Estatísticas derivadas (Aparar, Resistência, etc.) agora vão dentro do
             // próprio cabeçalho, no vão entre o nome e o retrato — ver drawHeader.
-            drawHeader(canvas, headerRect, personagem, theme, portrait, especieId)
+            drawHeader(canvas, headerRect, personagem, theme, portrait, especieId, listaTropos)
 
             // Atributos em uma faixa horizontal (em vez de empilhados na coluna
             // esquerda) — ocupa bem menos altura, sobrando espaço pro resto da página 1.
@@ -1331,8 +1391,8 @@ private fun buildEquipamentosBlocks(personagem: MeuPersonagem, showOfficialNames
     if (gear.isEmpty()) return emptyList()
     val rows = gear.map { eq ->
         val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nomeExibicao
-        val custo = eq.toResumo().custo ?: "-"
-        val peso = eq.peso.asText() ?: "-"
+        val custo = eq.toResumo(personagem.passosDiminuto).custo ?: "-"
+        val peso = pesoTextoComDiminuto(eq.peso, personagem.passosDiminuto) ?: "-"
         Triple(name.toFancyTitleCase(), custo, peso)
     }
     return listOf(GearTableBlock(rows))
@@ -1451,7 +1511,7 @@ fun getPdfTheme(themeName: String): PdfTheme {
 }
 
 // Helpers reused from previous implementation
-fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?, especieId: String? = null) {
+fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?, especieId: String? = null, listaTropos: List<Tropo> = emptyList()) {
     // ... (Same logic as before)
     val paint = Paint().apply {
         color = theme.headerBackground
@@ -1580,7 +1640,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
 
     canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
     val ancestralidadeTitulo = buildAncestralidadeDisplay(p, especieId = especieId)
-    canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
+    val tropoSuffixTexto = tropoDisplaySuffix(p, listaTropos)
+    canvas.drawText("$ancestralidadeTitulo$tropoSuffixTexto - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
     if (p.coracaoCrystalSelecionado != null) {
         val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(p.coracaoCrystalSelecionado.nome) else p.coracaoCrystalSelecionado.nome

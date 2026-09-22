@@ -4,6 +4,8 @@ import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionAnswer
 import com.example.swadebuilder.model.SelectionDef
 import com.example.swadebuilder.model.SelectionType
+import com.example.swadebuilder.model.TraitAddition
+import com.example.swadebuilder.model.TraitTargetKind
 import com.example.swadebuilder.model.VariantOption
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 
@@ -56,16 +58,50 @@ class ResolveAncestryVariantPackageUseCase {
 
     private fun resolveSelection(def: SelectionDef, answer: SelectionAnswer?): ResolvedTraitPackage? {
         return when (def.tipo) {
-            // Nenhuma raça cadastrada usa este tipo hoje — ver o comentário
-            // de SelectionDef.targetKind sobre o desenho de id ainda
-            // pendente pra um alvo escolhido pelo jogador.
-            SelectionType.TARGET_ATTRIBUTE_OR_SKILL -> null
+            SelectionType.TARGET_ATTRIBUTE_OR_SKILL -> resolveTargetAttributeOrSkill(def, answer)
             SelectionType.FIXED_PACKAGE -> {
                 val chosenId = answer?.fixedPackageChoiceId ?: def.pacotesFixos?.firstOrNull()?.id
                 def.pacotesFixos?.firstOrNull { it.id == chosenId }?.pacote
             }
             SelectionType.BUDGETED_CATALOG -> null // tratado à parte em resolve()
         }
+    }
+
+    // O jogador escolhe QUAL atributo/perícia recebe o bônus (ex.: Meio-Orc
+    // Força-ou-Vigor, Feral Força/Vigor/Agilidade) — o traço injetado usa o
+    // mesmo mecanismo parametrizado (traitId=ATTRIBUTE_BOOST/SKILL_BOOST +
+    // targetRef) que MonstroTemplate.kt já usa pra atributo de monstro, em
+    // vez de um id fixo por combinação (ex.: um id só pra "Força escolhida"
+    // e outro pra "Vigor escolhido" seria hardcode por valor final, o mesmo
+    // problema que RacialTraitPointCatalog já evita com AtributoStep/
+    // PericiaStep). `pontos` vai explícito (não confia em CUSTOS[id]), mas
+    // computado via RacialTraitPointCatalog.custoDe() — a MESMA fórmula que
+    // já calibra o catálogo oficial pra ATTRIBUTE_BOOST/SKILL_BOOST (ver
+    // custoDe) — em vez de duplicado aqui, porque o custo de ATTRIBUTE_BOOST/
+    // SKILL_BOOST no orçamento (Resolve/ValidateAncestryOptionBudgetsUseCase)
+    // lê `TraitAddition.id` cru, não `traitId` — ver o comentário de
+    // TraitAddition.traitId.
+    private fun resolveTargetAttributeOrSkill(def: SelectionDef, answer: SelectionAnswer?): ResolvedTraitPackage {
+        val opcoes = def.targetOptions.orEmpty()
+        val alvo = answer?.targetChoice?.takeIf { escolhido -> opcoes.any { it.equals(escolhido, ignoreCase = true) } }
+            ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.any { it.equals(padrao, ignoreCase = true) } }
+            ?: opcoes.firstOrNull()
+            ?: return ResolvedTraitPackage()
+        val nomeExibicao = def.injectionTemplate?.replace("{alvo}", alvo) ?: alvo
+        val traitIdMecanico = if (def.targetKind == TraitTargetKind.SKILL) "SKILL_BOOST" else "ATTRIBUTE_BOOST"
+        val pontos = com.example.swadebuilder.model.RacialTraitPointCatalog.custoDe(traitIdMecanico, value = def.passos)
+        return ResolvedTraitPackage(
+            tracosParaAdicionar = listOf(
+                TraitAddition(
+                    nome = nomeExibicao,
+                    id = "${def.id}_escolha".uppercase(),
+                    traitId = traitIdMecanico,
+                    targetRef = alvo,
+                    value = def.passos,
+                    pontos = pontos
+                )
+            )
+        )
     }
 
     private fun merge(packages: List<ResolvedTraitPackage>): ResolvedTraitPackage = ResolvedTraitPackage(

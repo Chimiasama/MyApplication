@@ -1,6 +1,7 @@
 package com.example.swadebuilder.util
 
 import com.example.swadebuilder.toDiceString
+import kotlin.math.roundToInt
 
 /**
  * Regras de "Força Mínima" do livro básico (Cap. 2 "Equipamento"), lidas a partir dos
@@ -103,5 +104,95 @@ object ForcaMinimaCalculator {
         val dadoArmaRaw = m.groupValues[2].toIntOrNull() ?: return null
         if (dadoArmaRaw <= forcaRaw) return null
         return dano.replaceRange(m.range, "${m.groupValues[1]}+${forcaRaw.toDiceString()}")
+    }
+
+    /** Inverso de passo(): índice de passo -> raw-int (0->4, 1->6, 2->8, 3->10, 4->12, 5->13...). */
+    private fun stepParaRaw(passo: Int): Int = if (passo <= 4) 4 + passo * 2 else 12 + (passo - 4)
+
+    /**
+     * Quantos passos de dado o traço "Diminuto" (livro Fantasia, pág. 10 — Pequeno/Muito
+     * Pequeno/Minúsculo) reduz, a partir do valor de Tamanho recebido (`rawSize`, ex.: -4
+     * pra Minúsculo). Mesmos limiares -2/-3/-4 já usados pro teto de Força em
+     * `CriadorState.atributoMaxRaw()`. Quem chama decide de onde vem esse Tamanho — ver
+     * `ModifierEngine.racialDiminutoPassos()`, que usa só o Tamanho racial direto (não
+     * `sizeRawDisplay()`, pra evitar recursão dentro de `collect()`). 0 = não é Diminuto,
+     * sem redução nenhuma.
+     */
+    fun diminutoPassos(rawSize: Int): Int = when {
+        rawSize <= -4 -> 4
+        rawSize == -3 -> 3
+        rawSize == -2 -> 2
+        else -> 0
+    }
+
+    /**
+     * "Reduza a Força Mínima de armaduras de Tamanho [Pequeno/Muito Pequeno/Minúsculo]
+     * em [dois/três/quatro] tipos de dado (mínimo d4)" (livro Fantasia, "Diminuto", pág.
+     * 10) — armadura feita sob medida pro corpo pequeno do personagem não exige a Força
+     * de um adulto padrão. `passosReducao` vem de `diminutoPassos()`; sem redução (0) ou
+     * `minimo` não reconhecível, devolve o texto original sem mexer.
+     */
+    fun minimoReduzidoPorDiminuto(minimo: String?, passosReducao: Int): String? {
+        if (minimo.isNullOrBlank() || passosReducao <= 0) return minimo
+        val raw = paraRaw(minimo) ?: return minimo
+        val novoPasso = (passo(raw) - passosReducao).coerceAtLeast(0)
+        return stepParaRaw(novoPasso).toDiceString()
+    }
+
+    /**
+     * "Subtraem [dois/três/quatro] de suas... rolagens de dano (corpo a corpo, à
+     * distância, magia etc.)" (livro Fantasia, "Diminuto", pág. 10) — penalidade FIXA em
+     * toda rolagem de dano do personagem, além (não em vez) do cap de
+     * `danoLimitadoPelaForca()`. Só anexa "-N" quando o texto de dano é uma fórmula de
+     * rolagem reconhecível (contém ao menos um "dN"); textos sem dado (ex.: "Especial",
+     * "-") voltam sem alteração. `passosReducao` vem de `diminutoPassos()`.
+     */
+    fun danoComPenalidadeDiminuto(dano: String, passosReducao: Int): String {
+        if (passosReducao <= 0) return dano
+        if (!DADO_REGEX.containsMatchIn(dano)) return dano
+        return "$dano-$passosReducao"
+    }
+
+    /**
+     * "Vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento", regra de
+     * Armadura): "A armadura mais leve adiciona metade do seu valor (arredondado para
+     * baixo) ao total e aumenta em UM TIPO DE DADO a penalidade por Força Mínima da
+     * armadura mais pesada." — a peça mais pesada (`minimo` = Força Mínima dela) sobe
+     * um passo de dado quando há uma segunda camada por baixo. Sem `minimo`
+     * reconhecível, devolve null (nada pra somar).
+     */
+    fun minimoComCamadaExtra(minimo: String?): String? {
+        val raw = minimo?.let { paraRaw(it) } ?: return null
+        return stepParaRaw(passo(raw) + 1).toDiceString()
+    }
+
+    /**
+     * "Equipamentos feitos para personagens [Pequenas/Muito Pequenas/Minúsculas] pesam e
+     * custam [metade/um quarto/um décimo] do valor listado" (livro Fantasia, "Diminuto",
+     * pág. 10) — equipamento sob medida pro corpo menor do personagem é proporcionalmente
+     * mais leve e barato. `passosReducao` vem de `diminutoPassos()`/
+     * `ModifierEngine.racialDiminutoPassos()` (2=Pequeno, 3=Muito Pequeno, 4=Minúsculo).
+     * 1.0 (sem redução) pra qualquer outro valor, inclusive Diminuto empilhável genérico
+     * (Tamanho -1, "Pequenos" de Goblins/Gnomos/etc.) — esse é um traço DIFERENTE do
+     * Diminuto especial de tier único descrito aqui, sem esse desconto de equipamento.
+     */
+    fun divisorEquipamentoDiminuto(passosReducao: Int): Double = when (passosReducao) {
+        2 -> 2.0
+        3 -> 4.0
+        4 -> 10.0
+        else -> 1.0
+    }
+
+    /**
+     * Aplica `divisorEquipamentoDiminuto()` a um valor já em unidade base (peso em kg, ou
+     * custo já convertido por `MoneyUtils.parseCostInBaseUnit()`) e arredonda pro inteiro
+     * mais próximo — usado só pra custo (unidade discreta de moeda). Nunca zera um item que
+     * já custava algo (mínimo 1), pra não parecer que o item virou de graça só por causa do
+     * arredondamento pra baixo.
+     */
+    fun custoInteiroReduzidoPorDiminuto(baseValue: Int, passosReducao: Int): Int {
+        if (passosReducao <= 0 || baseValue <= 0) return baseValue
+        val divisor = divisorEquipamentoDiminuto(passosReducao)
+        return (baseValue / divisor).roundToInt().coerceAtLeast(1)
     }
 }

@@ -49,9 +49,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
      * Constrói o Result a partir do pacote resolvido no registro — só
      * traduz os campos genéricos (traços/vantagens/desvantagens a
      * adicionar/remover). Armadura Natural quando a Variante muda o valor
-     * (ex.: Insetoides) já vem embutida em `naturalArmor`; `forceArmorZero`
-     * é sempre true nesse grupo de raças (nenhuma delas mantém Armadura sem
-     * forçar o reset primeiro), igual ao "when" fixo que este substitui.
+     * (ex.: Insetoides) já vem embutida em `naturalArmor`.
      */
     private fun buildResultFromVariantRegistry(ancestralidadeId: String, effectiveVariant: String?): Result? {
         // Só chamado dentro de `isSciFiActive` (ver `ancKey in
@@ -68,7 +66,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         )
         return Result(
             naturalArmorFromRace = resolved.naturalArmor,
-            forceArmorZero = true,
             ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
             ensureAdvantageIds = resolved.vantagensGratisIds,
             ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
@@ -88,7 +85,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
     data class Result(
         val naturalArmorFromRace: Int,
-        val forceArmorZero: Boolean,
         // Nomes de Vantagem (vantagens.json) casados por nome pra conceder a
         // Vantagem de verdade — ver ResolveAncestryRacialPackageUseCase.
         val ensureAdvantageNames: List<String>,
@@ -190,7 +186,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                     }
                     Result(
                         naturalArmorFromRace = 0,
-                        forceArmorZero = true,
                         ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar,
@@ -202,7 +197,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                     // Default / Básico
                     Result(
                         naturalArmorFromRace = 0,
-                        forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
@@ -237,7 +231,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
                 return Result(
                     naturalArmorFromRace = 0,
-                    forceArmorZero = true,
                     ensureAdvantageNames = emptyList(),
                     ensureAdvantageIds = emptyList(),
                     ensureAutomaticAdvantages = resolved.tracosParaAdicionar,
@@ -286,7 +279,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 }
                 return Result(
                     naturalArmorFromRace = 0,
-                    forceArmorZero = true,
                     ensureAdvantageNames = emptyList(),
                     ensureAdvantageIds = emptyList(),
                     ensureAutomaticAdvantages = resolved.tracosParaAdicionar,
@@ -316,7 +308,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
             return Result(
                 naturalArmorFromRace = if (effectiveVariant == "Pedregoso") 2 else 0,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 // Casa por id (TraitAddition.id), não mais por nome — o
                 // comparador em ResolveAncestryRacialPackageUseCase agora
@@ -362,7 +353,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
             return Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = resolved.vantagensGratisIds,
                 ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
@@ -401,7 +391,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             return Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = false,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
@@ -414,7 +403,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         if (ancKey.contains("AKAIMIMI")) {
             return Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
@@ -430,7 +418,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             // carrega esse traço em habilidades[].
             "SAURIOS" -> Result(
                 naturalArmorFromRace = naturalArmorFromAbilityId,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = listOf(TraitAddition("PRONTIDÃO", "PRONTIDAO")),
@@ -440,7 +427,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "GOLENS" -> Result(
                 naturalArmorFromRace = naturalArmorFromAbilityId,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
@@ -450,7 +436,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "DRACONIANOS" -> Result(
                 naturalArmorFromRace = naturalArmorFromAbilityId,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
@@ -460,7 +445,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "INSETOIDES" -> Result(
                 naturalArmorFromRace = naturalArmorFromAbilityId,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = listOf(TraitAddition("GARRAS", "GARRAS")),
@@ -470,7 +454,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "PEQUENINOS" -> Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
                 // "Espirituoso" nunca foi uma Vantagem de catálogo — é o traço
                 // racial (habilidades[], category "racial_trait_positive") que dá
                 // Espírito d6, já resolvido por atributoBaseRacial(); estava aqui
@@ -492,7 +475,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 if (canonicalOriginKey(ancestryOrigin) == "BASICO") {
                     Result(
                         naturalArmorFromRace = 0,
-                        forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = listOf("antecedente_arcano_milagres"),
                         ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (MILAGRES)", "ANTECEDENTE_ARCANO_MILAGRES")),
@@ -502,7 +484,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 } else {
                     Result(
                         naturalArmorFromRace = 0,
-                        forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
@@ -514,7 +495,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "HUMANO (WISEGUYS)".keyify() -> Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = false,
                 ensureAdvantageNames = emptyList(),
                 // "conexoes_mafia": pseudo-id tratado em
                 // ResolveAncestryRacialPackageUseCase (concede "Conexões" com a
@@ -531,7 +511,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "DESCENDENTE ELEMENTAL".keyify() -> Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
@@ -550,8 +529,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "TRANSMORFOS".keyify() -> Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
-                ensureAdvantageNames = emptyList(),
+                // "CARISMÁTICO" (habilidade racial, category=racial_trait_positive, id=
+                // CARISMATICO — mesmo texto do livro: "Começam gratuitamente com a
+                // Vantagem Carismático"): sem entrada aqui, a Vantagem nunca era
+                // concedida de verdade (o id não tem efeito automático em
+                // RacialTraitPointCatalog.EFEITOS, só custo de criação de raça) —
+                // achado ao investigar o traço "Mudar de Forma" logo abaixo.
+                ensureAdvantageNames = listOf("CARISMÁTICO"),
                 ensureAdvantageIds = listOf("antecedente_arcano_dom"),
                 ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (DOM)", "ANTECEDENTE_ARCANO_DOM")),
                 ensureRacialDisadvantages = emptyList(),
@@ -560,7 +544,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             "DEMÔNIO (ABISMO)".keyify() -> Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("aa_demonio"),
                 ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (DEMÔNIO)", "ANTECEDENTE_ARCANO_DEMONIO")),
@@ -570,7 +553,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             else -> Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),

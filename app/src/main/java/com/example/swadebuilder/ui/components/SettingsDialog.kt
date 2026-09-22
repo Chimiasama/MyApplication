@@ -59,6 +59,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toIdSlug
@@ -88,6 +90,16 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
         ?.replace('–', '-')
         ?.toIntOrNull()
         ?: 1
+
+// "Elfos (Fantasia)", "Elfo (Pathfinder)" etc. — usado no seletor de Raça Base de uma
+// Variante custom (ver "Variante de Raça" abaixo). `state.listaAncestralidadesJson` já
+// chega deduplicada por nome (carregamento do catálogo, via distinctByOriginPriority:
+// livro de cenário/companheiro vence o Básico quando os dois estão ativos), então nunca
+// existem duas raças com o mesmo nome pra escolher aqui — mas sem esse rótulo o Mestre
+// não tinha como saber DE QUAL LIVRO veio a versão que venceu (pode ser Horror, Fantasia,
+// Básico... dependendo de quais estão ativos), e montava a Variante sem essa informação.
+private fun RacialModifier.nomeComLivro(): String =
+    "$nome (${canonicalOriginKey(origem).toEditionDisplayName()})"
 
 /**
  * Rótulo + fileira de chips com scroll horizontal — o padrão único de "Chip Row" do
@@ -241,6 +253,42 @@ suspend fun findSavedCharactersUsingCustomItem(
     return affected
 }
 
+
+// Super Poderes (super_poderes.json) que o traço racial "Super Poderes (2+X)" não deveria
+// oferecer, porque a raça já tem um jeito próprio de conceder o mesmo efeito (via
+// basico_habilidades_raciais.json) — comprar de novo pelo Super Poder seria pagar duas vezes
+// pela mesma coisa. Conferido contra o texto de cada Super Poder (não só o nome): ex. "Não
+// dorme" descreve "metade do tempo normal de sono", igual ao traço "Redução de Sono";
+// "Supervantagem" concede "uma Vantagem... independente do Estágio", igual aos traços
+// "Vantagem Inata (Novato/Experiente/.../Heroico)". "Camaleão" (Grupo B) entra aqui também —
+// muda de cor pra se camuflar, igual ao traço "Camuflagem (Adaptável)" — mas "Crescimento" e
+// "Encolhimento" ficam de fora de propósito: mudar de tamanho ativamente (efeito temporário) é
+// diferente de já nascer com Tamanho +1/Diminuto.
+//
+// Segundo bloco: Super Poderes sem traço racial idêntico, mas com uma Magia (Poder) ou
+// Vantagem de nome igual/parecido já cobrindo o mesmo conceito (ex. "Campo de Dano" tem a
+// Magia "Campo de Dano"; "Destemido" tem a Vantagem "Destemido") — o traço "Poder" já cobre
+// esse caso de outro jeito (Antecedente Arcano + a Magia certa, restrito a Novato). Inclui
+// "Superciência"/"Superfeitiçaria": mesmo sendo balanceados pra um cenário de Supers, onde
+// todo mundo é super poderoso, como Antecedente Arcano alternativo pra criação de raça eles
+// são versões muito mais fortes que o normal — dá uma distorção grande demais concentrada
+// numa raça só, então ficam de fora.
+private val SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL: Set<String> = setOf(
+    // Grupo A: mesmo efeito de um traço racial
+    "Ações Adicionais", "Alcance", "Andar nas Paredes", "Aparar", "Aquático", "Armadura",
+    "Ataque Corpo a Corpo", "Ataque de Longa Distância", "Atordoar", "Aumentar/Reduzir Característica",
+    "Bônus de Perícia", "Camaleão", "Cavar", "Construto", "Espacial", "Imune a Doenças/Venenos",
+    "Interface", "Invisibilidade", "Membros Extras", "Morto-vivo", "Movimentação", "Mudança de Forma",
+    "Não dorme", "Não respira", "Regeneração", "Resistência Ambiental", "Resistência", "Robusto",
+    "Salto", "Sem Órgãos Vitais", "Sentidos Aprimorados", "Supervantagem", "Telepatia", "Veneno", "Voo",
+    // Grupo C: coberto por uma Magia (Poder) ou Vantagem de nome igual/parecido
+    "Campo de Dano", "Curar", "Cegar", "Enredar", "Explodir", "Falar Idioma", "Ilusão",
+    "Leitura de Objeto", "Leitura Mental", "Lentidão", "Velocidade", "Medo", "Obscurecer",
+    "Telecinese", "Teleporte", "Intangibilidade", "Possessão", "Companheiro Animal",
+    "Controle de Animal", "Controle Mental", "Empurrar", "Forma Alternativa", "Mimetismo",
+    "Destemido", "Esquiva", "Reflexos Aprimorados", "Não Come", "Perceptivo", "Superatributo",
+    "Superperícia", "Superciência", "Superfeitiçaria"
+).mapTo(mutableSetOf()) { it.keyify() }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -745,6 +793,10 @@ fun CustomContentManageDialog(
                         var showVarianteComplicacaoPickDialog by remember { mutableStateOf(false) }
                         var varianteComplicacaoComoMaiorEscolhido by remember { mutableStateOf(false) }
                         var varianteSemLimite by remember { mutableStateOf(false) }
+                        // Peça 4 (ver docs/auditoria_mecanica_racas_2026-08-31.md): escopa a
+                        // Variante a uma opção de Seleção específica da raça base (ex.: só o
+                        // Signo Dragão) — null = raça inteira, como sempre.
+                        var varianteOpcaoAlvoId by remember { mutableStateOf<String?>(null) }
 
                         val baseRacialCatalog: List<com.example.swadebuilder.model.HabilidadeCriacao> = remember {
                             runCatching {
@@ -762,7 +814,32 @@ fun CustomContentManageDialog(
                                 context.loadJsonAsset<List<com.example.swadebuilder.model.SuperPoder>>("super_poderes.json")
                             }.getOrElse { emptyList() }
                         }
+                        // Catálogo restrito ao seletor do traço "Super Poderes (2+X)": exclui os
+                        // Super Poderes que a raça já cobre por outro traço (ver
+                        // SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL) — não afeta a compra normal
+                        // de Super Poderes por um personagem (SuperPoderesSection.kt usa
+                        // state.listaSuperPoderes, um catálogo separado) nem o gerenciamento de
+                        // Modificador de Poder logo abaixo (superPoderesParaModificador), que
+                        // continua enxergando o catálogo completo.
+                        val superPoderesCatalogParaTracoRacial: List<com.example.swadebuilder.model.SuperPoder> = remember(superPoderesCatalog) {
+                            superPoderesCatalog.filterNot { it.nome.keyify() in SUPER_PODERES_JA_COBERTOS_POR_TRACO_RACIAL }
+                        }
                         var superPoderRacialPickerTarget by remember {
+                            mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
+                        }
+
+                        // "Poder (S)"/"Poder Inato" (livro básico, pág. 20): "Por 2 pontos, ela
+                        // tem o Antecedente Arcano (Dom) e um poder que reflete sua habilidade
+                        // incomum." — custo FIXO de 2 pontos (ao contrário de Super Poderes, o
+                        // livro não soma o custo do poder escolhido — Poderes comuns não têm um
+                        // "custo de compra" próprio como os Super Poderes têm). Só restrito a
+                        // poderes de Novato: o traço não diz isso explicitamente, mas sem essa
+                        // trava um Mestre podia escolher um poder Lendário (ex.: Ressurreição)
+                        // pelos mesmos 2 pontos — desbalanceado demais pra passar sem aviso.
+                        val poderesNovatoCatalog: List<com.example.swadebuilder.model.Poder> = remember(state.listaPoderes) {
+                            state.listaPoderes.filter { it.estagio.keyify() == "NOVATO" }.distinctBy { it.id }
+                        }
+                        var poderRacialPickerTarget by remember {
                             mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
                         }
 
@@ -1187,7 +1264,7 @@ fun CustomContentManageDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
-                                                    val availableAdvCategories = remember(state.listaVantagens, selectedBookTags, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoMonstroAtivo, state.modoSupers) {
+                                                    val availableAdvCategories = remember(state.listaVantagens, selectedBookTags, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoSupers) {
                                                         val baseCategories = mutableSetOf(
                                                             Categoria.ANTECEDENTE,
                                                             Categoria.COMBATE,
@@ -1210,7 +1287,7 @@ fun CustomContentManageDialog(
                                                         if ("DEADLANDS" in selectedBookTags || state.compendioDeadlandsAtivo) {
                                                             baseCategories.addAll(listOf(Categoria.ATORMENTADO, Categoria.ANCESTRALIDADE))
                                                         }
-                                                        if ("HORROR" in selectedBookTags || state.compendioHorrorAtivo || state.modoMonstroAtivo) {
+                                                        if ("HORROR" in selectedBookTags || state.compendioHorrorAtivo) {
                                                             baseCategories.add(Categoria.MONSTRUOSAS)
                                                         }
                                                         if (state.modoSupers) {
@@ -1667,7 +1744,7 @@ fun CustomContentManageDialog(
                                                         onClick = { showVarianteBaseRacaDialog = true },
                                                         modifier = Modifier.fillMaxWidth()
                                                     ) {
-                                                        Text(varianteBaseRaca?.nome ?: "Selecionar Raça Base")
+                                                        Text(varianteBaseRaca?.nomeComLivro() ?: "Selecionar Raça Base")
                                                     }
 
                                                     if (varianteBaseRaca == null) {
@@ -1677,9 +1754,90 @@ fun CustomContentManageDialog(
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
                                                     } else {
-                                                        val habilidadeItems = remember(varianteBaseRaca) {
-                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
+                                                        // Peça 4: se a raça base tem uma Seleção de pacote fixo
+                                                        // cadastrada (ex.: os 14 Signos do Humano Arte da Guerra,
+                                                        // Voto/Obrigação do Terracota), deixa escopar esta Variante a
+                                                        // UMA opção específica em vez da raça inteira — as demais
+                                                        // opções continuam 100% oficiais mesmo com a Variante ativa.
+                                                        val opcoesDeSelecao = remember(varianteBaseRaca) {
+                                                            com.example.swadebuilder.registry.AncestryVariantRegistry
+                                                                .get(varianteBaseRaca.nome.keyify(), canonicalOriginKey(varianteBaseRaca.origem))
+                                                                ?.selecoes
+                                                                ?.firstOrNull { it.tipo == com.example.swadebuilder.model.SelectionType.FIXED_PACKAGE }
+                                                                ?.pacotesFixos
+                                                                .orEmpty()
+                                                        }
+                                                        val escopoAtual = opcoesDeSelecao.firstOrNull { it.id == varianteOpcaoAlvoId }
+
+                                                        if (opcoesDeSelecao.isNotEmpty()) {
+                                                            var showEscopoDialog by remember { mutableStateOf(false) }
+                                                            Text("Escopo desta Variante:", style = MaterialTheme.typography.labelMedium)
+                                                            OutlinedButton(
+                                                                onClick = { showEscopoDialog = true },
+                                                                modifier = Modifier.fillMaxWidth()
+                                                            ) {
+                                                                Text(escopoAtual?.nome ?: "Toda a raça (padrão)")
+                                                            }
+                                                            Text(
+                                                                text = if (escopoAtual != null) {
+                                                                    "Só se aplica quando \"${escopoAtual.nome}\" estiver ativo — as outras opções continuam oficiais."
+                                                                } else {
+                                                                    "Aplica em cima da raça inteira, qualquer que seja a opção ativa."
+                                                                },
+                                                                style = MaterialTheme.typography.bodySmall,
+                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                            )
+                                                            if (showEscopoDialog) {
+                                                                AlertDialog(
+                                                                    onDismissRequest = { showEscopoDialog = false },
+                                                                    title = { Text("Escopo da Variante") },
+                                                                    text = {
+                                                                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                                                    varianteOpcaoAlvoId = null
+                                                                                    showEscopoDialog = false
+                                                                                }.padding(vertical = 6.dp),
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Text("Toda a raça (padrão)", style = MaterialTheme.typography.bodyMedium)
+                                                                            }
+                                                                            opcoesDeSelecao.forEach { opcao ->
+                                                                                Row(
+                                                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                                                        varianteOpcaoAlvoId = opcao.id
+                                                                                        showEscopoDialog = false
+                                                                                    }.padding(vertical = 6.dp),
+                                                                                    verticalAlignment = Alignment.CenterVertically
+                                                                                ) {
+                                                                                    Text(opcao.nome, style = MaterialTheme.typography.bodyMedium)
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    confirmButton = {
+                                                                        TextButton(onClick = { showEscopoDialog = false }) { Text("Fechar") }
+                                                                    }
+                                                                )
+                                                            }
+                                                            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                                                        }
+
+                                                        // Escopada a uma opção: os traços REMOVÍVEIS incluem os da
+                                                        // própria opção (ex.: Espírito d6 do Dragão), não só os da
+                                                        // raça base estática — sem isso não dava pra sobrescrever
+                                                        // nada que a opção concede, só a raça base como um todo.
+                                                        val habilidadeItems = remember(varianteBaseRaca, escopoAtual) {
+                                                            val baseItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca, state.listaVantagens)
                                                                 .filter { it.habilidadeId != null }
+                                                            val opcaoItems = escopoAtual?.pacote?.tracosParaAdicionar.orEmpty().map { traco ->
+                                                                com.example.swadebuilder.model.usecase.VariantBudgetItem(
+                                                                    label = com.example.swadebuilder.model.RacialTraitPointCatalog.LABEL[traco.id.keyify()] ?: traco.nome,
+                                                                    custo = com.example.swadebuilder.model.RacialTraitPointCatalog.custoDe(traco.id, pontos = traco.pontos),
+                                                                    habilidadeId = traco.id
+                                                                )
+                                                            }
+                                                            (baseItems + opcaoItems).distinctBy { it.habilidadeId }
                                                         }
 
                                                         val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
@@ -1700,8 +1858,23 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
 
-                                                        val valorBaseRaca = remember(varianteBaseRaca) {
-                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca)
+                                                        // Escopada a uma opção: o orçamento de partida é o saldo
+                                                        // RESOLVIDO dessa opção (ex.: os 3 pontos do Dragão, não os
+                                                        // 0 do marcador estático SIGNOS_DE_NASCENCA na raça base) —
+                                                        // mesmo cálculo que ValidateAncestryOptionBudgetsUseCase já
+                                                        // usa pra validar cada opção isolada.
+                                                        val valorBaseRaca = remember(varianteBaseRaca, escopoAtual) {
+                                                            val viaOpcao = escopoAtual?.let {
+                                                                com.example.swadebuilder.registry.AncestryVariantRegistry
+                                                                    .get(varianteBaseRaca.nome.keyify(), canonicalOriginKey(varianteBaseRaca.origem))
+                                                                    ?.let { config ->
+                                                                        com.example.swadebuilder.model.usecase.ValidateAncestryOptionBudgetsUseCase()
+                                                                            .execute(varianteBaseRaca, config, state.listaVantagens)
+                                                                            .firstOrNull { resultado -> resultado.optionId == escopoAtual.id }
+                                                                    }
+                                                            }
+                                                            viaOpcao?.saldo
+                                                                ?: com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca, state.listaVantagens)
                                                         }
                                                         val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
@@ -2320,7 +2493,7 @@ fun CustomContentManageDialog(
                                                     if (baseRaca == null) {
                                                         statusMessage = "Selecione a raça base da Variante."
                                                     } else {
-                                                        val habilidadeItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
+                                                        val habilidadeItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca, state.listaVantagens)
                                                             .filter { it.habilidadeId != null }
 
                                                         val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
@@ -2341,7 +2514,7 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
 
-                                                        val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
+                                                        val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca, state.listaVantagens)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
                                                             valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
                                                             orcamento = baseRaca.pontosRaciaisEsperados,
@@ -2360,7 +2533,8 @@ fun CustomContentManageDialog(
                                                                 tracosAdicionados = varianteTracosAdicionados,
                                                                 vantagensAdicionadasIds = varianteVantagensAdicionadas,
                                                                 complicacoesAdicionadas = varianteComplicacoesAdicionadas,
-                                                                semLimiteDePontos = varianteSemLimite
+                                                                semLimiteDePontos = varianteSemLimite,
+                                                                opcaoAlvoId = varianteOpcaoAlvoId
                                                             )
                                                             tags.forEach { tag -> customStorageManager.addVarianteRacial(context, tag, newVariant) }
                                                             state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom + newVariant
@@ -2371,6 +2545,7 @@ fun CustomContentManageDialog(
                                                             varianteVantagensAdicionadas = emptyList()
                                                             varianteComplicacoesAdicionadas = emptyList()
                                                             varianteSemLimite = false
+                                                            varianteOpcaoAlvoId = null
                                                         }
                                                     }
                                                 }
@@ -2783,11 +2958,14 @@ fun CustomContentManageDialog(
                                         )
                                         allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isPoderInatoRow = trait.nome == "Poder Inato"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isStackableRow = (trait.vezesMax ?: 1) > 1
                                             val isGrupoEscolhaRow = trait.grupoEscolha != null
                                             val isSel = if (isSuperPoderesRow) {
                                                 selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isPoderInatoRow) {
+                                                selectedRacialTraits.any { it.nome.startsWith("Poder (") }
                                             } else if (isGrupoEscolhaRow) {
                                                 selectedRacialTraits.any { it.grupoEscolha == trait.grupoEscolha }
                                             } else if (isPericiaChoiceRow || isStackableRow) {
@@ -2803,6 +2981,14 @@ fun CustomContentManageDialog(
                                                         }
                                                     } else {
                                                         selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isPoderInatoRow) {
+                                                    if (checked) {
+                                                        poderRacialPickerTarget = { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Poder (") }
                                                     }
                                                 } else if (isGrupoEscolhaRow) {
                                                     if (checked) {
@@ -2881,11 +3067,12 @@ fun CustomContentManageDialog(
                                                 modifier = Modifier.fillMaxWidth().clickable {
                                                     varianteBaseRacaId = raca.nome.keyify()
                                                     varianteTracosRemovidos = emptyList()
+                                                    varianteOpcaoAlvoId = null
                                                     showVarianteBaseRacaDialog = false
                                                 }.padding(vertical = 6.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Text(raca.nome, style = MaterialTheme.typography.bodyMedium)
+                                                Text(raca.nomeComLivro(), style = MaterialTheme.typography.bodyMedium)
                                             }
                                         }
                                     }
@@ -2910,11 +3097,14 @@ fun CustomContentManageDialog(
                                         )
                                         allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isPoderInatoRow = trait.nome == "Poder Inato"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isStackableRow = (trait.vezesMax ?: 1) > 1
                                             val isGrupoEscolhaRow = trait.grupoEscolha != null
                                             val isSel = if (isSuperPoderesRow) {
                                                 varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isPoderInatoRow) {
+                                                varianteTracosAdicionados.any { it.nome.startsWith("Poder (") }
                                             } else if (isGrupoEscolhaRow) {
                                                 varianteTracosAdicionados.any { it.grupoEscolha == trait.grupoEscolha }
                                             } else if (isPericiaChoiceRow || isStackableRow) {
@@ -2930,6 +3120,14 @@ fun CustomContentManageDialog(
                                                         }
                                                     } else {
                                                         varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isPoderInatoRow) {
+                                                    if (checked) {
+                                                        poderRacialPickerTarget = { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Poder (") }
                                                     }
                                                 } else if (isGrupoEscolhaRow) {
                                                     if (checked) {
@@ -2997,7 +3195,7 @@ fun CustomContentManageDialog(
                                 text = {
                                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                                         Text(
-                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido.",
+                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido. Super Poderes já cobertos por outro traço racial, Magia ou Vantagem (Resistência, Armadura, Voo, Cura, Destemido etc.) não aparecem aqui.",
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(bottom = 8.dp)
@@ -3008,7 +3206,7 @@ fun CustomContentManageDialog(
                                             label = { Text("Filtrar Super Poder") },
                                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                                         )
-                                        superPoderesCatalog
+                                        superPoderesCatalogParaTracoRacial
                                             .filter { it.nome.contains(filterSuperPoderText, ignoreCase = true) }
                                             .forEach { poder ->
                                                 val custoPoder = primeiroCustoSuperPoder(poder.custoBase)
@@ -3038,6 +3236,63 @@ fun CustomContentManageDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { superPoderRacialPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        poderRacialPickerTarget?.let { onEscolhido ->
+                            var filterPoderText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { poderRacialPickerTarget = null },
+                                title = { Text("Escolher Poder") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            "O traço Poder custa 2 pontos fixos pelo Antecedente Arcano (Dom) e um poder — restrito a poderes de Novato, pra não desbalancear a raça com um poder mais avançado pelos mesmos 2 pontos.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterPoderText,
+                                            onValueChange = { filterPoderText = it },
+                                            label = { Text("Filtrar Poder") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        if (poderesNovatoCatalog.isEmpty()) {
+                                            Text(
+                                                "Nenhum poder de Novato encontrado no catálogo carregado.",
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+                                        poderesNovatoCatalog
+                                            .filter { it.nome.contains(filterPoderText, ignoreCase = true) }
+                                            .sortedBy { it.nome }
+                                            .forEach { poder ->
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                        onEscolhido(
+                                                            com.example.swadebuilder.model.HabilidadeCriacao(
+                                                                nome = "Poder (${poder.nome})",
+                                                                custo = 2,
+                                                                descricao = "Antecedente Arcano (Dom) + poder \"${poder.nome}\" (Novato).",
+                                                                descricaoLite = "Concede o Antecedente Arcano (Dom) e o poder \"${poder.nome}\"."
+                                                            )
+                                                        )
+                                                        poderRacialPickerTarget = null
+                                                    }.padding(vertical = 6.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Column {
+                                                        Text(poder.nome, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                        if (poder.descricao.isNotBlank()) {
+                                                            Text(poder.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { poderRacialPickerTarget = null }) { Text("Cancelar") } }
                             )
                         }
 

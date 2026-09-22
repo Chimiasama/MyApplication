@@ -1,0 +1,249 @@
+package com.example.swadebuilder.model.usecase
+
+import com.example.swadebuilder.model.AncestryVariantConfig
+import com.example.swadebuilder.model.FixedPackageOption
+import com.example.swadebuilder.model.RacialAbility
+import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.ResolvedTraitPackage
+import com.example.swadebuilder.model.SelectionDef
+import com.example.swadebuilder.model.SelectionType
+import com.example.swadebuilder.model.TraitAddition
+import com.example.swadebuilder.model.VariantGroup
+import com.example.swadebuilder.model.VariantOption
+import com.example.swadebuilder.registry.AncestryVariantRegistry
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ValidateAncestryOptionBudgetsUseCaseTest {
+
+    private val useCase = ValidateAncestryOptionBudgetsUseCase()
+
+    @Test
+    fun `opcao com pacote vazio fecha com o valor da raca base`() {
+        val base = RacialModifier(
+            nome = "RACA_TESTE",
+            habilidades = listOf(RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL")),
+            pontosRaciaisEsperados = 2
+        )
+        val config = AncestryVariantConfig(
+            ancestralidadeId = "RACA_TESTE",
+            livro = "BASICO",
+            grupoVariante = VariantGroup(
+                opcoes = listOf(VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()))
+            )
+        )
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(1, results.size)
+        assertEquals(2, results.first().saldo)
+        assertTrue(results.first().dentroDoOrcamento)
+    }
+
+    @Test
+    fun `opcao que troca um traco por outro de mesmo custo continua fechando`() {
+        val base = RacialModifier(
+            nome = "RACA_TESTE",
+            habilidades = listOf(RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL")),
+            pontosRaciaisEsperados = 2
+        )
+        val config = AncestryVariantConfig(
+            ancestralidadeId = "RACA_TESTE",
+            livro = "BASICO",
+            grupoVariante = VariantGroup(
+                opcoes = listOf(
+                    VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
+                    VariantOption(
+                        id = "agil",
+                        nome = "Ágil",
+                        pacoteFixo = ResolvedTraitPackage(
+                            tracosParaRemoverPorNome = listOf("Adaptável"),
+                            tracosParaAdicionar = listOf(TraitAddition("Ágil", "AGIL"))
+                        )
+                    )
+                )
+            )
+        )
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == 2 })
+    }
+
+    @Test
+    fun `opcao desbalanceada e sinalizada sem afetar as outras opcoes da mesma raca`() {
+        val base = RacialModifier(
+            nome = "RACA_TESTE",
+            habilidades = listOf(RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL")),
+            pontosRaciaisEsperados = 2
+        )
+        val config = AncestryVariantConfig(
+            ancestralidadeId = "RACA_TESTE",
+            livro = "BASICO",
+            grupoVariante = VariantGroup(
+                opcoes = listOf(
+                    VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
+                    // Adiciona Resistência (1 pt) sem remover nada — fica 1
+                    // ponto acima do orçamento, de propósito.
+                    VariantOption(
+                        id = "errado",
+                        nome = "Errado",
+                        pacoteFixo = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Resistência", "RESISTENCIA"))
+                        )
+                    )
+                )
+            )
+        )
+
+        val results = useCase.execute(base, config)
+
+        val padrao = results.first { it.optionId == "padrao" }
+        val errado = results.first { it.optionId == "errado" }
+
+        assertTrue(padrao.dentroDoOrcamento)
+        assertEquals(2, padrao.saldo)
+
+        assertFalse(errado.dentroDoOrcamento)
+        assertEquals(3, errado.saldo)
+    }
+
+    @Test
+    fun `selecao fixed package tambem e validada por opcao, mesmo padrao de terracota`() {
+        val base = RacialModifier(
+            nome = "RACA_TESTE",
+            habilidades = emptyList(),
+            pontosRaciaisEsperados = -2
+        )
+        val config = AncestryVariantConfig(
+            ancestralidadeId = "RACA_TESTE",
+            livro = "ARTE_DA_GUERRA",
+            selecoes = listOf(
+                SelectionDef(
+                    id = "escolha",
+                    rotulo = "Escolha a Complicação",
+                    tipo = SelectionType.FIXED_PACKAGE,
+                    pacotesFixos = listOf(
+                        FixedPackageOption(
+                            id = "voto",
+                            nome = "Voto",
+                            pacote = ResolvedTraitPackage(
+                                desvantagensParaAdicionar = listOf(TraitAddition("Voto (Maior)", "VOTO_MAIOR"))
+                            )
+                        ),
+                        FixedPackageOption(
+                            id = "obrigacao",
+                            nome = "Obrigação",
+                            pacote = ResolvedTraitPackage(
+                                desvantagensParaAdicionar = listOf(TraitAddition("Obrigação (Maior)", "OBRIGACAO_MAIOR"))
+                            )
+                        )
+                    )
+                )
+            )
+        )
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == -2 })
+    }
+
+    @Test
+    fun `raca sem grupoVariante nem selecoes fixed package nao produz nenhum resultado`() {
+        val base = RacialModifier(nome = "RACA_TESTE", pontosRaciaisEsperados = 2)
+        val config = AncestryVariantConfig(ancestralidadeId = "RACA_TESTE", livro = "BASICO")
+
+        val results = useCase.execute(base, config)
+
+        assertTrue(results.isEmpty())
+    }
+
+    // Conteúdo real do registro (não sintético) — confere que
+    // AncestryVariantRegistry.meioElfoHeranca() está calibrado certo contra
+    // o mesmo pacote base que ancestralidades.json carrega pro Meio-Elfo do
+    // Básico (Forasteiro Menor -1, Herança 2, Visão no Escuro 1 = 2, o
+    // padrão de livro).
+    @Test
+    fun `meio-elfo real fecha nas duas opcoes de heranca`() {
+        val base = RacialModifier(
+            nome = "MEIO-ELFOS",
+            habilidades = listOf(
+                RacialAbility(nome = "Forasteiro", descricao = "", id = "FORASTEIRO", severity = "Menor"),
+                RacialAbility(nome = "Herança", descricao = "", id = "HERANCA"),
+                RacialAbility(nome = "Visão no Escuro", descricao = "", id = "VISAO_NO_ESCURO")
+            ),
+            origem = "BASICO"
+        )
+        val config = AncestryVariantRegistry.get("MEIO-ELFOS", "BASICO")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == 2 })
+    }
+
+    // Idem pro Meio-Demônio (Cidade do Sol a Vapor): raça base só com o
+    // marcador ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO (2 pts, orçamento
+    // padrão de livro) — as duas opções (Adaptável/Antecedente Arcano)
+    // custam o mesmo (GRANTED_EDGE = 2), então nenhuma desbalanceia a raça.
+    @Test
+    fun `meio-demonio real fecha nas duas opcoes de traco racial`() {
+        val base = RacialModifier(
+            nome = "MEIO-DEMONIO",
+            habilidades = listOf(
+                RacialAbility(
+                    nome = "Adaptável",
+                    descricao = "",
+                    id = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"
+                )
+            ),
+            origem = "CIDADE_SOL_VAPOR"
+        )
+        val config = AncestryVariantRegistry.get("MEIO-DEMONIO", "CIDADE_SOL_VAPOR")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == 2 })
+    }
+
+    // Humano (Império San, Arte da Guerra): 14 opções de Signo de Nascença
+    // (13 signos + Nenhum). Conteúdo real do registro — confirma a
+    // calibração descrita no comentário de
+    // AncestryVariantRegistry.humanoArteDaGuerraSignos(): "Nenhum" fecha
+    // exatamente em 3 (o orçamento de livro), Garça soma 4 (os 3 efeitos
+    // dela já têm gancho mecânico pronto, o livro não parece calibrar os
+    // Signos entre si com o mesmo rigor que Terracota/Meio-Elfo), Tartaruga
+    // fica em 1 e Tigre em 0 (nenhum efeito situacional modelado ainda —
+    // achado real, não bug de código).
+    @Test
+    fun `humano arte da guerra real - nenhum fecha em 3, garca fica acima, tigre em 0`() {
+        val base = RacialModifier(
+            nome = "HUMANOS",
+            habilidades = listOf(
+                RacialAbility(nome = "Signos de Nascença", descricao = "", id = "SIGNOS_DE_NASCENCA")
+            ),
+            origem = "ARTE_DA_GUERRA",
+            pontosRaciaisEsperados = 3
+        )
+        val config = AncestryVariantRegistry.get("HUMANOS", "ARTE_DA_GUERRA")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(14, results.size)
+        assertEquals(3, results.first { it.optionId == "nenhum" }.saldo)
+        assertEquals(3, results.first { it.optionId == "kirin" }.saldo)
+        assertEquals(4, results.first { it.optionId == "garca" }.saldo)
+        assertEquals(1, results.first { it.optionId == "tartaruga" }.saldo)
+        assertEquals(0, results.first { it.optionId == "tigre" }.saldo)
+        assertEquals(0, results.first { it.optionId == "serpente" }.saldo)
+    }
+}

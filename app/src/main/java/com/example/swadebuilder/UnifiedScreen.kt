@@ -91,7 +91,6 @@ import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
-import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
@@ -508,7 +507,6 @@ private fun MainSection.icon(): ImageVector = when (this) {
     MainSection.RESUMO -> Icons.Default.Description
     MainSection.ANCESTRALIDADES -> Icons.Default.Face
     MainSection.TROPOS -> Icons.Default.AccountBox
-    MainSection.MONSTRO -> Icons.Default.BugReport
     MainSection.COMPLICACOES -> Icons.Default.Warning
     MainSection.ATRIBUTOS -> Icons.Default.FitnessCenter
     MainSection.PERICIAS -> Icons.Default.School
@@ -539,7 +537,6 @@ private fun MainSection.tabLabel(state: CriadorState): String = when (this) {
         "Poderes"
     }
     MainSection.XP -> "XP"
-    MainSection.MONSTRO -> "Monstro"
     MainSection.CRYSTAL_HEART -> "Crystal Heart".toEditionDisplayName()
     MainSection.MECHAS -> "Mechas"
     MainSection.CIBERNETICOS -> "Cibernéticos"
@@ -644,17 +641,21 @@ internal fun availableSectionsFor(state: CriadorState): List<MainSection> {
         return sections
     }
 
-    if (!state.compendioWiseguysAtivo && !state.compendioDeadlandsAtivo) {
+    if ((!state.compendioWiseguysAtivo || state.wiseguysHabilitaRacas) && !state.compendioDeadlandsAtivo) {
         sections += MainSection.ANCESTRALIDADES
     }
-    if (state.compendioArteDaGuerraAtivo) {
+    // Aba Tropo: aparece pra qualquer livro com o sistema de Tropo ligado (obrigatório no
+    // Arte da Guerra, ou ligado manualmente na checkbox de regra em qualquer outro livro —
+    // ver CriadorState.modoTroposAtivo), não só Arte da Guerra. Monstro Heroico (Horror)
+    // virou um Tropo de verdade (rodada 44) — não existe mais uma aba/mecanismo de seleção
+    // separado, é a mesma aba/lista. O bloqueio total das demais abas (isAdgLockedMode)
+    // continua exclusivo do Arte da Guerra — só ele obriga escolher um Tropo antes de
+    // liberar o resto da ficha.
+    if (state.modoTroposAtivo) {
         sections += MainSection.TROPOS
         if (state.isAdgLockedMode) {
             return sections
         }
-    }
-    if (state.modoMonstroAtivo) {
-        sections += MainSection.MONSTRO
     }
     sections += MainSection.COMPLICACOES
     sections += MainSection.ATRIBUTOS
@@ -926,11 +927,6 @@ private fun CreationDetailContent(
             listaVantagens = viewModel.gameDataStore.getVantagens(),
             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onUserFeedback = onUserFeedback
-        )
-        MainSection.MONSTRO -> TipoMonstroSection(
-            state = state,
-            onUserFeedback = onUserFeedback,
-            onLogFeedback = viewModel::logFeedback
         )
         MainSection.COMPLICACOES -> ComplicacoesSection(
             state = state,

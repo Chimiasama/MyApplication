@@ -133,4 +133,28 @@ class ModifierEngineAdgAncestryTest {
             }
         )
     }
+
+    // Sistema de Tropo genérico (rodada 43): Protagonista (Arte da Guerra) "Velocidade
+    // Incomum" concede +6 de Movimentação — nenhuma raça concede um bônus fixo desse tipo
+    // hoje, mas o mecanismo (traitId=PACE_CHANGE -> RacialTraitEffect.PassoBonus) já é
+    // genérico e passa pelo mesmo ModifierEngine que raça/Monstro usam, sem precisar de
+    // nenhum alvo novo.
+    @Test
+    fun `tropo com PassoBonus concede Modifier de Movimentacao, mesmo mecanismo generico de raca`() {
+        val state = stateWithAncestry(
+            ancestralidade = "Humano",
+            modifier = RacialModifier(nome = "Humano")
+        )
+        state.tropoSelecionado = Tropo(
+            id = "tropo_teste", nome = "Tropo Teste", categoria = "TROPO", origem = "ARTE_DA_GUERRA",
+            descricao = "",
+            habilidades = listOf(
+                RacialAbility(nome = "Velocidade Incomum", descricao = "", traitId = "PACE_CHANGE", value = 6)
+            )
+        )
+
+        val modifiers = ModifierEngine.collect(state)
+
+        assertTrue(modifiers.any { it.target == ModifierTarget.PACE && it.value == 6 })
+    }
 }

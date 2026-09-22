@@ -29,9 +29,10 @@ fun StandardEquipamentoItem(
     onClick: () -> Unit,
     allowLongTexts: Boolean,
     showOriginalName: Boolean = false,
-    showTensao: Boolean = false
+    showTensao: Boolean = false,
+    passosDiminuto: Int = 0
 ) {
-    val resumo = equipamento.toResumo()
+    val resumo = equipamento.toResumo(passosDiminuto)
     val themeData = LocalAppThemeData.current
 
     Card(

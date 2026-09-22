@@ -77,6 +77,7 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.FilterChipGroup
 import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
@@ -98,6 +99,15 @@ fun VantFilterDialog(
     onChange: (VantFilter) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Cada grupo abre/fecha independente — Perícias sozinha já pode ter dezenas de opções, e
+    // antes os três grupos (Estágio/Atributos/Perícias) ficavam sempre todos abertos ao mesmo
+    // tempo dentro de uma altura fixa de 300dp, virando uma lista de Checkbox gigante e sem
+    // como recolher. Perícias começa fechada por padrão (é o grupo mais longo); os outros dois
+    // são curtos o bastante pra abrir já expandidos.
+    val expandedGroups = remember {
+        mutableStateMapOf("Estágio" to true, "Atributos" to true, "Perícias" to false)
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Filtros Avançados") },
@@ -105,59 +115,48 @@ fun VantFilterDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 300.dp)
+                    .heightIn(max = 420.dp)
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
-                Text("Estágio", fontWeight = FontWeight.Bold)
-                allEstagios.forEach { e ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = e in current.estagios,
-                            onCheckedChange = {
-                                val s = current.estagios.toMutableSet()
-                                if (it) s += e else s -= e
-                                onChange(current.copy(estagios = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(e)
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
+                FilterChipGroup(
+                    title = "Estágio",
+                    options = allEstagios,
+                    selected = current.estagios,
+                    onToggle = { e ->
+                        val s = current.estagios.toMutableSet()
+                        if (e in s) s -= e else s += e
+                        onChange(current.copy(estagios = s))
+                    },
+                    expanded = expandedGroups["Estágio"] ?: true,
+                    onExpandedChange = { expandedGroups["Estágio"] = it }
+                )
 
-                Text("Atributos", fontWeight = FontWeight.Bold)
-                allAtributos.forEach { a ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = a in current.atributos,
-                            onCheckedChange = {
-                                val s = current.atributos.toMutableSet()
-                                if (it) s += a else s -= a
-                                onChange(current.copy(atributos = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(a)
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
+                FilterChipGroup(
+                    title = "Atributos",
+                    options = allAtributos,
+                    selected = current.atributos,
+                    onToggle = { a ->
+                        val s = current.atributos.toMutableSet()
+                        if (a in s) s -= a else s += a
+                        onChange(current.copy(atributos = s))
+                    },
+                    expanded = expandedGroups["Atributos"] ?: true,
+                    onExpandedChange = { expandedGroups["Atributos"] = it }
+                )
 
-                Text("Perícias", fontWeight = FontWeight.Bold)
-                allPericias.forEach { p ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = p in current.pericias,
-                            onCheckedChange = {
-                                val s = current.pericias.toMutableSet()
-                                if (it) s += p else s -= p
-                                onChange(current.copy(pericias = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(p)
-                    }
-                }
+                FilterChipGroup(
+                    title = "Perícias",
+                    options = allPericias,
+                    selected = current.pericias,
+                    onToggle = { p ->
+                        val s = current.pericias.toMutableSet()
+                        if (p in s) s -= p else s += p
+                        onChange(current.copy(pericias = s))
+                    },
+                    expanded = expandedGroups["Perícias"] ?: false,
+                    onExpandedChange = { expandedGroups["Perícias"] = it }
+                )
             }
         },
         confirmButton = {
@@ -201,7 +200,7 @@ fun VantagensContent(
         state.compendioFantasiaAtivo,
         state.compendioHorrorAtivo,
         state.compendioSciFiAtivo,
-        state.modoMonstroAtivo,
+        state.tropoSelecionado,
         state.compendioPathfinderAtivo,
         state.compendioDeadlandsAtivo,
         state.compendioCrystalHeartAtivo,
@@ -314,20 +313,19 @@ fun VantagensContent(
     val filteredListGlobal = remember(
         listaVantagensAtivas,
         state.modoSupers,
-        state.modoMonstroAtivo,
-        state.tipoMonstroSelecionado,
+        state.tropoSelecionado,
         hasProfissional,
         filter,
         multiplosAAHabilitados
     ) {
         listaVantagensAtivas.filter { vant ->
-            // Monster mode: for MONSTRUOSAS, only show matching template edges + generic ones (without template)
-            if (state.modoMonstroAtivo && vant.categoria == Categoria.MONSTRUOSAS) {
-                val requiredTemplates = vant.requisitos.templatesRequired.map { it.keyify() }
-                if (requiredTemplates.isNotEmpty()) {
-                    val selectedTemplate = state.tipoMonstroSelecionado?.keyify()
-                    if (selectedTemplate == null || selectedTemplate !in requiredTemplates) return@filter false
-                }
+            // Vantagem travada a um Tropo específico (requisitos.templatesRequired — ex.:
+            // MONSTRUOSAS do Horror, mas generaliza pra qualquer categoria custom com o mesmo
+            // requisito — ver rodada 44): só aparece quando o Tropo selecionado bate.
+            val requiredTemplates = vant.requisitos.templatesRequired.map { it.keyify() }
+            if (requiredTemplates.isNotEmpty()) {
+                val selectedTropoId = state.tropoSelecionado?.id?.keyify()
+                if (selectedTropoId == null || selectedTropoId !in requiredTemplates) return@filter false
             }
 
             // Professional/Specialist Dependency
@@ -887,7 +885,12 @@ fun VantagensContent(
                                                     } else {
                                                         attemptPurchase(vant) {}
                                                     }
-                                                } else if (vant.id == "poder_favorito") {
+                                                // "poder_favorito_horror" é o mesmo conceito (Poder Favorito) só que
+                                                // com id próprio no livro Horror (requisitos.vantagens_previas
+                                                // diferente) — sem essa segunda checagem, comprar a versão Horror
+                                                // pulava direto pro "else" (attemptPurchase sem escolher poder
+                                                // nenhum), então nunca ficava registrado QUAL poder é o favorito.
+                                                } else if (vant.id == "poder_favorito" || vant.id == "poder_favorito_horror") {
                                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
                                                     if (ownedPowers.isEmpty()) {
                                                         viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
@@ -943,7 +946,7 @@ fun VantagensContent(
                                             } else {
                                                 attemptPurchase(vant) {}
                                             }
-                                        } else if (vant.id == "poder_favorito") {
+                                        } else if (vant.id == "poder_favorito" || vant.id == "poder_favorito_horror") {
                                             val ownedPowers = state.poderesSelecionados.filterNotNull()
                                             if (ownedPowers.isEmpty()) {
                                                 viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
@@ -1027,7 +1030,7 @@ fun VantagensContent(
                                     } else {
                                         attemptPurchase(vant) {}
                                     }
-                                } else if (vant.id == "poder_favorito") {
+                                } else if (vant.id == "poder_favorito" || vant.id == "poder_favorito_horror") {
                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
                                     if (ownedPowers.isEmpty()) {
                                         viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
@@ -1423,11 +1426,14 @@ fun VantagensContent(
             derivedStateOf { state.poderesSelecionados.distinct().filterNotNull() }
         }
 
-        // Retrieve already selected "Favored Powers" to exclude them
+        // Retrieve already selected "Favored Powers" to exclude them — "poder_favorito"
+        // (Fantasia/Sci-Fi) e "poder_favorito_horror" (id próprio no livro Horror) são o
+        // mesmo conceito, então contam juntos pra não deixar escolher o mesmo poder duas
+        // vezes se por algum motivo os dois estiverem disponíveis ao mesmo tempo.
         val alreadyFavored by remember {
             derivedStateOf {
                 state.vantagensSelecionadas
-                    .filter { it.id == "poder_favorito" && !it.choice.isNullOrBlank() }
+                    .filter { (it.id == "poder_favorito" || it.id == "poder_favorito_horror") && !it.choice.isNullOrBlank() }
                     .mapNotNull { it.choice }
                     .toSet()
             }

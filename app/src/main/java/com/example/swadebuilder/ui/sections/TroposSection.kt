@@ -99,7 +99,10 @@ fun TroposSection(
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
-    if (!state.compendioArteDaGuerraAtivo) return
+    // Livros com o sistema de Tropo ligado manualmente (ver CriadorState.modoTroposAtivo)
+    // também usam esta seção — não é mais exclusiva do Arte da Guerra (só ele obriga a
+    // escolha de um Tropo; os demais o oferecem como regra opcional, ver TelaInicial).
+    if (!state.modoTroposAtivo) return
 
     val tropos = remember(listaTropos) { listaTropos }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
@@ -145,17 +148,26 @@ fun TroposSection(
                 Column(modifier = Modifier.padding(12.dp)) {
                     RadioButtonRow(
                         selected = noneSelected,
-                        label = "Nenhum (Permite alterar Ancestralidade)",
+                        label = "Nenhum",
                         onSelect = {
                             state.selecionarTropo(null)
                             onUserFeedback()
                         }
                     )
-                    Text(
-                        text = "Selecione esta opção se deseja alterar sua Ancestralidade. Enquanto um Tropo estiver ativo, a Ancestralidade fica bloqueada.",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 40.dp, top = 4.dp)
-                    )
+                    // Escolher um Tropo não bloqueia mais a Ancestralidade (rodada 46) — o
+                    // motor de raça+Tropo recalcula tudo do zero a cada chamada, então trocar
+                    // de raça com um Tropo selecionado é seguro. No Arte da Guerra, "Nenhum"
+                    // ainda é só um estado transitório: o resto da ficha continua bloqueado
+                    // até o jogador escolher um Tropo de verdade (regra do livro, sistema
+                    // obrigatório) — nos demais livros (sistema opcional), é um estado final
+                    // válido.
+                    if (state.compendioArteDaGuerraAtivo) {
+                        Text(
+                            text = "Enquanto nenhum Tropo de verdade for escolhido, o resto da ficha continua bloqueado (regra do Arte da Guerra).",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                        )
+                    }
                 }
             }
 

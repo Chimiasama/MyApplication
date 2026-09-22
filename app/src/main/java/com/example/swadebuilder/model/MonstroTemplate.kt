@@ -48,6 +48,97 @@ data class MonstroTemplate(
     }
 }
 
+// Complicações de MonstroTemplate.complicacoes que citam, no próprio texto do livro, uma
+// Complicação real do catálogo geral com severidade explícita — conferido contra
+// complicacoes.json (id/severity reais) na migração pro sistema de Tropo (ver
+// docs/auditoria_mecanica_racas_2026-08-31.md rodada 43): Anjo "Complicação Voto (Maior)",
+// Monstro de Retalhos "Complicação Sem Noção" (catálogo só tem severidade "maior") e "Fobia
+// (Maior)", Vampiro "tratado como Hábito (Maior)", Revivido "Voto (Maior)". Múmia "Lento:
+// Movimentação reduzida em 1..." bate palavra por palavra com a versão Menor da Complicação
+// real "Lento" do catálogo — esse caso, diferente dos outros 5 (puramente narrativos mesmo
+// vinculados, igual qualquer Voto/Hábito/Fobia/Sem Noção normal), tem efeito numérico real
+// (RacialTraitPointCatalog.EFEITOS["LENTO"] = PassoBonus(-1)), por isso ganha também
+// traitId=PACE_CHANGE explícito — sem isso, a Complicação aparecia na lista mas nunca
+// reduzia a Movimentação de verdade (igual o texto solto de complicacoes[] já fazia antes
+// desta migração). Auditoria mais profunda (rodada 43, a pedido do usuário) não achou mais
+// nenhum outro caso real: o catálogo geral não tem uma Complicação genérica "Fraqueza (X)"/
+// "Vulnerabilidade a dano de X" equivalente às ~12 "Fraqueza (Prata)/(Fogo)/(Estaca)/..." dos
+// outros templates (VULNERABILIDADE do catálogo é sobre exposição a substância — Distraído/
+// Fadiga —, não sobre dano extra de um tipo de arma/elemento) — ficam narrativas mesmo, sem
+// targetRef (mesmo padrão de uma Complicação de raça sem reskin, ex. Avianos "Não Sabe
+// Nadar" antes do vínculo existir).
+private data class MonstroComplicacaoLink(
+    val monstroId: String,
+    val textoContem: String,
+    val targetRef: String,
+    val severity: String,
+    val traitId: String? = null,
+    val value: Int = 1
+)
+
+private val MONSTRO_COMPLICACAO_LINKS = listOf(
+    MonstroComplicacaoLink("anjo", "Servo do Paraíso", "voto", "Maior"),
+    MonstroComplicacaoLink("monstro_retalhos", "Confusão", "sem_nocao", "Maior"),
+    MonstroComplicacaoLink("monstro_retalhos", "Fogo Mau", "fobia", "Maior"),
+    MonstroComplicacaoLink("vampiro", "Fome", "habito", "Maior"),
+    MonstroComplicacaoLink("revivido", "Vingança", "voto", "Maior"),
+    MonstroComplicacaoLink("mumia", "Lento", "lento", "Menor", traitId = "PACE_CHANGE", value = -1)
+)
+
+/**
+ * Converte um MonstroTemplate (Horror) pro tipo Tropo unificado (ver rodada 43): mesmo
+ * formato `habilidades: List<RacialAbility>` que raça/Tropo de Arte da Guerra usam.
+ * `atributosBonus` vira ATTRIBUTE_BOOST/SKILL_BOOST (Fé é perícia, o resto é atributo) —
+ * mesma conversão que `paraCaracteristicas()` já fazia, só que agora vira dado real em vez
+ * de sintético-na-hora; `habilidades[]` passa direto (já usa o mesmo formato); cada string de
+ * `complicacoes` vira uma RacialAbility `category="racial_hindrance"`, com `targetRef`
+ * explícito só nos 5 casos verificados contra o catálogo (ver MONSTRO_COMPLICACAO_LINKS
+ * acima) — preserva o comportamento atual (ModifierEngine já lê o texto antes de ":" como
+ * nome da Complicação) e, nesses 5 casos, além disso vincula com o id real.
+ */
+fun MonstroTemplate.paraTropo(): Tropo {
+    val atributoHabilidades = atributosBonus.entries
+        .filterNot { it.key.keyify() == "FE" }
+        .map { (atributo, passos) ->
+            RacialAbility(nome = atributo, descricao = "", traitId = "ATTRIBUTE_BOOST", targetRef = atributo, value = passos, invisivel = true)
+        }
+    val feEntry = atributosBonus.entries.firstOrNull { it.key.keyify() == "FE" }
+    val periciaHabilidade = feEntry?.let {
+        RacialAbility(nome = "Fé", descricao = "", traitId = "SKILL_BOOST", targetRef = "Fé", value = it.value, invisivel = true)
+    }
+    val habilidadesConvertidas = habilidades.map {
+        RacialAbility(
+            nome = it.nome, descricao = it.descricao, descricaoLite = it.descricaoLite,
+            id = it.id, category = it.category, traitId = it.traitId, targetRef = it.targetRef,
+            armasNaturais = it.armasNaturais
+        )
+    }
+    val complicacaoHabilidades = complicacoes.mapIndexed { i, texto ->
+        val label = texto.substringBefore(":").trim()
+        val link = MONSTRO_COMPLICACAO_LINKS.firstOrNull { it.monstroId == id && label.contains(it.textoContem, ignoreCase = true) }
+        RacialAbility(
+            nome = label,
+            descricao = texto,
+            descricaoLite = complicacoesLite?.getOrNull(i),
+            id = "MONSTRO_${id}_COMPLICACAO_$i".keyify(),
+            category = "racial_hindrance",
+            traitId = link?.traitId,
+            targetRef = link?.targetRef,
+            value = link?.value ?: 1,
+            severity = link?.severity
+        )
+    }
+    return Tropo(
+        id = id,
+        nome = nome,
+        categoria = "MONSTRO",
+        origem = "HORROR",
+        descricao = descricao,
+        descricaoLite = descricaoLite,
+        habilidades = atributoHabilidades + listOfNotNull(periciaHabilidade) + habilidadesConvertidas + complicacaoHabilidades
+    )
+}
+
 @Serializable
 data class MonstroHabilidade(
     val nome: String,
@@ -104,7 +195,7 @@ data class MonstroHabilidade(
  *   rótulo antes dos ":" (mesmo corte que ModifierEngine já faz pra aplicar
  *   a mecânica).
  */
-fun MonstroTemplate.paraCaracteristicas(): List<String> {
+fun MonstroTemplate.paraCaracteristicas(allVantagens: List<Vantagem> = emptyList()): List<String> {
     val atributosSinteticos = atributosBonus
         .filterKeys { it.keyify() != "FE" }
         .map { (atributo, passos) ->
@@ -121,7 +212,8 @@ fun MonstroTemplate.paraCaracteristicas(): List<String> {
     }
 
     val linhas = RacialCaracteristicasResolver.resolver(
-        habilidades = atributosSinteticos + listOfNotNull(periciaSintetica) + habilidadesConvertidas
+        habilidades = atributosSinteticos + listOfNotNull(periciaSintetica) + habilidadesConvertidas,
+        allVantagens = allVantagens
     ).toMutableList()
 
     complicacoes.forEach { linhas += it.substringBefore(":").trim() }
@@ -134,7 +226,15 @@ data class ArmaNatural(
     val nome: String,
     val dano: String,
     val pa: Int = 0,
-    // Se Artista Marcial/Brigão aumenta o tipo de dado desta arma (regra do
-    // livro: só armas de "impacto" tipo garras escalam, mordida não).
-    val escalavel: Boolean = false
-)
+    // Id do traço/Vantagem que concedeu esta arma (ex.: "GARRAS_SEM_PA",
+    // "CHIFRES", "garras_demonio") — única fonte de verdade pra saber se ela
+    // escala com Artista Marcial/Brigão (regra do livro: só armas de
+    // "impacto" tipo garra escalam, mordida/chifre não — ver
+    // RacialTraitPointCatalog.armaNaturalEscalavel()). Nunca mais um
+    // booleano `escalavel` solto por raça/instância: sem esse campo pra
+    // setar, não tem como uma raça nova "errar" o valor — o traço que já
+    // concede a arma é quem decide, pelo próprio id.
+    val id: String? = null
+) {
+    val escalavel: Boolean get() = RacialTraitPointCatalog.armaNaturalEscalavel(id)
+}

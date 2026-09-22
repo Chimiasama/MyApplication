@@ -32,8 +32,6 @@ class CharacterRevisionManagerTest {
                 modoSupers = false,
                 compendioFantasiaAtivo = false,
                 compendioHorrorAtivo = false,
-                modoMonstroAtivo = false,
-                tipoMonstroSelecionado = null,
                 usarEspecializacoesDePericia = false,
                 grandesResponsabilidades = false,
                 nasceUmHeroi = false,

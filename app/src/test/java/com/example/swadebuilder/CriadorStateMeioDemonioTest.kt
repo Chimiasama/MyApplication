@@ -35,7 +35,16 @@ class CriadorStateMeioDemonioTest {
     private fun meioDemonio(): RacialModifier = RacialModifier(
         nome = "Meio-Demônio",
         habilidades = listOf(
-            RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
+            // Id marcador da escolha (não mais o "ADAPTAVEL" genérico) — ver
+            // applyAncestryVariantAdjustments em CriadorState: dispara pelo
+            // traço em si, não pelo nome da raça, mesmo padrão de HERANCA
+            // (Meio-Elfo) e SIGNOS_DE_NASCENCA (Humano Arte da Guerra).
+            RacialAbility(
+                nome = "Adaptável",
+                descricao = "",
+                id = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO",
+                category = "racial_trait_positive"
+            )
         ),
         origem = "CIDADE_SOL_VAPOR"
     )

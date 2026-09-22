@@ -58,6 +58,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -86,7 +87,6 @@ fun TelaInicial(
         compendioArteDaGuerraAtivo: Boolean,
         compendioCidadeSolVaporAtivo: Boolean,
         compendioWiseguysAtivo: Boolean,
-        modoMonstroAtivo: Boolean,
         nasceUmHeroi: Boolean,
         especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
@@ -97,7 +97,8 @@ fun TelaInicial(
         optRegraCosaNostra: Boolean,
         optRegraMechas: Boolean,
         optRegraCiberneticos: Boolean,
-        optVariantesDeRaca: Boolean
+        optVariantesDeRaca: Boolean,
+        modoTroposHabilitadoManualmente: Boolean
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     onOpenSettings: () -> Unit,
@@ -123,7 +124,6 @@ fun TelaInicial(
 
     // Horror
     var optCompendioHorror by rememberSaveable { mutableStateOf(false) }
-    var optModoMonstro by rememberSaveable { mutableStateOf(false) }
 
     // Fantasy
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
@@ -131,9 +131,15 @@ fun TelaInicial(
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
+    // Checkbox "usar sistema de Tropos" pra qualquer livro que não seja Arte da Guerra
+    // (sempre obrigatório lá) — ver CriadorState.modoTroposAtivo. Pra Horror, é a MESMA
+    // checkbox que antes era "Monstros Heróis" (Monstro Heroico virou Tropo — rodada 44),
+    // só com rótulo contextual (ver o SimpleCheckRow mais abaixo).
+    var optModoTropos by rememberSaveable { mutableStateOf(false) }
     var optRegraFama by rememberSaveable { mutableStateOf(false) }
     var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
     var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
+    var optWiseguysHabilitaRacas by rememberSaveable { mutableStateOf(false) }
     var optRegraRiqueza by rememberSaveable { mutableStateOf(false) }
     var optRegraCosaNostra by rememberSaveable { mutableStateOf(false) }
     var optVariantesDeRaca by rememberSaveable { mutableStateOf(false) }
@@ -166,10 +172,11 @@ fun TelaInicial(
         optMaisPontosPericias = true
         optNasceUmHeroi = false
         optGrandesResponsabilidades = false
-        optModoMonstro = false
+        optModoTropos = false
         optRegraFama = false
         optRegraRiqueza = false
         optRegraCosaNostra = false
+        optWiseguysHabilitaRacas = false
         optRegraMechas = false
         optRegraCiberneticos = false
     }
@@ -187,7 +194,6 @@ fun TelaInicial(
         optRegraMechas = preset.defaultRegraMechas
         optRegraCiberneticos = preset.defaultRegraCiberneticos
         optGrandesResponsabilidades = preset.defaultGrandesResponsabilidades
-        optModoMonstro = preset.defaultModoMonstro
     }
 
     fun getActiveBookPresetId(): String {
@@ -408,7 +414,6 @@ fun TelaInicial(
                 optCompendioArteDaGuerra,
                 optCompendioCidadeSolVapor,
                 optCompendioWiseguys,
-                optModoMonstro,
                 optNasceUmHeroi,
                 optEspecializacaoPer,
                 optSemPontosPoder,
@@ -419,7 +424,8 @@ fun TelaInicial(
                 optRegraCosaNostra,
                 optRegraMechas,
                 optRegraCiberneticos,
-                optVariantesDeRaca
+                optVariantesDeRaca,
+                optModoTropos
             )
             viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
             viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
@@ -427,6 +433,7 @@ fun TelaInicial(
             viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
             viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
             viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+            viewModel.state.wiseguysHabilitaRacas = optWiseguysHabilitaRacas
             viewModel.state.optRegraRiqueza = optRegraRiqueza
             viewModel.state.optRegraCosaNostra = optRegraCosaNostra
             viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
@@ -664,10 +671,23 @@ fun TelaInicial(
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        if (optCompendioWiseguys) {
+                            // Wiseguys é um cenário substituto (só "Humano" tem
+                            // `livros: WISEGUYS` no catálogo) — sem isso ligado, a aba
+                            // Ancestralidades nem aparece e Variantes de Raça não tem
+                            // nada pra mostrar (fica desabilitado até aqui ser marcado).
+                            SimpleCheckRow(
+                                title = "Habilitar Raças",
+                                description = "Reabre a aba de Ancestralidades com as raças do Livro Básico, pra fugir do padrão \"todo mundo é humano\" do cenário.",
+                                checked = optWiseguysHabilitaRacas,
+                                onCheckedChange = { optWiseguysHabilitaRacas = it }
+                            )
+                        }
                         SimpleCheckRow(
                             title = "Variantes de Raça",
                             description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber, Sáurios Cuspidor).",
                             checked = optVariantesDeRaca,
+                            enabled = !optCompendioWiseguys || optWiseguysHabilitaRacas,
                             onCheckedChange = { optVariantesDeRaca = it }
                         )
 
@@ -720,12 +740,20 @@ fun TelaInicial(
                             )
                         }
 
-                        if (optCompendioHorror) {
+                        // Arte da Guerra já obriga o sistema de Tropo (fica de fora daqui).
+                        // Monstro Heroico (Horror) virou um Tropo de verdade (rodada 44) — a
+                        // antiga checkbox dedicada "Monstros Heróis" é a MESMA checkbox de
+                        // qualquer outro livro, só com rótulo contextual.
+                        if (!optCompendioArteDaGuerra) {
                             SimpleCheckRow(
-                                title = "Monstros Heróis",
-                                description = "Jogar como vampiro, lobisomem, etc.",
-                                checked = optModoMonstro,
-                                onCheckedChange = { optModoMonstro = it }
+                                title = if (optCompendioHorror) "Monstros Heróis" else "Usar sistema de Tropos",
+                                description = if (optCompendioHorror) {
+                                    "Jogar como vampiro, lobisomem, etc."
+                                } else {
+                                    "Habilita a aba de Tropos (arquétipos opcionais do personagem)."
+                                },
+                                checked = optModoTropos,
+                                onCheckedChange = { optModoTropos = it }
                             )
                         }
 
@@ -801,16 +829,19 @@ fun SimpleCheckRow(
     title: String,
     description: String,
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    val alpha = if (enabled) 1f else 0.5f
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 4.dp),
+            .clickable(enabled = enabled) { onCheckedChange(!checked) }
+            .padding(vertical = 4.dp)
+            .alpha(alpha),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = checked, onCheckedChange = null)
+        Checkbox(checked = checked, onCheckedChange = null, enabled = enabled)
         Spacer(Modifier.width(8.dp))
         Column {
             Text(text = title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)

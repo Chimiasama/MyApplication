@@ -22,11 +22,12 @@ package com.example.swadebuilder.model
  * não existe "raça normal" à parte).
  */
 
-// ATTRIBUTE/SKILL ainda não são referenciados: nenhuma raça cadastrada usa
-// SelectionType.TARGET_ATTRIBUTE_OR_SKILL hoje (ver o comentário em
-// ResolveAncestryVariantPackageUseCase.resolveSelection) — o desenho de id
-// pra esse tipo de alvo ainda está pendente. Suprimido em vez de removido.
-@Suppress("unused")
+// Usado por SelectionDef.targetKind pra decidir o traço mecânico injetado
+// por uma Seleção TARGET_ATTRIBUTE_OR_SKILL (ATTRIBUTE_BOOST ou SKILL_BOOST
+// — ver ResolveAncestryVariantPackageUseCase.resolveSelection). SKILL ainda
+// não é usado por nenhuma raça cadastrada (só ATTRIBUTE, ver
+// AncestryVariantRegistry.meioOrc()/feral()), mas o enum já cobre os dois
+// porque o mecanismo de resolução em si não distingue.
 enum class TraitTargetKind { ATTRIBUTE, SKILL }
 
 /** Como uma Seleção resolve a escolha do jogador em efeito mecânico. */
@@ -62,7 +63,38 @@ enum class SelectionType {
  * narrativo, ex.: "Garras", "Visão no Escuro"), o id ainda existe — só não
  * bate com nenhuma chave de EFEITOS, exatamente como já acontecia com
  * habilidades sem efeito mecânico. */
-data class TraitAddition(val nome: String, val id: String, val vezes: Int = 1)
+data class TraitAddition(
+    val nome: String,
+    val id: String,
+    val vezes: Int = 1,
+    // Override pra traços puramente de bookkeeping orçamentário — sem efeito
+    // mecânico próprio, só um ajuste de pontos pra fechar o total de uma opção
+    // de Variante contra outra (ex.: Elementais "Ar, Fogo ou Água" trocando
+    // Forte+Resistência, 6 pts, por Forma de Energia, 4 pts, precisa de +2 pra
+    // fechar igual à opção "Padrão"). 0/false preserva o comportamento de
+    // sempre: pontos vêm de RacialTraitPointCatalog via `id`, traço visível.
+    val pontos: Int = 0,
+    val invisivel: Boolean = false,
+    // Override do mecanismo parametrizado (RacialAbility.traitId/targetRef) —
+    // usado por Seleções cujo efeito depende de um alvo ESCOLHIDO pelo
+    // jogador (ex.: TARGET_ATTRIBUTE_OR_SKILL: "ATTRIBUTE_BOOST" + targetRef
+    // = o atributo escolhido), onde `id` sozinho não é suficiente pra
+    // RacialTraitPointCatalog.efeitoDe() resolver o efeito certo. `id`
+    // continua sendo a identidade estável do traço (dedup/remoção); quando
+    // `traitId` está presente, RacialAbility.resolvedTraitId() o prioriza
+    // pra leitura do efeito mecânico, mas note que o custo em pontos
+    // (ResolveVariantPointBudgetUseCase/ValidateAncestryOptionBudgetsUseCase)
+    // ainda lê `id` cru — por isso quem usa `traitId` aqui também deve
+    // preencher `pontos` explicitamente, não confiar em CUSTOS[id].
+    val traitId: String? = null,
+    val targetRef: String? = null,
+    // Idem — override de RacialAbility.value (passos acima de d4; ver
+    // RacialTraitEffect.AtributoStep/PericiaStep.passos) pros mesmos casos
+    // de `traitId`/`targetRef` acima, quando o passo não é o padrão 1 (d6
+    // de atributo, d4 de perícia) — ex.: Usagimimi "Definido pelo Ofício"
+    // concede perícia d6 (passos=2), não d4.
+    val value: Int = 1
+)
 
 /** Id + contagem de compras de um traço empilhável (ver RacialTraitPointCatalog.
  * VEZES_MAX) já resolvido por Variante/Seleção — a versão "sem nome de
@@ -120,21 +152,58 @@ data class SelectionDef(
     val rotulo: String,
     val tipo: SelectionType,
     // TARGET_ATTRIBUTE_OR_SKILL — injectionTemplate usa "{alvo}" como
-    // placeholder de exibição (ex.: "{alvo} d6"), mas nenhuma raça cadastrada
-    // no registro usa este tipo hoje: um traço de alvo ESCOLHIDO pelo
-    // jogador (ex.: Meio-Orc Força-ou-Vigor) precisaria de um efeito
-    // mecânico dinâmico (o atributo/perícia certo, não um id fixo do
-    // RacialTraitEffect), que ainda não foi desenhado. Até existir esse
-    // desenho, ResolveAncestryVariantPackageUseCase.resolveSelection não
-    // resolve este tipo (retorna null) — não reintroduzir aqui um id
-    // derivado do texto do template como solução provisória.
+    // placeholder de exibição (ex.: "{alvo} d6"). resolveSelection() injeta
+    // um TraitAddition com traitId="ATTRIBUTE_BOOST"/"SKILL_BOOST" (conforme
+    // targetKind) + targetRef=o alvo escolhido pelo jogador (answer.targetChoice,
+    // validado contra targetOptions; sem resposta, cai no primeiro de
+    // targetOptions) — RacialTraitPointCatalog.efeitoDe() já sabe resolver
+    // esse par (traitId, targetRef) em RacialTraitEffect.AtributoStep/
+    // PericiaStep dinâmico, o mesmo mecanismo que MonstroTemplate.kt já usa
+    // pra atributo de monstro. Usado por Meio-Orc (Fantasia, Força-ou-Vigor)
+    // e Feral (Arte da Guerra, Força/Vigor/Agilidade) — ver
+    // AncestryVariantRegistry.meioOrc()/feral().
     val targetKind: TraitTargetKind? = null,
     val targetOptions: List<String>? = null, // null = qualquer atributo/perícia
+    // Alvo default quando o jogador ainda não escolheu nada — o livro não
+    // define um padrão universal (ex.: Meio-Orc "Endurecido" não diz Força
+    // OU Vigor por padrão), então cada Seleção declara o seu aqui em vez de
+    // um `?: "Vigor"` espalhado em CriadorState/na UI. Nulo cai no primeiro
+    // de `targetOptions`.
+    val defaultTargetChoice: String? = null,
+    // Quantos passos acima de d4 o alvo escolhido recebe — mesma unidade
+    // que o laço genérico de resolução ao vivo usa (CriadorState.
+    // atributoBaseRacial/periciaStartRawInternal: `4 + passos*2`), então
+    // passos=0 é d4 e passos=1 é d6. ATTRIBUTE_BOOST sempre usa passos>=1
+    // (atributo já nasce em d4, não faz sentido "subir pra d4"; o padrão 1
+    // cobre Meio-Orc/Feral/Minerador, todos "d6 à escolha"). SKILL_BOOST
+    // usa passos=0 quando o livro diz só "começam com d4" (perícia nasce
+    // DESTREINADA, então d4 já É o primeiro patamar — ex.: Kitsunemimi
+    // Preparado, Gnomo Obsessivos) e passos=1 quando o livro diz "d6"
+    // (ex.: Usagimimi Definido pelo Ofício). O custo em pontos vem de
+    // RacialTraitPointCatalog.custoDe() com este valor (ATTRIBUTE_BOOST=
+    // passos*2, SKILL_BOOST=passos+1 — a mesma fonte única que já calibra
+    // o catálogo oficial: pericia_racial_d4=1pt/passos=0,
+    // pericia_racial_d6=2pt/passos=1), nunca hardcoded aqui.
+    val passos: Int = 1,
     val injectionTemplate: String? = null,
     // BUDGETED_CATALOG — delega pro catálogo existente (ex.: AnaoCiberTraitCatalog)
     val catalogId: String? = null,
     // FIXED_PACKAGE
-    val pacotesFixos: List<FixedPackageOption>? = null
+    val pacotesFixos: List<FixedPackageOption>? = null,
+    // Id do traço (habilidades[] da raça BASE) que sinaliza "esta Seleção
+    // está ativa nesta raça" e é substituído/complementado pelo traço já
+    // resolvido — mesmo papel que HERANCA/SIGNOS_DE_NASCENCA/ENDURECIDO/
+    // PRIMITIVO já cumpriam como "if" por id espalhado em
+    // CriadorState.applyAncestryVariantAdjustments, agora declarado aqui
+    // pra virar dado, não código, por Seleção. Nulo pra Seleções resolvidas
+    // por outro caminho (ex.: aninhadas dentro de uma VariantOption, como
+    // Humanos Sci-Fi "Minerador" — já gated pelo variantOptionId escolhido).
+    val marcadorTraitId: String? = null,
+    // true mantém o traço-marcador visível em habilidades[] depois de
+    // resolvido (ex.: SIGNOS_DE_NASCENCA — o card de referência dos 13
+    // Signos é útil mesmo com uma opção ativa). false (padrão) remove o
+    // marcador, como HERANCA já fazia.
+    val manterMarcadorVisivel: Boolean = false
 )
 
 data class VariantOption(

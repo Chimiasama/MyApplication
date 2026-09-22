@@ -41,8 +41,11 @@ data class RacialAbility(
      * ResolveVariantPointBudgetUseCase.habilidadeComoItem (custo do editor de Variante),
      * que já multiplicava — as duas ficavam divergentes.
      */
-    fun resolvedPontos(): Int =
-        RacialTraitPointCatalog.custoDe(resolvedTraitId(), value, severity, pontos) * vezes
+    fun resolvedPontos(allVantagens: List<Vantagem> = emptyList()): Int =
+        RacialTraitPointCatalog.custoDe(
+            resolvedTraitId(), value, severity, pontos,
+            targetRef = targetRef, nome = nome, allVantagens = allVantagens
+        ) * vezes
 }
 
 @Serializable
@@ -71,37 +74,26 @@ data class RacialModifier(
     // que precisa marcar "Sem limite de pontos".
     val pontosRaciaisEsperados: Int = 2
 ) {
-    /** Retorna vantagens grátis concedidas por traços `GRANTED_EDGE`/`racial_edge` em `habilidades`. */
-    fun resolvedVantagensGratis(): List<String> {
-        val list = mutableListOf<String>()
-        habilidades.forEach { hab ->
-            val tid = hab.resolvedTraitId().uppercase()
-            if (tid == "GRANTED_EDGE" && !hab.targetRef.isNullOrBlank()) {
-                if (!list.contains(hab.targetRef)) list.add(hab.targetRef)
-            } else if (hab.category == "racial_edge") {
-                val grant = hab.targetRef ?: hab.id ?: hab.nome
-                if (!list.contains(grant)) list.add(grant)
-            }
-        }
-        return list
-    }
+    /**
+     * Retorna vantagens grátis concedidas por traços `racial_edge`/`GRANTED_EDGE` em
+     * `habilidades` — delega pra [vantagensGratisEfetivas] (função de topo de arquivo, mesma
+     * regra de prioridade de `targetRef` e mesmo dedup por [racialGrantDedupeKey]) em vez de
+     * reimplementar a leitura aqui; ver [resolvedDesvantagens] pro motivo desta função existir
+     * como método além da função de topo (histórico de call sites já escritos contra o método).
+     */
+    fun resolvedVantagensGratis(): List<String> = vantagensGratisEfetivas(habilidades)
 
-    /** Retorna desvantagens raciais concedidas por traços `RACIAL_HINDRANCE`/`racial_hindrance` em `habilidades`. */
-    fun resolvedDesvantagens(): List<String> {
-        val list = mutableListOf<String>()
-        habilidades.forEach { hab ->
-            val tid = hab.resolvedTraitId().uppercase()
-            if (tid == "RACIAL_HINDRANCE" && !hab.targetRef.isNullOrBlank()) {
-                val grant = if (!hab.severity.isNullOrBlank()) "${hab.targetRef} (${hab.severity})" else hab.targetRef
-                if (!list.contains(grant)) list.add(grant)
-            } else if (hab.category == "racial_hindrance") {
-                val sev = hab.severity
-                val grant = if (sev != null && !hab.nome.contains("($sev)", ignoreCase = true)) "${hab.nome} ($sev)" else hab.nome
-                if (!list.contains(grant)) list.add(grant)
-            }
-        }
-        return list
-    }
+    /**
+     * Retorna desvantagens raciais concedidas por traços `racial_hindrance`/`RACIAL_HINDRANCE`
+     * em `habilidades` — delega pra [desvantagensEfetivas]. Antes reimplementava a leitura e,
+     * ao contrário do irmão [resolvedVantagensGratis], nunca priorizava `targetRef` no ramo
+     * `category == "racial_hindrance"` (só olhava `hab.nome`) — então uma Complicação
+     * reskinada por `targetRef` (ex.: Draconianos "Mal-Humorado" concedendo "Arrogante") virava
+     * a desvantagem automática com o nome de EXIBIÇÃO da raça em vez do nome real do catálogo
+     * de Complicações, quebrando o vínculo com `complicacoes.json`. Delegar corrige os dois call
+     * sites reais (`CriadorState.aplicarAncestralidade`/`ComplicacoesSection.kt`) de uma vez.
+     */
+    fun resolvedDesvantagens(): List<String> = desvantagensEfetivas(habilidades)
 }
 
 @Serializable
@@ -268,7 +260,7 @@ fun desvantagensEfetivas(habilidades: List<RacialAbility>): List<String> =
  */
 object RacialCaracteristicasResolver {
 
-    fun resolver(habilidades: List<RacialAbility>): List<String> {
+    fun resolver(habilidades: List<RacialAbility>, allVantagens: List<Vantagem> = emptyList()): List<String> {
         val linhas = mutableListOf<String>()
 
         fun formatPts(pts: Int): String = when {
@@ -298,7 +290,7 @@ object RacialCaracteristicasResolver {
                 val dado = (4 + efeito.passos * 2).toDiceString()
                 // Custo real (não um formato fixo por passo): perícias básicas têm
                 // desconto — ver RacialTraitPointCatalog.custoDe/CUSTOS.
-                linhas += "Perícia inicial: ${efeito.pericia.toFancyTitleCase()} ($dado)${formatPts(hab.resolvedPontos())}"
+                linhas += "Perícia inicial: ${efeito.pericia.toFancyTitleCase()} ($dado)${formatPts(hab.resolvedPontos(allVantagens))}"
             }
         }
 
@@ -306,7 +298,15 @@ object RacialCaracteristicasResolver {
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
             .forEach { entrada ->
                 val cleanName = entrada.replace(Regex("(?i)^Vantagem\\s+(Racial|Grátis):\\s*"), "").trim()
-                linhas += "Vantagem Racial: ${cleanName.toFancyTitleCase()}${formatPts(2)}"
+                // Custo real da Vantagem concedida (por Estágio, ver
+                // RacialTraitPointCatalog.custoDeVantagem) em vez do +2 fixo de antes — mesmo
+                // achado do custoDe("GRANTED_EDGE") acima: sem a Vantagem resolvível no
+                // catálogo (allVantagens vazio, ou nome sem match), mantém o fallback de 2.
+                val chaveVantagem = entrada.keyify()
+                val vantagemConcedida = allVantagens.firstOrNull { it.id.keyify() == chaveVantagem }
+                    ?: allVantagens.firstOrNull { it.nome.keyify() == chaveVantagem }
+                val pts = vantagemConcedida?.let { RacialTraitPointCatalog.custoDeVantagem(it) } ?: 2
+                linhas += "Vantagem Racial: ${cleanName.toFancyTitleCase()}${formatPts(pts)}"
             }
 
         desvantagensEfetivas(habilidades).forEach { entrada ->
@@ -328,8 +328,13 @@ object RacialCaracteristicasResolver {
             val id = hab.id?.keyify()
             val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
-            val rotulo = id?.let { RacialTraitPointCatalog.LABEL[it] } ?: hab.nome.toFancyTitleCase()
-            val pts = hab.resolvedPontos()
+            // labelComVezes escala o rótulo (ex.: "Tamanho +1" -> "Tamanho +3" pra
+            // Meio-Gigantes, vezes=3) quando o id tem LABEL cadastrado; sem LABEL,
+            // cai no nome cru da habilidade, igual antes (nunca no id em si).
+            val rotulo = id?.takeIf { RacialTraitPointCatalog.LABEL.containsKey(it) }
+                ?.let { RacialTraitPointCatalog.labelComVezes(it, hab.vezes) }
+                ?: hab.nome.toFancyTitleCase()
+            val pts = hab.resolvedPontos(allVantagens)
             linhas += "$rotulo${formatPts(pts)}"
         }
 

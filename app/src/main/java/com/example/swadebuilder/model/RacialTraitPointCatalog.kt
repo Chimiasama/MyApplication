@@ -62,8 +62,14 @@ import com.example.swadebuilder.util.keyify
  * diz o quê e quanto.
  */
 sealed class RacialTraitEffect {
-    data class AtributoStep(val atributo: String, val passos: Int = 1) : RacialTraitEffect()
-    data class PericiaStep(val pericia: String, val passos: Int = 1) : RacialTraitEffect()
+    // `relativo=true` soma `passos` ACIMA do que a fonte anterior (raça, Monstro etc.) já
+    // concedeu, em vez de definir um piso fixo — ex.: Tropo "Protagonista" (Arte da Guerra)
+    // diz "aumenta esta perícia em um tipo de dado": se a raça já dá d6, vira d8, não trava
+    // em d6. Só usado por Tropo hoje (raça sempre concede piso fixo) — ver
+    // CriadorState.atributoBaseRacial()/periciaStartRawInternal(), que aplicam isso via
+    // applySuperStepsFrom(pisoSemTropo, passos) em vez de maxOf(base, 4 + passos*2).
+    data class AtributoStep(val atributo: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
+    data class PericiaStep(val pericia: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
     // Bônus fixo (não "passo de dado") de Resistência/Passo/Aparar — mesma
     // ideia de AtributoStep/PericiaStep, só que pra alvos que o ModifierEngine
     // já trata como valor plano (ModifierTarget.TOUGHNESS_FLAT/PACE/PARRY),
@@ -109,6 +115,12 @@ sealed class RacialTraitEffect {
     // editor de Traço Racial (SettingsDialog.kt).
     data class PericiaPoolBonus(val valor: Int) : RacialTraitEffect()
     data class AtributoPoolBonus(val valor: Int) : RacialTraitEffect()
+    // Bônus fixo na Reserva de Chi inicial (Arte da Guerra) — mesma ideia de
+    // ResistenciaBonus/PassoBonus, só que pro alvo "reservaChi" em
+    // CriadorState, que já lê os outros bônus fixos (Terracota "Chi
+    // Reduzido") genericamente por id. Existe pra Kirin (Signo de Nascença,
+    // Humano Arte da Guerra) parar de ser um "if" hardcoded.
+    data class ChiReserveBonus(val valor: Int) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
 
@@ -137,8 +149,13 @@ object RacialTraitPointCatalog {
         "MUITO_AGIL" to RacialTraitEffect.AtributoStep("Agilidade", passos = 2), // sintético, usado pelo Template de Monstro Heroico Lobisomem (Horror)
         "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
         "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
+        // Anões (Fantasia) "ROBUSTO" (nome) é a MESMA habilidade "Resistente" do
+        // Anão Básico (Vigor d6, mesmo texto quase palavra por palavra) — usa
+        // id="RESISTENTE" compartilhado, skin "Robusto" via `nome`. Isso deixa o
+        // id "ROBUSTO" livre pro conceito oficial de verdade (Ogros, catálogo
+        // genérico "Robusto (1)": 2º Abalado não vira Ferimento — ver CUSTOS
+        // abaixo, sem entrada aqui porque não é aumento de atributo).
         "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),
-        "ROBUSTO" to RacialTraitEffect.AtributoStep("Vigor"),
         "SOLIDO_COMO_ROCHA" to RacialTraitEffect.AtributoStep("Vigor"),
         "VIGOROSO" to RacialTraitEffect.AtributoStep("Vigor"),
 
@@ -163,7 +180,43 @@ object RacialTraitPointCatalog {
         // achado dos três de cima (custoDe já cobrava o ponto certo via
         // RacialTraitPointCatalog, mas o dado de perícia em si nunca era
         // concedido por faltar aqui).
-        "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar"),
+        //
+        // Bug real achado na rodada de migração de Atributo/Perícia Aumentada
+        // (backlog): faltava `passos = 0` aqui — sem isso o loop genérico
+        // (4 + passos*2, passos default=1) calculava d6, não d4, apesar do
+        // texto do livro (embutido em ancestralidades.json: "O Araiguma
+        // recebe Provocar d4 (1)") e do custo já cadastrado (1pt = tier
+        // pericia_racial_d4, nunca bateu com d6 = pericia_racial_d6/2pt).
+        // Provocar não é Perícia Básica (pericias.json), então não é caso de
+        // "básica com desconto" — é d4 mesmo, sem ambiguidade.
+        "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar", passos = 0),
+
+        // Signos de Nascença (Humano Arte da Guerra, AncestryVariantRegistry.
+        // humanoArteDaGuerraSignos()): ids próprios de cada Signo com efeito
+        // de perícia inicial — não reaproveitam ids de outra raça porque o
+        // texto de exibição precisa ser específico ("Cura d6 (Lebre)" etc.).
+        // Lebre: "toque natural (Cura d6)".
+        "LEBRE_CURA" to RacialTraitEffect.PericiaStep("Curar"),
+        // Garça: "d4 em Acrobacia" — passos=0 é de propósito (Acrobacia não é
+        // perícia básica; sem o traço o piso seria 0/destreinada, com o
+        // traço vira d4 — mesma fórmula "4 + passos*2" das outras
+        // PericiaStep, só que o piso já É o d4 em si, não um aumento acima
+        // dele).
+        "GARCA_ACROBACIA" to RacialTraitEffect.PericiaStep("Acrobacia", passos = 0),
+        // Garça: "aumentam Atletismo em um tipo de dado" (d4 base -> d6).
+        "GARCA_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"),
+        // Kirin: "+1 em sua Reserva de Chi inicial".
+        "KIRIN_CHI" to RacialTraitEffect.ChiReserveBonus(1),
+        // "Nenhum" (sem Signo): "começam com 15 pontos de perícia, em vez dos
+        // 12 padrão". Só entra em habilidades[] pela opção "Nenhum" do
+        // Signo (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()) —
+        // antes ficava sempre presente na raça, independente do Signo
+        // escolhido, e o +3 era um "if" hardcoded à parte em
+        // CriadorState.totalSpPool (bug real, corrigido nesta rodada); agora
+        // que o traço só existe quando "Nenhum" está ativo, religar ao
+        // mecanismo genérico de bonusPontosPericia não soma mais errado pras
+        // outras 13 opções.
+        "PONTOS_DE_PERICIA" to RacialTraitEffect.PericiaPoolBonus(3),
 
         // Humanos (Fantasia) - Pacotes Culturais: cada opção de Variante
         // concede um piso de atributo/perícia igual a qualquer outra raça —
@@ -218,8 +271,7 @@ object RacialTraitPointCatalog {
         // nome/descrição do traço que existiam antes em ModifierEngine.
         // Valores conferidos contra a própria descrição de cada raça em
         // ancestralidades.json.
-        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder) — livro: "Tamanho -1 (1)", não empilha
-        "PEQUENOS" to RacialTraitEffect.TamanhoBonus(-1), // Goblins (mesmo efeito de Tamanho -1, id próprio)
+        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder), Goblins ("Pequenos", skin do livro) — livro: "Tamanho -1 (1)", não empilha
         // Diminuto/Minúsculo: traço de TIER único (não empilhável — o livro
         // marca "(1)" mas com 3 custos internos conforme o tier escolhido:
         // Pequeno/Muito Pequeno/Minúsculo), diferente do empilhável acima.
@@ -230,6 +282,12 @@ object RacialTraitPointCatalog {
         // AncestryVariantRegistry (ver TraitAddition) pros textos "DIMINUTO
         // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
         // (Padrão/Menor) injeta.
+        // "_2" (Pequeno) só tinha entrada em CUSTOS/LABEL, sem efeito nenhum aqui — nenhuma
+        // raça oficial usa esse tier ainda, mas sem isso uma Variante/raça customizada que
+        // usasse o tier Pequeno não ganharia Tamanho -2 nem contaria como Diminuto pra fins
+        // de redução de Força Mínima/dano/custo-peso de equipamento (ModifierEngine
+        // .racialDiminutoPassos() só olha o flag `minusculo`).
+        "DIMINUTO_TAMANHO_2" to RacialTraitEffect.TamanhoBonus(-2, minusculo = true),
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
         "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true)
     )
@@ -239,6 +297,12 @@ object RacialTraitPointCatalog {
         return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
             "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
+            // Versão "relativa" de ATTRIBUTE_BOOST/SKILL_BOOST — soma `value` passos ACIMA do
+            // que já existe (ver RacialTraitEffect.AtributoStep/PericiaStep.relativo) em vez de
+            // definir um piso fixo. Só Tropo usa isso hoje (ex.: Protagonista "aumenta em um
+            // tipo de dado").
+            "ATTRIBUTE_STEP_UP" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value, relativo = true) else RacialTraitEffect.Nenhum
+            "SKILL_STEP_UP" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value, relativo = true) else RacialTraitEffect.Nenhum
             "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
             "PACE_CHANGE" -> RacialTraitEffect.PassoBonus(value)
             "PARRY_BOOST" -> RacialTraitEffect.ApararBonus(value)
@@ -456,7 +520,7 @@ object RacialTraitPointCatalog {
         // usa. Migrado pra ACAO_ADICIONAL_FISICA, ver comentário lá embaixo.
         "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
         "ADAPTAVEL" to 2, // oficial: adaptavel
-        "ADAPTAVEL_OU_SIGNO" to 2, // mesmo efeito de Adaptável
+        "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" to 2, // Meio-Demônio (Cidade do Sol a Vapor) — mesmo efeito de Adaptável
         "AGIL" to 2, // oficial: aumento_atributo
         "ALMOFADINHA" to -1, // oficial: complicacao_racial_menor
         "ALTA_TECNOLOGIA" to -2, // oficial: complicacao_racial_maior
@@ -504,6 +568,14 @@ object RacialTraitPointCatalog {
         "ASTUCIA" to 2, // oficial: aumento_atributo
         "ASTUTO" to 2, // oficial: aumento_atributo
         "ATRAENTE" to 2, // oficial: vantagem_racial
+        // Signos de Nascença (Humano Arte da Guerra) que concedem uma
+        // Vantagem de graça — a concessão de verdade continua vindo de
+        // CriadorState.SIGNO_VANTAGENS_AUTOMATICAS (já por id, não por
+        // nome); estes ids só documentam o custo/exibição da mesma escolha
+        // no registro (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()
+        // — categoria "racial_trait_positive", nunca "racial_edge", pra não
+        // conceder a Vantagem uma segunda vez por resolvedVantagensGratis()).
+        "ELEVAR_O_MORAL" to 2, // oficial: vantagem_racial (Raposa)
         "AVERSAO_ANIMAL" to -1, // sem equivalente oficial, penalidade situacional
         "AZARADO" to -2, // Complicação Maior no catálogo real (complicacoes.json) — a severidade "Menor" anotada em ancestralidades.json pra Nekomimi não existe pra essa Complicação, corrigido pra bater com o catálogo
         "BAIXA_GRAVIDADE_AGIL" to 2, // oficial: aumento_atributo — sintético (Humanos Sci-Fi "Baixa Gravidade"), Agilidade d4->d6
@@ -513,7 +585,9 @@ object RacialTraitPointCatalog {
         "BOM_CONSELHEIRO" to -1, // oficial: complicacao_racial_menor (Peculiaridade)
         // oficial: "Bônus de Perícia" (Básico) — bônus fixo de +1/+2 na rolagem de
         // uma perícia específica, diferente de "Perícia" (pericia_racial_d4/d6, que
-        // eleva o DADO inicial). Nenhuma raça cadastrada usa isso hoje.
+        // eleva o DADO inicial). Infernais "Natureza Diabólica" (+1 Intimidar) usa
+        // id="BONUS_PERICIA_1", skin "Natureza Diabólica" via `nome` — mesmo padrão
+        // do Usagimimi "Ariscos" (id="PENALIDADE_PERICIA_2") logo abaixo.
         "BONUS_PERICIA_1" to 1,
         "BONUS_PERICIA_2" to 2,
         "BRINCALHAO" to 1, // oficial: pericia_racial_d4 (Provocar d4)
@@ -584,6 +658,7 @@ object RacialTraitPointCatalog {
         "DOENTE_MAIOR" to -2,
         "DONS_DA_NATUREZA" to 0, // placeholder de Seleção (Umvee/Feral escolhem 1 de 6 dons; o dom resolvido é que pontua)
         "DURAO" to 2, // oficial: aumento_atributo
+        "ELO_COMUM" to 2, // oficial: vantagem_racial (Lobo, Signo de Nascença — ver ATRAENTE acima)
         "EM_FORMA" to 2, // oficial: aumento_atributo
         "ENDURECIDO" to 2, // oficial: aumento_atributo (escolha entre Força/Vigor)
         "ESGUIOS" to -3, // oficial penalidade_atributo_1 (-1 Vigor = -2) + -1 Resistência (~-1) combinados
@@ -661,6 +736,10 @@ object RacialTraitPointCatalog {
         "GARRAS" to 3,
         "GARRAS_MAIORES_SEM_PA" to 3,
         "GARRAS_MAIORES" to 4,
+        // Garça (Signo de Nascença, Humano Arte da Guerra) — ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos().
+        "GARCA_ACROBACIA" to 1, // livro: "d4 em Acrobacia" — pericia_racial_d4
+        "GARCA_ATLETISMO" to 2, // livro: "aumentam Atletismo em um tipo de dado" — aumento_pericia_d6
         "GELATINOSO" to 2, // oficial: gelatinoso_2 — tier base (metade do dano de queda/colisão)
         "GELATINOSO_MAIOR" to 3, // mesmo trecho: também atravessa grades/aberturas como Terreno Difícil
         "GUIADO" to -2, // oficial: complicacao_racial_maior
@@ -683,7 +762,11 @@ object RacialTraitPointCatalog {
         "INTEGRADO_A_NATUREZA" to 2, // oficial: pericia_racial_d6 (Sobrevivência d6)
         "INTELIGENCIA" to 2, // oficial: aumento_atributo
         "INTIMIDANTE" to 1, // oficial: pericia_racial_d4 (Intimidar d4, teto ampliado)
+        // Kirin/Lebre (Signos de Nascença, Humano Arte da Guerra) — ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos().
+        "KIRIN_CHI" to 1, // livro: "+1 em sua Reserva de Chi inicial" — mesmo tier de RESISTENCIA (+1/compra)
         "LEAL" to -1, // oficial: complicacao_racial_menor
+        "LEBRE_CURA" to 2, // livro: "toque natural (Cura d6)" — pericia_racial_d6
         "LENTO" to -1, // oficial: movimentacao_reduzida_1
         "LIMITACOES_TECNICAS" to -1, // sem equivalente oficial, restrição narrativa (Técnicas de Chi)
         "MAGIA_ELFICA" to 1, // sem equivalente oficial, utilidade defensiva estreita
@@ -721,7 +804,6 @@ object RacialTraitPointCatalog {
         "NAO_PODE_CURAR" to -1, // oficial: nao_pode_curar
         "NAO_SABE_NADAR" to -1, // oficial: complicacao_racial_menor
         "NATURALMENTE_SOBRENATURAL" to 1, // oficial: pericia_racial_d4 (Ocultismo d4)
-        "NATUREZA_DIABOLICA" to 1, // oficial: bonus_pericia_1 (+1 Intimidar)
         "NERVOS_DE_ACO" to 2, // oficial: vantagem_racial
         "NOCAO_DO_PERIGO" to 2, // oficial: vantagem_racial
         "OBSESSIVOS" to 1, // oficial: pericia_racial_d4
@@ -734,7 +816,6 @@ object RacialTraitPointCatalog {
         // Iluminada pela Lua (Emanar Luz)" via `nome`, exclusiva da raça.
         "PELE_LUMINOSA" to 1,
         "PENSAMENTOS_POSITIVOS" to 2, // oficial: vantagem_racial
-        "PEQUENOS" to -1, // oficial: tamanho_menos_1
         "PERCEBER_D6" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA) — Umvee "Gatoruja"
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
         "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
@@ -758,7 +839,7 @@ object RacialTraitPointCatalog {
         "RESISTENCIA_NATURAL" to 1, // oficial: imune_doencas_venenos
         "RESISTENTE" to 2, // oficial: aumento_atributo
         "ROBO" to 6, // oficial: robo
-        "ROBUSTO" to 2, // oficial: robusto (id igual, mesmo conceito)
+        "ROBUSTO" to 2, // oficial: "Robusto (1)" — 2º Abalado não vira Ferimento (Ogros); sem entrada em EFEITOS, não é cálculo automático
         "RUDE" to -2, // oficial: penalidade_pericia_2 (-2 Persuadir, perícia)
         "SANGUE_FRIO" to -3, // oficial: sangue_frio (id igual, mesmo conceito)
         "SANGUINARIO" to -2, // oficial: complicacao_racial_maior
@@ -950,26 +1031,87 @@ object RacialTraitPointCatalog {
         "PENALIDADE_ATRIBUTO_2" to -3
     )
 
-    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
-     * Ao contrário de efeitoDe(), não recebe targetRef: o custo de ATTRIBUTE_BOOST/SKILL_BOOST
-     * só depende de value (quanto foi concedido), nunca de qual atributo/perícia recebeu. */
+    /**
+     * Custo em pontos de conceder uma Vantagem do catálogo geral como traço racial de graça
+     * (GRANTED_EDGE/racial_edge) — não existe uma escala oficial de "pontos de Vantagem" no
+     * livro, então usa o Estágio (Novato/Experiente/Veterano/Heroico) como proxy de força, um
+     * degrau a mais por Estágio acima de Novato (mesma calibração de "uma Vantagem grátis
+     * custa 2" já usada pros ids sem Vantagem de catálogo vinculada, ver CUSTOS). Única fonte
+     * desta fórmula — [custoDe] (abaixo) e
+     * `ResolveVariantPointBudgetUseCase.custoDeAdicionarVantagem` delegam pra cá.
+     */
+    fun custoDeVantagem(vantagem: Vantagem): Int = when (vantagem.requisitos.estagio.trim().lowercase()) {
+        "experiente" -> 3
+        "veterano" -> 4
+        "heroico", "lendário", "lendario" -> 5
+        else -> 2 // Novato ou sem estágio definido
+    }
+
+    // Acha, no catálogo geral, a Vantagem concedida por um traço GRANTED_EDGE/racial_edge —
+    // mesma cadeia de prioridade de identificador que vantagensGratisEfetivas() já usa
+    // (targetRef, com fallback pro nome de exibição do traço): por id primeiro (formato mais
+    // robusto contra reskin/acento/pontuação, ex.: Demônios targetRef="aa_demonio"), com
+    // fallback por nome (ex.: Kitsunemimi targetRef="Cativar o Ambiente", que não tem id
+    // próprio de catálogo cadastrado no traço).
+    private fun vantagemConcedidaPor(targetRef: String?, nome: String?, allVantagens: List<Vantagem>): Vantagem? {
+        val alvo = targetRef?.takeIf { it.isNotBlank() } ?: nome?.takeIf { it.isNotBlank() } ?: return null
+        val chave = alvo.keyify()
+        return allVantagens.firstOrNull { it.id.keyify() == chave }
+            ?: allVantagens.firstOrNull { it.nome.keyify() == chave }
+    }
+
+    /**
+     * Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
+     * Ao contrário de efeitoDe(), não recebe targetRef pros ids ATTRIBUTE_BOOST/SKILL_BOOST: o
+     * custo desses só depende de value (quanto foi concedido), nunca de qual atributo/perícia
+     * recebeu. GRANTED_EDGE é diferente: precisa saber QUAL Vantagem foi concedida pra cobrar
+     * o Estágio real dela (ver [custoDeVantagem]) — por isso os três últimos parâmetros, todos
+     * opcionais (chamadas que não os passam mantêm o fallback fixo de 2 pontos de antes, sem
+     * regressão pra quem não tem o catálogo de Vantagens à mão nesse ponto do código).
+     */
     fun custoDe(
         id: String?,
         value: Int = 1,
         severity: String? = null,
-        pontos: Int = 0
+        pontos: Int = 0,
+        targetRef: String? = null,
+        nome: String? = null,
+        allVantagens: List<Vantagem> = emptyList()
     ): Int {
         if (pontos != 0) return pontos
         if (id == null) return 0
         return when (val key = id.keyify()) {
-            "ATTRIBUTE_BOOST" -> value * 2
-            "SKILL_BOOST" -> if (value >= 1) 2 else 1
+            "ATTRIBUTE_BOOST", "ATTRIBUTE_STEP_UP" -> value * 2
+            // Achado real (rodada 36): fórmula antiga era `if (value>=1) 2
+            // else 1` — invertida em relação ao catálogo oficial
+            // (pericia_racial_d4 custa 1, pericia_racial_d6 custa 2, ver
+            // basico_habilidades_raciais.json), nunca pega antes porque
+            // nenhuma raça cadastrada usava SKILL_BOOST com value>=1 até
+            // esta rodada (Kitsunemimi/Usagimimi/Gnomo). `value` aqui é
+            // "passos", MESMA unidade que AtributoStep/PericiaStep.passos
+            // usam no loop genérico de resolução ao vivo (4 + passos*2) —
+            // mas ATTRIBUTE_BOOST e SKILL_BOOST têm baselines diferentes:
+            // atributo já começa em d4 (passos=1 vira d6, "1 passo ACIMA da
+            // base"), perícia começa DESTREINADA (passos=0 vira d4, "o
+            // primeiro patamar treinado"; passos=1 vira d6). Por isso o
+            // custo de SKILL_BOOST é `value + 1`, não `value` puro:
+            // passos=0 (d4) = 1pt, passos=1 (d6) = 2pt — bate exatamente
+            // com os dois tiers oficiais.
+            "SKILL_BOOST", "SKILL_STEP_UP" -> value + 1
             // Só usado se quem criar o traço deixar `custo` em 0 (o editor
             // sempre pede um valor explícito) — 1 ponto de orçamento por
             // Ponto de Perícia/Atributo concedido ou tirado, o mesmo peso já
             // usado por BONUS_PERICIA_1/PENALIDADE_PERICIA_1 neste catálogo.
             "PERICIA_POINTS_BONUS", "ATRIBUTO_POINTS_BONUS" -> value
-            "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
+            // Achado real (auditoria pedida pelo usuário): custo fixo de 2 não escalava com o
+            // Estágio da Vantagem de verdade concedida (ex.: uma Vantagem Experiente custa 3,
+            // não 2) — sem Vantagem resolvível (sem targetRef/nome, ou catálogo não passado
+            // pra esta chamada), mantém o fallback fixo de 2 de antes (nenhuma das Vantagens
+            // hoje concedidas por raça é acima de Novato, então este fallback não muda nada
+            // pro catálogo atual — só corrige o cálculo pra quando uma raça futura conceder
+            // algo mais forte).
+            "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" ->
+                vantagemConcedidaPor(targetRef, nome, allVantagens)?.let { custoDeVantagem(it) } ?: 2
             "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
             // Complicações reais de complicacoes.json com severidade "Menor ou
             // Maior" (a raça escolhe qual) — CUSTOS sozinho não sabe qual
@@ -990,4 +1132,39 @@ object RacialTraitPointCatalog {
             else -> CUSTOS[key] ?: 0
         }
     }
+
+    // Ids de traço racial que representam Voo de verdade (qualquer tier: Fadas
+    // VOO_MOV_6, Avianos/Celestiais VOO_MOV_12, Anjo/Cidade do Sol a Vapor
+    // ASAS_DE_ANJO — mesmo efeito de Voo, id próprio por causa das regras extras do
+    // traço — e VOO_MOV_24, reservado mesmo sem raça oficial usando ainda). Usado por
+    // `temTracoVoo()` pra decidir quem pode comprar a Vantagem "Golpe de Asa" (livro
+    // Fantasia, requisito oficial "Asas") a partir do traço de verdade da raça, em vez
+    // da tag manual solta "asas" que `ancestralidades.json` mantinha à parte (uma raça
+    // nova/custom com Voo não ganhava a tag automaticamente, então não conseguia
+    // comprar Golpe de Asa mesmo tendo o traço).
+    private val VOO_TRAIT_IDS = setOf("VOO_MOV_6", "VOO_MOV_12", "VOO_MOV_24", "ASAS_DE_ANJO")
+
+    fun temTracoVoo(habilidades: List<RacialAbility>?): Boolean =
+        habilidades?.any { it.resolvedTraitId().keyify() in VOO_TRAIT_IDS } ?: false
+
+    // Mesma ideia de `temTracoVoo()`, pra decidir quem pode comprar "Queimar" (livro
+    // Fantasia, requisito oficial "Arma de Sopro") a partir do traço de verdade da
+    // raça, em vez da tag manual solta "arma_de_sopro".
+    fun temArmaDeSopro(habilidades: List<RacialAbility>?): Boolean =
+        habilidades?.any { it.resolvedTraitId().keyify() == "ARMA_DE_SOPRO" } ?: false
+
+    // Famílias de Arma Natural que escalam com Artista Marcial/Brigão (regra do livro:
+    // "dano por punhos/garras em mais um tipo de dado" só vale pra garras — mordida,
+    // chifre e cascos batem forte, mas não são a mesma categoria de golpe desarmado que
+    // essas Vantagens aprimoram). Única fonte de verdade — ver ArmaNatural.escalavel em
+    // MonstroTemplate.kt: o campo não é mais um booleano solto setável por raça, é sempre
+    // derivado do id do traço/Vantagem que concedeu a arma, então não tem como uma raça
+    // nova "errar" o valor (achado real: Centauros "Cascos" tinha o booleano true
+    // vinculado à raça, quando deveria vir do id GARRAS_SEM_PA como qualquer outra
+    // Garra — a raça em si não deveria carregar essa decisão).
+    private val ARMAS_NATURAIS_ESCALAVEIS: Set<String> = setOf(
+        "GARRAS", "GARRAS_SEM_PA", "GARRAS_MAIORES", "GARRAS_MAIORES_SEM_PA"
+    )
+
+    fun armaNaturalEscalavel(id: String?): Boolean = id?.keyify() in ARMAS_NATURAIS_ESCALAVEIS
 }

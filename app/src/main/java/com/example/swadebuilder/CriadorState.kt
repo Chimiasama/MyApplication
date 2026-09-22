@@ -44,6 +44,7 @@ import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitEffect
 import com.example.swadebuilder.model.RacialTraitPointCatalog
@@ -63,6 +64,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.desvantagensEfetivas
+import com.example.swadebuilder.model.escolhaTropoReferenciada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.vantagensGratisEfetivas
 import com.example.swadebuilder.model.ids.ModuleIds
@@ -87,6 +89,7 @@ import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.ForcaMinimaCalculator
 import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
@@ -97,6 +100,11 @@ import kotlinx.serialization.json.intOrNull
 import java.util.UUID
 
 enum class TabStyle { ICONES, TEXTO }
+
+// Os 4 locais de corpo que uma peça de armadura pode cobrir (ver
+// EquipamentoItem.local) — mesma nomenclatura usada no catálogo
+// (equipamentos.json) e em CriadorState.armaduraPorLocal().
+val LOCAIS_CORPO = listOf("CABECA", "TRONCO", "BRACOS", "PERNAS")
 
 class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
@@ -549,6 +557,14 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    // Wiseguys é um "cenário substituto" (como Pathfinder/Deadlands/Crystal Heart):
+    // sem isso, só a raça própria do livro (Humano) fica disponível — a aba
+    // Ancestralidades nem aparece (ver UnifiedScreen.kt) — porque só ela tem
+    // `livros: ["WISEGUYS"]` no catálogo. Ligar esta opção reabre a aba e
+    // reintroduz o Livro Básico como origem ativa pra escolha de raça (ver
+    // getActiveOrigins() em ContentVisibility.kt), pro Mestre que quiser rodar
+    // Wiseguys com raças variantes em vez de só humanos.
+    var wiseguysHabilitaRacas by mutableStateOf(false)
     var optRegraRiqueza by mutableStateOf(false)
     var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
@@ -561,8 +577,6 @@ class CriadorState {
     var modoOficialAtivo by mutableStateOf(false)
     var modoLivre by mutableStateOf(false)
     var isNpcExibicao by mutableStateOf(false)
-    var modoMonstroAtivo by mutableStateOf(false)
-    var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si (ex.:
@@ -651,64 +665,64 @@ class CriadorState {
         return keys
     }
 
-    fun getMonstroSelecionado(): MonstroTemplate? {
-        if (!modoMonstroAtivo || tipoMonstroSelecionado == null) return null
-        return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }
-    }
-
-    fun aplicarTipoMonstro(novoId: String?): List<String> {
-        val feedback = mutableListOf<String>()
-
-        val monstroAnterior = getMonstroSelecionado()
-        tipoMonstroSelecionado = novoId
-        val monstroNovo = getMonstroSelecionado()
-
-        if (modoMonstroAtivo) {
-            // Vantagens grátis do Template de Monstro Heroico (ex.: Monstro de
-            // Retalhos possui Furioso e Resistência Arcana de graça — não é
-            // escolha do jogador, é o template quem concede, via traço
-            // vinculado em habilidades[] — traitId=GRANTED_EDGE/category=
-            // racial_edge, mesmo padrão de Ancestralidade). Usa o mesmo
-            // mecanismo (vantagensRaciais) que uma Ancestralidade usa pros
-            // próprios grants automáticos, só que a fonte aqui é o monstro.
-            val grantsAnteriores = monstroAnterior?.resolvedVantagensGratis().orEmpty()
-            val grantsNovos = monstroNovo?.resolvedVantagensGratis().orEmpty()
-            val novasKeys = grantsNovos.map { it.keyify() }
-            grantsAnteriores
-                .filterNot { it.keyify() in novasKeys }
-                .forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
-            grantsNovos.forEach { grant ->
-                if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
-                    vantagensRaciais.add(grant)
-                }
+    /**
+     * Remove automaticamente Vantagens travadas a um Tropo específico
+     * (`requisitos.templatesRequired`, ex.: MONSTRUOSAS do Horror — generaliza pra qualquer
+     * categoria, não só MONSTRUOSAS, ver rodada 44) que não batem mais com o Tropo recém
+     * selecionado (ou nenhum). Chamada de dentro de `selecionarTropo()` — antes disso era
+     * lógica exclusiva de `aplicarTipoMonstro()` (apagada: Monstro Heroico virou Tropo de
+     * verdade), agora genérica sobre `tropoSelecionado?.id` em vez de `tipoMonstroSelecionado`.
+     */
+    private fun removerVantagensIncompativeisComTropo(novoTropo: Tropo?, feedbackMessages: MutableList<String>) {
+        val novoTropoIdKey = novoTropo?.id?.keyify()
+        vantagensSelecionadas
+            .filter { it.requisitos.templatesRequired.isNotEmpty() }
+            .filter { v ->
+                val required = v.requisitos.templatesRequired.map { it.keyify() }
+                novoTropoIdKey == null || novoTropoIdKey !in required
             }
-
-            val selectedTemplateKey = novoId?.keyify()
-            val toRemove = vantagensSelecionadas
-                .filter { it.categoria == Categoria.MONSTRUOSAS }
-                .filter { it.requisitos.templatesRequired.isNotEmpty() }
-                .filter { v ->
-                    val required = v.requisitos.templatesRequired.map { it.keyify() }
-                    selectedTemplateKey == null || selectedTemplateKey !in required
-                }
-                .toList()
-
-            toRemove.forEach { vantagem ->
+            .toList()
+            .forEach { vantagem ->
                 var refundMessage: String? = null
                 venderVantagem(vantagem) { msg -> refundMessage = msg }
                 val suffix = refundMessage?.let { " $it" } ?: ""
-                feedback.add("Vantagem '${vantagem.nome}' removida automaticamente por incompatibilidade com o tipo de monstro selecionado.$suffix")
+                feedbackMessages.add("Vantagem '${vantagem.nome}' removida automaticamente por incompatibilidade com o Tropo selecionado.$suffix")
+            }
+    }
+
+    /**
+     * Vantagens grátis que `habilidadesDoTropoResolvidas` concede AGORA — mesmo mecanismo de
+     * `vantagensGratisEfetivas()` que raça/Monstro usam (`category="racial_edge"`/
+     * `traitId="GRANTED_EDGE"`), com o targetRef já resolvido por TropoEscolha (ver
+     * `habilidadesDoTropoResolvidas`). `targetRef` de um GRANTED_EDGE de Tropo é sempre um id
+     * real de `listaVantagens` (mesma convenção que `Tropo.ganhaAoComprar` já usa) — nomes que
+     * não batem com nenhum id são ignorados aqui (não quebram nada, só não resolvem).
+     */
+    private fun tropoVantagensGratisIds(): List<String> =
+        vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
+
+    /**
+     * Reconcilia `vantagensSelecionadas`/`vantagensAutomaticasDoTropo` com as Vantagens que
+     * `habilidadesDoTropoResolvidas` concede AGORA — a MESMA lista/mecanismo que
+     * `Tropo.ganhaAoComprar` já usa em `selecionarTropo()` (não uma lista paralela nova), só
+     * que alimentada pelo novo `habilidades[]` em vez do campo antigo. Chamada tanto de dentro
+     * de `selecionarTropo()` (ao trocar de Tropo) quanto de `escolherTropoOpcao()` (uma
+     * TropoEscolha pode trocar QUAL Vantagem é concedida, não só um número — ex.: Artista
+     * Marcial "Potencial Físico": Agilidade->Esquiva, Força->Bloquear, Vigor->Reflexos de
+     * Combate).
+     */
+    private fun reconciliarGrantsDeHabilidadesDoTropo(idsAnteriores: List<String>) {
+        val idsNovos = tropoVantagensGratisIds()
+        idsAnteriores
+            .filterNot { it in idsNovos }
+            .forEach { vantId -> vantagensSelecionadas.removeAll { it.id == vantId }; vantagensAutomaticasDoTropo.remove(vantId) }
+        idsNovos.forEach { vantId ->
+            if (vantagensSelecionadas.none { it.id == vantId }) {
+                val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+                vantagensSelecionadas += vant
+                vantagensAutomaticasDoTropo += vant.id
             }
         }
-
-        recalcularPontosAtributo(feedback)
-        rebuildAllPericiaStacks(feedback)
-
-        if (feedback.isNotEmpty()) {
-            anotacoes += "\n• " + feedback.joinToString("\n• ")
-        }
-
-        return feedback
     }
 
     /**
@@ -739,7 +753,7 @@ class CriadorState {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
 
-        // Toda raça de candidato único, EXCETO Umvee e Meio-Demônio, mantém o
+        // Toda raça de candidato único, EXCETO as listadas abaixo, mantém o
         // curto-circuito original: sai aqui sem passar por
         // applyAncestryVariantAdjustments. Umvee precisa passar por ele mesmo
         // tendo um candidato só — o Dom da Natureza "Gatoruja" injeta
@@ -749,48 +763,117 @@ class CriadorState {
         // mora a troca Adaptável/Antecedente Arcano (Demônio) por
         // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
         // jogador escolhendo o AA (bug real, raça sempre ficava travada em
-        // Adaptável). Elementais e Drakens (Sci-Fi) também precisam passar —
-        // é onde MUITO_FORTE/RESISTENCIA (Elementais Padrão) viram
-        // FORMA_DE_ENERGIA (Ar, Fogo ou Água), e onde FORTE (Drakens Padrão)
-        // é removido pra "Dragão"; sem isso a Força de ambas ficava
-        // hardcoded por nome de raça em vez de vir de habilidades[] (bug
-        // real, corrigido a pedido do usuário). Humanos e Descendente
-        // Elemental (Fantasia) também precisam passar — é onde os Pacotes
-        // Culturais (Povo do Mar/Senhores dos Cavalos) trocam Adaptável
-        // pelos traços do pacote, e onde o elemento escolhido troca a
-        // Resistência Ambiental genérica pela específica; como
-        // `mergedAncestralidades` já dedupa por origem (só sobra 1 entrada
-        // de "Humanos"/"Descendente Elemental" quando apenas o compêndio de
-        // Fantasia está ativo — o caso normal de criação de personagem, um
-        // livro por vez), esses candidatos chegam aqui como candidato único
-        // na prática, não só quando vários livros estão ativos ao mesmo
-        // tempo — cair fora antes de applyAncestryVariantAdjustments deixava
-        // o Pacote Cultural inteiro sem efeito (bug real relatado pelo
-        // usuário: Senhores dos Cavalos não concedia nada e Adaptável
-        // continuava presente). Já o Meio-Elfo do Pathfinder (também
-        // candidato único) depende do contrário — de sair aqui — pra NÃO
-        // entrar no ramo Herança/Adaptável de applyAncestryVariantAdjustments,
-        // pensado pra variante Meio-Elfo de outros livros
-        // (CriadorStateRacialTraitDrivenAttributesTest).
+        // Adaptável).
+        // Toda raça em AncestryVariantRegistry.scifiVariantDrivenKeys (19 no
+        // total: Rakashanos, Aquarianos, Avianos, Elfos, Humanos, Centaux,
+        // Drakens, Ferais, Florans, Gelatinoides, Insetoides, Mímicos,
+        // Mineradores Genéticos, Oráculos, Possessores, Quadroides, Soldados
+        // Genéticos, Yetis, Robôs, Seres Sintéticos) também precisa passar —
+        // é o mesmo bloco genérico (linha ~1311 abaixo) que lê o "grupoVariante"
+        // do registro e troca/adiciona os traços de habilidades[] conforme a
+        // opção selecionada (ex.: FORTE vira ARMA DE SOPRO em Drakens
+        // "Dragão", NOÇÃO DO PERIGO some no Possessores "Energia", MOVIMENTAÇÃO
+        // sobe de vezes=1 pra vezes=2 no Centaux "Gazela"). A maioria dessas
+        // raças só existe em UM livro (Sci-Fi) — sem entrada em outro
+        // compêndio para "empatar", elas chegam aqui como candidato único no
+        // caso normal de personagem (um livro por vez), então cair fora antes
+        // de applyAncestryVariantAdjustments deixava a troca de Variante
+        // inteira sem efeito na exibição (achado ao investigar por que só
+        // Drakens/Elementais estavam na lista de exceção enquanto as outras
+        // ~12 raças do mesmo lote — Ferais, Florans, Gelatinoides, Mímicos,
+        // Mineradores Genéticos, Oráculos, Possessores, Robôs, Seres
+        // Sintéticos, Soldados Genéticos, Yetis, Centaux — não; checagem por
+        // pertencimento ao registro, não por uma lista crescente de nomes
+        // literais). Humanos e Descendente Elemental (Fantasia) também
+        // precisam passar — é onde os Pacotes Culturais (Povo do Mar/Senhores
+        // dos Cavalos) trocam Adaptável pelos traços do pacote, e onde o
+        // elemento escolhido troca a Resistência Ambiental genérica pela
+        // específica; como `mergedAncestralidades` já dedupa por origem (só
+        // sobra 1 entrada de "Humanos"/"Descendente Elemental" quando apenas
+        // o compêndio de Fantasia está ativo — o caso normal de criação de
+        // personagem, um livro por vez), esses candidatos chegam aqui como
+        // candidato único na prática, não só quando vários livros estão
+        // ativos ao mesmo tempo — cair fora antes de
+        // applyAncestryVariantAdjustments deixava o Pacote Cultural inteiro
+        // sem efeito (bug real relatado pelo usuário: Senhores dos Cavalos
+        // não concedia nada e Adaptável continuava presente). Já o Meio-Elfo
+        // do Pathfinder (também candidato único) depende do contrário — de
+        // sair aqui — pra NÃO entrar no ramo Herança/Adaptável de
+        // applyAncestryVariantAdjustments, pensado pra variante Meio-Elfo de
+        // outros livros (CriadorStateRacialTraitDrivenAttributesTest).
         // Meio-Elfos com o traço "Herança" (Básico/Fantasia/Horror/Super) também
         // precisa passar — é onde "Herança" é trocada por "Ágil" (Agilidade d6)
         // ou "Adaptável" conforme meioElfoAgil. Sem isso, quando só um livro com
         // Meio-Elfo está ativo (candidato único), a escolha nunca surtia efeito:
         // marcar "Agilidade d6" ficava sem aplicar (bug real relatado pelo
         // usuário — Agilidade continuava em d4 mesmo com a opção marcada).
-        // A checagem é pelo traço "HERANCA" em si (não só pelo nome/!Pathfinder):
-        // o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO" no nome, mas tem
-        // "Flexibilidade" em vez de "Herança" — sem esse traço presente, cai fora
-        // e mantém o curto-circuito original (senão a troca Herança/Adaptável
-        // seria injetada nele também, mesmo sem ele ter Herança pra começar).
+        // A checagem é só pelo traço "HERANCA" em si, sem depender do nome da
+        // raça: o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO" no nome,
+        // mas tem "Flexibilidade" em vez de "Herança" — como esse id nunca
+        // aparece em nenhuma outra raça carregada (conferido contra
+        // ancestralidades.json), a checagem de id sozinha já garante que só
+        // Meio-Elfo Básico/Fantasia/Horror/Super entra aqui, sem precisar
+        // repetir o nome da raça.
         fun ehMeioElfoComHeranca(candidato: RacialModifier): Boolean =
-            (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) &&
-                !key.contains("PATHFINDER") &&
-                candidato.habilidades.any { it.id?.keyify() == "HERANCA" }
+            candidato.habilidades.any { it.id?.keyify() == "HERANCA" }
+
+        // Mesmo padrão do Meio-Elfo acima, mas pro traço "ADAPTAVEL_OU_
+        // ANTECEDENTE_ARCANO_DEMONIO" do Meio-Demônio (Cidade do Sol a
+        // Vapor) — escolha entre Adaptável e Antecedente Arcano (Demônio)
+        // diluído. Id exclusivo dessa raça, sem precisar checar o nome.
+        fun temEscolhaMeioDemonio(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" }
+
+        // Mesmo padrão acima, pro traço "SIGNOS_DE_NASCENCA" do Humano
+        // (Império San, Arte da Guerra) — id exclusivo dessa raça (só ela
+        // carrega esse traço em ancestralidades.json), sem precisar checar
+        // o nome.
+        fun temSignoDeNascenca(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
+
+        // Mesmo padrão acima, pra Seleção TARGET_ATTRIBUTE_OR_SKILL de
+        // Meio-Orc (ENDURECIDO, Fantasia), Feral (PRIMITIVO, Arte da
+        // Guerra), Kitsunemimi (PREPARADO, Arte da Guerra), Gnomo
+        // (OBSESSIVOS, Pathfinder) e Usagimimi (DEFINIDO_PELO_OFICIO, Arte
+        // da Guerra) — ids exclusivos dessas raças, sem precisar checar o
+        // nome. Nenhuma delas tem origem que já força
+        // `applyAncestryVariantAdjustments` incondicionalmente (só FC/
+        // SCI_FI fazem isso logo abaixo).
+        fun temEscolhaDeAtributoOuPericia(candidato: RacialModifier): Boolean =
+            candidato.habilidades.any {
+                it.id?.keyify() in setOf(
+                    "ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO"
+                )
+            }
 
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
             (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental && !ehMeioElfoComHeranca(candidates.first())) {
+        // Elementais (Sci-Fi) fica fora de scifiVariantDrivenKeys de propósito
+        // (ver comentário de AncestryVariantRegistry.scifiVariantDrivenKeys):
+        // resolve por `selecoes`/FIXED_PACKAGE (bloco dedicado `key ==
+        // "ELEMENTAIS"` mais abaixo em applyAncestryVariantAdjustments), não
+        // por `grupoVariante` como as 19 raças do lote genérico — por isso
+        // precisa da própria entrada aqui, checagem por nome mesmo (ainda não
+        // há um marcador genérico no registro pra distinguir os dois formatos
+        // sem duplicar a leitura da config). Ambas as checagens abaixo exigem
+        // origem FC/SCI_FI (mesmo guard de `withVariant` logo adiante) —
+        // Elfos, Humanos, Aquarianos etc. também estão em
+        // scifiVariantDrivenKeys, mas seu candidato do Básico/Fantasia/Horror
+        // não deve entrar aqui (o bloco genérico é específico do livro
+        // Sci-Fi; sem esse guard, um Elfo do Básico com candidato único caía
+        // no `AncestryVariantRegistry.get(key, "SCI_FI")` por engano e perdia
+        // o traço Ágil da raça base — achado ao rodar CriadorStateFullFlowTest
+        // depois desta mudança).
+        val candidatoEhScifiOuFc = candidates.first().origem == "FC" || candidates.first().origem == "SCI_FI"
+        val precisaPassarPorAjusteDeVariante = key.contains("UMVEE") ||
+            temEscolhaMeioDemonio(candidates.first()) ||
+            temSignoDeNascenca(candidates.first()) ||
+            temEscolhaDeAtributoOuPericia(candidates.first()) ||
+            (candidatoEhScifiOuFc && key == "ELEMENTAIS") ||
+            (candidatoEhScifiOuFc && key in AncestryVariantRegistry.scifiVariantDrivenKeys) ||
+            isFantasiaHumanoOuDescElemental ||
+            ehMeioElfoComHeranca(candidates.first())
+        if (candidates.size == 1 && !precisaPassarPorAjusteDeVariante) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -820,7 +903,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("MEIO-DEMONIO")) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || temEscolhaMeioDemonio(selected) || temSignoDeNascenca(selected) || temEscolhaDeAtributoOuPericia(selected)) {
             applyAncestryVariantAdjustments(selected, key)
         } else if (ehMeioElfoComHeranca(selected)) {
             applyAncestryVariantAdjustments(selected, key)
@@ -844,10 +927,58 @@ class CriadorState {
      * currentAncestryDef — passa a refletir a Variante automaticamente, sem precisar tocar em
      * ResolveAncestrySpecificAdjustmentsUseCase.
      */
+    /**
+     * Id da opção de Seleção ATIVA agora nesta raça (ex.: "boi"/"nenhum" pro
+     * Signo, "voto"/"obrigacao" pro Terracota), ou `null` se a raça não tem
+     * Seleção do tipo FIXED_PACKAGE nenhuma. Usado só por
+     * [applyCustomAncestryVariantIfSelected] pra decidir se uma Variante
+     * Customizada escopada a uma opção específica (`CustomAncestryVariant
+     * .opcaoAlvoId`) se aplica agora — ver Peça 4 do plano em
+     * docs/auditoria_mecanica_racas_2026-08-31.md.
+     *
+     * `base` aqui já é o RacialModifier RESOLVIDO (depois de
+     * `applyAncestryVariantAdjustments`) — pra raças cujo marcador
+     * desaparece depois de resolvido (Herança, Meio-Demônio — ao contrário
+     * do Signo, que mantém `SIGNOS_DE_NASCENCA` visível de propósito), não
+     * dá pra detectar "esta raça tem essa Seleção" olhando `base.habilidades`
+     * de novo. Por isso as 3 raças com campo de estado próprio (não
+     * compartilhado via `AncestryVariantRegistry`) são despachadas por
+     * nome aqui — não é o mesmo tipo de hardcode que o resto da auditoria
+     * eliminou (não decide COMPORTAMENTO mecânico por nome, só qual campo
+     * de estado ler pra montar um id de UI). As demais (Terracota, Umvee,
+     * Elementais e qualquer outra Seleção FIXED_PACKAGE cadastrada) casam
+     * o texto de `resolveSciFiVariantSelectionFor` contra os nomes das
+     * opções do registro, sem nome de raça nenhum.
+     */
+    private fun currentSelectionOptionId(base: RacialModifier): String? {
+        val key = base.nome.keyify()
+        val origemKey = canonicalOriginKey(base.origem)
+        return when {
+            key == "MEIO-ELFOS" -> if (meioElfoAgil) "agil" else "adaptavel"
+            key == "HUMANOS" && origemKey == "ARTE_DA_GUERRA" ->
+                signoIdFromNome(signoAdgSelecionado)?.lowercase() ?: "nenhum"
+            key == "MEIO-DEMONIO" -> if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
+            else -> {
+                val config = AncestryVariantRegistry.get(key, origemKey) ?: return null
+                val fixedPackageDef = config.selecoes
+                    .firstOrNull { it.tipo == com.example.swadebuilder.model.SelectionType.FIXED_PACKAGE }
+                    ?: return null
+                val opcaoTexto = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return null
+                fixedPackageDef.pacotesFixos?.firstOrNull { it.nome.equals(opcaoTexto, ignoreCase = true) }?.id
+            }
+        }
+    }
+
     private fun applyCustomAncestryVariantIfSelected(base: RacialModifier): RacialModifier {
         val variantId = customVarianteRacialSelecionadaId ?: return base
         val variant = listaVariantesRaciaisCustom.firstOrNull { it.id == variantId } ?: return base
         if (variant.ancestralidadeId != base.nome.keyify()) return base
+        // Escopada a uma opção específica (Peça 4): só se aplica quando a
+        // opção ativa agora bate com a que a Variante sobrescreve — as
+        // demais opções da mesma raça continuam 100% oficiais. `null` (não
+        // escopada) preserva o comportamento de sempre: aplica em cima da
+        // raça toda, qualquer que seja a opção ativa.
+        if (variant.opcaoAlvoId != null && variant.opcaoAlvoId != currentSelectionOptionId(base)) return base
 
         val tracosRemovidosKeys = variant.tracosRemovidosIds.map { it.keyify() }.toSet()
         val newHabilidades = base.habilidades.filterNot { hab ->
@@ -931,6 +1062,79 @@ class CriadorState {
         return base.copy(habilidades = newHabilidades)
     }
 
+    /**
+     * Mecanismo genérico de Seleção "marcador em habilidades[]": QUALQUER
+     * raça pode usar (Herança do Meio-Elfo, Signo do Humano Arte da Guerra,
+     * Endurecido do Meio-Orc, Primitivo do Feral — nenhuma delas precisa de
+     * lógica própria além de UM `if` de gate por id de marcador + UMA
+     * chamada aqui), mas não fica ativado a menos que a raça carregue um
+     * traço-marcador em `habilidades[]` (ver `AncestryVariantRegistry` —
+     * `SelectionDef.marcadorTraitId`, quando presente, documenta qual id é
+     * esse pra cada Seleção). Uma raça sem marcador simplesmente nunca entra
+     * nesta função — mostra os dados normais da raça, sem nada a mais.
+     *
+     * `base` sempre chega como a definição PRÍSTINA da raça (vinda do JSON,
+     * nunca da versão já resolvida em `currentAncestryDef`), então "tirar o
+     * marcador, adicionar o resolvido" nunca precisa desfazer uma escolha
+     * anterior — ela nunca chega a entrar em `base` pra começo de conversa.
+     *
+     * Lê `resolved.tracosParaAdicionar` E `resolved.vantagensGratisParaAdicionar`
+     * (Vantagem real concedida — ex.: Descendente Elemental "Fogo" concede
+     * Rápido de verdade). NÃO lê `desvantagensParaAdicionar`/`vantagensGratisIds`:
+     * nenhuma Seleção que usa este caminho hoje produz Complicação
+     * concedida, e `vantagensGratisIds` é consumida por um mecanismo à
+     * parte (`ResolveAncestrySpecificAdjustmentsUseCase.ensureAdvantageIds`)
+     * que este caminho não substitui (ver rodada do Meio-Demônio sobre o
+     * risco de duplicar concessão de Vantagem se os dois caminhos lerem a
+     * mesma resposta). Se uma futura Seleção precisar de Complicação
+     * concedida ou de `vantagensGratisIds`, estender aqui em vez de
+     * duplicar a função.
+     */
+    private fun resolveMarkedSelection(
+        base: RacialModifier,
+        marcador: String,
+        ancestralidadeId: String,
+        livro: String,
+        answer: com.example.swadebuilder.model.SelectionAnswer,
+        manterMarcadorVisivel: Boolean = false
+    ): RacialModifier {
+        val resolved = resolveAncestryVariantPackageUseCase.resolve(
+            ancestralidadeId = ancestralidadeId,
+            livro = livro,
+            variantOptionId = null,
+            selectionAnswers = listOf(answer)
+        )
+        val newHabilidades = base.habilidades
+            .filter { hab -> if (manterMarcadorVisivel) hab.id?.keyify() == marcador else hab.id?.keyify() != marcador }
+            .toMutableList()
+        fun adicionarTraco(traco: com.example.swadebuilder.model.TraitAddition, traitIdPadrao: String?) {
+            if (newHabilidades.none { it.id == traco.id }) {
+                val traitId = traco.traitId ?: traitIdPadrao
+                val category = when (traitId) {
+                    "GRANTED_EDGE" -> "racial_edge"
+                    "RACIAL_HINDRANCE" -> "racial_hindrance"
+                    else -> "racial_trait_positive"
+                }
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = traco.nome,
+                        descricao = "",
+                        id = traco.id,
+                        category = category,
+                        traitId = traitId,
+                        targetRef = traco.targetRef,
+                        value = traco.value,
+                        pontos = traco.pontos,
+                        vezes = traco.vezes
+                    )
+                )
+            }
+        }
+        resolved.tracosParaAdicionar.forEach { adicionarTraco(it, traitIdPadrao = null) }
+        resolved.vantagensGratisParaAdicionar.forEach { adicionarTraco(it, traitIdPadrao = "GRANTED_EDGE") }
+        return base.copy(habilidades = newHabilidades)
+    }
+
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
             // Pacotes Culturais: Variante de verdade (mesmo sistema genérico de
@@ -995,34 +1199,25 @@ class CriadorState {
             return base
         }
 
-        if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
-            val newHabilidades = base.habilidades.toMutableList()
-            newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
-
-            if (meioElfoAgil) {
-                if (newHabilidades.none { it.id == "AGIL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Ágil",
-                            descricao = "Meio-elfos ágeis começam com d6 em Agilidade em vez de d4. Isso aumenta a Agilidade máxima para d12+1.",
-                            id = "AGIL",
-                            category = "racial_trait_positive"
-                        )
-                    )
-                }
-            } else {
-                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Adaptável",
-                            descricao = "Meio-elfos adaptáveis começam com uma Vantagem de Estágio Novato à sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
-                            id = "ADAPTAVEL",
-                            category = "racial_trait_positive"
-                        )
-                    )
-                }
-            }
-            return base.copy(habilidades = newHabilidades)
+        // Escolha por id do traço "HERANCA" (Básico/Fantasia/Horror/Super Meio-Elfos),
+        // não por nome de raça — o Meio-Elfo do Pathfinder também casa com "MEIO-ELFO"
+        // no nome, mas tem "Flexibilidade" em vez de Herança, então nunca entra aqui.
+        // Lido de AncestryVariantRegistry.meioElfoHeranca() (mesmo padrão de
+        // Terracota/Umvee/Elementais) em vez de construir os traços na mão —
+        // as 4 entradas do registro (uma por livro) compartilham o mesmo
+        // pacote, então não tem como as opções saírem de sincronismo entre
+        // Básico/Fantasia/Horror/Super.
+        if (base.habilidades.any { it.id?.keyify() == "HERANCA" }) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "HERANCA",
+                ancestralidadeId = "MEIO-ELFOS",
+                livro = canonicalOriginKey(base.origem),
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "meio_elfo_heranca",
+                    fixedPackageChoiceId = if (meioElfoAgil) "agil" else "adaptavel"
+                )
+            )
         }
 
         // Meio-Demônio (Cidade do Sol a Vapor): igual ao livro, escolhe entre
@@ -1033,37 +1228,183 @@ class CriadorState {
         // Disfarce Demoníaco — ver isStageBasedArcanoVariant e
         // ArcaneConfig.SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS) — como sua
         // habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
-        // Meio-Elfo acima, mas sem interação com atributos.
-        if (key.contains("MEIO-DEMONIO")) {
-            val newHabilidades = base.habilidades.toMutableList()
-            newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }
+        // Meio-Elfo acima (escolha por id do traço "ADAPTAVEL_OU_ANTECEDENTE_
+        // ARCANO_DEMONIO", não por nome de raça), mas sem interação com
+        // atributos. Migrado pro resolveMarkedSelection genérico na rodada
+        // 38 — antes ficava só cadastrado no registro sem ser chamado, por
+        // um risco real de concessão de Vantagem quebrada (targetRef não
+        // era threadado ainda; ver comentário de
+        // AncestryVariantRegistry.meioDemonio()), já resolvido pela rodada
+        // 36 (Descendente Elemental).
+        if (base.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" }) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO",
+                ancestralidadeId = "MEIO-DEMONIO",
+                livro = "CIDADE_SOL_VAPOR",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "meio_demonio_traco",
+                    fixedPackageChoiceId = if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
+                )
+            )
+        }
 
-            if (meioDemonioAA) {
-                if (newHabilidades.none { it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Antecedente Arcano (Demônio)",
-                            descricao = "Pode adquirir o Antecedente Arcano (Demônio) como habilidade racial — versão diluída do sangue demoníaco, sem Disfarce Demoníaco de graça (só disponível a partir do Estágio Experiente, pela Vantagem separada Disfarce Demoníaco (Estágio Experiente)).",
-                            id = "ANTECEDENTE_ARCANO_DEMONIO_MEIO",
-                            category = "racial_edge",
-                            traitId = "GRANTED_EDGE",
-                            targetRef = "aa_demonio_meio_demonio"
-                        )
-                    )
-                }
-            } else {
-                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Adaptável",
-                            descricao = "Recebe uma Vantagem Novato extra, como um humano comum.",
-                            id = "ADAPTAVEL",
-                            category = "racial_trait_positive"
-                        )
-                    )
-                }
+        // Humano (Império San, Arte da Guerra) — Signos de Nascença: mesmo
+        // padrão de Terracota/Umvee/Elementais, lido de
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos() em vez de uma
+        // cadeia de "if (signId == 'BOI')" na mão. A raça base só carrega o
+        // traço "SIGNOS_DE_NASCENCA" (marcador + texto de referência,
+        // sempre presente) — tudo que uma opção específica concede
+        // (Adaptável + Pontos de Perícia pra "Nenhum", Força d6 pro Boi,
+        // etc.) é resolvido aqui e reaplicado a cada troca de Signo, nunca
+        // acumulado de uma escolha anterior.
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "SIGNOS_DE_NASCENCA",
+                ancestralidadeId = "HUMANOS",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "signo_de_nascenca",
+                    fixedPackageChoiceId = signoIdFromNome(signoAdgSelecionado)?.lowercase()
+                ),
+                manterMarcadorVisivel = true
+            )
+        }
+
+        // Meio-Orc (Fantasia): Endurecido — escolha entre Força/Vigor d6.
+        // Feral (Arte da Guerra): Primitivo — escolha entre Força/Vigor/
+        // Agilidade d6. Mesmo mecanismo genérico acima (resolveMarkedSelection),
+        // só que a Seleção é TARGET_ATTRIBUTE_OR_SKILL: quem decide QUAL
+        // atributo é o campo compartilhado `humanoMineradorAtributo` (mesmo
+        // campo já usado pela variante "Minerador" de Humanos Sci-Fi
+        // abaixo — nunca duas raças com essa escolha ativas ao mesmo tempo).
+        // Repassado cru pra `resolve()` — validação contra `targetOptions` e
+        // o default por Seleção (Vigor pro Meio-Orc, Força pro resto, ver
+        // AncestryVariantRegistry.meioOrc()/feral()) já acontecem lá dentro
+        // (ResolveAncestryVariantPackageUseCase.resolveTargetAttributeOrSkill),
+        // não precisam ser duplicados aqui.
+        if (base.habilidades.any { it.id?.keyify() == "ENDURECIDO" }) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "ENDURECIDO",
+                ancestralidadeId = "MEIO-ORCS",
+                livro = "FANTASIA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "meio_orc_atributo",
+                    targetChoice = humanoMineradorAtributo
+                )
+            )
+        }
+
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "PRIMITIVO" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "PRIMITIVO",
+                ancestralidadeId = "FERAL",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "feral_atributo",
+                    targetChoice = humanoMineradorAtributo
+                )
+            )
+        }
+
+        // Kitsunemimi (Raposa, Arte da Guerra): Preparado — escolhe 1 de 5
+        // perícias listadas pra começar em d4. Mesmo mecanismo de Meio-Orc/
+        // Feral, mas SKILL em vez de ATTRIBUTE; kitsunemimiPericiaEscolhida
+        // é o campo de estado dedicado (já existia, só não alimentava a
+        // Seleção genérica ainda).
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "PREPARADO" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "PREPARADO",
+                ancestralidadeId = "KITSUNEMIMI (RAPOSA)",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "kitsunemimi_preparado",
+                    targetChoice = kitsunemimiPericiaEscolhida
+                )
+            )
+        }
+
+        // Gnomo (Pathfinder): Obsessivos — escolhe 1 perícia de Astúcia (do
+        // conjunto fixo do livro) pra começar em d4. Mesmo mecanismo acima.
+        if (canonicalOriginKey(base.origem) == "PATHFINDER" &&
+            base.habilidades.any { it.id?.keyify() == "OBSESSIVOS" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "OBSESSIVOS",
+                ancestralidadeId = "GNOMO",
+                livro = "PATHFINDER",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "gnomo_obsessivos",
+                    targetChoice = gnomoPericiaEscolhida
+                )
+            )
+        }
+
+        // Usagimimi (Coelho, Arte da Guerra): Definido pelo Ofício — escolhe
+        // 1 perícia (do conjunto de perícias da AdG, exceto Idiomas/Jutsu)
+        // pra começar em d6 (passos=1, não "d4" como Kitsunemimi/Gnomo — o
+        // livro já concede o patamar treinado direto). Restrição de Tropo
+        // ligada à opção "Transição" (isUsagimimiTransicaoRestrictionActive)
+        // continua vivendo em selecionarPericiaUsagimimi, fora daqui — não é
+        // um efeito de Seleção, é compatibilidade entre escolhas do
+        // personagem, minha função aqui só resolve o traço mecânico em si.
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "DEFINIDO_PELO_OFICIO" }
+        ) {
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "DEFINIDO_PELO_OFICIO",
+                ancestralidadeId = "USAGIMIMI (COELHO)",
+                livro = "ARTE_DA_GUERRA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "usagimimi_definido_pelo_oficio",
+                    targetChoice = usagimimiPericiaEscolhida
+                )
+            )
+        }
+
+        // Descendente Elemental (Fantasia): Seleção de elemento (Água/Ar/
+        // Fogo/Terra) — precisa vir ANTES do early-return de
+        // resolveSciFiVariantSelectionFor logo abaixo, porque esta raça não
+        // tem `opcoes` (não é Variante de livro, só Seleção): o bloco antigo
+        // que resolvia isso ficava DEPOIS desse early-return e nunca era
+        // alcançado — escolher um elemento não tinha efeito nenhum (bug
+        // real, corrigido nesta rodada; ver comentário em
+        // AncestryVariantRegistry.descendenteElemental()). Resistência
+        // Ambiental é permanente (não é substituída pela escolha, ao
+        // contrário do que o bloco antigo assumia) — resolveMarkedSelection
+        // só mexe no marcador ELEMENTO_ANCESTRAL, mantendo o resto intacto.
+        if (canonicalOriginKey(base.origem) == "FANTASIA" &&
+            base.habilidades.any { it.id?.keyify() == "ELEMENTO_ANCESTRAL" }
+        ) {
+            val elementoId = when (descendenteElementalSelecionado) {
+                "Água" -> "agua"
+                "Ar" -> "ar"
+                "Fogo" -> "fogo"
+                "Terra" -> "terra"
+                else -> null
             }
-            return base.copy(habilidades = newHabilidades)
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "ELEMENTO_ANCESTRAL",
+                ancestralidadeId = "DESCENDENTE ELEMENTAL",
+                livro = "FANTASIA",
+                answer = com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "descendente_elemental_elemento",
+                    fixedPackageChoiceId = elementoId
+                )
+            )
         }
 
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
@@ -1079,74 +1420,42 @@ class CriadorState {
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
 
-        if (key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL") {
-            // Always remove generic resistance, as it will be replaced by specific one from selection
-            removeByIdOrName("RESISTENCIA_AMBIENTAL", "RESISTÊNCIA AMBIENTAL")
-
-            when (descendenteElementalSelecionado) {
-                "Água" -> {
-                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("rapido", "RÁPIDO")
-                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
-                }
-                "Ar" -> {
-                    removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("rapido", "RÁPIDO")
-                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
-                }
-                "Fogo" -> {
-                    removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
-                }
-                "Terra" -> {
-                    removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("rapido", "RÁPIDO")
-                }
-                // If null (not selected yet), arguably show all or none. Showing all lets user see options.
-                // But removing generic resistance avoids duplication if logic adds it elsewhere?
-                // Logic in selecionarDescendenteElemental adds specific one. If none selected, none added.
-                // So removing generic here is correct if we want to enforce selection.
-                // But if selection is null, we show filtered list (all - generic).
-            }
-        }
-
-        // Elementais (Sci-Fi): MUITO_FORTE (Força d8) e RESISTENCIA +2 são
-        // habilidades base em ancestralidades.json, representando a opção
-        // "Padrão". A opção "Ar, Fogo ou Água" troca as duas por Forma de
-        // Energia (livro: "Elementais do ar, fogo e água têm Forma de
-        // Energia em vez de Forte e Resistência") — Força cai pra d4 puro,
-        // sem nenhum traço de atributo (resolvido pelo loop genérico de
-        // AtributoStep em atributoBaseRacial(), sem hardcode de nome de
-        // raça). Isso tira 6 pontos da raça (MUITO_FORTE=4 + RESISTENCIA+2=2)
-        // e Forma de Energia sozinha só repõe 4, então um traço invisível
-        // sem efeito mecânico nenhum (id não cadastrado em EFEITOS, cai em
-        // Nenhum) fecha os 2 pontos que faltam pra manter o total da
-        // variante igual ao de Padrão (ambos em pontosRaciaisEsperados = 2).
-        if (key == "ELEMENTAIS" && variant != "Padrão") {
-            removeByIdOrName("MUITO_FORTE", "MUITO FORTE")
-            removeByIdOrName("RESISTENCIA", "RESISTÊNCIA +2")
-            if (newHabilidades.none { it.id == "FORMA_DE_ENERGIA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Forma de Energia",
-                        descricao = "Elementais de ar, fogo ou água trocam Forte e Resistência por Forma de Energia.",
-                        id = "FORMA_DE_ENERGIA",
-                        category = "racial_trait_positive"
-                    )
+        // Elementais (Sci-Fi): a troca Padrão↔"Ar, Fogo ou Água" (Forte+
+        // Resistência vira Forma de Energia + ajuste de orçamento) mora nos
+        // dados de AncestryVariantRegistry.elementaisScifi() — este bloco só
+        // decide QUANDO ler o pacote "ar_fogo_ou_agua" em vez do "padrao"
+        // (vazio, mantém a raça base como está), no mesmo padrão de
+        // ResolveAncestryVariantPackageUseCase.resolve() já usado por
+        // scifiVariantDrivenKeys logo abaixo — nenhum traço é mais
+        // construído aqui à mão.
+        if (key == "ELEMENTAIS") {
+            val elementoAnswer = if (variant != "Padrão") {
+                com.example.swadebuilder.model.SelectionAnswer(
+                    selectionId = "elementais_scifi_elemento",
+                    fixedPackageChoiceId = "ar_fogo_ou_agua"
                 )
-            }
-            if (newHabilidades.none { it.id == "AJUSTE_FORMA_DE_ENERGIA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Ajuste de Orçamento (Forma de Energia)",
-                        descricao = "",
-                        id = "AJUSTE_FORMA_DE_ENERGIA",
-                        pontos = 2,
-                        invisivel = true
+            } else null
+            val elementaisPack = resolveAncestryVariantPackageUseCase.resolve(
+                ancestralidadeId = "ELEMENTAIS",
+                livro = "SCI_FI",
+                variantOptionId = null,
+                selectionAnswers = listOfNotNull(elementoAnswer)
+            )
+            elementaisPack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
+            elementaisPack.tracosParaAdicionar.forEach { traco ->
+                if (newHabilidades.none { it.id == traco.id }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = traco.nome,
+                            descricao = "",
+                            id = traco.id,
+                            category = "racial_trait_positive",
+                            vezes = traco.vezes,
+                            pontos = traco.pontos,
+                            invisivel = traco.invisivel
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -1178,7 +1487,7 @@ class CriadorState {
                             id = "GARRAS_SEM_PA",
                             category = "racial_trait_positive",
                             armasNaturais = listOf(
-                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, escalavel = true)
+                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, id = "GARRAS_SEM_PA")
                             )
                         )
                     )
@@ -1351,13 +1660,54 @@ class CriadorState {
                     )
                 }
             } else if (variant.equals("Minerador", ignoreCase = true)) {
-                if (newHabilidades.none { it.id == "MINERADOR_ATRIBUTO" }) {
+                // Seleção aninhada dentro da VariantOption "minerador" (ver
+                // AncestryVariantRegistry.humanos() SCI_FI) — mesmo mecanismo
+                // de TARGET_ATTRIBUTE_OR_SKILL usado por Meio-Orc/Feral acima,
+                // só que aninhado numa Variante em vez de direto na raça
+                // (marcador MINERADOR_ATRIBUTO fixo removido: o traço real
+                // resolvido, ATTRIBUTE_BOOST+targetRef, entra no lugar).
+                // DEPENDENCIA_ATMOSFERICA_MAIOR (a outra metade do pacote
+                // desta VariantOption) já foi injetada pelo bloco genérico de
+                // scifiVariantDrivenKeys logo acima — só o traço de atributo
+                // (não coberto ali, que resolve sem respostas de Seleção)
+                // falta aqui.
+                val nestedDef = AncestryVariantRegistry.get("HUMANOS", "SCI_FI")
+                    ?.grupoVariante?.opcoes
+                    ?.firstOrNull { it.id == "minerador" }
+                    ?.selecoes?.firstOrNull()
+                val answer = nestedDef?.let {
+                    com.example.swadebuilder.model.SelectionAnswer(
+                        selectionId = it.id,
+                        targetChoice = humanoMineradorAtributo
+                    )
+                }
+                val resolved = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "HUMANOS",
+                    livro = "SCI_FI",
+                    variantOptionId = "minerador",
+                    selectionAnswers = listOfNotNull(answer)
+                )
+                // O bloco genérico de scifiVariantDrivenKeys logo acima já
+                // rodou pra esta mesma VariantOption, mas com
+                // selectionAnswers=emptyList() (não sabe de Seleções — só de
+                // Variantes) — ele já resolveu e injetou este MESMO traço,
+                // só que caindo no default (defaultTargetChoice) por falta
+                // de resposta, e via addIfAbsent (que não repassa traitId/
+                // targetRef). Precisa remover essa versão "capenga" antes de
+                // adicionar a de verdade, senão o dedup por id abaixo
+                // silenciosamente mantém a errada.
+                resolved.tracosParaAdicionar.forEach { traco ->
+                    newHabilidades.removeAll { it.id == traco.id }
                     newHabilidades.add(
                         com.example.swadebuilder.model.RacialAbility(
-                            nome = "Planeta de Mineração",
-                            descricao = "Habitantes de planetas de mineração começam com d6 em Força ou Vigor (à escolha) em vez de d4. Isso aumenta o máximo do atributo escolhido para d12+1.",
-                            id = "MINERADOR_ATRIBUTO",
-                            category = "racial_trait_positive"
+                            nome = traco.nome,
+                            descricao = "",
+                            id = traco.id,
+                            category = "racial_trait_positive",
+                            traitId = traco.traitId,
+                            targetRef = traco.targetRef,
+                            pontos = traco.pontos,
+                            vezes = traco.vezes
                         )
                     )
                 }
@@ -1414,17 +1764,21 @@ class CriadorState {
     }
 
     fun isAttributeFreeForMonster(attr: String): Boolean {
-        if (!modoMonstroAtivo) return false
+        // Monstro Heroico virou Tropo (categoria="MONSTRO", ver rodada 44) — deriva do
+        // Tropo selecionado em vez de tipoMonstroSelecionado/MonstroTemplate.atributosBonus
+        // direto. Antes: lista fixa (Agilidade/Força/Vigor) que só batia com os templates
+        // Lobisomem/Monstro de Retalhos/Múmia/Vampiro. Anjo, Demônio, Fantasma e Revivido
+        // bonificam Espírito (ou nem tocam os 3 atributos da lista), e ficavam sem o
+        // benefício — ou ganhavam à toa em atributos que o template escolhido nem
+        // bonifica. Agora deriva de habilidadesDoTropoResolvidas (ATTRIBUTE_BOOST real).
+        if (tropoSelecionado?.categoria != "MONSTRO") return false
         val key = attr.keyify()
-        // Antes: lista fixa (Agilidade/Força/Vigor) que só batia com os templates
-        // Lobisomem/Monstro de Retalhos/Múmia/Vampiro. Anjo, Demônio, Fantasma e
-        // Revivido bonificam Espírito (ou nem tocam os 3 atributos da lista), e
-        // ficavam sem o benefício — ou ganhavam à toa em atributos que o
-        // template escolhido nem bonifica. Agora deriva do template selecionado.
         val validAttrKeys = setOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         if (key !in validAttrKeys) return false
-        val monstro = getMonstroSelecionado() ?: return false
-        return monstro.atributosBonus.keys.any { it.keyify() == key }
+        return habilidadesDoTropoResolvidas.any { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == key
+        }
     }
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
@@ -1766,6 +2120,10 @@ class CriadorState {
     val equipSelectedSuperTypes = mutableStateListOf<EquipSuperType>()
     var equipFilter by mutableStateOf(EquipFilter())
     val equipExpandedTypes = mutableStateMapOf<String, Boolean>()
+    // Chave "SuperType/Grupo" (ex.: "Armaduras/Corpo") — um grupo dentro de um SuperType
+    // já expandido também pode ser recolhido, pra não despejar a lista inteira de uma vez
+    // quando o SuperType tem muitos grupos (ex.: "Armas" com dezenas de itens).
+    val equipExpandedGroups = mutableStateMapOf<String, Boolean>()
     var equipSectionFilters = mutableStateMapOf<EquipSuperType, Set<String>>()
 
     var anotacoes by mutableStateOf("")
@@ -2309,15 +2667,46 @@ class CriadorState {
         // palavra-chave, o dano/PA de cada arma já vem pronto de
         // ancestralidades.json.
         ancestralidadeObj.habilidades.forEach { hab ->
-            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
+            // ancestralidades.json não repete o id do traço dentro de cada
+            // ArmaNatural (ele já mora em `hab.id`) — sem esse fallback,
+            // ArmaNatural.escalavel (derivado do id, ver RacialTraitPointCatalog
+            // .armaNaturalEscalavel()) nunca acharia nada e toda arma natural de
+            // raça oficial cairia como não-escalável, mesmo Garras de verdade.
+            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma.copy(id = arma.id ?: hab.id)) }
         }
 
-        // Monster Natural Weapons: mesma leitura estruturada, pro Template de
-        // Monstro Heroico (horror_monstros.json).
-        getMonstroSelecionado()?.let { monstro ->
-            monstro.habilidades.forEach { hab ->
-                hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
-            }
+        // Arma de Sopro (Draconianos, livro Fantasia): "causa 2d6 de dano em um Modelo
+        // de Cone ou em uma linha de 12 quadros" — sem campo estruturado próprio (não é
+        // corpo a corpo/Toque como armasNaturais), então entra direto como item de
+        // Armas à Distância (ResumoPdfReferenciador.buildWeaponAndArmorBlocks já roteia
+        // pra lá qualquer EquipamentoItem com `dano` + `distancia` != "Toque"). A
+        // Vantagem Queimar ("o dano... aumenta em um tipo de dado", livro Fantasia)
+        // sobe 2d6 pra 2d8 usando o mesmo upgradeDie() já usado pra Garras/Mordida
+        // aprimoradas acima.
+        if (RacialTraitPointCatalog.temArmaDeSopro(ancestralidadeObj.habilidades)) {
+            val temQueimar = vantagensSelecionadas.any { it.id == "queimar" }
+            val danoSopro = if (temQueimar) upgradeDie("2d6") else "2d6"
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Ataque de Sopro",
+                    dano = JsonPrimitive(danoSopro),
+                    distancia = JsonPrimitive("Cone ou Linha (12)"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0),
+                    // Repete a área aqui (além do campo `distancia` acima) porque o Resumo em
+                    // tela mostra ataques naturais numa linha só de nome+dano+observações (sem
+                    // coluna de alcance própria) — só o PDF usa a tabela de Armas à Distância
+                    // (com coluna "Alcance") pra mostrar `distancia` direto.
+                    observacoes = JsonPrimitive("Área: Cone ou Linha (12 quadros). Teste de Atletismo (pode ser Evadido); Falha Crítica causa Fadiga.")
+                )
+            )
+        }
+
+        // Tropo Natural Weapons: mesma leitura estruturada — cobre tanto Arte da Guerra
+        // quanto Monstro Heroico (Horror, virou Tropo — ver rodada 44), já que os dois usam
+        // o mesmo formato RacialAbility.armasNaturais em habilidades[].
+        habilidadesDoTropoResolvidas.forEach { hab ->
+            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma.copy(id = arma.id ?: hab.id)) }
         }
 
         // Variant Natural Weapons: armas que só existem numa Variante
@@ -2566,6 +2955,31 @@ class CriadorState {
         return (stepIndex - 1) * 10f
     }
 
+    // "Equipamentos feitos para personagens Pequenas/Muito Pequenas/Minúsculas pesam e
+    // custam metade/um quarto/um décimo do valor listado" (livro Fantasia, "Diminuto",
+    // pág. 10). Só ancestralidades com o traço Diminuto (TamanhoBonus.minusculo = true,
+    // ver ModifierEngine.racialDiminutoPassos()) recebem o desconto — Tamanho negativo
+    // sem esse flag (Obeso invertido, Vantagens etc.) não conta.
+    private fun passosDiminuto(): Int = ModifierEngine.racialDiminutoPassos(this)
+
+    /** Peso de `item` já ajustado pelo desconto de Diminuto (kg), ou null se o item não tem peso cadastrado/reconhecível. */
+    fun pesoEquipamentoEfetivo(item: EquipamentoItem): Float? {
+        val pesoBase = (item.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull() ?: return null
+        val passos = passosDiminuto()
+        if (passos <= 0) return pesoBase
+        return pesoBase / ForcaMinimaCalculator.divisorEquipamentoDiminuto(passos).toFloat()
+    }
+
+    /** Custo de `item` (unidade base de moeda) já ajustado pelo desconto de Diminuto. */
+    fun custoEquipamentoEfetivo(item: EquipamentoItem): Int {
+        val custoBase = MoneyUtils.parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
+        return ForcaMinimaCalculator.custoInteiroReduzidoPorDiminuto(custoBase, passosDiminuto())
+    }
+
+    /** Soma do peso de todos os itens comprados, já com o desconto de Diminuto aplicado. */
+    fun totalPesoEquipamentos(): Float =
+        equipamentosComprados.sumOf { (pesoEquipamentoEfetivo(it) ?: 0f).toDouble() }.toFloat()
+
     fun forcaEfetivaParaArmaduras(): Int {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
         val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
@@ -2746,7 +3160,7 @@ class CriadorState {
 
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
-            ancestralidade.keyify().contains("HUMANO") &&
+            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" } == true &&
             signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             v.id == "sorte"
 
@@ -3411,42 +3825,36 @@ class CriadorState {
             }
         }
 
-        // Template de Monstro Heroico (Horror): mesma leitura genérica de
-        // atributos_bonus que o atributo usa (ver monstroAtributoTraitIds), só
-        // que aqui o único caso real é "Fe" — a perícia Fé, id "FE" no mesmo
-        // RacialTraitPointCatalog (RacialTraitEffect.PericiaStep). Passos segue
-        // a mesma convenção do resto do app: cada passo é um tipo de dado acima
-        // de d4 (1 passo = d6, 2 passos = d8...).
-        getMonstroSelecionado()?.let { monstro ->
-            val bonusEntry = monstro.atributosBonus.entries.firstOrNull {
-                it.key.keyify() == perKey
-            }
-            if (bonusEntry != null) {
-                modifiedBase = maxOf(modifiedBase, 4 + 2 * bonusEntry.value)
+        // Monstro Heroico (Horror, virou Tropo — ver rodada 44): mesma leitura genérica de
+        // habilidadesDoTropoResolvidas que o atributo usa logo abaixo, só que aqui o único
+        // caso real é "Fé" (paraTropo() converte pra SKILL_BOOST/targetRef="Fé"). Fica ANTES
+        // do corte de pisoSemTropo — não é bônus relativo de Tropo tipo Arte da Guerra, é
+        // traço inerente da criatura (igual raça), que PODE esticar o teto da perícia.
+        if (tropoSelecionado?.categoria == "MONSTRO") {
+            habilidadesDoTropoResolvidas.forEach { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
+                    modifiedBase = maxOf(modifiedBase, 4 + efeito.passos * 2)
+                }
             }
         }
 
-        // Arte da Guerra - Signos (only for Humans)
-        if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
-            val signId = signoIdFromNome(signoAdgSelecionado)
-            if (signId != null) {
-                // Lebre: Cura d6
-                if (signId == "LEBRE" && perKey == "CURAR") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                // Garça: Acrobacia d4, Atletismo +1 die type (from base)
-                if (signId == "GARCA") {
-                    if (perKey == "ACROBACIA") modifiedBase = maxOf(modifiedBase, 4)
-                    if (perKey == "ATLETISMO") modifiedBase = maxOf(modifiedBase, 6) // Base d4 -> d6
-                }
-                // Serpente: Jogar OR Performance d6
-                if (signId == "SERPENTE") {
-                    val chosen = signoSerpentePericiaEscolhida.keyify()
-                    if (perKey == chosen) {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    }
-                }
-                // Macaco: Unskilled d4+1 (Not represented in start raw)
+        // Arte da Guerra - Signo Serpente: Jogar OU Performance d6, à escolha
+        // do jogador (signoSerpentePericiaEscolhida) — o único Signo cujo
+        // efeito de perícia muda de ALVO por jogador, então não dá pra
+        // modelar como um traço fixo em habilidades[] (os outros Signos com
+        // efeito de perícia — Lebre, Garça — já vêm de lá, ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos(), e são lidos
+        // pelo loop genérico de PericiaStep logo acima). Guardado pelo traço
+        // "SIGNOS_DE_NASCENCA" (não por nome de raça), mesmo padrão do resto
+        // do mecanismo de Signo.
+        if (compendioArteDaGuerraAtivo &&
+            currentDef?.habilidades?.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" } == true &&
+            signoIdFromNome(signoAdgSelecionado) == "SERPENTE"
+        ) {
+            val chosen = signoSerpentePericiaEscolhida.keyify()
+            if (perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 
@@ -3469,21 +3877,15 @@ class CriadorState {
             ?.toSet()
             ?: emptySet()
 
-        // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
-        if (habilidadeIdsPericia.contains("OBSESSIVOS")) {
-            val chosen = gnomoPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-
-        // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
-        if (habilidadeIdsPericia.contains("PREPARADO")) {
-            val chosen = kitsunemimiPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
+        // Gnomo (Obsessivos), Kitsunemimi (Preparado) e Usagimimi (Definido
+        // pelo Ofício): escolha de perícia à escolha do jogador — não é mais
+        // um "if" hardcoded aqui. applyAncestryVariantAdjustments
+        // (resolveMarkedSelection, Seleção TARGET_ATTRIBUTE_OR_SKILL) já
+        // injeta o traço real (traitId=SKILL_BOOST + targetRef=a perícia
+        // escolhida) em habilidades[] conforme gnomoPericiaEscolhida/
+        // kitsunemimiPericiaEscolhida/usagimimiPericiaEscolhida, e o laço
+        // genérico de PericiaStep logo acima já o lê como qualquer outro
+        // traço racial — mesmo padrão de Endurecido/Primitivo.
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
@@ -3500,14 +3902,6 @@ class CriadorState {
             modifiedBase = maxOf(modifiedBase, 6)
         }
 
-        // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
-        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO")) {
-            val chosen = usagimimiPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
-
         // Piso "sem Tropo": raça + Monstro + Signo + Pacote Cultural — só isso
         // alimenta o teto da perícia (periciaCapRaw chama esta função com
         // includeTropo=false). Um bônus de Tropo pode somar ao valor final
@@ -3519,6 +3913,23 @@ class CriadorState {
         // por vez, mas isso evita qualquer acoplamento acidental entre eles.
         val pisoSemTropo = modifiedBase
         if (!includeTropo) return pisoSemTropo
+
+        // Sistema de Tropo genérico (ver docs/auditoria_mecanica_racas_2026-08-31.md rodada
+        // 43): mesmo mecanismo do loop equivalente em atributoBaseRacial() acima, só que pra
+        // PericiaStep — `relativo=true` (traitId SKILL_STEP_UP) soma passos ACIMA de
+        // pisoSemTropo; `relativo=false` (traitId SKILL_BOOST) é piso fixo a partir de
+        // pisoSemTropo. Substitui, pra qualquer Tropo migrado pra `habilidades[]`, os blocos
+        // hardcoded por id logo abaixo.
+        habilidadesDoTropoResolvidas.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
+                modifiedBase = if (efeito.relativo) {
+                    maxOf(modifiedBase, applySuperStepsFrom(pisoSemTropo, efeito.passos))
+                } else {
+                    maxOf(modifiedBase, 4 + efeito.passos * 2)
+                }
+            }
+        }
 
         // Arte da Guerra - Protagonista: livro diz "Essa perícia é aumentada
         // em um tipo de dado" — bônus RELATIVO ao que o herói já tem (de
@@ -4501,9 +4912,7 @@ class CriadorState {
             // Traço genérico de raça (oficial ou criado no editor de conteúdo
             // customizado, ver RacialTraitEffect.PericiaPoolBonus) que dá/tira
             // Pontos de Perícia — soma de todas as habilidades[] com esse
-            // efeito. Humano (Império San) "Pontos de Perícia" continua com o
-            // +3 hardcoded abaixo (id não migrado pra não mexer numa raça já
-            // testada), mas qualquer raça nova pode usar isso.
+            // efeito. Qualquer raça nova pode usar isso.
             val bonusPontosPericia = currentAncestryDef?.habilidades
                 ?.sumOf { hab ->
                     val tid = hab.resolvedTraitId()
@@ -4519,8 +4928,16 @@ class CriadorState {
                 // Base: 12 points
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
-                val isHuman = ancestralidade.keyify().contains("HUMANO")
-                val base = 12 + (if (isHuman && signoIdFromNome(signoAdgSelecionado) == "NENHUM") 3 else 0) + bonusPontosPericia
+                //
+                // O traço "Pontos de Perícia" (id PONTOS_DE_PERICIA) só entra
+                // em habilidades[] quando o Signo "Nenhum" está ativo — ver
+                // AncestryVariantRegistry.humanoArteDaGuerraSignos() e
+                // CriadorState.applyAncestryVariantAdjustments() — e não
+                // mais como traço permanente da raça, independente da
+                // escolha (bug real corrigido nesta rodada). Por isso o +3
+                // já vem sozinho de bonusPontosPericia, sem precisar de
+                // nenhum "if" aqui: nas outras 13 opções o traço nem existe.
+                val base = 12 + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -4568,7 +4985,16 @@ class CriadorState {
         // ficam de fora desta conta.
         val bonusFromChiEdges = 4 * vantagensSelecionadas.count { it.id == "pontos_de_chi" }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
-        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
+        // Kirin (Signo de Nascença, Humano Arte da Guerra) só injeta o
+        // traço "KIRIN_CHI" em habilidades[] quando é o Signo ativo (ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos()) — lido aqui
+        // genericamente por RacialTraitEffect.ChiReserveBonus, mesmo padrão
+        // de bonusPontosPericia acima, sem precisar de "if (signId == X)".
+        val bonusFromSign = currentAncestryDef?.habilidades
+            ?.sumOf { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.ChiReserveBonus) efeito.valor else 0
+            } ?: 0
 
         // Complicação "Bloqueio Interno" (docs/swade_adg, id bloqueio_interno):
         // substitui a fórmula padrão "2 + metade do dado de Espírito" da Reserva de
@@ -4707,10 +5133,77 @@ class CriadorState {
     var meioElfoAgil by mutableStateOf(false)
     var meioDemonioAA by mutableStateOf(false)
 
+    // Gate de ativação genérico do sistema de Tropo (rodada 43 do audit doc) — checkbox de
+    // regra na tela de criação, disponível em QUALQUER livro (mesmo sem nenhum Tropo de
+    // catálogo pra oferecer ainda; nesse caso a aba Tropo só mostra "nenhum Tropo escolhido",
+    // sem efeito mecânico nenhum). Arte da Guerra não usa esta flag pra se ativar — ela é
+    // sempre obrigatória lá (ver modoTroposAtivo), então a UI da checkbox deve mostrar
+    // marcado e travado (sem poder desmarcar) sempre que compendioArteDaGuerraAtivo, mas o
+    // valor desta variável em si só importa pros DEMAIS livros (ela pode ficar false o tempo
+    // todo com Arte da Guerra ativo — modoTroposAtivo ainda dá true pelo outro lado do OR).
+    var modoTroposHabilitadoManualmente by mutableStateOf(false)
+
+    /**
+     * Sistema de Tropo genérico ligado nesta sessão — trava a Ancestralidade (ver
+     * isSectionEnabled) assim que um Tropo for escolhido, disponibiliza a aba Tropo. Arte da
+     * Guerra sempre liga (regra obrigatória do livro, não dá pra desmarcar); qualquer outro
+     * livro liga só se o jogador marcar a checkbox manualmente.
+     */
+    val modoTroposAtivo: Boolean
+        get() = compendioArteDaGuerraAtivo || modoTroposHabilitadoManualmente
+
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
     val vantagensAutomaticasDoProtagonista = mutableStateListOf<String>()
     val vantagensSlotProtagonista = mutableStateListOf<String>()
+
+    // Escolhas de TropoEscolha feitas pelo jogador (ver Tropo.escolhas/targetRefPorEscolhaTropo)
+    // — chave é o id da TropoEscolha, valor é a opção escolhida (sempre uma de
+    // TropoEscolha.opcoes). Ex.: Kensai (Youxia) grava aqui qual perícia o jogador vinculou à
+    // Arma Predileta. Sem entrada aqui pra uma escolha existente, tropoEscolhaAtual() cai no
+    // `padrao` dela — nunca deixa a ficha sem alvo resolvido.
+    val tropoEscolhasFeitas = mutableStateMapOf<String, String>()
+
+    /** Opção atual pra uma TropoEscolha (a que o jogador marcou, ou o padrão dela). */
+    fun tropoEscolhaAtual(escolhaId: String): String? {
+        val escolha = tropoSelecionado?.escolhas?.firstOrNull { it.id == escolhaId } ?: return null
+        val feita = tropoEscolhasFeitas[escolhaId]
+        return if (feita != null && escolha.opcoes.any { it.equals(feita, ignoreCase = true) }) feita else escolha.padrao
+    }
+
+    fun escolherTropoOpcao(escolhaId: String, valor: String, feedbackMessages: MutableList<String> = mutableListOf()) {
+        // Antes da troca: precisa ler habilidadesDoTropoResolvidas com a escolha ANTIGA ainda
+        // valendo, senão o "grant anterior" já sairia calculado com o valor novo (ex.: Artista
+        // Marcial "Potencial Físico" — trocar de Agilidade pra Força precisa saber que a
+        // Vantagem Esquiva (ligada à opção antiga) deixou de valer, pra poder trocar por
+        // Bloquear). Mesma reconciliação que selecionarTropo() já faz pro Tropo inteiro, só
+        // que aqui é só a Vantagem ligada a ESTA escolha que pode ter mudado — o resto de
+        // vantagensAutomaticasDoTropo (ganhaAoComprar, outras habilidades[] sem escolha) fica
+        // intacto.
+        val idsAnteriores = tropoVantagensGratisIds()
+        tropoEscolhasFeitas[escolhaId] = valor
+        reconciliarGrantsDeHabilidadesDoTropo(idsAnteriores)
+
+        recalcularPontosAtributo(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages)
+        if (feedbackMessages.isNotEmpty()) {
+            anotacoes += "\n• " + feedbackMessages.joinToString("\n• ")
+        }
+    }
+
+    /**
+     * `tropoSelecionado?.habilidades`, mas com todo `targetRef` que referencia uma
+     * TropoEscolha (ver `escolhaTropoReferenciada()`) já substituído pela opção atual —
+     * `atributoBaseRacial`/`periciaStartRawInternal`/`ModifierEngine` e qualquer leitura de
+     * Vantagem/Complicação concedida por Tropo devem ler DAQUI, nunca de
+     * `tropoSelecionado?.habilidades` direto, senão um Tropo com escolha (ex.: Kensai) nunca
+     * resolve pra um alvo de verdade.
+     */
+    val habilidadesDoTropoResolvidas: List<RacialAbility>
+        get() = tropoSelecionado?.habilidades.orEmpty().map { hab ->
+            val escolhaId = hab.targetRef.escolhaTropoReferenciada() ?: return@map hab
+            hab.copy(targetRef = tropoEscolhaAtual(escolhaId) ?: hab.targetRef)
+        }
 
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
@@ -4730,7 +5223,98 @@ class CriadorState {
 
     var pontosAtributo by mutableIntStateOf(5)
 
-    var armadura by mutableIntStateOf(0)
+    // Valor final de Armadura num local do corpo, já com a regra de "vestir armadura
+    // sobre armadura" aplicada (ver armaduraPorLocal) — e a Força Mínima efetiva pra
+    // esse local (da peça principal, +1 passo de dado quando há uma segunda camada;
+    // ver ForcaMinimaCalculator.minimoComCamadaExtra). `forcaMinima` null = local sem
+    // peça cadastrada com Força Mínima reconhecível.
+    data class ArmorLocalInfo(val valor: Int, val forcaMinima: String?)
+
+    /**
+     * Armadura equipada em cada local do corpo, já resolvendo a regra oficial de
+     * "vestir armadura sobre armadura" (livro básico, Cap. 2 "Equipamento", regra de
+     * Armadura): duas peças no MESMO local não simplesmente tomam a melhor — a peça
+     * PRINCIPAL (maior valor) soma o valor cheio, a SEGUNDA (a "mais leve") soma
+     * METADE do valor dela arredondado pra baixo, e a Força Mínima efetiva desse local
+     * sobe um passo de dado (a penalidade da peça mais pesada aumenta). Com 3+ peças no
+     * mesmo local (raro/sem regra explícita no livro), só as 2 melhores contam — o
+     * resto é ignorado pra esse cálculo. Lê o campo estruturado `EquipamentoItem.local`
+     * (ver comentário lá); `CORPO_INTEIRO` (trajes completos) conta pros 4 locais ao
+     * mesmo tempo. Item sem `local` (equipamento customizado feito pelo Mestre — todo o
+     * catálogo oficial já está migrado) não entra aqui; participa só do fallback de
+     * `armadura`/da penalidade de Força Mínima em ModifierEngine.
+     * Registrado pra já existir pronto quando a Resistência por local entrar no PDF —
+     * hoje só `armadura` (Tronco/melhor local) é usada na ficha.
+     */
+    fun armaduraPorLocal(): Map<String, ArmorLocalInfo> {
+        val pecasPorLocal = mutableMapOf<String, MutableList<Pair<Int, String?>>>()
+        equipamentosComprados.forEach { item ->
+            val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
+            if (valor == null || valor == 0) return@forEach
+            val locaisItem = item.local ?: return@forEach
+            // Defensivo: nenhuma peça com `local` hoje tem subtipo de Mecha/Veículo
+            // (esses ficaram de fora da migração — ver equipamentos.json), mas se um
+            // catálogo futuro adicionar uma, não deve contar aqui (Mecha usa Armadura
+            // Máx do chassi, não Resistência do piloto).
+            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                        s.contains("CHASSIS") || s.contains("MECHA")
+            } == true
+            if (isMechaOrVehicle) return@forEach
+            val forcaMinItem = (item.forcaMin as? JsonPrimitive)?.content
+            val locaisResolvidos = if ("CORPO_INTEIRO" in locaisItem) LOCAIS_CORPO else locaisItem
+            locaisResolvidos.forEach { local ->
+                pecasPorLocal.getOrPut(local) { mutableListOf() }.add(valor to forcaMinItem)
+            }
+        }
+        return pecasPorLocal.mapValues { (_, pecas) ->
+            val ordenadas = pecas.sortedByDescending { it.first }
+            val principal = ordenadas[0]
+            val temSegundaCamada = ordenadas.size > 1
+            val valorFinal = principal.first + if (temSegundaCamada) ordenadas[1].first / 2 else 0
+            val forcaMinFinal = if (temSegundaCamada) {
+                com.example.swadebuilder.util.ForcaMinimaCalculator.minimoComCamadaExtra(principal.second)
+                    ?: principal.second
+            } else {
+                principal.second
+            }
+            ArmorLocalInfo(valorFinal, forcaMinFinal)
+        }
+    }
+
+    // Valor de Armadura que soma na Resistência exibida no Resumo/PDF (ver
+    // armorBase/calcResistencia()). Era um `var` manual (mutableIntStateOf) que
+    // nenhum lugar do app nunca atualizava — ficava sempre 0, Armadura comprada
+    // nunca aparecia na Resistência total, só na lista separada "Armaduras"
+    // (bug relatado: comprou Corselete de Bronze, Resistência não mudou).
+    //
+    // Resistência geral do personagem usa o valor de Tronco (por convenção — é
+    // o local que a Resistência "padrão" da ficha representa, sem detalhar por
+    // local do corpo, decisão combinada com o dono do projeto), com fallback
+    // pra melhor local equipado quando não há nada cobrindo o Tronco (ex.: só um
+    // capacete comprado) e, por fim, pra equipamento customizado sem `local`
+    // estruturado (heurística por texto de `observacoes`, mesmo comportamento
+    // de antes desta peça virar dado estruturado no catálogo oficial — sem a regra
+    // de camadas, que exige saber o local de cada peça pra agrupar).
+    val armadura: Int
+        get() {
+            val porLocal = armaduraPorLocal()
+            porLocal["TRONCO"]?.let { return it.valor }
+            if (porLocal.isNotEmpty()) return porLocal.values.maxOf { it.valor }
+
+            val pecasSemLocal = equipamentosComprados.mapNotNull { item ->
+                if (item.local != null) return@mapNotNull null
+                val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
+                if (valor == null || valor == 0) return@mapNotNull null
+                val local = (item.observacoes as? JsonPrimitive)?.content ?: ""
+                valor to local
+            }
+            if (pecasSemLocal.isEmpty()) return 0
+            val doTronco = pecasSemLocal.filter { (_, local) ->
+                local.contains("tronco", ignoreCase = true) || local.contains("corpo", ignoreCase = true)
+            }
+            return (doTronco.ifEmpty { pecasSemLocal }).maxOf { it.first }
+        }
 
     var nasceUmHeroi by mutableStateOf(false)
 
@@ -4807,12 +5391,13 @@ class CriadorState {
             return true
         }
 
-        // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
-        if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
-            if (signoAdgSelecionado == null || signoIdFromNome(signoAdgSelecionado) == "NENHUM") {
-                return true
-            }
-        }
+        // Arte da Guerra Human: Signo "Nenhum" concede Adaptável — não é mais
+        // um caso especial aqui, o traço "ADAPTAVEL" já sai de habilidades[]
+        // via applyAncestryVariantAdjustments quando "Nenhum" é a opção
+        // ativa (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()),
+        // então o check genérico lá em cima já reflete isso, mesmo padrão do
+        // Pacote Cultural de Humanos (Fantasia) citado no comentário do topo
+        // desta função.
 
         return false
     }
@@ -4999,7 +5584,7 @@ class CriadorState {
 
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
-            ancestralidade.keyify().contains("HUMANO") &&
+            currentAncestryDef?.habilidades?.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" } == true &&
             signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             vantagem.id == "sorte"
         if (kirinSorteAutomatica) {
@@ -5070,7 +5655,6 @@ class CriadorState {
             valoresAtributos = valoresAtributos.mapValues { it.value.intValue },
             pericias = periciasComIdiomas(),
             rawTotalPericia = { rawTotal(it) },
-            tipoMonstroSelecionado = tipoMonstroSelecionado,
             cartaSelvagem = cartaSelvagem,
             complicacoesSelecionadas = complicacoesSelecionadas.toMap(),
             // "Uma vez por Estágio" sem acumular Estágios pulados: compara só o que já foi
@@ -5152,30 +5736,6 @@ class CriadorState {
         }
     }
 
-    /**
-     * Traduz `MonstroTemplate.atributosBonus` (mapa "atributo -> passos", ex.:
-     * Anjo tem Força:2/Vigor:2) para ids já existentes em
-     * `RacialTraitPointCatalog.EFEITOS` — os mesmos que uma Ancestralidade real
-     * usaria para o mesmo efeito (ex.: Força +2 é "MUITO_FORTE", o id que
-     * qualquer raça com Força +2 também usaria). Isso evita reimplementar o
-     * cálculo de "quantos passos de dado" num segundo lugar: o Monstro apenas
-     * contribui com ids pro mesmo catálogo que a raça já usa.
-     *
-     * A entrada "Fe" (perícia Fé, não atributo) fica de fora — é tratada em
-     * periciaStartRawInternal, que também usa o id "FE" do mesmo catálogo.
-     */
-    private fun monstroAtributoTraitIds(monstro: MonstroTemplate): Set<String> =
-        monstro.atributosBonus.mapNotNull { (atributo, passos) ->
-            when (atributo.keyify()) {
-                "FORCA" -> if (passos >= 2) "MUITO_FORTE" else "FORTE"
-                "VIGOR" -> if (passos >= 2) "MUITO_RESISTENTE" else "RESISTENTE"
-                "AGILIDADE" -> if (passos >= 2) "MUITO_AGIL" else "AGIL"
-                "ESPIRITO" -> "ESPIRITUAL"
-                "ASTUCIA" -> "ASTUCIA"
-                else -> null
-            }
-        }.toSet()
-
     private fun atributoBaseRacial(a: String, includeTropo: Boolean = true): Int {
         // Piso racial vem só de habilidades[] (ATTRIBUTE_BOOST/AtributoStep, ver
         // loop abaixo) — RacialModifier não carrega mais um mapa `atributos`
@@ -5193,15 +5753,10 @@ class CriadorState {
         // habilidades[] da raça (já com os ajustes de variante aplicados por
         // applyAncestryVariantAdjustments/getAncestralidadeDef) em vez de comparar
         // o nome da raça — assim o bônus segue o traço, não o rótulo da raça.
-        //
-        // O Template de Monstro Heroico (Horror) entra no MESMO conjunto de ids —
-        // não é raça nem variante de raça, é uma camada adicional que se soma à
-        // ancestralidade escolhida (ver monstroAtributoTraitIds). Assim o loop
-        // abaixo nem precisa saber que "monstro" existe: só vê ids de traço.
-        val habilidadeIds = (currentAncestryDef?.habilidades
+        val habilidadeIds = currentAncestryDef?.habilidades
             ?.mapNotNull { it.id?.keyify() }
             ?.toSet()
-            ?: emptySet()) + (getMonstroSelecionado()?.let { monstroAtributoTraitIds(it) } ?: emptySet())
+            ?: emptySet()
 
         // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
         // está presente): o traço só precisa estar na raça, quem diz QUAL
@@ -5224,23 +5779,30 @@ class CriadorState {
             }
         }
 
-        // Traços de alvo escolhido pelo jogador entre 2-3 atributos: o traço só
-        // decide QUE a raça tem a escolha; qual atributo foi escolhido continua
-        // vindo do state dedicado (mesmo padrão usado no restante do app,
-        // reaproveitando o mesmo campo pras 3 raças — nunca duas ativas ao
-        // mesmo tempo, já que só existe uma ancestralidade escolhida por vez).
-        if (habilidadeIds.contains("ENDURECIDO") || habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
-            // Meio-Orc (Fantasia): escolha entre Força/Vigor (livro não define um
-            // padrão; "Vigor" preserva o comportamento default de antes desta raça
-            // migrar pro mesmo mecanismo de Feral/Minerador).
-            // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
-            // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
-            val defaultChoice = if (habilidadeIds.contains("ENDURECIDO")) "Vigor" else "Força"
-            val chosen = humanoMineradorAtributo ?: defaultChoice
-            if (attrKey == chosen.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 6)
+        // Monstro Heroico (Horror, virou Tropo — ver rodada 44): não é raça nem variante de
+        // raça, é uma camada adicional que se soma à ancestralidade escolhida (ex.: Elfo +
+        // Vampiro) — paraTropo() já converte atributos_bonus em ATTRIBUTE_BOOST/targetRef=
+        // atributo/value=passos, mesma unidade que o loop de raça acima. Fica ANTES do corte
+        // de pisoSemTropo (categoria=="MONSTRO" só entra aqui, nunca no loop relativo de
+        // Tropo mais abaixo) — não é bônus relativo de Tropo tipo Arte da Guerra, é traço
+        // inerente da criatura que PODE esticar o teto do atributo, igual raça.
+        if (tropoSelecionado?.categoria == "MONSTRO") {
+            habilidadesDoTropoResolvidas.forEach { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                    modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
+                }
             }
         }
+
+        // Meio-Orc (Fantasia)/Feral (Arte da Guerra)/Humano Sci-Fi "Minerador":
+        // escolha de atributo (Força/Vigor/Agilidade à escolha do jogador) não
+        // é mais um "if" hardcoded aqui — applyAncestryVariantAdjustments
+        // (resolveMarkedSelection, Seleção TARGET_ATTRIBUTE_OR_SKILL) já
+        // injeta o traço real (traitId=ATTRIBUTE_BOOST + targetRef=o atributo
+        // escolhido) em habilidades[] conforme `humanoMineradorAtributo`, e o
+        // loop genérico de AtributoStep logo acima já o lê como qualquer
+        // outro traço racial — mesmo padrão do Povo da Montanha/Signos.
 
         // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
         // não precisam mais de exceção numérica aqui: MUITO_FORTE/RESISTENCIA
@@ -5255,25 +5817,13 @@ class CriadorState {
         // applyAncestryVariantAdjustments), então não precisa comparar o nome da
         // raça nem reler descendenteElementalSelecionado aqui.
 
-        // Arte da Guerra - Signos (only for Humans)
-        if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
-            val signId = signoIdFromNome(signoAdgSelecionado)
-            val attrKey = a.keyify()
-            if (signId != null) {
-                if (signId == "BOI" && attrKey == "FORCA") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                if (signId == "DRAGAO" && attrKey == "ESPIRITO") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                if (signId == "MACACO" && attrKey == "ASTUCIA") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-                if (signId == "URSO" && attrKey == "VIGOR") {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-            }
-        }
+        // Arte da Guerra - Signos (Boi/Dragão/Macaco/Urso: bônus de
+        // atributo): não é mais um "if" hardcoded aqui — os traços FORTE/
+        // ESPIRITUAL/ASTUCIA/VIGOROSO entram em habilidades[] via
+        // applyAncestryVariantAdjustments conforme o Signo ativo (ver
+        // AncestryVariantRegistry.humanoArteDaGuerraSignos()), e o loop
+        // genérico de AtributoStep logo acima já os lê como qualquer outro
+        // traço racial — mesmo padrão do Povo da Montanha logo abaixo.
 
         // Povo da Montanha (Pacote Cultural de Humanos, Fantasia): Vigor d6 não
         // é mais um "if" hardcoded aqui — o id POVO_MONTANHA_VIGOR entra em
@@ -5289,6 +5839,26 @@ class CriadorState {
         // máximo do teto dela").
         val pisoSemTropo = modifiedBase
         if (!includeTropo) return pisoSemTropo
+
+        // Sistema de Tropo genérico (ver docs/auditoria_mecanica_racas_2026-08-31.md rodada
+        // 43): qualquer Tropo com uma AtributoStep em `habilidades[]` sobe este atributo —
+        // `relativo=true` (traitId ATTRIBUTE_STEP_UP) soma passos ACIMA de pisoSemTropo via
+        // applySuperStepsFrom (ex.: raça já dá d6, Tropo diz "+1 tipo", vira d8, nunca trava
+        // em d6); `relativo=false` (traitId ATTRIBUTE_BOOST, piso fixo) funciona igual a um
+        // traço de raça, só que a partir de pisoSemTropo em vez de 4 — nos dois casos nunca
+        // entra no cálculo do teto (só roda quando includeTropo=true, acima). Substitui, pra
+        // qualquer Tropo migrado pra `habilidades[]`, os blocos hardcoded por id que ainda
+        // existem logo abaixo pros Tropos não migrados.
+        habilidadesDoTropoResolvidas.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                modifiedBase = if (efeito.relativo) {
+                    maxOf(modifiedBase, applySuperStepsFrom(pisoSemTropo, efeito.passos))
+                } else {
+                    maxOf(modifiedBase, 4 + 2 * efeito.passos)
+                }
+            }
+        }
 
         // Arte da Guerra - Protagonista (Qualidades de Herói): livro diz
         // "aumenta [o atributo] em um tipo de dado" — é um bônus RELATIVO ao
@@ -5502,6 +6072,19 @@ class CriadorState {
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
         val ancDef = getAncestralidadeDef(anc)
+
+        // Equipamento comprado sob o traço Diminuto (livro Fantasia, pág. 10) é "feito
+        // para" o tamanho da ancestralidade — não serve mais se o personagem passa a ser
+        // de OUTRO tamanho (inclusive perdendo Diminuto por completo, ou virando Diminuto
+        // vindo de um tamanho normal). Compara o tier ANTES/DEPOIS (2/3/4 = Pequeno/Muito
+        // Pequeno/Minúsculo, 0 = tamanho normal) e devolve tudo da mochila se mudou —
+        // sem isso, o jogador podia comprar equipamento caro pelo desconto e trocar de
+        // raça sem perder o item físico (o preço/peso exibido já corrige sozinho, ver
+        // CriadorState.pesoEquipamentoEfetivo()/custoEquipamentoEfetivo(), mas o ITEM em
+        // si continuava na mochila).
+        val passosDiminutoAntes = ModifierEngine.racialDiminutoPassosDe(prevAncDef?.habilidades)
+        val passosDiminutoDepois = ModifierEngine.racialDiminutoPassosDe(ancDef?.habilidades)
+
         val effectiveScifiVariant = resolveSciFiVariantSelectionFor(
             ancestryName = anc,
             availableOptions = ancDef?.opcoes ?: emptyList()
@@ -5598,6 +6181,14 @@ class CriadorState {
         // Troca efetiva da ancestralidade
         ancestralidade = anc
 
+        if (passosDiminutoAntes != passosDiminutoDepois && equipamentosComprados.isNotEmpty()) {
+            val quantidadeDevolvida = equipamentosComprados.size
+            equipamentosComprados.clear()
+            feedbackMessages.add(
+                "$quantidadeDevolvida equipamento(s) devolvido(s): o tamanho da Ancestralidade mudou (traço Diminuto) e o equipamento antigo não serve mais no tamanho novo."
+            )
+        }
+
         // SAFETY: Force removal of "Herança" edge for Fantasy Half-Elves if it slipped through
         if ((anc.keyify().contains("MEIO-ELFO") || anc.keyify().contains("MEIO-ELFOS")) && !anc.keyify().contains("PATHFINDER")) {
             val herancaEdge = vantagensSelecionadas.find { it.id == "heranca" || it.nome.keyify() == "HERANCA" }
@@ -5690,9 +6281,6 @@ class CriadorState {
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
-        if (racialPackage.forceArmorZero) {
-            armadura = 0
-        }
 
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
@@ -5820,6 +6408,24 @@ class CriadorState {
         }
 
         syncPoderesSelecionadosFromSlots()
+
+        // Restrição de Transição favorita (Usagimimi, Arte da Guerra): só permite Elementalista
+        // (ou nenhum Tropo) — ver isUsagimimiTransicaoRestrictionActive()/
+        // podeSelecionarTropoPorRestricoesAtuais(). Antes, trocar de Ancestralidade com um
+        // Tropo selecionado era bloqueado na própria UI (ver isSectionEnabled — travava a
+        // aba Ancestralidades sempre que havia Tropo escolhido), então essa combinação nunca
+        // surgia sozinha. Com a trava removida (rodada 46 — o motor de Tropo/raça já é puro/
+        // recalculado do zero a cada chamada, não precisa mais dessa defesa), virar Usagimimi
+        // com Transição já escolhida de uma sessão anterior, enquanto um Tropo incompatível
+        // segue selecionado, precisa da mesma correção automática que qualquer outra
+        // invalidação de raça já recebe aqui.
+        if (!podeSelecionarTropoPorRestricoesAtuais(tropoSelecionado)) {
+            val tropoRemovido = tropoSelecionado
+            selecionarTropo(null, feedbackMessages)
+            if (tropoRemovido != null) {
+                feedbackMessages.add("Tropo '${tropoRemovido.nome}' removido: Usagimimi com Transição favorita só permite Elementalista (ou nenhum Tropo).")
+            }
+        }
     }
 
     private fun atendeRequisitosMantidos(v: Vantagem): Boolean {
@@ -5875,15 +6481,23 @@ class CriadorState {
             }
         }
 
-        // Tags
+        // Tags — "asas"/"arma_de_sopro" checam o traço de verdade da raça, não a tag
+        // manual solta (mesmo motivo/comentário de ValidateRequirementsUseCase.kt).
         if (v.requisitos.tags.isNotEmpty()) {
             val ancDef = currentAncestryDef
-            if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) return false
+            val atendeTodasAsTags = v.requisitos.tags.all { tag ->
+                when (tag.keyify()) {
+                    "ASAS" -> RacialTraitPointCatalog.temTracoVoo(ancDef?.habilidades)
+                    "ARMA_DE_SOPRO" -> RacialTraitPointCatalog.temArmaDeSopro(ancDef?.habilidades)
+                    else -> ancDef?.tags?.any { it.keyify() == tag.keyify() } == true
+                }
+            }
+            if (!atendeTodasAsTags) return false
         }
 
-        // Template Monstruoso
+        // Vantagem travada a um Tropo específico (templatesRequired) — ver rodada 44.
         if (v.requisitos.templatesRequired.isNotEmpty()) {
-            val selected = tipoMonstroSelecionado
+            val selected = tropoSelecionado?.id
             if (selected == null || selected !in v.requisitos.templatesRequired) {
                 return false
             }
@@ -5943,26 +6557,32 @@ class CriadorState {
 
     fun isSectionEnabled(section: MainSection): Boolean {
         if (modoProgressaoAtivo) return true
-        if (!compendioArteDaGuerraAtivo) return true
+        if (!modoTroposAtivo) return true
 
-        return if (tropoSelecionado == null) {
-            // "Locked Mode" (No Trope selected yet):
-            // Can see Summary, Ancestry, and Trope selection.
-            // Other tabs are disabled.
-            when (section) {
+        if (tropoSelecionado == null) {
+            // Pré-escolha ("Locked Mode"): só bloqueia TUDO (exceto Resumo/Ancestralidade/
+            // Tropos) quando o livro OBRIGA escolher um Tropo — hoje só Arte da Guerra (ver
+            // modoTroposAtivo). Pros demais livros (sistema ligado pela checkbox manual,
+            // opcional), "nenhum Tropo escolhido" é um estado final válido — nunca faz
+            // sentido travar o resto da ficha só porque o jogador ainda não visitou a aba
+            // Tropo pra confirmar que não quer nenhum.
+            if (!compendioArteDaGuerraAtivo) return true
+            return when (section) {
                 MainSection.RESUMO, MainSection.ANCESTRALIDADES, MainSection.TROPOS -> true
                 else -> false
             }
-        } else {
-            // "Unlocked Mode" (Trope selected):
-            // Ancestry is now LOCKED (disabled).
-            // Trope is ENABLED (to change back to 'None').
-            // All other tabs are ENABLED.
-            when (section) {
-                MainSection.ANCESTRALIDADES -> false
-                else -> true
-            }
         }
+
+        // Um Tropo de verdade foi escolhido (qualquer livro com o sistema ligado, não só Arte
+        // da Guerra): NÃO trava mais Ancestralidade (rodada 46). A trava antiga vinha do
+        // sistema de Tropo original do Arte da Guerra, que calculava atributo/perícia de
+        // forma incremental e podia perder conta ao trocar de raça com bônus de Tropo já
+        // aplicados por cima. O motor atual (atributoBaseRacial/periciaStartRawInternal) é
+        // puro — recalcula do zero, lendo raça + Tropo juntos a cada chamada — então trocar de
+        // Ancestralidade com um Tropo selecionado é seguro, sem esse risco estrutural. Ver
+        // aplicarAncestralidade() pra correção automática do único caso que ainda pode ficar
+        // inválido (Usagimimi + Transição favorita só permite Elementalista).
+        return true
     }
 
     // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
@@ -6706,9 +7326,23 @@ class CriadorState {
         }
 
         tropoSelecionado = novoTropo
+        removerVantagensIncompativeisComTropo(novoTropo, feedbackMessages)
 
         if (novoTropo != null) {
             novoTropo.ganhaAoComprar.forEach { vantId ->
+                val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+                if (vantagensSelecionadas.none { it.id == vant.id }) {
+                    vantagensSelecionadas += vant
+                    vantagensAutomaticasDoTropo += vant.id
+                }
+            }
+            // Sistema de Tropo genérico (rodada 43): mesmo mecanismo acima, só que lendo
+            // habilidades[] (category=racial_edge/traitId=GRANTED_EDGE) em vez do campo antigo
+            // ganhaAoComprar — os dois convivem enquanto os 9 Tropos oficiais ainda não
+            // migraram totalmente pro novo campo (ver Fase 4). vantagensAutomaticasDoTropo.clear()
+            // já rodou pro Tropo ANTERIOR no topo desta função, então aqui só falta ADICIONAR,
+            // não precisa diferenciar contra nada.
+            tropoVantagensGratisIds().forEach { vantId ->
                 val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
                 if (vantagensSelecionadas.none { it.id == vant.id }) {
                     vantagensSelecionadas += vant
@@ -7207,8 +7841,7 @@ class CriadorState {
                 optRegraFama = optRegraFama,
                 optVariantesDeRacaAtivo = optVariantesDeRacaAtivo,
                 modoOficialAtivo = modoOficialAtivo,
-                modoMonstroAtivo = modoMonstroAtivo,
-                tipoMonstroSelecionado = tipoMonstroSelecionado,
+                modoTroposHabilitadoManualmente = modoTroposHabilitadoManualmente,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
                 grandesResponsabilidades = grandesResponsabilidades,
                 nasceUmHeroi = nasceUmHeroi,
@@ -7284,6 +7917,7 @@ class CriadorState {
                 ciberneticosInstalados = ciberneticosInstalados.toList(),
                 coracaoCrystalId = coracaoCrystalSelecionado?.id,
                 tropoSelecionadoId = tropoSelecionado?.id,
+                tropoEscolhasFeitas = tropoEscolhasFeitas.toMap(),
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
                 retratoFileName = portraitFileName,
@@ -7406,7 +8040,7 @@ class CriadorState {
         modoLivre = flags.modoLivre
         isNpcExibicao = flags.isNpcExibicao
         modoOficialAtivo = flags.modoOficialAtivo
-        modoMonstroAtivo = flags.modoMonstroAtivo
+        modoTroposHabilitadoManualmente = flags.modoTroposHabilitadoManualmente
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
         grandesResponsabilidades = flags.grandesResponsabilidades
 
@@ -7435,7 +8069,6 @@ class CriadorState {
         obesoBonusSize = flags.obesoBonusSize
         obesoMalusMov = flags.obesoMalusMov
         bonusPoderExtra = flags.bonusPoderExtra
-        tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
 
         // Restore sign automatic advantages logic
@@ -7699,6 +8332,10 @@ class CriadorState {
 
         tropoSelecionado = snapshot.selecoes.tropoSelecionadoId?.let { id ->
             listaTropos.firstOrNull { it.id == id }
+        }
+        tropoEscolhasFeitas.apply {
+            clear()
+            putAll(snapshot.selecoes.tropoEscolhasFeitas)
         }
         vantagensAutomaticasDoTropo.apply {
             clear()

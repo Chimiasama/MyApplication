@@ -50,13 +50,15 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
 
     // 2. Determine if "BASICO" should be included
     // Standalone replacement settings replace the basic book, whereas Companions (Fantasia, Horror, Sci-Fi, Supers) extend BÁSICO.
+    // Wiseguys com `wiseguysHabilitaRacas` ligado é a exceção: o Mestre pediu pra
+    // reabrir o Básico como origem de raça só pra esse cenário (ver o campo).
     val replacementSettingsActive =
         compendioPathfinderAtivo ||
         compendioDeadlandsAtivo ||
         compendioCrystalHeartAtivo ||
         compendioArteDaGuerraAtivo ||
         compendioCidadeSolVaporAtivo ||
-        compendioWiseguysAtivo
+        (compendioWiseguysAtivo && !wiseguysHabilitaRacas)
 
     if (!replacementSettingsActive) {
         add("BASICO")
@@ -123,9 +125,14 @@ private fun CriadorState.evaluateVantagemVisibility(
 
     // 2. Specific Item Logic (Forbidden items within an active setting)
 
-    // Monstrous Advantages (Horror) - Require Monster Rule
-    if (vant.categoria == Categoria.MONSTRUOSAS && !modoMonstroAtivo) {
-        return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_mode")
+    // Vantagens MONSTRUOSAS (Horror) só aparecem quando um Tropo de Monstro Heroico de
+    // verdade está selecionado (rodada 44: Monstro Heroico virou Tropo) — não basta o
+    // livro/sistema de Tropo estar ligado. O filtro por id específico (ex.: "Furioso" só
+    // pro Monstro de Retalhos) fica à parte, em `vant.requisitos.templatesRequired` (ver
+    // VantagensSection.kt) — aqui é só o corte "categoria inteira exige algum Tropo de
+    // Monstro selecionado, mesmo pras Vantagens sem id de template específico".
+    if (vant.categoria == Categoria.MONSTRUOSAS && tropoSelecionado?.categoria != "MONSTRO") {
+        return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_tropo")
     }
 
     // Sci-Fi Cybernetics Check

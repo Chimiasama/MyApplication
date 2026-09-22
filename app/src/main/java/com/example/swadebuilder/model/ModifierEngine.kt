@@ -8,7 +8,6 @@ enum class ModifierTarget {
     SIZE_DISPLAY,
     SIZE_TOUGHNESS,
     TOUGHNESS_FLAT,
-    ARMOR,
     PACE,
     PARRY
 }
@@ -38,34 +37,6 @@ object ModifierEngine {
     fun collect(state: CriadorState): List<Modifier> {
         val modifiers = mutableListOf<Modifier>()
 
-        // 1. Equipamento (Armadura)
-        state.equipamentosComprados.forEach { item ->
-            val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)
-                ?.content?.toIntOrNull() ?: 0
-
-            if (armorVal > 0) {
-                // Checa se é item de Mecha/Veículo que não deve somar
-                val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
-                    s.contains("VEICULO") || s.contains("VEÍCULO") ||
-                            s.contains("CHASSIS") || s.contains("MECHA")
-                } == true
-
-                val shouldExclude = isMechaOrVehicle
-
-                if (!shouldExclude) {
-                    modifiers.add(
-                        Modifier(
-                            id = "equip_${item.nome.keyify()}",
-                            sourceType = SourceType.OUTRO,
-                            sourceName = item.nome,
-                            target = ModifierTarget.ARMOR,
-                            value = armorVal
-                        )
-                    )
-                }
-            }
-        }
-
         // 1b. Penalidade de Movimentação por Força insuficiente (livro básico, "Força
         // Mínima > Armadura/Equipamento Vestidos"): -1 Movimentação por passo de tipo de
         // dado que a Força do personagem fica abaixo do mínimo da peça, cumulativo entre
@@ -74,22 +45,21 @@ object ModifierEngine {
         // stat fixo — por isso só vira nota de texto na ficha (ver ResumoSection.kt),
         // nunca um Modifier aqui.
         val forcaRawParaArmadura = state.valoresAtributos["FORCA"]?.intValue ?: 4
-        state.equipamentosComprados.forEach { item ->
-            if (item.armadura == null) return@forEach
-            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
-                s.contains("VEICULO") || s.contains("VEÍCULO") ||
-                        s.contains("CHASSIS") || s.contains("MECHA")
-            } == true
-            if (isMechaOrVehicle) return@forEach
+        // Diminuto (livro Fantasia, pág. 10 — Fadas/Povo Rato/Ferais Menor): armadura
+        // feita sob medida pro corpo pequeno tem Força Mínima reduzida em 2/3/4 tipos de
+        // dado (mínimo d4). racialDiminutoPassos() não chama collect() de novo (ver seu
+        // comentário) — só por isso pode ser chamada daqui de dentro.
+        val passosDiminuto = racialDiminutoPassos(state)
 
-            val forcaMinTexto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
-            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinTexto)
+        fun aplicarPenalidadePace(id: String, nomeExibicao: String, forcaMinTexto: String?) {
+            val forcaMinAjustado = ForcaMinimaCalculator.minimoReduzidoPorDiminuto(forcaMinTexto, passosDiminuto)
+            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinAjustado)
             if (passos > 0) {
                 modifiers.add(
                     Modifier(
-                        id = "forca_min_pace_${item.nome.keyify()}",
+                        id = "forca_min_pace_$id",
                         sourceType = SourceType.OUTRO,
-                        sourceName = item.nome,
+                        sourceName = nomeExibicao,
                         target = ModifierTarget.PACE,
                         value = -passos
                     )
@@ -97,34 +67,44 @@ object ModifierEngine {
             }
         }
 
+        // Peças com `local` estruturado (catálogo oficial): agrupadas por local do
+        // corpo — `armaduraPorLocal()` já resolve "vestir armadura sobre armadura"
+        // (livro básico, Cap. 2), inclusive a Força Mínima efetiva por local (+1 passo
+        // quando há uma segunda camada), então a penalidade aqui é por LOCAL, não mais
+        // por peça — vestir cota de malha sob placas no Tronco conta uma vez só, com a
+        // Força Mínima já ajustada, em vez de somar a penalidade das duas peças em
+        // separado.
+        state.armaduraPorLocal().forEach { (local, info) ->
+            aplicarPenalidadePace(local, "Armadura ($local)", info.forcaMinima)
+        }
+
+        // Peças SEM `local` (equipamento customizado do Mestre — o catálogo oficial já
+        // está 100% migrado) mantêm o comportamento por peça de antes, já que não dá
+        // pra agrupar por local sem saber qual é.
+        state.equipamentosComprados.forEach { item ->
+            if (item.armadura == null) return@forEach
+            if (item.local != null) return@forEach
+            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                        s.contains("CHASSIS") || s.contains("MECHA")
+            } == true
+            if (isMechaOrVehicle) return@forEach
+
+            val forcaMinBruto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+            aplicarPenalidadePace(item.nome.keyify(), item.nome, forcaMinBruto)
+        }
+
         // 2. Ancestralidade
         val ancestralName = state.ancestralidade
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
-            // Template de Monstro Heroico (Horror): NÃO é raça nem variante de
-            // raça — é uma camada de traços que se soma à ancestralidade
-            // escolhida (ex.: Elfo + Vampiro). Por isso entra aqui como mais uma
-            // fonte de nomes de traço, junto das da raça, em vez de qualquer
-            // caminho específico por "qual monstro é esse": os checks abaixo
-            // (hasMortoVivo, hasLentoRacial, hasVelocidadeRacial etc.) reagem à
-            // presença do traço, não à identidade do monstro ou da raça.
-            val monstro = state.getMonstroSelecionado()
-            val monstroSources = monstro?.let { m ->
-                m.habilidades.map { it.nome } +
-                    // Complicações do monstro vêm como frase completa
-                    // ("Lento: Movimentação reduzida em 1..."); só o rótulo
-                    // antes dos ":" interessa pros checks por nome/id.
-                    m.complicacoes.map { it.substringBefore(":").trim() }
-            } ?: emptyList()
-
             val rawSources =
                 anc.habilidades.map { it.nome } +
                     state.vantagensRaciais +
                     state.vantagensAutomaticas +
                     state.desvantagensRaciais +
-                    state.desvantagensAutomaticas +
-                    monstroSources
+                    state.desvantagensAutomaticas
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
                 val allTraitKeys = (
@@ -224,11 +204,11 @@ object ModifierEngine {
                 .forEach { hab ->
                     registrarCompra(hab.resolvedTraitId(), hab.vezes)
                 }
-            // Habilidades do Monstro Heroico não passam pela filtragem de
-            // variante de raça acima, então entram sem restrição.
-            // MonstroHabilidade não tem campo `vezes` (nenhum Template do
-            // Horror hoje concede um traço EMPILHÁVEL) — sempre 1 compra.
-            monstro?.habilidades?.forEach { registrarCompra(it.id, 1) }
+            // Monstro Heroico (Horror, virou Tropo — rodada 44) não entra mais aqui: seus
+            // traços (habilidades[] e complicações vinculadas) já são cobertos pelo laço
+            // genérico de habilidadesDoTropoResolvidas logo abaixo, com id real (verificado
+            // caso a caso na migração — nenhum traço de Monstro Heroico dependia de match por
+            // NOME contra este `sources`/`sourceKeys`, só o id explícito que já tinha).
             // Traços de Variante/Seleção (Centaux Gazela, Drakens/Mímicos/
             // Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) que chegam
             // como texto solto em vantagensRaciais/desvantagensRaciais (ver
@@ -274,14 +254,17 @@ object ModifierEngine {
                         modifiers.add(Modifier("racial_trait_${id}_size_tough", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_TOUGHNESS, efeito.valor * vezes))
                     }
                     // Armadura Natural não vira Modifier aqui — a Armadura final
-                    // do personagem é resolvida à parte
-                    // (ResolveAncestrySpecificAdjustmentsUseCase.naturalArmorFromRace,
-                    // que já lê este mesmo efeito por id), não pelo
-                    // ModifierTarget.ARMOR deste motor.
+                    // do personagem é resolvida à parte, em
+                    // ResolveAncestrySpecificAdjustmentsUseCase.naturalArmorFromRace,
+                    // que já lê este mesmo efeito por id.
                     is RacialTraitEffect.ArmaduraBonus -> Unit
                     is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao, vezes) }
                     is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum,
-                    is RacialTraitEffect.PericiaPoolBonus, is RacialTraitEffect.AtributoPoolBonus -> Unit
+                    is RacialTraitEffect.PericiaPoolBonus, is RacialTraitEffect.AtributoPoolBonus,
+                    // Reserva de Chi não vira Modifier aqui — CriadorState.reservaChi já
+                    // lê este mesmo efeito por id direto de habilidades[], mesmo padrão
+                    // de PericiaPoolBonus/AtributoPoolBonus acima.
+                    is RacialTraitEffect.ChiReserveBonus -> Unit
                 }
             }
 
@@ -295,6 +278,23 @@ object ModifierEngine {
                         aplicarEfeito(tid, efeito, hab.nome, hab.vezes)
                     }
                 }
+
+            // Sistema de Tropo genérico (rodada 43 do audit doc): mesmo tratamento das
+            // habilidades parametrizadas da raça acima, só que pra tropoSelecionado — sem o
+            // filtro de sourceKeys (que só existe pra raça poder REMOVER um traço da lista de
+            // exibição numa Variante sem perder o Modifier; Tropo não tem esse conceito, o que
+            // está em habilidades[] está sempre ativo enquanto esse Tropo for o selecionado).
+            // Cobre, por exemplo, o Protagonista (Arte da Guerra) "Velocidade Incomum" (+6
+            // Movimentação, traitId=PACE_CHANGE) — um bônus fixo que nenhuma raça concede hoje,
+            // mas que já tem mecanismo genérico pronto (RacialTraitEffect.PassoBonus), sem
+            // precisar de um alvo novo no ModifierEngine.
+            state.habilidadesDoTropoResolvidas.forEach { hab ->
+                val tid = hab.resolvedTraitId()
+                val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
+                if (efeito !is RacialTraitEffect.Nenhum) {
+                    aplicarEfeito(tid, efeito, hab.nome, hab.vezes)
+                }
+            }
 
             RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
                 val vezes = vezesPorId[id] ?: return@forEach
@@ -328,9 +328,6 @@ object ModifierEngine {
 
         // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
-            if (vant.id == "couro_blindado") {
-                modifiers.add(Modifier("edge_couro_blindado_armor", SourceType.VANTAGEM, vant.nome, ModifierTarget.ARMOR, 4))
-            }
             if (vant.id == Constants.ID_MUSCULOSO) {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
@@ -364,13 +361,11 @@ object ModifierEngine {
             }
         }
 
-        // 4.5 Monster templates: Resistência (Morto-Vivo) e Passo (Velocidade,
-        // Lento) do Template de Monstro Heroico agora são resolvidos dentro do
-        // bloco "2. Ancestralidade" acima, pelos mesmos checks por nome/id de
-        // traço que a ancestralidade usa (hasMortoVivo, hasVelocidadeRacial,
-        // hasLentoRacial) — o monstro só entra como mais uma fonte de nomes em
-        // `sources`/`monstroSources`, não como um `if (monstro.id == ...)`
-        // separado por monstro.
+        // 4.5 Monster templates: Monstro Heroico virou Tropo (rodada 44) — Resistência
+        // (Morto-Vivo), Passo (Velocidade, Lento) etc. são resolvidos pelo mesmo laço
+        // genérico de habilidadesDoTropoResolvidas que Arte da Guerra usa (ver "Sistema de
+        // Tropo genérico" logo acima, dentro do bloco "2. Ancestralidade"), não mais por um
+        // caminho específico de Monstro Heroico.
 
         // 5. Powers / Other
         if (state.bonusResFromPower != 0) {
@@ -460,6 +455,31 @@ object ModifierEngine {
 
     fun sum(state: CriadorState, target: ModifierTarget): Int {
         return collect(state).filter { it.target == target }.sumOf { it.value }
+    }
+
+    /**
+     * Quantos passos de dado o traço Diminuto (livro Fantasia) reduz — Fadas/Povo Rato/
+     * Ferais Menor. Lê direto de `currentAncestryDef.habilidades` (não chama
+     * `sizeRawDisplay()`/`collect()`: usada também DE DENTRO de `collect()`, na seção 1b,
+     * e uma chamada recursiva a `collect()` ali travaria em loop infinito). Só cobre o
+     * traço racial direto — Diminuto nunca é injetado só por Variante/Monstro Heroico
+     * hoje, então não precisa somar `racialTraitIdsFromVariants` aqui.
+     */
+    fun racialDiminutoPassos(state: CriadorState): Int = racialDiminutoPassosDe(state.currentAncestryDef?.habilidades)
+
+    /**
+     * Mesmo cálculo de `racialDiminutoPassos()`, mas a partir de uma lista de
+     * `habilidades` direta em vez de `CriadorState` — usada por
+     * `CriadorState.aplicarAncestralidade()` pra comparar o tier de Diminuto
+     * ANTES/DEPOIS de uma troca de raça (a raça anterior já não é mais
+     * `state.currentAncestryDef` no momento da comparação).
+     */
+    fun racialDiminutoPassosDe(habilidades: List<RacialAbility>?): Int {
+        val efeitoDiminuto = habilidades?.firstNotNullOfOrNull { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            (efeito as? RacialTraitEffect.TamanhoBonus)?.takeIf { it.minusculo }?.let { it.valor * hab.vezes }
+        } ?: 0
+        return ForcaMinimaCalculator.diminutoPassos(efeitoDiminuto)
     }
 
     fun sizeRawDisplay(state: CriadorState): Int {

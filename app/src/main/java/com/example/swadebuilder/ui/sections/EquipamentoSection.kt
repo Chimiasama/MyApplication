@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -64,6 +65,7 @@ import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.FilterCategoryGroup
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
@@ -71,7 +73,6 @@ import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
-import kotlinx.serialization.json.JsonPrimitive
 
 // --- Data Structures for Refactoring ---
 
@@ -194,6 +195,13 @@ fun EquipFilterDialog(
     onChange: (EquipFilter) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Cada categoria (Armas/Armaduras/etc.) abre/fecha independente — antes todas as
+    // subseções de toda categoria ficavam sempre abertas ao mesmo tempo dentro de uma altura
+    // fixa de 400dp, virando uma parede de Checkbox impossível de navegar com vários
+    // livros/módulos ativos (muitas categorias, cada uma com várias subseções). Começam
+    // fechadas; abrir só a categoria que importa no momento.
+    val expandedCategories = remember { mutableStateMapOf<EquipSuperType, Boolean>() }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Filtros Avançados") },
@@ -201,7 +209,7 @@ fun EquipFilterDialog(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp)
+                    .heightIn(max = 420.dp)
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
@@ -219,40 +227,25 @@ fun EquipFilterDialog(
 
                 Text("Categorias e Subseções", fontWeight = FontWeight.Bold)
                 availableSuperTypes.forEach { t ->
-                    // SuperType Header/Checkbox
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = t in current.superTipos,
-                            onCheckedChange = {
-                                val s = current.superTipos.toMutableSet()
-                                if (it) s += t else s -= t
-                                onChange(current.copy(superTipos = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(t.label, fontWeight = FontWeight.SemiBold)
-                    }
-
-                    // SubSections List (only if SuperType has subsections)
                     val subSecs = availableSubSections[t]?.sorted() ?: emptyList()
-                    if (subSecs.isNotEmpty()) {
-                        Column(modifier = Modifier.padding(start = 32.dp)) {
-                            subSecs.forEach { sub ->
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Checkbox(
-                                        checked = sub in current.subSections,
-                                        onCheckedChange = {
-                                            val s = current.subSections.toMutableSet()
-                                            if (it) s += sub else s -= sub
-                                            onChange(current.copy(subSections = s))
-                                        }
-                                    )
-                                    Spacer(Modifier.size(4.dp))
-                                    Text(sub, style = MaterialTheme.typography.bodySmall)
-                                }
-                            }
-                        }
-                    }
+                    FilterCategoryGroup(
+                        title = t.label,
+                        checked = t in current.superTipos,
+                        onCheckedChange = {
+                            val s = current.superTipos.toMutableSet()
+                            if (it) s += t else s -= t
+                            onChange(current.copy(superTipos = s))
+                        },
+                        subOptions = subSecs,
+                        selectedSubOptions = current.subSections,
+                        onToggleSub = { sub ->
+                            val s = current.subSections.toMutableSet()
+                            if (sub in s) s -= sub else s += sub
+                            onChange(current.copy(subSections = s))
+                        },
+                        expanded = expandedCategories[t] ?: false,
+                        onExpandedChange = { expandedCategories[t] = it }
+                    )
                 }
             }
         },
@@ -487,6 +480,12 @@ fun EquipamentoSection(
     val selectedSuperTypes = state.equipSelectedSuperTypes
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+
+    // Traço Diminuto (livro Fantasia, pág. 10): equipamento comum comprado nesta seção
+    // (não o item mágico da Herança, que tem orçamento próprio de 10.000 PO e não muda
+    // de peso/custo) pesa e custa menos pra ancestralidades Pequenas/Muito Pequenas/
+    // Minúsculas. 0 = personagem não é Diminuto, sem desconto nenhum.
+    val passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(state)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
     val isSearching = searchQuery.isNotBlank()
@@ -774,11 +773,7 @@ fun EquipamentoSection(
                 Spacer(Modifier.padding(vertical = 4.dp))
             }
 
-            val totalWeight = equipamentosComprados
-            .mapNotNull { item ->
-                (item.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
-                }
-                .sum()
+            val totalWeight = state.totalPesoEquipamentos()
             val limit = state.valorCargaMaxima()
 
             val tensaoExcedida = tensaoTotal > tensaoLimite
@@ -848,7 +843,7 @@ fun EquipamentoSection(
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
-                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, usaRequisicao, compendioPathfinderAtivo) {
+                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, usaRequisicao, compendioPathfinderAtivo, passosDiminuto) {
                     mappedCategories.filter { mapped ->
                         // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
@@ -861,7 +856,7 @@ fun EquipamentoSection(
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
-                                val c = MoneyUtils.parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
+                                val c = state.custoEquipamentoEfetivo(item)
                                 if (!usaRiqueza && !usaRequisicao && c > dinheiro) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
@@ -901,7 +896,8 @@ fun EquipamentoSection(
                                 onClick = { onEquipamentoDoubleClick(entry.item) },
                                 allowLongTexts = allowLongTexts,
                                 showOriginalName = showOfficialNames,
-                                showTensao = compendioSciFiAtivo
+                                showTensao = compendioSciFiAtivo,
+                                passosDiminuto = passosDiminuto
                             )
                         }
                     }
@@ -916,7 +912,7 @@ fun EquipamentoSection(
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
                 // Added state.compendioScifiMechasCiberneticosAtivo to keys to ensure refresh when rule is toggled
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, usaRequisicao, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo) {
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, usaRequisicao, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo, passosDiminuto) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
                         // Apply SubSection Filter at Category Level
@@ -943,7 +939,7 @@ fun EquipamentoSection(
                                     }
                                     .filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
-                                        val c = MoneyUtils.parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
+                                        val c = state.custoEquipamentoEfetivo(entry.item)
                                         usaRiqueza || usaRequisicao || c <= dinheiro
                                     } else {
                                         true
@@ -1022,36 +1018,39 @@ fun EquipamentoSection(
                                 // Itera sobre os dados pré-calculados
                                 filteredGroupKeys.forEach { groupName ->
                                     val subGroups = groupData[groupName]!!
-                                    Text(
-                                        text = groupName,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp)
-                                    )
+                                    val groupKey = "${superType.label}/$groupName"
+                                    val isGroupExpanded = state.equipExpandedGroups[groupKey] ?: false
 
-                                    subGroups.keys.sorted().forEach { subGroupName ->
-                                        if (subGroupName != groupName && subGroupName.isNotBlank()) {
-                                            Text(
-                                                text = subGroupName,
-                                                style = MaterialTheme.typography.labelLarge,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = MaterialTheme.colorScheme.secondary,
-                                                modifier = Modifier.padding(top = 4.dp, bottom = 2.dp, start = 4.dp)
-                                            )
-                                        }
+                                    CollapsibleSection(
+                                        title = groupName,
+                                        expanded = isGroupExpanded,
+                                        onToggle = { state.equipExpandedGroups[groupKey] = !isGroupExpanded },
+                                        onToggleFeedback = onUserFeedback
+                                    ) {
+                                        subGroups.keys.sorted().forEach { subGroupName ->
+                                            if (subGroupName != groupName && subGroupName.isNotBlank()) {
+                                                Text(
+                                                    text = subGroupName,
+                                                    style = MaterialTheme.typography.labelLarge,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = MaterialTheme.colorScheme.secondary,
+                                                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp, start = 4.dp)
+                                                )
+                                            }
 
-                                        val itemsInSub = subGroups[subGroupName]!!
-                                        itemsInSub.forEach { entry ->
-                                            StandardEquipamentoItem(
-                                                equipamento = entry.item,
-                                                onClick = { onEquipamentoDoubleClick(entry.item) },
-                                                allowLongTexts = allowLongTexts,
-                                                showOriginalName = showOfficialNames,
-                                                showTensao = compendioSciFiAtivo
-                                            )
+                                            val itemsInSub = subGroups[subGroupName]!!
+                                            itemsInSub.forEach { entry ->
+                                                StandardEquipamentoItem(
+                                                    equipamento = entry.item,
+                                                    onClick = { onEquipamentoDoubleClick(entry.item) },
+                                                    allowLongTexts = allowLongTexts,
+                                                    showOriginalName = showOfficialNames,
+                                                    showTensao = compendioSciFiAtivo,
+                                                    passosDiminuto = passosDiminuto
+                                                )
+                                            }
+                                            Spacer(Modifier.height(4.dp))
                                         }
-                                        Spacer(Modifier.height(4.dp))
                                     }
                                 }
                             }

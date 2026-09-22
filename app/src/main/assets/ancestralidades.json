@@ -58,7 +58,10 @@
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1."
+        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Visão no Escuro",
@@ -105,7 +108,11 @@
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1."
+        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Voo",
@@ -174,7 +181,10 @@
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
+        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Desastrado",
@@ -260,7 +270,10 @@
         "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
         "id": "ESPIRITUOSO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Espírito inicial em d6 em vez de d4, com limite máximo elevado para d12+1."
+        "descricaoLite": "Espírito inicial em d6 em vez de d4, com limite máximo elevado para d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "Movimentação Reduzida",
@@ -299,7 +312,10 @@
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
+        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Inimigo Racial",
@@ -318,8 +334,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -333,8 +348,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -404,8 +418,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -439,9 +452,12 @@
       {
         "nome": "ROBUSTO",
         "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
-        "id": "ROBUSTO",
+        "id": "RESISTENTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Vigor começa em d6 em vez de d4, com máximo em d12+1."
+        "descricaoLite": "Vigor começa em d6 em vez de d4, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "VISÃO NO ESCURO",
@@ -530,7 +546,11 @@
         "descricao": "Avianos são mais perspicazes do que a maioria das ancestralidades. Começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12+1.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Perceber inicia em d6 em vez de d4, podendo evoluir até d12+1."
+        "descricaoLite": "Perceber inicia em d6 em vez de d4, podendo evoluir até d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "VOO",
@@ -608,8 +628,7 @@
           {
             "nome": "Cascos",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -714,6 +733,8 @@
         "descricao": "Draconianos têm orgulho dos poderosos dragões dos quais são parentes. Isso lhes dá a Complicação Arrogante. Se os draconianos do seu cenário não tiverem essa característica, escolha dois pontos de penalidades de ancestralidade negativas que melhor se adaptem a sua origem ou sociedade.",
         "id": "ARROGANTE",
         "category": "racial_hindrance",
+        "traitId": "RACIAL_HINDRANCE",
+        "targetRef": "Arrogante",
         "severity": "Maior",
         "descricaoLite": "Carregam a Complicação Arrogante, fruto do orgulho por sua ascendência dracônica; caso o cenário não use essa característica, duas outras complicações negativas equivalentes podem ser escolhidas em seu lugar."
       },
@@ -727,8 +748,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 2,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -742,8 +762,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -763,8 +782,7 @@
       }
     ],
     "tags": [
-      "arma_de_sopro",
-      "asas"
+      "arma_de_sopro"
     ],
     "livros": [
       "FANTASIA"
@@ -798,7 +816,10 @@
         "descricao": "Elfos são graciosos e ágeis. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Agilidade começa em d6 em vez de d4, com limite elevado a d12+1."
+        "descricaoLite": "Agilidade começa em d6 em vez de d4, com limite elevado a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       }
     ],
     "livros": [
@@ -877,7 +898,10 @@
         "descricao": "Gnomos começam com um d6 em Astúcia em vez de um d4. Isso aumenta a Astúcia máxima para d12+1.",
         "id": "ASTUCIA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Astúcia inicial em d6 no lugar de d4, elevando o máximo a d12+1."
+        "descricaoLite": "Astúcia inicial em d6 no lugar de d4, elevando o máximo a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Astúcia",
+        "value": 1
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -891,7 +915,11 @@
         "descricao": "Gomos começam com um d6 em Perceber em vez de um d4. Isso aumenta seu máximo para d12+1.",
         "id": "SENTIDOS_APRIMORADOS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Perceber começa em d6 em vez de d4, podendo chegar até d12+1."
+        "descricaoLite": "Perceber começa em d6 em vez de d4, podendo chegar até d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "TAMANHO -1",
@@ -937,7 +965,7 @@
       {
         "nome": "PEQUENOS",
         "descricao": "Goblins medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
-        "id": "PEQUENOS",
+        "id": "TAMANHO_MENOS_1",
         "category": "racial_trait_negative",
         "descricaoLite": "Estatura baixa, na faixa de 1,20 m: -1 em Tamanho e -1 em Resistência."
       },
@@ -953,7 +981,11 @@
         "descricao": "Goblins aprendem rapidamente como se esgueirar de seres mais ferozes que querem matá-los ou feri-los. Começam com um d6 em Furtividade, o que aumenta seu máximo para d12+1.",
         "id": "SORRATEIRO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com d6 em Furtividade, podendo evoluir essa perícia até d12+1."
+        "descricaoLite": "Começa com d6 em Furtividade, podendo evoluir essa perícia até d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Furtividade",
+        "value": 1,
+        "pontos": 1
       }
     ],
     "livros": [
@@ -1086,8 +1118,7 @@
           {
             "nome": "Chifres",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1109,7 +1140,7 @@
       {
         "nome": "NATUREZA DIABÓLICA",
         "descricao": "A verdadeira natureza de um infernal está sempre logo abaixo da superfície e ele pode revelá-la quando desejar. Adiciona +1 às rolagens de Intimidar.",
-        "id": "NATUREZA_DIABOLICA",
+        "id": "BONUS_PERICIA_1",
         "category": "racial_trait_positive",
         "descricaoLite": "+1 em testes de Intimidar."
       },
@@ -1185,8 +1216,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1285,14 +1315,20 @@
         "descricao": "O tamanho dos meio-gigantes aumenta sua Força inicial para d8 e sua Força máxima para d12+2.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Força d8 e pode elevá-la até d12+2."
+        "descricaoLite": "Começa com Força d8 e pode elevá-la até d12+2.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 2
       },
       {
         "nome": "MUITO RESISTENTE",
         "descricao": "Meio-gigantes são seres resistentes. Seu Vigor inicial é d8 e seu limite é aumentado para d12+2.",
         "id": "MUITO_RESISTENTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Vigor d8 e pode elevá-lo até d12+2."
+        "descricaoLite": "Começa com Vigor d8 e pode elevá-lo até d12+2.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 2
       },
       {
         "nome": "SEM NOÇÃO",
@@ -1363,8 +1399,7 @@
           {
             "nome": "Chifres",
             "dano": "For+d6",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1381,7 +1416,10 @@
         "descricao": "O Vigor inicial dos Minotauros é d6, aumentando o limite para d12+1.",
         "id": "DURAO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Vigor inicial d6, com teto elevado a d12+1."
+        "descricaoLite": "Vigor inicial d6, com teto elevado a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "GRANDE",
@@ -1395,7 +1433,10 @@
         "descricao": "Minotauros começam com Força d8, aumentando sua Força máxima para d12+2.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Força inicial d8, com teto elevado a d12+2."
+        "descricaoLite": "Força inicial d8, com teto elevado a d12+2.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 2
       },
       {
         "nome": "SEM INSTRUÇÃO",
@@ -1472,14 +1513,20 @@
         "descricao": "Ogros têm Força inicial d8 e Força máxima d12+2.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Força inicial d8, com máximo elevado a d12+2."
+        "descricaoLite": "Força inicial d8, com máximo elevado a d12+2.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 2
       },
       {
         "nome": "MUITO RESISTENTE",
         "descricao": "Seu Vigor inicial é d8 e o limite é aumentado para d12+2.",
         "id": "MUITO_RESISTENTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Vigor inicial d8, com máximo elevado a d12+2."
+        "descricaoLite": "Vigor inicial d8, com máximo elevado a d12+2.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 2
       },
       {
         "nome": "ROBUSTO",
@@ -1533,7 +1580,10 @@
         "descricao": "Orcs começam com Força d6 em vez de d4. Isso aumenta seu máximo para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Força d6 no lugar do d4 padrão, elevando o teto para d12+1."
+        "descricaoLite": "Começa com Força d6 no lugar do d4 padrão, elevando o teto para d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "INFRAVISÃO",
@@ -1547,7 +1597,10 @@
         "descricao": "A Força de um orc é igualada pela sua resistência. Começam com um d6 em Vigor em vez de um d4. Isso aumenta seu máximo para d12+1.",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Vigor inicial d6 no lugar do d4 padrão, elevando o teto para d12+1."
+        "descricaoLite": "Vigor inicial d6 no lugar do d4 padrão, elevando o teto para d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "TAMANHO +1",
@@ -1573,7 +1626,10 @@
         "descricao": "Pequeninos normalmente são seres otimistas. Começam com um d6 em Espírito em vez de um d4. Isso aumenta seu máximo para d12+1.",
         "id": "ESPIRITUOSO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Espírito inicial d6 em vez do d4 padrão, com teto elevado a d12+1."
+        "descricaoLite": "Espírito inicial d6 em vez do d4 padrão, com teto elevado a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -1633,16 +1689,15 @@
       },
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano e adicionam +2 às jogadas de Atletismo (escalar).",
-        "id": "GARRAS_SEM_PA",
+        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (escalar).",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, além de +2 em Atletismo para escalar.",
+        "descricaoLite": "Garras causam For+d4 de dano com PA 2, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -1656,8 +1711,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1678,7 +1732,7 @@
       {
         "nome": "SUCATEIRO",
         "descricao": "Membros do povo ratazana colecionam itens obsessivamente onde quer que vão, carregando-os em seus corpos e em suas tocas. Possuem a Vantagem Sucateiro.",
-        "id": "sucateiro",
+        "id": "SUCATEIRO",
         "category": "racial_edge",
         "descricaoLite": "Possui a Vantagem Sucateiro."
       },
@@ -1700,6 +1754,7 @@
     "livros": [
       "FANTASIA"
     ],
+    "pontosRaciaisEsperados": 3,
     "descricaoLite": "Adaptados a viver à margem, com corpo peludo e curvado, rosto de roedor e cauda sem pelos; costumam ocupar esgotos e áreas abandonadas, em grupos que se desfazem facilmente diante de perigo ou vantagem."
   },
   {
@@ -1796,8 +1851,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1811,8 +1865,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1845,16 +1898,15 @@
     "habilidades": [
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano e adicionam +2 às jogadas de Atletismo (Escalar).",
-        "id": "GARRAS_SEM_PA",
+        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (Escalar).",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, além de +2 em Atletismo para escalar.",
+        "descricaoLite": "Garras causam For+d4 de dano com PA 2, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 2
           }
         ]
       },
@@ -1875,8 +1927,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -1908,12 +1959,16 @@
         "descricao": "A graça felina concede aos rakashanos um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Têm mais agilidade que o normal: começam com d6 no atributo em vez de d4, podendo evoluir até d12+1."
+        "descricaoLite": "Têm mais agilidade que o normal: começam com d6 no atributo em vez de d4, podendo evoluir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       }
     ],
     "livros": [
       "FANTASIA"
     ],
+    "pontosRaciaisEsperados": 3,
     "descricaoLite": "Felinos humanoides com pelagem que remete a tigres, leopardos ou gatos exóticos, além de garras e presas afiadas; transitam entre cidades próprias e os limites da sociedade comum, usando charme para conquistar confiança apesar da desconfiança que despertam."
   },
   {
@@ -1948,7 +2003,10 @@
         "descricao": "Renascidos são mais fortes que humanos. Sua Força inicial é d6 e seu limite é aumentado para d12+1.",
         "id": "FORCA_SOBRENATURAL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Superam a força humana comum: começam com Força d6 e podem evoluir até o limite de d12+1."
+        "descricaoLite": "Superam a força humana comum: começam com Força d6 e podem evoluir até o limite de d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "MORDIDA",
@@ -1960,8 +2018,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2030,8 +2087,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2141,7 +2197,10 @@
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
-        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1."
+        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Visão no Escuro",
@@ -2188,7 +2247,11 @@
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1."
+        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Voo",
@@ -2257,7 +2320,10 @@
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
+        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Desastrado",
@@ -2343,7 +2409,10 @@
         "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "ESPIRITUOSO",
-        "descricaoLite": "Espírito inicial em d6 em vez de d4, com limite máximo elevado para d12+1."
+        "descricaoLite": "Espírito inicial em d6 em vez de d4, com limite máximo elevado para d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "Movimentação Reduzida",
@@ -2382,7 +2451,10 @@
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
+        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Inimigo Racial",
@@ -2401,8 +2473,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -2416,8 +2487,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2487,8 +2557,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2528,7 +2597,10 @@
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1."
+        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Visão no Escuro",
@@ -2627,7 +2699,11 @@
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1."
+        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Voo",
@@ -2661,7 +2737,10 @@
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
+        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Desastrado",
@@ -2727,7 +2806,10 @@
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
+        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Inimigo Racial",
@@ -2746,8 +2828,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -2761,8 +2842,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2871,8 +2951,7 @@
           {
             "nome": "Cabeça Dura",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -2881,7 +2960,10 @@
         "descricao": "Drakens começam com Força d6 (no lugar do d4). Isso também eleva o limite de Força para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "A Força inicial já nasce em d6, não em d4, com o limite do atributo esticado até d12+1."
+        "descricaoLite": "A Força inicial já nasce em d6, não em d4, com o limite do atributo esticado até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "LENTO",
@@ -2956,7 +3038,10 @@
         "descricao": "Elementais padrão são extremamente fortes, começando com Força d8. Isso também eleva o limite de Força para d12+2. Elementais de ar, fogo ou água trocam isso (e a Resistência abaixo) por Forma de Energia.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Força inicial d8, com o teto elevado a d12+2. Trocado por Forma de Energia nas variantes de Ar, Fogo ou Água."
+        "descricaoLite": "Força inicial d8, com o teto elevado a d12+2. Trocado por Forma de Energia nas variantes de Ar, Fogo ou Água.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 2
       },
       {
         "nome": "RESISTÊNCIA +2",
@@ -2998,7 +3083,10 @@
         "descricao": "Ferais são determinados e tenazes. Começam com um d6 em Espírito (em vez de um d4). Isso aumenta o Espírito máximo para d12+1.",
         "id": "ESPIRITUOSO",
         "category": "racial_trait_positive",
-        "descricaoLite": "O atributo Espírito começa em d6 em vez de d4, elevando o teto para d12+1."
+        "descricaoLite": "O atributo Espírito começa em d6 em vez de d4, elevando o teto para d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
@@ -3226,7 +3314,10 @@
         "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1.",
         "id": "EM_FORMA",
         "category": "racial_trait_positive",
-        "descricaoLite": "O trabalho pesado forjou resistência física: o Vigor começa em d6, com teto elevado a d12+1."
+        "descricaoLite": "O trabalho pesado forjou resistência física: o Vigor começa em d6, com teto elevado a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "DEPENDÊNCIA ATMOSFÉRICA (Maior)",
@@ -3240,7 +3331,10 @@
         "descricao": "Começam com Força d6 (no lugar do d4). Isso também eleva o limite de Força da heroína para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "A Força inicial já nasce em d6, não em d4, com o limite do atributo esticado até d12+1."
+        "descricaoLite": "A Força inicial já nasce em d6, não em d4, com o limite do atributo esticado até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       }
     ],
     "tags": [
@@ -3615,7 +3709,10 @@
         "descricao": "Yetis são grandes e ferozmente fortes. Começam com um d6 em Força, aumentando o limite para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
-        "descricaoLite": "Força bruta de sobra: o atributo começa em d6 em vez de d4, podendo chegar a d12+1."
+        "descricaoLite": "Força bruta de sobra: o atributo começa em d6 em vez de d4, podendo chegar a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Calor)",
@@ -3687,7 +3784,10 @@
         "descricao": "Começa com Força d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "FORTE",
-        "descricaoLite": "Força inicial d6, com máximo em d12+1."
+        "descricaoLite": "Força inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "Adaptável",
@@ -3715,7 +3815,10 @@
         "descricao": "Começa com Astúcia d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "ASTUTO",
-        "descricaoLite": "Astúcia inicial d6, com máximo em d12+1."
+        "descricaoLite": "Astúcia inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Astúcia",
+        "value": 1
       },
       {
         "nome": "Adaptável",
@@ -3743,7 +3846,10 @@
         "descricao": "Começa com Vigor d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "VIGOROSO",
-        "descricaoLite": "Vigor inicial d6, com máximo em d12+1."
+        "descricaoLite": "Vigor inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Adaptável",
@@ -3771,7 +3877,10 @@
         "descricao": "Começa com Agilidade d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Agilidade inicial d6, com máximo em d12+1."
+        "descricaoLite": "Agilidade inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Adaptável",
@@ -3799,7 +3908,10 @@
         "descricao": "Começa com Espírito d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "ESPIRITUAL",
-        "descricaoLite": "Espírito inicial d6, com máximo em d12+1."
+        "descricaoLite": "Espírito inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "Adaptável",
@@ -3820,20 +3932,6 @@
     "categoria": "ANCESTRALIDADE",
     "descricao": "Os humanos são um grupo diversificado e adaptável que se conformam com valores e ensinamentos dos clãs ou famílias em que cresceram. Ao criar um herói humano, você pode escolher um dos seguintes signos de nascença. Os signos de nascença são o equivalente a um signo do zodíaco, correspondendo a um mês específico. Cada um menciona, de forma não exata, características comuns de personalidade daqueles que nasceram sob esse signo. Também será listada um benefício humano alternativo para o personagem. Você também pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com uma Vantagem gratuita.",
     "habilidades": [
-      {
-        "nome": "Pontos de Perícia",
-        "descricao": "Humanos que escolhem o signo Nenhum começam com 15 pontos de perícia, em vez dos 12 padrão.",
-        "category": "racial_trait_positive",
-        "id": "PONTOS_DE_PERICIA",
-        "descricaoLite": "Ao dispensar um signo de nascença, o humano inicia com 15 pontos de perícia em vez dos 12 padrão."
-      },
-      {
-        "nome": "Adaptável ou Signo",
-        "descricao": "Você pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com Adaptável (ganha 1 PV).",
-        "category": "racial_trait_positive",
-        "id": "ADAPTAVEL_OU_SIGNO",
-        "descricaoLite": "É possível abrir mão de um signo de nascença e virar um humano padrão com Adaptável, ganhando 1 Ponto de Vida extra no lugar."
-      },
       {
         "nome": "Signos de Nascença",
         "descricao": "Mês 1 - Basabasa: Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói. Mês 2 - Boi: Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir esforço físico (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1. Mês 3 - Tigre: A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso). Mês 4 - Lebre: Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura. Mês 5 - Garça: Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado. Mês 6 - Serpente: Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso. Mês 7 - Dragão: Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas. Mês 8 - Kirin: O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão. Mês 9 - Macaco: O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Geralmente, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem. Mês 10 - Raposa: Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação. Mês 11 - Lobo: Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial. Mês 12 - Tartaruga: Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa. Mês 13 - Urso: Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2.",
@@ -3867,14 +3965,21 @@
         "descricao": "Os Akaimimi estão naturalmente cientes dos estigmas sociais e dos costumes alheios, começando com um d6 em Convenção e o máximo da perícia aumenta para d12+1.",
         "category": "racial_trait_positive",
         "id": "DICAS_CULTURAIS",
-        "descricaoLite": "Convenção inicial d6, com teto elevado a d12+1."
+        "descricaoLite": "Convenção inicial d6, com teto elevado a d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Convenção",
+        "value": 1
       },
       {
         "nome": "Conhecimento Geral",
         "descricao": "Akaimimi começa com Conhecimento Geral d6 (1).",
         "category": "racial_trait_positive",
         "id": "CONHECIMENTO_GERAL",
-        "descricaoLite": "Inicia com 1 ponto de perícia investido em Conhecimento Geral, resultando em d6."
+        "descricaoLite": "Inicia com 1 ponto de perícia investido em Conhecimento Geral, resultando em d6.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Conhecimento Geral",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Visão no Escuro",
@@ -3901,7 +4006,10 @@
         "descricao": "O Araiguma recebe Provocar d4 (1).",
         "category": "racial_trait_positive",
         "id": "BRINCALHAO",
-        "descricaoLite": "1 ponto de perícia investido em Provocar, resultando em d4."
+        "descricaoLite": "1 ponto de perícia investido em Provocar, resultando em d4.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Provocar",
+        "value": 0
       },
       {
         "nome": "Digestão Gloriosa",
@@ -3922,7 +4030,11 @@
         "descricao": "Os Araiguma sentem um certo encanto na confusão, começando com d6 em Furtividade.",
         "category": "racial_trait_positive",
         "id": "TRAPALHOES_TRAVESSOS",
-        "descricaoLite": "Furtividade inicial d6."
+        "descricaoLite": "Furtividade inicial d6.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Furtividade",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Esquisitices (Hábito)",
@@ -3970,8 +4082,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -3980,7 +4091,11 @@
         "descricao": "Os Inumimi começam com d6 em Perceber.",
         "category": "racial_trait_positive",
         "id": "CAES_DE_GUARDA",
-        "descricaoLite": "Perceber inicial d6."
+        "descricaoLite": "Perceber inicial d6.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Visão no Escuro",
@@ -4066,7 +4181,10 @@
         "descricao": "Os nekomimi têm um talento natural para jogos de azar. Começam com d6 em Jogar.",
         "category": "racial_trait_positive",
         "id": "BRINCANDO_COM_O_DESTINO",
-        "descricaoLite": "Jogar inicial d6."
+        "descricaoLite": "Jogar inicial d6.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Jogar",
+        "value": 1
       },
       {
         "nome": "Fortuna Dá",
@@ -4101,7 +4219,10 @@
         "descricao": "Pessoas resilientes e simples, os tanukimimi são felizes e começam com d6 em Espírito.",
         "category": "racial_trait_positive",
         "id": "FELIZES_POR_NATUREZA",
-        "descricaoLite": "Espírito inicial d6."
+        "descricaoLite": "Espírito inicial d6.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "Despretensiosos e Barrigudos (Aparar Baixo)",
@@ -4299,7 +4420,10 @@
         "descricao": "Ferais têm uma ligação mais forte com a natureza que os Umvee e começam com Sobrevivência d6, aumentando seu máximo para d12+1.",
         "category": "racial_trait_positive",
         "id": "INTEGRADO_A_NATUREZA",
-        "descricaoLite": "Sobrevivência inicial d6, com máximo em d12+1."
+        "descricaoLite": "Sobrevivência inicial d6, com máximo em d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Sobrevivência",
+        "value": 1
       },
       {
         "nome": "Insanidade (Sanguinário)",
@@ -4319,8 +4443,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -4394,7 +4517,10 @@
         "descricao": "O sangue dos Oni corre nas veias de um Onigem, tornando sua Força inicial em d6 e sua Força máxima em d12+1.",
         "category": "racial_trait_positive",
         "id": "FORTE",
-        "descricaoLite": "Força inicial d6, máximo d12+1."
+        "descricaoLite": "Força inicial d6, máximo d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "Suspeitoso",
@@ -4455,7 +4581,8 @@
     ],
     "livros": [
       "CIDADE_SOL_VAPOR"
-    ]
+    ],
+    "pontosRaciaisEsperados": 0
   },
   {
     "id": "anc_meio_demonio_csv",
@@ -4464,10 +4591,10 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Recebe uma Vantagem Novato extra, como um humano comum.",
+        "descricao": "Recebe uma Vantagem Novato extra, como um humano comum, ou pode abrir mão dela para adquirir o Antecedente Arcano (Demônio) diluído.",
         "category": "racial_trait_positive",
-        "id": "ADAPTAVEL",
-        "descricaoLite": "Ganha de graça uma Vantagem adicional de nível Novato."
+        "id": "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO",
+        "descricaoLite": "Ganha de graça uma Vantagem adicional de nível Novato, ou troca por Antecedente Arcano (Demônio) diluído."
       }
     ],
     "livros": [
@@ -4550,7 +4677,10 @@
         "descricao": "Começa com Vigor d6. Vigor máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
-        "descricaoLite": "Vigor inicial d6 (máximo d12+1)."
+        "descricaoLite": "Vigor inicial d6 (máximo d12+1).",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Robustez",
@@ -4584,7 +4714,10 @@
         "descricao": "Começa com Agilidade d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Agilidade inicial d6, com máximo em d12+1."
+        "descricaoLite": "Agilidade inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Esguios",
@@ -4598,7 +4731,10 @@
         "descricao": "Começa com Astúcia d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "INTELIGENCIA",
-        "descricaoLite": "Astúcia inicial d6, com teto em d12+1."
+        "descricaoLite": "Astúcia inicial d6, com teto em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Astúcia",
+        "value": 1
       },
       {
         "nome": "Magia Élfica",
@@ -4612,7 +4748,11 @@
         "descricao": "Começa com Perceber d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_APURADOS",
-        "descricaoLite": "Perceber inicial d6, com máximo em d12+1."
+        "descricaoLite": "Perceber inicial d6, com máximo em d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Visão na Penumbra",
@@ -4659,14 +4799,21 @@
         "descricao": "Começam com Vigor d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
-        "descricaoLite": "Vigor inicial d6, com teto em d12+1."
+        "descricaoLite": "Vigor inicial d6, com teto em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Sentidos Apurados",
         "descricao": "Começam com Perceber d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_APURADOS",
-        "descricaoLite": "Perceber inicial d6, com teto em d12+1."
+        "descricaoLite": "Perceber inicial d6, com teto em d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Tamanho -1",
@@ -4700,7 +4847,10 @@
         "descricao": "Começa com Agilidade d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Agilidade inicial d6, com máximo em d12+1."
+        "descricaoLite": "Agilidade inicial d6, com máximo em d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Movimentação Reduzida",
@@ -4714,14 +4864,22 @@
         "descricao": "Começa com Atletismo d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "PESFIRMES",
-        "descricaoLite": "Atletismo inicial d6, com máximo em d12+1."
+        "descricaoLite": "Atletismo inicial d6, com máximo em d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Atletismo",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Sentidos Aguçados",
         "descricao": "Começa com Perceber d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Perceber inicial d6, com máximo em d12+1."
+        "descricaoLite": "Perceber inicial d6, com máximo em d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Sorte",
@@ -4829,7 +4987,10 @@
         "descricao": "Começam com Força d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "FORTE",
-        "descricaoLite": "Força inicial d6, máximo d12+1."
+        "descricaoLite": "Força inicial d6, máximo d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Força",
+        "value": 1
       },
       {
         "nome": "Intimidante",
@@ -4911,7 +5072,10 @@
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
-        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1."
+        "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1
       },
       {
         "nome": "Visão no Escuro",
@@ -4958,7 +5122,11 @@
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1."
+        "descricaoLite": "Perceber começa em d6 em vez de d4, com teto elevado para d12+1.",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Perceber",
+        "value": 1,
+        "pontos": 1
       },
       {
         "nome": "Voo",
@@ -5027,7 +5195,10 @@
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
+        "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Desastrado",
@@ -5113,7 +5284,10 @@
         "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "ESPIRITUOSO",
-        "descricaoLite": "Espírito inicial em d6 em vez de d4, com limite máximo elevado para d12+1."
+        "descricaoLite": "Espírito inicial em d6 em vez de d4, com limite máximo elevado para d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Espírito",
+        "value": 1
       },
       {
         "nome": "Movimentação Reduzida",
@@ -5152,7 +5326,10 @@
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
-        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
+        "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1.",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Agilidade",
+        "value": 1
       },
       {
         "nome": "Inimigo Racial",
@@ -5171,8 +5348,7 @@
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": true
+            "pa": 0
           }
         ]
       },
@@ -5186,8 +5362,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },
@@ -5257,8 +5432,7 @@
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 0,
-            "escalavel": false
+            "pa": 0
           }
         ]
       },

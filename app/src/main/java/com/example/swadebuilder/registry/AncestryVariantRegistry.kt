@@ -7,6 +7,7 @@ import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionDef
 import com.example.swadebuilder.model.SelectionType
 import com.example.swadebuilder.model.TraitAddition
+import com.example.swadebuilder.model.TraitTargetKind
 import com.example.swadebuilder.model.VariantGroup
 import com.example.swadebuilder.model.VariantOption
 
@@ -23,7 +24,8 @@ import com.example.swadebuilder.model.VariantOption
  * ambiguidade que tinha adiado esse par no lote 2 não existe de verdade.
  *
  * Uma raça ausente daqui simplesmente não tem variante nem seleção conhecida
- * pelo motor novo (ex.: Feral — tem traços fixos, não variante nem seleção).
+ * pelo motor novo (ex.: a maioria das raças de Fantasia/Horror sem nenhuma
+ * escolha embutida — só Adaptável ou um traço fixo, sem opção nenhuma).
  */
 object AncestryVariantRegistry {
 
@@ -53,7 +55,18 @@ object AncestryVariantRegistry {
         robos(),
         seresSinteticos(),
         descendenteElemental(),
-        humanoFantasia()
+        humanoFantasia(),
+        meioElfoHeranca("BASICO"),
+        meioElfoHeranca("FANTASIA"),
+        meioElfoHeranca("HORROR"),
+        meioElfoHeranca("SUPER"),
+        meioDemonio(),
+        humanoArteDaGuerraSignos(),
+        meioOrc(),
+        feralArteDaGuerra(),
+        kitsunemimiArteDaGuerra(),
+        gnomoPathfinder(),
+        usagimimiArteDaGuerra()
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -90,8 +103,8 @@ object AncestryVariantRegistry {
     // 1 reconfiguração de cenário), migradas de ResolveAncestrySpecificAdjustmentsUseCase
     // (bloco `if (isSciFiActive) { if (ancKey == "X") ... }`). Mesmo padrão do
     // lote piloto: cada opção carrega só as ADIÇÕES/REMOÇÕES de traços — a
-    // Armadura Natural (quando difere de 0, ex.: Sáurios/Insetoides) e o
-    // `forceArmorZero` seguem como exceção pontual na camada de wiring
+    // Armadura Natural (quando difere de 0, ex.: Sáurios/Insetoides) segue
+    // como exceção pontual na camada de wiring
     // (ResolveAncestrySpecificAdjustmentsUseCase), igual ao Umvee Pedregoso.
 
     private fun rakashanos(): AncestryVariantConfig = AncestryVariantConfig(
@@ -227,6 +240,26 @@ object AncestryVariantRegistry {
                     nome = "Minerador",
                     pacoteFixo = ResolvedTraitPackage(
                         desvantagensParaAdicionar = listOf(TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR"))
+                    ),
+                    // Seleção aninhada (mesmo padrão de humanoFantasia() —
+                    // VariantOption.selecoes): o jogador escolhe Força OU
+                    // Vigor pro d6 inicial ("Planeta de Mineração"). Antes o
+                    // marcador MINERADOR_ATRIBUTO só sinalizava a escolha,
+                    // sem custo cadastrado (a raça toda não passava pelo
+                    // validador de orçamento por opção); agora o traço
+                    // resolvido (ATTRIBUTE_BOOST, 2 pts) entra de verdade em
+                    // habilidades[] via CriadorState, mesmo mecanismo de
+                    // Meio-Orc/Feral acima.
+                    selecoes = listOf(
+                        SelectionDef(
+                            id = "humano_minerador_atributo",
+                            rotulo = "Planeta de Mineração",
+                            tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                            targetKind = TraitTargetKind.ATTRIBUTE,
+                            targetOptions = listOf("Força", "Vigor"),
+                            defaultTargetChoice = "Força",
+                            injectionTemplate = "{alvo} d6 (Planeta de Mineração)"
+                        )
                     )
                 )
             )
@@ -383,7 +416,7 @@ object AncestryVariantRegistry {
                             TraitAddition("ARMADURA +2", "ARMADURA"),
                             TraitAddition("GARRAS", "GARRAS")
                         ),
-                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Garras", dano = "For+d4", pa = 2, escalavel = true)),
+                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Garras", dano = "For+d4", pa = 2, id = "GARRAS")),
                         naturalArmor = 2
                     )
                 ),
@@ -824,27 +857,26 @@ object AncestryVariantRegistry {
     // --- Elementais (Sci-Fi): apesar de ter "Padrão" entre as opções (o que
     // normalmente indicaria Variante), o usuário confirmou que este é o caso
     // excepcional: é Seleção de elemento mesmo (todo elemental É de algum
-    // elemento, igual ao Descendente Elemental de Fantasia) — só foi
-    // implementado no sistema de variante antigo por falta de alternativa na
-    // época. Efeitos idênticos aos que já existiam no "when" fixo de
-    // ResolveAncestrySpecificAdjustmentsUseCase: Padrão mantém Forte e
-    // Resistência +2 (a raça é de pedra/terra, física e resistente); Ar,
-    // Fogo ou Água troca os dois por Forma de Energia (o corpo já não é mais
-    // sólido nem musculoso). ---
+    // elemento, igual ao Descendente Elemental de Fantasia). Efeitos
+    // idênticos ao que o livro descreve: Padrão mantém Forte e Resistência
+    // +2 (a raça é de pedra/terra, física e resistente); Ar, Fogo ou Água
+    // troca os dois por Forma de Energia (o corpo já não é mais sólido nem
+    // musculoso).
+    //
     // Elementais é candidato único em ancestralidades.json (só existe no
-    // Sci-Fi), então cai fora de getAncestralidadeDef() antes de chegar a ler
-    // este registro pro caminho genérico de scifiVariantDrivenKeys (ver o
-    // curto-circuito de candidato único lá, e a exceção específica que
-    // Elementais ganhou nele) — os pacotes abaixo, portanto, não são
-    // resolvidos/aplicados por esse caminho genérico. A troca real
-    // Padrão↔"Ar, Fogo ou Água" (MUITO_FORTE + RESISTENCIA vira FORMA_DE_ENERGIA
-    // + um traço invisível de ajuste de orçamento) mora direto num bloco
-    // dedicado em CriadorState.applyAncestryVariantAdjustments(), que já entra
-    // em habilidades[] de verdade — mesmo padrão de exceção que Umvee/
-    // Meio-Demônio usam. Mantido com `selecoes`/FIXED_PACKAGE (em vez de
-    // `grupoVariante`) só pra preservar o rótulo "Seleção:" já exibido em
-    // AncestralidadesSection (isSelecaoPura), sem trocas paralelas de
-    // conteúdo mecânico que já não são lidas por ninguém.
+    // Sci-Fi) e não faz parte de `scifiVariantDrivenKeys` (não tem
+    // `grupoVariante`, é Seleção pura) — mas CriadorState
+    // .applyAncestryVariantAdjustments() lê estes `pacotesFixos` de verdade
+    // via ResolveAncestryVariantPackageUseCase.resolve(), no mesmo padrão
+    // (tracosParaRemoverPorNome/tracosParaAdicionar) que as raças de
+    // scifiVariantDrivenKeys usam — zero `if` de nome de raça decidindo QUAIS
+    // traços trocam, só QUANDO trocar (a condição de qual pacote escolher
+    // ainda lê `key == "ELEMENTAIS"`, mas o conteúdo do pacote mora aqui).
+    // "Ajuste de Orçamento (Forma de Energia)" fecha a diferença de pontos
+    // entre remover Forte+Resistência (6 pts) e ganhar só Forma de Energia
+    // (4 pts) — sem efeito mecânico próprio, só bookkeeping (ver
+    // TraitAddition.pontos/invisivel), pra manter as duas opções em
+    // pontosRaciaisEsperados = 2, igual sempre foi.
     private fun elementaisScifi(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ELEMENTAIS",
         livro = "SCI_FI",
@@ -855,19 +887,47 @@ object AncestryVariantRegistry {
                 tipo = SelectionType.FIXED_PACKAGE,
                 pacotesFixos = listOf(
                     FixedPackageOption("padrao", "Padrão", ResolvedTraitPackage()),
-                    FixedPackageOption("ar_fogo_ou_agua", "Ar, Fogo ou Água", ResolvedTraitPackage())
+                    FixedPackageOption(
+                        "ar_fogo_ou_agua", "Ar, Fogo ou Água",
+                        ResolvedTraitPackage(
+                            tracosParaRemoverPorNome = listOf("MUITO FORTE", "RESISTÊNCIA +2"),
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Forma de Energia", "FORMA_DE_ENERGIA"),
+                                TraitAddition(
+                                    "Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA",
+                                    pontos = 2, invisivel = true
+                                )
+                            )
+                        )
+                    )
                 )
             )
         )
     )
 
     // --- Descendente Elemental (Fantasia): Seleção de elemento, mesmo padrão
-    // de elementaisScifi() acima (o comentário de lá já citava este caso como
-    // o análogo pendente). Base fixa em ancestralidades.json (Resistência
-    // Ambiental +1, Forasteiro Menor -1) mais o placeholder "Elemento
-    // Ancestral" (ELEMENTO_ANCESTRAL, custo 0 — ver RacialTraitPointCatalog);
-    // cada elemento resolvido vale 2 pontos, então a raça fecha em +2
-    // (-1+1+0 do placeholder, +2 do elemento) qualquer que seja a escolha.
+    // de elementaisScifi() acima. Base fixa em ancestralidades.json
+    // (Resistência Ambiental +1, sempre presente — NÃO é substituída pela
+    // escolha, é um traço permanente à parte; Forasteiro Menor -1) mais o
+    // marcador "Elemento Ancestral" (ELEMENTO_ANCESTRAL, custo 2 —
+    // resolveMarkedSelection REMOVE esse marcador e injeta o traço real do
+    // elemento escolhido, que já custa 2 também, então o catálogo estático
+    // (RESISTENCIA_AMBIENTAL 1 + ELEMENTO_ANCESTRAL 2 + FORASTEIRO -1 = 2)
+    // e o resolvido ao vivo (RESISTENCIA_AMBIENTAL 1 + <elemento> 2 +
+    // FORASTEIRO -1 = 2) fecham no mesmo total — mesmo padrão de HERANCA
+    // (Meio-Elfo), sem precisar mexer no JSON nem na lista de exceções de
+    // AncestralidadeCatalogBudgetTest.
+    //
+    // Achado real (rodada 36): antes desta rodada, o bloco que resolvia
+    // `descendenteElementalSelecionado` em CriadorState.applyAncestryVariantAdjustments
+    // ficava DEPOIS de `resolveSciFiVariantSelectionFor(base.nome, base.opcoes)
+    // ?: return base` — e Descendente Elemental não tem `opcoes` (raça sem
+    // Variante de livro, só Seleção), então esse early-return disparava
+    // sempre primeiro e o bloco inteiro nunca era alcançado: escolher um
+    // elemento não tinha efeito mecânico nenhum (bug real em produção,
+    // confirmado rodando o app — não hipotético). Corrigido movendo a
+    // resolução pra antes desse early-return, mesmo lugar de Herança/
+    // Signo/Meio-Orc/Feral.
     private fun descendenteElemental(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "DESCENDENTE ELEMENTAL",
         livro = "FANTASIA",
@@ -876,6 +936,7 @@ object AncestryVariantRegistry {
                 id = "descendente_elemental_elemento",
                 rotulo = "Escolha o elemento ancestral",
                 tipo = SelectionType.FIXED_PACKAGE,
+                marcadorTraitId = "ELEMENTO_ANCESTRAL",
                 pacotesFixos = listOf(
                     FixedPackageOption(
                         "agua", "Água",
@@ -887,11 +948,28 @@ object AncestryVariantRegistry {
                     ),
                     FixedPackageOption(
                         "fogo", "Fogo",
-                        ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf(TraitAddition("RÁPIDO", "RAPIDO")))
+                        // targetRef = id real de vantagens.json ("rapido") —
+                        // resolveMarkedSelection injeta isso como
+                        // traitId=GRANTED_EDGE + targetRef, o par que
+                        // resolvedVantagensGratis() já lê pra conceder a
+                        // Vantagem de verdade (mesmo mecanismo de
+                        // Kitsunemimi/Tanukimimi/Meio-Demônio).
+                        ResolvedTraitPackage(
+                            vantagensGratisParaAdicionar = listOf(
+                                TraitAddition("RÁPIDO", "RAPIDO", targetRef = "rapido")
+                            )
+                        )
                     ),
                     FixedPackageOption(
                         "terra", "Terra",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("SÓLIDO COMO ROCHA", "SOLIDO_COMO_ROCHA")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition(
+                                    "SÓLIDO COMO ROCHA", "SOLIDO_COMO_ROCHA",
+                                    traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor", value = 1
+                                )
+                            )
+                        )
                     )
                 )
             )
@@ -965,7 +1043,12 @@ object AncestryVariantRegistry {
                     id = "nomades_do_deserto",
                     nome = "Nômades do Deserto",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("Sobrevivência d6", "NOMADES_DESERTO_SOBREVIVENCIA")),
+                        tracosParaAdicionar = listOf(
+                            TraitAddition(
+                                "Sobrevivência d6", "NOMADES_DESERTO_SOBREVIVENCIA",
+                                traitId = "SKILL_BOOST", targetRef = "Sobrevivência", value = 1
+                            )
+                        ),
                         tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Frio)", "FRAQUEZA_AMBIENTAL_FRIO")),
                         vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Calor)", "RESISTENCIA_AMBIENTAL_CALOR"))
                     )
@@ -974,7 +1057,12 @@ object AncestryVariantRegistry {
                     id = "povo_da_montanha",
                     nome = "Povo da Montanha",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("Vigor d6", "POVO_MONTANHA_VIGOR")),
+                        tracosParaAdicionar = listOf(
+                            TraitAddition(
+                                "Vigor d6", "POVO_MONTANHA_VIGOR",
+                                traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor", value = 1
+                            )
+                        ),
                         tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Calor)", "FRAQUEZA_AMBIENTAL_CALOR")),
                         vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Frio)", "RESISTENCIA_AMBIENTAL_FRIO"))
                     )
@@ -984,8 +1072,14 @@ object AncestryVariantRegistry {
                     nome = "Povo do Mar",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("Atletismo d6", "POVO_MAR_ATLETISMO"),
-                            TraitAddition("Navegar d6", "POVO_MAR_NAVEGAR")
+                            TraitAddition(
+                                "Atletismo d6", "POVO_MAR_ATLETISMO",
+                                traitId = "SKILL_BOOST", targetRef = "Atletismo", value = 1
+                            ),
+                            TraitAddition(
+                                "Navegar d6", "POVO_MAR_NAVEGAR",
+                                traitId = "SKILL_BOOST", targetRef = "Navegar", value = 1
+                            )
                         )
                     ),
                     selecoes = listOf(
@@ -1017,7 +1111,12 @@ object AncestryVariantRegistry {
                     id = "senhores_dos_cavalos",
                     nome = "Senhores dos Cavalos",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("Cavalgar d6", "SENHORES_CAVALOS_CAVALGAR"))
+                        tracosParaAdicionar = listOf(
+                            TraitAddition(
+                                "Cavalgar d6", "SENHORES_CAVALOS_CAVALGAR",
+                                traitId = "SKILL_BOOST", targetRef = "Cavalgar", value = 1
+                            )
+                        )
                     ),
                     selecoes = listOf(
                         SelectionDef(
@@ -1052,6 +1151,441 @@ object AncestryVariantRegistry {
                         )
                     )
                 )
+            )
+        )
+    )
+
+    // --- Meio-Elfo (Básico/Fantasia/Horror/Super): Seleção de pacote fixo
+    // (Herança Élfica x Herança Humana), mesmo formato de Terracota — a
+    // raça carrega o traço "HERANCA" como placeholder (custo 2, igual às
+    // duas opções abaixo, então o valor de livro da raça não muda seja qual
+    // for a escolha), e cada opção troca esse placeholder pelo traço
+    // resolvido de verdade. As 4 entradas (uma por livro) compartilham o
+    // mesmo conteúdo através desta função — evita duplicar o pacote 4 vezes
+    // e o risco de as cópias saírem do sincronismo. Meio-Elfo do Pathfinder
+    // fica de fora de propósito: tem "Flexibilidade" (atributo livre à
+    // escolha) em vez de "Herança", raça mecanicamente diferente que só
+    // compartilha o nome de exibição.
+    private fun meioElfoHeranca(livro: String): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MEIO-ELFOS",
+        livro = livro,
+        selecoes = listOf(
+            SelectionDef(
+                id = "meio_elfo_heranca",
+                rotulo = "Escolha a Herança",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        id = "agil",
+                        nome = "Herança Élfica (Agilidade d6)",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("HERANCA"),
+                            tracosParaAdicionar = listOf(TraitAddition("Ágil", "AGIL"))
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "adaptavel",
+                        nome = "Herança Humana (Adaptável)",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("HERANCA"),
+                            tracosParaAdicionar = listOf(TraitAddition("Adaptável", "ADAPTAVEL"))
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Meio-Demônio (Cidade do Sol a Vapor): mesmo formato do Meio-Elfo
+    // acima, só que o placeholder é "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_
+    // DEMONIO" (custo 2, igual Adaptável — ver RacialTraitPointCatalog) e as
+    // opções são Adaptável x Antecedente Arcano (Demônio) diluído
+    // (aa_demonio_meio_demonio — mesmo id de vantagem já usado em
+    // ResolveAncestrySpecificAdjustmentsUseCase, não um clone novo).
+    //
+    // Ficou só cadastrado aqui (sem aplicação de verdade) da rodada em que
+    // foi criado até a rodada 38: `resolveMarkedSelection` só lia
+    // `vantagensGratisParaAdicionar` sem setar `targetRef` (só `id`), o que
+    // teria trocado silenciosamente o alvo da concessão de
+    // "aa_demonio_meio_demonio" (id real da Vantagem, o que
+    // `resolvedVantagensGratis()` espera) pra "ANTECEDENTE_ARCANO_DEMONIO_MEIO"
+    // (id do TRAÇO, que não existe no catálogo de Vantagens) — quebrando a
+    // concessão sem nenhum teste acusar na hora. A rodada 36 (Descendente
+    // Elemental) já resolveu isso threadando `targetRef` de verdade em
+    // `TraitAddition`/`resolveMarkedSelection`; `vantagensGratisIds` abaixo
+    // nunca chegou a ser consumido por nada pra esta raça (não existe bloco
+    // de Meio-Demônio em `ResolveAncestrySpecificAdjustmentsUseCase`,
+    // confirmado por grep) — removido por virar dado morto/confuso agora
+    // que `targetRef` é o mecanismo de verdade.
+    private fun meioDemonio(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MEIO-DEMONIO",
+        livro = "CIDADE_SOL_VAPOR",
+        selecoes = listOf(
+            SelectionDef(
+                id = "meio_demonio_traco",
+                rotulo = "Escolha o Traço Racial",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        id = "adaptavel",
+                        nome = "Adaptável",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"),
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Adaptável", "ADAPTAVEL")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "antecedente_arcano",
+                        nome = "Antecedente Arcano (Demônio)",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaRemoverPorId = listOf("ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"),
+                            vantagensGratisParaAdicionar = listOf(
+                                TraitAddition(
+                                    nome = "Antecedente Arcano (Demônio)",
+                                    id = "ANTECEDENTE_ARCANO_DEMONIO_MEIO",
+                                    targetRef = "aa_demonio_meio_demonio"
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Humano (Império San, Arte da Guerra): Signos de Nascença. Seleção
+    // de pacote fixo, 1 de 14 opções (13 signos + "Nenhum") — mesmo formato
+    // de Terracota/Umvee, só maior. A raça base carrega só o traço
+    // "SIGNOS_DE_NASCENCA" (custo 0, o texto de referência com os 13
+    // signos), sempre presente independente da escolha — ele é o marcador
+    // usado pelas guardas em CriadorState (nunca por nome de raça). Cada
+    // opção abaixo é o que a raça REALMENTE concede quando ativa; "Nenhum"
+    // é o único caso onde a raça tem Adaptável + Pontos de Perícia — as
+    // outras 13 removem esses dois de vez (não fazem sentido pra quem tem
+    // um Signo de verdade).
+    //
+    // Cobertura mecânica: cada opção só carrega os efeitos que JÁ TÊM um
+    // gancho mecânico real no app (aumento de atributo/perícia, Vantagem
+    // concedida, bônus de Reserva de Chi — tudo generalizado nesta mesma
+    // rodada). Bônus puramente situacionais que o livro descreve mas que
+    // nenhuma parte do app aplica automaticamente a uma rolagem específica
+    // (Tigre inteiro; a penalidade de Finalização da Tartaruga; o d4+1 sem
+    // treino do Macaco; a redução de Exausto do Urso; os +1 pontuais de
+    // Basabasa/Boi/Dragão/Raposa em perícias específicas; o uso de Bene da
+    // Lebre; os efeitos percentuais/de diferença do Jogar-ou-Performance da
+    // Serpente) ficam de fora do pacote (sem custo fabricado pra "fechar" a
+    // conta) e documentados em `anotacoes` — o validador de orçamento por
+    // opção (ValidateAncestryOptionBudgetsUseCase) vai mostrar essas opções
+    // abaixo de pontosRaciaisEsperados=3, de propósito: é um retrato honesto
+    // do que já está implementado, não um "quase lá" escondido atrás de um
+    // ajuste de pontos inventado. Garça soma 4 (acima de 3) pelo motivo
+    // oposto: os 3 efeitos dela (Aparar, Acrobacia, Atletismo) JÁ têm gancho
+    // mecânico pronto e reaproveitado (nenhum inventado), e o livro
+    // aparentemente não calibra os Signos entre si com o mesmo rigor que
+    // Terracota/Meio-Elfo — sinais de conteúdo, não bugs de código.
+    private fun humanoArteDaGuerraSignos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "HUMANOS",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "signo_de_nascenca",
+                rotulo = "Escolha o Signo de Nascença",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        id = "nenhum",
+                        nome = "Nenhum",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Adaptável", "ADAPTAVEL"),
+                                TraitAddition("Pontos de Perícia", "PONTOS_DE_PERICIA")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "basabasa",
+                        nome = "Basabasa",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Atraente (Vantagem concedida)", "ATRAENTE"),
+                                TraitAddition(
+                                    "Bônus de Perícia (+1): Provocar ou Intimidar (à escolha)",
+                                    "BONUS_PERICIA_1"
+                                )
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "boi",
+                        nome = "Boi",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Força d6 (Boi)", "FORTE"),
+                                TraitAddition("Bônus de Perícia (+1): Atletismo (esforço físico)", "BONUS_PERICIA_1")
+                            ),
+                            anotacoes = listOf(
+                                "Com a Vantagem Brutamontes, o bônus de Atletismo vale para toda rolagem, não só esforço físico — ainda não modelado automaticamente."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "tigre",
+                        nome = "Tigre",
+                        pacote = ResolvedTraitPackage(
+                            anotacoes = listOf(
+                                "Alcance de Comando +4 quadros, +1 em testes de Medo e -1 no resultado da Tabela de Medo (cumulativo com Corajoso) — nenhum efeito numérico modelado ainda."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "lebre",
+                        nome = "Lebre",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Cura d6 (Lebre)", "LEBRE_CURA")),
+                            anotacoes = listOf(
+                                "1x por aventura, pode gastar um Bene pra tratar um Ferimento até 4 dias depois como se ainda estivesse na Hora de Ouro — ainda não modelado."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "garca",
+                        nome = "Garça",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Aparar +1 (Garça)", "APARAR"),
+                                TraitAddition("Acrobacia d4 (Garça)", "GARCA_ACROBACIA"),
+                                TraitAddition("Atletismo d6 (Garça)", "GARCA_ATLETISMO")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "serpente",
+                        nome = "Serpente",
+                        pacote = ResolvedTraitPackage(
+                            anotacoes = listOf(
+                                "Jogar d6 OU Performance d6 (à escolha do jogador, ver CriadorState.signoSerpentePericiaEscolhida — não modelado como Seleção estruturada porque o alvo muda por jogador). Bônus de +1/-1 na diferença de Jogar e os percentuais alterados de Performance ainda não modelados."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "dragao",
+                        nome = "Dragão",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Espírito d6 (Dragão)", "ESPIRITUAL"),
+                                TraitAddition(
+                                    "Bônus de Perícia (+1): Conhecimento Geral (situação desconhecida)",
+                                    "BONUS_PERICIA_1"
+                                )
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "kirin",
+                        nome = "Kirin",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Sorte (Vantagem concedida)", "SORTE"),
+                                TraitAddition("Reserva de Chi +1 (Kirin)", "KIRIN_CHI")
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "macaco",
+                        nome = "Macaco",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Astúcia d6 (Macaco)", "ASTUCIA")),
+                            anotacoes = listOf(
+                                "Perícias não treinadas de Astúcia rolam d4+1 em vez do padrão (sem valer pro dado selvagem) — ainda não modelado."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "raposa",
+                        nome = "Raposa",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Elevar a Moral (Vantagem concedida)", "ELEVAR_O_MORAL"),
+                                TraitAddition("Bônus de Perícia (+1): Persuadir", "BONUS_PERICIA_1")
+                            ),
+                            anotacoes = listOf("+1 na Tabela de Reação ainda não modelado.")
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "lobo",
+                        nome = "Lobo",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Elo Comum (Vantagem concedida)", "ELO_COMUM")),
+                            anotacoes = listOf("+1 na Reação Inicial da Tabela de Reação ainda não modelado.")
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "tartaruga",
+                        nome = "Tartaruga",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Resistência +1 (Tartaruga)", "RESISTENCIA")),
+                            anotacoes = listOf(
+                                "Quem tentar a manobra Finalização contra este personagem sofre -1 no ataque e no dano — ainda não modelado."
+                            )
+                        )
+                    ),
+                    FixedPackageOption(
+                        id = "urso",
+                        nome = "Urso",
+                        pacote = ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(TraitAddition("Vigor d6 (Urso)", "VIGOROSO")),
+                            anotacoes = listOf("Penalidade de Exausto reduzida pra -1 em vez de -2 — ainda não modelada.")
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Meio-Orc (Fantasia) e Feral (Arte da Guerra): Seleção do tipo
+    // TARGET_ATTRIBUTE_OR_SKILL — o jogador escolhe QUAL atributo recebe o
+    // d6 inicial, não um pacote nomeado (mesma ideia de Herança/Signo acima,
+    // mas o "efeito mecânico" é o próprio alvo escolhido, não um pacote de
+    // traços fixo por opção). O marcador (ENDURECIDO/PRIMITIVO) já existe em
+    // ancestralidades.json com custo cadastrado em RacialTraitPointCatalog.CUSTOS
+    // (2, "oficial: aumento_atributo") — continua valendo pro cálculo de
+    // orçamento da raça BASE (ResolveVariantPointBudgetUseCase.valorTotalDe),
+    // já que o traço resolvido (ATTRIBUTE_BOOST) substitui o marcador em
+    // habilidades[] em tempo de execução, não no JSON.
+    private fun meioOrc(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MEIO-ORCS",
+        livro = "FANTASIA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "meio_orc_atributo",
+                rotulo = "Endurecido",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.ATTRIBUTE,
+                targetOptions = listOf("Força", "Vigor"),
+                // Livro não define um padrão pra "Endurecido" — "Vigor"
+                // preserva o comportamento default de antes desta raça
+                // migrar pro mesmo mecanismo de Feral/Minerador.
+                defaultTargetChoice = "Vigor",
+                injectionTemplate = "{alvo} d6 (Endurecido)",
+                marcadorTraitId = "ENDURECIDO"
+            )
+        )
+    )
+
+    private fun feralArteDaGuerra(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "FERAL",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "feral_atributo",
+                rotulo = "Primitivo",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.ATTRIBUTE,
+                targetOptions = listOf("Força", "Vigor", "Agilidade"),
+                defaultTargetChoice = "Força",
+                injectionTemplate = "{alvo} d6 (Primitivo)",
+                marcadorTraitId = "PRIMITIVO"
+            )
+        )
+    )
+
+    // --- Kitsunemimi (Raposa, Arte da Guerra): "Preparado" — escolhe 1 de 5
+    // perícias listadas pelo livro pra começar em d4 (passos=1, mesmo custo
+    // 1pt já cadastrado em RacialTraitPointCatalog pro marcador PREPARADO).
+    // Achado real (rodada 36): antes só existia como `if` avulso em
+    // CriadorState (habilidadeIdsPericia.contains("PREPARADO") +
+    // kitsunemimiPericiaEscolhida) — funcionava, mas fora do sistema de
+    // Seleção; migrado agora pro mesmo padrão de Meio-Orc/Feral.
+    private fun kitsunemimiArteDaGuerra(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "KITSUNEMIMI (RAPOSA)",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "kitsunemimi_preparado",
+                rotulo = "Preparado",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.SKILL,
+                targetOptions = listOf(
+                    "Conhecimento Acadêmico", "Convenção", "Intimidar", "Pesquisar", "Provocar"
+                ),
+                defaultTargetChoice = "Conhecimento Acadêmico",
+                // passos=0: livro diz "começar com d4" — perícia nasce
+                // destreinada, então d4 já é o primeiro patamar (não "d6",
+                // que seria passos=1/padrão da classe). Custo 1pt (ver
+                // RacialTraitPointCatalog.custoDe SKILL_BOOST).
+                passos = 0,
+                injectionTemplate = "{alvo} d4 (Preparado)",
+                marcadorTraitId = "PREPARADO"
+            )
+        )
+    )
+
+    // --- Gnomo (Pathfinder): "Obsessivos" — escolhe 1 perícia baseada em
+    // Astúcia (dentre as do próprio livro Pathfinder) pra começar em d4.
+    // Lista estática (mesma ideia de Meio-Orc Força/Vigor), gerada a partir
+    // de todas as perícias de Astúcia cadastradas em pericias.json com
+    // "PATHFINDER" nos livros (12 no total — a rodada 36 migrou isso com
+    // essa lista faltando "Provocar" por engano; corrigido na rodada 37 ao
+    // conferir contra o catálogo real, não de memória).
+    private fun gnomoPathfinder(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "GNOMO",
+        livro = "PATHFINDER",
+        selecoes = listOf(
+            SelectionDef(
+                id = "gnomo_obsessivos",
+                rotulo = "Obsessivos",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.SKILL,
+                targetOptions = listOf(
+                    "Conhecimento de Batalha", "Ciência", "Conhecimento Acadêmico",
+                    "Conhecimento Geral", "Conjurar", "Consertar", "Curar", "Jogar",
+                    "Ocultismo", "Perceber", "Provocar", "Sobrevivência"
+                ),
+                defaultTargetChoice = "Conhecimento Acadêmico",
+                // passos=0: mesmo caso de Kitsunemimi acima — "d4" é o
+                // primeiro patamar de uma perícia destreinada.
+                passos = 0,
+                injectionTemplate = "{alvo} d4 (Obsessivos)",
+                marcadorTraitId = "OBSESSIVOS"
+            )
+        )
+    )
+
+    // --- Usagimimi (Coelho, Arte da Guerra): "Definido pelo Ofício" —
+    // escolhe 1 perícia dentre TODAS as da Arte da Guerra (exceto
+    // Idiomas/Jutsu, que não são perícias "normais" pra esse efeito) pra
+    // começar em d6 — não d4: o livro já concede o patamar treinado direto
+    // (`passos=1`, o default de SelectionDef, então nem precisa declarar).
+    // Lista de 29 perícias gerada a partir de pericias.json (livros
+    // contendo "ARTE_DA_GUERRA", nome não começando com "Idiomas"/"Jutsu")
+    // — a UI antiga já mostrava exatamente esse conjunto calculado em tempo
+    // de execução (`state.listaPericias.filter{...}`); virou lista estática
+    // aqui, mesmo padrão de Kitsunemimi/Gnomo (achado real da rodada 36: um
+    // "picker de qualquer perícia" preocupava por ser ilimitado, mas o
+    // livro já restringe a um conjunto finito e pequeno o bastante pra
+    // enumerar, igual às outras duas raças).
+    private fun usagimimiArteDaGuerra(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "USAGIMIMI (COELHO)",
+        livro = "ARTE_DA_GUERRA",
+        selecoes = listOf(
+            SelectionDef(
+                id = "usagimimi_definido_pelo_oficio",
+                rotulo = "Definido pelo Ofício",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.SKILL,
+                targetOptions = listOf(
+                    "Acrobacia", "Atirar", "Atletismo", "Cavalgar", "Ciência",
+                    "Conhecimento Acadêmico", "Conhecimento Geral", "Conhecimento de Batalha",
+                    "Consertar", "Convenção", "Curar", "Dirigir", "Foco", "Furtividade",
+                    "Intimidar", "Jogar", "Ladinagem", "Lutar", "Navegar", "Ocultismo",
+                    "Ofício", "Perceber", "Performance", "Persuadir", "Pesquisar",
+                    "Pilotar", "Provocar", "Sobrevivência", "Transição"
+                ),
+                defaultTargetChoice = "Conhecimento Acadêmico",
+                injectionTemplate = "{alvo} d6 (Definido pelo Ofício)",
+                marcadorTraitId = "DEFINIDO_PELO_OFICIO"
             )
         )
     )

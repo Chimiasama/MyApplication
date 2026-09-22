@@ -19,6 +19,7 @@ object AppPreferences {
     private const val KEY_CRIACAO_NAS_ABAS = "habilitar_criacao_nas_abas"
     private const val KEY_ABAS_INSTRUCAO_VISTAS = "abas_instrucao_vistas"
     private const val KEY_TUTORIAIS_DESABILITADOS = "tutoriais_desabilitados"
+    private const val KEY_MODO_AUDITORIA_ID_PURO = "modo_auditoria_id_puro"
 
     enum class ModoSelecaoPericia {
         CARROSSEL_POPOVER,
@@ -143,6 +144,25 @@ object AppPreferences {
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
             .edit {
                 putBoolean(KEY_TUTORIAIS_DESABILITADOS, desabilitados)
+            }
+    }
+
+    // Interruptor de auditoria (ver RacialTraitAuditFormatter.kt/AncestralidadesSection.kt):
+    // quando true, a tela "Ver detalhes" de Ancestralidades troca a leitura normal (nome/
+    // descrição da raça, possivelmente reskinada) pela leitura "crua" — id/traitId de cada
+    // RacialAbility mais a definição oficial do catálogo (basico_habilidades_raciais.json),
+    // sem passar pela reskinagem por raça. Só serve pra quem audita o app (não é, e não deve
+    // virar, algo visível pro jogador/criador de raça) — reversível a qualquer momento, o
+    // padrão (false) é sempre a leitura normal.
+    fun loadModoAuditoriaIdPuro(context: Context): Boolean =
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .getBoolean(KEY_MODO_AUDITORIA_ID_PURO, false)
+
+    fun saveModoAuditoriaIdPuro(context: Context, ativo: Boolean) {
+        context
+            .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .edit {
+                putBoolean(KEY_MODO_AUDITORIA_ID_PURO, ativo)
             }
     }
 }

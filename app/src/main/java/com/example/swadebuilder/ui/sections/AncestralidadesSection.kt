@@ -31,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,9 +56,13 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
+import com.example.swadebuilder.model.HabilidadeCriacao
 import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitAuditFormatter
+import com.example.swadebuilder.model.SelectionDef
+import com.example.swadebuilder.model.SelectionType
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
@@ -67,7 +72,9 @@ import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.theme.emphasis
+import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toFancyTitleCase
@@ -79,7 +86,19 @@ data class RacialAbilityLite(
     val descricao: String,
     val id: String? = null,
     val category: String? = null,
-    val severity: String? = null
+    val severity: String? = null,
+    // Sem estes campos, um traço empilhável (ex.: Meio-Gigantes Tamanho +1
+    // x3, Povo Serpente Movimentação x2) ou com skin via targetRef (ex.:
+    // Draconianos Mal-Humorado -> Arrogante) virava a versão de 1 compra/
+    // sem targetRef só na tela "Ver detalhes" — RacialCaracteristicasResolver
+    // recebe esses campos zerados e mostra rótulo/pontos errados mesmo com
+    // o dado de origem (RacialAbility) correto.
+    val traitId: String? = null,
+    val targetRef: String? = null,
+    val value: Int = 1,
+    val pontos: Int = 0,
+    val invisivel: Boolean = false,
+    val vezes: Int = 1
 )
 
 @Serializable
@@ -91,7 +110,10 @@ data class RacialModifierLite(
     val aliases: Set<String> = emptySet(),
     val origens: Set<String> = emptySet(),
     val habilidades: List<RacialAbilityLite> = emptyList(),
-    val opcoes: List<String> = emptyList()
+    val opcoes: List<String> = emptyList(),
+    // Orçamento de pontos raciais desta raça (ver RacialModifier.pontosRaciaisEsperados) — usado
+    // só pro aviso sutil de "Ancestralidade desbalanceada" na tela "Ver detalhes".
+    val pontosRaciaisEsperados: Int = 2
 )
 
 private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
@@ -106,6 +128,77 @@ private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
 // vivem em com.example.swadebuilder.model.RacialModifier.kt (groupAncestralidadesForDisplay),
 // para serem testáveis por unit test puro sem depender do Compose.
 private fun stripScenarioSuffix(nome: String): String = stripAncestralidadeScenarioSuffix(nome)
+
+/**
+ * Acha a Seleção TARGET_ATTRIBUTE_OR_SKILL aplicável a esta exibição de raça,
+ * se houver — mesmo mecanismo genérico usado por Meio-Orc (Endurecido),
+ * Feral (Primitivo) e Humanos Sci-Fi (Planeta de Mineração, aninhada dentro
+ * da VariantOption "Minerador"), sem precisar de 3 blocos de UI quase
+ * idênticos copiados um do outro. Uma raça sem nenhuma Seleção deste tipo
+ * (a maioria) simplesmente recebe null aqui e não mostra seletor nenhum —
+ * só os dados normais da raça.
+ */
+private fun atributoEscolhidoSelectionDefFor(
+    item: RacialModifierLite,
+    variantConfig: com.example.swadebuilder.model.AncestryVariantConfig?,
+    currentSelection: String?
+): SelectionDef? {
+    if (variantConfig == null) return null
+    val topLevel = variantConfig.selecoes.firstOrNull { def ->
+        def.tipo == SelectionType.TARGET_ATTRIBUTE_OR_SKILL &&
+            def.marcadorTraitId != null &&
+            item.habilidades.any { it.id?.keyify() == def.marcadorTraitId }
+    }
+    if (topLevel != null) return topLevel
+    return variantConfig.grupoVariante?.opcoes
+        ?.firstOrNull { it.nome.equals(currentSelection, ignoreCase = true) }
+        ?.selecoes
+        ?.firstOrNull { it.tipo == SelectionType.TARGET_ATTRIBUTE_OR_SKILL }
+}
+
+/**
+ * Seletor genérico pra uma Seleção TARGET_ATTRIBUTE_OR_SKILL — rótulo e
+ * opções vêm do próprio `SelectionDef` (dado, não código), reaproveitado por
+ * qualquer raça que registre uma (ver `atributoEscolhidoSelectionDefFor`
+ * acima e `AncestryVariantRegistry.meioOrc()/feral()/kitsunemimiArteDaGuerra()/
+ * gnomoPathfinder()`/a Seleção aninhada de `humanos()` Sci-Fi). `valorAtual`/
+ * `onSelecionar` vêm de cada chamador ligados ao campo de estado dedicado
+ * daquela raça (ex.: `state.humanoMineradorAtributo`/
+ * `state.selecionarHumanoMineradorAtributo`, `state.kitsunemimiPericiaEscolhida`/
+ * `state.selecionarPericiaKitsunemimi`) — nunca dois pickers ativos ao mesmo
+ * tempo, já que só existe uma ancestralidade escolhida por vez.
+ */
+@Composable
+private fun AtributoEscolhidoPicker(
+    def: SelectionDef,
+    valorAtual: String?,
+    onSelecionar: (String) -> Unit
+) {
+    Spacer(Modifier.height(8.dp))
+    val opcoes = def.targetOptions.orEmpty()
+    val atual = valorAtual
+        ?.takeIf { escolha -> opcoes.any { it.equals(escolha, ignoreCase = true) } }
+        ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.any { it.equals(padrao, ignoreCase = true) } }
+        ?: opcoes.firstOrNull().orEmpty()
+    Text("${def.rotulo}:", style = MaterialTheme.typography.labelMedium)
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        OutlinedButton(onClick = { expanded = true }) {
+            Text(atual.toFancyTitleCase())
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            opcoes.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option.toFancyTitleCase()) },
+                    onClick = {
+                        onSelecionar(option)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -124,6 +217,45 @@ fun AncestralidadesSection(
     val configuration = LocalConfiguration.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+
+    // Interruptor de auditoria (ver AppPreferences.loadModoAuditoriaIdPuro/
+    // RacialTraitAuditFormatter.kt) — só pra quem audita o app, nunca pro jogador/criador de
+    // raça: troca a leitura normal de "Ver detalhes" (nome/descrição da raça, possivelmente
+    // reskinada) pela leitura crua id-por-id contra o catálogo oficial. Reversível a
+    // qualquer momento, padrão sempre desligado.
+    var modoAuditoriaIdPuro by remember { mutableStateOf(AppPreferences.loadModoAuditoriaIdPuro(context)) }
+    val catalogoOficialHabilidades: List<HabilidadeCriacao> = remember {
+        runCatching {
+            context.loadJsonAsset<List<HabilidadeCriacao>>("basico_habilidades_raciais.json")
+        }.getOrElse { emptyList() }
+    }
+    // Catálogo BRUTO, sem filtro de compêndio ativo — carregado à parte de
+    // `state.listaAncestralidadesJson` (que só tem as raças dos livros
+    // ligados na sessão atual — ver, no carregador de dados,
+    // localListaAncestralidadesJson/ancestryVisibleOrigins) porque
+    // "exclusivo desta raça" é uma pergunta
+    // sobre o CATÁLOGO INTEIRO do jogo, não sobre a sessão de agora. Bug
+    // real (achado pelo usuário testando o app): com só o Básico ativo,
+    // Androides "Construto" (também usado por Golens, Fantasia) aparecia
+    // marcado como exclusivo, porque Golens simplesmente não estava
+    // carregado — o cálculo via `state.listaAncestralidadesJson` estava
+    // certo pros dados que recebia, só que recebia o catálogo errado pra
+    // essa pergunta. `origem` fica sempre "BASICO" (valor default de
+    // RacialModifier, já que `ancestralidades.json` usa `livros: List<String>`
+    // em vez de `origem: String`) — irrelevante aqui, calcularIdsExclusivos
+    // só olha nome+id de traço, nunca origem.
+    val catalogoAncestralidadesBruto: List<RacialModifier> = remember {
+        runCatching {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades.json")
+        }.getOrElse { state.listaAncestralidadesJson }
+    }
+    // Ids usados por só 1 raça em todo o catálogo — ver RacialTraitAuditFormatter
+    // .calcularIdsExclusivos: diferente de RacialAbility.invisivel (que marca algo escondido
+    // da UI por outro motivo), essa é a etiqueta "traço de balanceamento/narrativa exclusivo
+    // desta raça" que o modo auditoria mostra.
+    val idsExclusivosPorRaca: Map<String, String> = remember(catalogoAncestralidadesBruto) {
+        RacialTraitAuditFormatter.calcularIdsExclusivos(catalogoAncestralidadesBruto)
+    }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
@@ -222,7 +354,19 @@ fun AncestralidadesSection(
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
-                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao, it.id, it.category, it.severity)
+                    RacialAbilityLite(
+                        nome = it.nome.toFancyTitleCase(),
+                        descricao = it.descricao,
+                        id = it.id,
+                        category = it.category,
+                        severity = it.severity,
+                        traitId = it.traitId,
+                        targetRef = it.targetRef,
+                        value = it.value,
+                        pontos = it.pontos,
+                        invisivel = it.invisivel,
+                        vezes = it.vezes
+                    )
                 }
 
                 RacialModifierLite(
@@ -233,7 +377,8 @@ fun AncestralidadesSection(
                     aliases = aliasKeys,
                     origens = originsInGroup,
                     habilidades = habilidadesLite,
-                    opcoes = representative.opcoes
+                    opcoes = representative.opcoes,
+                    pontosRaciaisEsperados = representative.pontosRaciaisEsperados
                 )
             }.sortedBy { it.nome }
 
@@ -312,6 +457,33 @@ fun AncestralidadesSection(
             onListaCompletaClick = null,
             listaCompletaText = ""
         )
+
+        // Só aparece quando "Ver detalhes" existe pra ver (allowLongTexts) — sem esse painel
+        // expandido, ligar o modo auditoria não muda nada visível. Deliberadamente sem
+        // esconder atrás de nenhuma outra flag: é um botão a mais na tela, não algo o
+        // jogador vai entender ou se importar, mas também não precisa de mistério.
+        if (allowLongTexts) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Auditoria: ID de traço (sem skin)",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Switch(
+                    checked = modoAuditoriaIdPuro,
+                    onCheckedChange = {
+                        modoAuditoriaIdPuro = it
+                        AppPreferences.saveModoAuditoriaIdPuro(context, it)
+                    }
+                )
+            }
+        }
 
         if (state.habilitarCriacaoNasAbas) {
             var showCreateOptionsDialog by rememberSaveable { mutableStateOf(false) }
@@ -460,7 +632,10 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && item.nome.contains("Humano", ignoreCase = true)) {
+                            // Por id do traço "SIGNOS_DE_NASCENCA", não por nome de raça —
+                            // mesmo padrão de isMeioElfo/isMeioDemonio abaixo.
+                            val temSigno = item.habilidades.any { it.id?.keyify() == "SIGNOS_DE_NASCENCA" }
+                            if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && temSigno) {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Signo de Nascença:", style = MaterialTheme.typography.labelMedium)
 
@@ -528,17 +703,17 @@ fun AncestralidadesSection(
                             if (isSelected) {
                                 val opcoesValidas = item.opcoes
 
-                                // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
-                                // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
-                                val isFeral = item.nome.keyify() == "FERAL"
-                                val isMeioOrc = item.nome.keyify() == "MEIO-ORCS"
-                                // Exato, não .contains(): "MEIO-ELFOS" (Fantasia/outros livros) é uma
-                                // raça diferente de "Meio-Elfo" (Pathfinder, id anc_meio_elfopathfinder),
-                                // que tem "Flexibilidade" (atributo à escolha livre) em vez desta
-                                // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
-                                // comparação exata já as separa sem precisar checar o livro de origem.
-                                val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
-                                val isMeioDemonio = item.nome.keyify() == "MEIO-DEMONIO"
+                                // Por id do traço "HERANCA", não por nome de raça: "Meio-Elfo" do
+                                // Pathfinder também casa com o nome, mas tem "Flexibilidade" (atributo
+                                // à escolha livre) em vez desta Herança Élfica/Humana.
+                                val isMeioElfo = item.habilidades.any { it.id?.keyify() == "HERANCA" }
+                                // Por id do traço, não por nome de raça — mesmo padrão de
+                                // isMeioElfo acima. Meio-Orc (Endurecido) e Feral (Primitivo) não
+                                // precisam mais de flag própria aqui — resolvidos genericamente por
+                                // atributoEscolhidoSelectionDefFor (ver mais abaixo).
+                                val isMeioDemonio = item.habilidades.any {
+                                    it.id?.keyify() == "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO"
+                                }
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -586,32 +761,17 @@ fun AncestralidadesSection(
                                         }
                                     }
 
-                                    // Human Miner Attribute Choice
-                                    if (item.nome.keyify() == "HUMANOS" && currentSelection == "Minerador") {
-                                        Spacer(Modifier.height(8.dp))
-                                        val attributeOptions = listOf("Força", "Vigor")
-                                        var attributeExpanded by remember { mutableStateOf(false) }
-                                        val currentAttributeSelection = state.humanoMineradorAtributo
-                                            ?.takeIf { it in attributeOptions }
-                                            ?: "Força"
-                                        Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                        Box {
-                                            OutlinedButton(onClick = { attributeExpanded = true }) {
-                                                Text(currentAttributeSelection.toFancyTitleCase())
-                                            }
-                                            DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                                attributeOptions.forEach { option ->
-                                                    DropdownMenuItem(
-                                                        text = { Text(option.toFancyTitleCase()) },
-                                                        onClick = {
-                                                            state.selecionarHumanoMineradorAtributo(option)
-                                                            attributeExpanded = false
-                                                        }
-                                                    )
-                                                }
-                                            }
+                                    // Humanos Sci-Fi "Minerador": Seleção aninhada dentro da
+                                    // VariantOption (ver atributoEscolhidoSelectionDefFor acima) —
+                                    // mesmo seletor genérico usado por Meio-Orc/Feral abaixo.
+                                    atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection)
+                                        ?.let { def ->
+                                            AtributoEscolhidoPicker(
+                                                def = def,
+                                                valorAtual = state.humanoMineradorAtributo,
+                                                onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                            )
                                         }
-                                    }
 
                                     // Anões Ciber: até 2 pontos de traços raciais negativos (nenhum maior que -2)
                                     if (item.nome.keyify() == "ANOES" && currentSelection == "Ciber") {
@@ -790,6 +950,29 @@ fun AncestralidadesSection(
                                         }
                                     }
 
+                                    // Peça 4: Variante escopada a uma opção específica (ex.: só o
+                                    // Signo Dragão) — só se aplica de verdade quando essa opção
+                                    // estiver ativa (ver CriadorState.currentSelectionOptionId());
+                                    // hint pro mestre não se surpreender ao trocar de opção e ver a
+                                    // Variante "sumir" sem precisar desmarcá-la.
+                                    val opcaoAlvoNome = selectedCustomVariant?.opcaoAlvoId?.let { alvoId ->
+                                        val itemLivro = item.origens.firstOrNull() ?: "BASICO"
+                                        AncestryVariantRegistry.get(item.nome.keyify(), itemLivro)
+                                            ?.selecoes
+                                            ?.firstOrNull { it.tipo == SelectionType.FIXED_PACKAGE }
+                                            ?.pacotesFixos
+                                            ?.firstOrNull { it.id == alvoId }
+                                            ?.nome
+                                    }
+                                    if (opcaoAlvoNome != null) {
+                                        Spacer(Modifier.height(2.dp))
+                                        Text(
+                                            text = "Escopo: só se aplica quando \"$opcaoAlvoNome\" estiver ativo.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.tertiary
+                                        )
+                                    }
+
                                     if (selectedCustomVariant != null && selectedCustomVariant.descricao.isNotBlank()) {
                                         Spacer(Modifier.height(4.dp))
                                         Text(
@@ -800,35 +983,69 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                if (isFeral) {
-                                    Spacer(Modifier.height(8.dp))
-                                    // Rótulo "Dons da Natureza: Ápice" removido — texto sobrado de
-                                    // Umvee (Dons da Natureza é a Seleção DELES, "Ápice" uma das
-                                    // opções), copiado aqui sem ajustar; Feral não tem Dons da
-                                    // Natureza nem Ápice, só o Primitivo abaixo.
-                                    val attributeOptions = listOf("Força", "Vigor", "Agilidade")
-                                    var attributeExpanded by remember { mutableStateOf(false) }
-                                    val currentAttributeSelection = state.humanoMineradorAtributo
-                                        ?.takeIf { it in attributeOptions }
-                                        ?: "Força"
-                                    Text("Atributo Primitivo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                    Box {
-                                        OutlinedButton(onClick = { attributeExpanded = true }) {
-                                            Text(currentAttributeSelection.toFancyTitleCase())
-                                        }
-                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                            attributeOptions.forEach { option ->
-                                                DropdownMenuItem(
-                                                    text = { Text(option.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarHumanoMineradorAtributo(option)
-                                                        attributeExpanded = false
-                                                    }
-                                                )
-                                            }
-                                        }
+                                // Feral (Primitivo): mesmo seletor genérico do Minerador acima —
+                                // Seleção TARGET_ATTRIBUTE_OR_SKILL top-level desta vez (não
+                                // aninhada numa VariantOption), gateada pelo id do traço-marcador
+                                // "PRIMITIVO" (ver atributoEscolhidoSelectionDefFor), não pelo
+                                // nome da raça.
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "PRIMITIVO" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.humanoMineradorAtributo,
+                                            onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                        )
                                     }
-                                }
+
+                                // Kitsunemimi (Preparado): mesmo seletor genérico, mas escolhendo
+                                // uma PERÍCIA em vez de um atributo — campo de estado próprio
+                                // (kitsunemimiPericiaEscolhida), gateado pelo traço-marcador
+                                // "PREPARADO" (ver AncestryVariantRegistry.kitsunemimiArteDaGuerra()).
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "PREPARADO" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.kitsunemimiPericiaEscolhida,
+                                            onSelecionar = { state.selecionarPericiaKitsunemimi(it) }
+                                        )
+                                    }
+
+                                // Gnomo (Obsessivos): mesmo seletor genérico, escolhendo uma
+                                // PERÍCIA baseada em Astúcia — campo de estado próprio
+                                // (gnomoPericiaEscolhida), gateado pelo traço-marcador
+                                // "OBSESSIVOS" (ver AncestryVariantRegistry.gnomoPathfinder()).
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "OBSESSIVOS" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.gnomoPericiaEscolhida,
+                                            onSelecionar = { state.selecionarPericiaGnomo(it) }
+                                        )
+                                    }
+
+                                // Usagimimi (Definido pelo Ofício): mesmo seletor genérico,
+                                // lista de 29 perícias da Arte da Guerra — gateado pelo
+                                // traço-marcador "DEFINIDO_PELO_OFICIO" (ver
+                                // AncestryVariantRegistry.usagimimiArteDaGuerra()).
+                                // selecionarPericiaUsagimimi continua recebendo
+                                // feedbackMessages — a restrição de Tropo por causa da opção
+                                // "Transição" (isUsagimimiTransicaoRestrictionActive) mora só
+                                // ali, não faz parte do seletor genérico em si.
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "DEFINIDO_PELO_OFICIO" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.usagimimiPericiaEscolhida,
+                                            onSelecionar = {
+                                                state.selecionarPericiaUsagimimi(it, feedbackMessages)
+                                                onUserFeedback()
+                                            }
+                                        )
+                                    }
 
                                 // Meio-Elfos: escolha entre Herança Élfica (traço "AGIL", Agilidade d6)
                                 // e Herança Humana (traço "ADAPTAVEL", Vantagem de Estágio Novato à
@@ -873,36 +1090,18 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                // Meio-Orcs: "Endurecido" — escolha entre Força ou Vigor d6 (livro:
-                                // "Começam com um d6 em Força ou Vigor em vez de um d4"). Mesmo
-                                // mecanismo de escolha de atributo já usado por Feral/Minerador
-                                // Genético acima, não um dialog dedicado.
-                                if (isMeioOrc) {
-                                    Spacer(Modifier.height(8.dp))
-                                    Text("Endurecido:", style = MaterialTheme.typography.labelMedium)
-                                    val attributeOptions = listOf("Força", "Vigor")
-                                    var attributeExpanded by remember { mutableStateOf(false) }
-                                    val currentAttributeSelection = state.humanoMineradorAtributo
-                                        ?.takeIf { it in attributeOptions }
-                                        ?: "Vigor"
-                                    Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                    Box {
-                                        OutlinedButton(onClick = { attributeExpanded = true }) {
-                                            Text(currentAttributeSelection.toFancyTitleCase())
-                                        }
-                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                            attributeOptions.forEach { option ->
-                                                DropdownMenuItem(
-                                                    text = { Text(option.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarHumanoMineradorAtributo(option)
-                                                        attributeExpanded = false
-                                                    }
-                                                )
-                                            }
-                                        }
+                                // Meio-Orc (Endurecido): mesmo seletor genérico do Feral/Minerador
+                                // acima — gateado pelo id do traço-marcador "ENDURECIDO", não pelo
+                                // nome da raça.
+                                atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
+                                    ?.takeIf { it.marcadorTraitId == "ENDURECIDO" }
+                                    ?.let { def ->
+                                        AtributoEscolhidoPicker(
+                                            def = def,
+                                            valorAtual = state.humanoMineradorAtributo,
+                                            onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                        )
                                     }
-                                }
 
                                 // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si já
                                 // é o dropdown genérico de Variante lá em cima (dentro do
@@ -956,106 +1155,6 @@ fun AncestralidadesSection(
                                                 onSelect = {
                                                     val error = state.selecionarHumanoFantasiaSelecaoAninhada(valor)
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (isSelected && state.compendioPathfinderAtivo && item.nome.keyify().contains("GNOMO")) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Perícia Obsessiva (Astúcia):", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-                                val smartsSkills = state.periciasFiltradasPorCompendio
-                                    .filter {
-                                        val key = it.nome.keyify()
-                                        it.atributo == "ASTUCIA" &&
-                                        !key.contains("IDIOMAS") &&
-                                        (!compendioPathfinderAtivo || (key != "ALQUIMIA" && key != "CIENCIA ESTRANHA"))
-                                    }
-                                    .sortedBy { it.nome }
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.gnomoPericiaEscolhida ?: "Selecionar Perícia")
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        smartsSkills.forEach { skill ->
-                                            DropdownMenuItem(
-                                                text = { Text(skill.nome) },
-                                                onClick = {
-                                                    state.selecionarPericiaGnomo(skill.nome)
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-
-
-                            if (isSelected && item.nome.keyify().contains("KITSUNEMIMI")) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Perícia Preparada:", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-                                val allowedSkills = listOf(
-                                    "Conhecimento Acadêmico",
-                                    "Convenção",
-                                    "Intimidar",
-                                    "Pesquisar",
-                                    "Provocar"
-                                )
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.kitsunemimiPericiaEscolhida ?: "Selecionar Perícia")
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        allowedSkills.forEach { skillName ->
-                                            DropdownMenuItem(
-                                                text = { Text(skillName) },
-                                                onClick = {
-                                                    state.selecionarPericiaKitsunemimi(skillName)
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (isSelected && item.nome.keyify().contains("USAGIMIMI")) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Perícia Definida pelo Ofício (d6):", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-                                val adgSkills = state.listaPericias
-                                    .filter {
-                                        val key = it.nome.keyify()
-                                        it.origem == "ARTE_DA_GUERRA" &&
-                                            !key.startsWith("IDIOMAS") &&
-                                            !key.startsWith("JUTSU")
-                                    }
-                                    .map { it.nome }
-                                    .distinctBy { it.keyify() }
-                                    .sortedBy { it }
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.usagimimiPericiaEscolhida ?: "Selecionar Perícia")
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        adgSkills.forEach { skillName ->
-                                            DropdownMenuItem(
-                                                text = { Text(skillName) },
-                                                onClick = {
-                                                    state.selecionarPericiaUsagimimi(skillName, feedbackMessages)
-                                                    expanded = false
-                                                    onUserFeedback()
                                                 }
                                             )
                                         }
@@ -1117,18 +1216,20 @@ fun AncestralidadesSection(
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
-                                            RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
-                                        } ?: item.habilidades
-
-                                        // Description
-                                        if (descricao.isNotBlank()) {
-                                            Text(
-                                                text = descricao,
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            RacialAbilityLite(
+                                                nome = it.nome,
+                                                descricao = it.descricao,
+                                                id = it.id,
+                                                category = it.category,
+                                                severity = it.severity,
+                                                traitId = it.traitId,
+                                                targetRef = it.targetRef,
+                                                value = it.value,
+                                                pontos = it.pontos,
+                                                invisivel = it.invisivel,
+                                                vezes = it.vezes
                                             )
-                                            Spacer(Modifier.height(8.dp))
-                                        }
+                                        } ?: item.habilidades
 
                                         // Características: uma lista só, montada inteiramente a partir de
                                         // dado estruturado (atributos/perícias numéricos, vantagens/
@@ -1148,27 +1249,93 @@ fun AncestralidadesSection(
                                             }
                                         }
 
-                                        val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                            habilidades = habilidadesParaCaracteristicas.map {
-                                                RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
-                                            }
-                                        )
+                                        val habilidadesResolvidas = habilidadesParaCaracteristicas.map {
+                                            RacialAbility(
+                                                nome = it.nome,
+                                                descricao = "",
+                                                id = it.id,
+                                                category = it.category,
+                                                severity = it.severity,
+                                                traitId = it.traitId,
+                                                targetRef = it.targetRef,
+                                                value = it.value,
+                                                pontos = it.pontos,
+                                                invisivel = it.invisivel,
+                                                vezes = it.vezes
+                                            )
+                                        }
 
-                                        if (caracteristicas.isNotEmpty()) {
+                                        if (modoAuditoriaIdPuro) {
+                                            // Leitura "crua": ignora de propósito `descricao`/nome
+                                            // reskinado da raça — só id/traitId de cada habilidade
+                                            // contra a definição oficial do catálogo. Ver
+                                            // RacialTraitAuditFormatter.
                                             Text(
-                                                text = "Características:",
+                                                text = "Auditoria (id puro, sem skin):",
                                                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                                                color = MaterialTheme.colorScheme.onSurface
+                                                color = MaterialTheme.colorScheme.tertiary
                                             )
                                             Spacer(Modifier.height(2.dp))
-                                            caracteristicas.forEach { linha ->
+                                            RacialTraitAuditFormatter.formatar(habilidadesResolvidas, catalogoOficialHabilidades, idsExclusivosPorRaca, state.listaVantagens)
+                                                .forEach { linha ->
+                                                    Text(
+                                                        text = "• $linha",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                                                    )
+                                                }
+                                        } else {
+                                            // Description
+                                            if (descricao.isNotBlank()) {
                                                 Text(
-                                                    text = "• $linha",
+                                                    text = descricao,
                                                     style = MaterialTheme.typography.bodySmall,
-                                                    color = MaterialTheme.colorScheme.onSurface,
-                                                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
+                                                Spacer(Modifier.height(8.dp))
                                             }
+
+                                            val caracteristicas = RacialCaracteristicasResolver.resolver(
+                                                habilidades = habilidadesResolvidas,
+                                                allVantagens = state.listaVantagens
+                                            )
+
+                                            if (caracteristicas.isNotEmpty()) {
+                                                Text(
+                                                    text = "Características:",
+                                                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                                    color = MaterialTheme.colorScheme.onSurface
+                                                )
+                                                Spacer(Modifier.height(2.dp))
+                                                caracteristicas.forEach { linha ->
+                                                    Text(
+                                                        text = "• $linha",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                        // Aviso sutil de raça com orçamento de pontos raciais diferente do
+                                        // padrão do livro (com.example.swadebuilder.model.usecase
+                                        // .ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO, 2 pontos —
+                                        // a mesma calibração que toda raça oficial usa por padrão). Não é
+                                        // sobre a raça estar com dado errado (isso a varredura automática
+                                        // de AncestralidadeCatalogBudgetTest já garante em CI) — é só avisar
+                                        // o jogador que ESTA ancestralidade usa um orçamento diferente do
+                                        // padrão (3 pontos pro Arte da Guerra, 4 pro Pathfinder/Crystal
+                                        // Heart/Centauros etc.), acima ou abaixo, sem julgar se isso é
+                                        // "forte" ou "fraco" — só "fora do padrão".
+                                        if (item.pontosRaciaisEsperados != com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO) {
+                                            Spacer(Modifier.height(4.dp))
+                                            Text(
+                                                text = "⚠ Ancestralidade desbalanceada (orçamento oficial desta ancestralidade: ${item.pontosRaciaisEsperados} pontos raciais, padrão do livro: ${com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.DEFAULT_ORCAMENTO})",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.tertiary
+                                            )
                                         }
                                     }
                                 }
