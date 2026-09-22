@@ -3957,3 +3957,207 @@ nos casos COM skin, que já têm `targetRef` ou foram cobertos pelos 3 bugs
 acima. Backlog, não bug: migrar esses ids também pra `targetRef` deixaria a
 identificação robusta contra futura mudança de nome de exibição, mas não
 corrige nenhum comportamento errado hoje.
+
+## Quadragésima terceira rodada (planejamento) — sistema de Tropo genérico, unificando Arte da Guerra e Monstro Heroico
+
+Pedido do usuário: desistir do sistema de Tropo do Arte da Guerra "no formato
+que está" e do sistema de Monstro Heroico "no formato que está", e construir
+UM sistema de Tropo genérico, utilizável por qualquer livro, que os dois
+migrem para. Registrado aqui antes de começar a implementar, como pedido —
+nenhum código foi alterado nesta rodada além da limpeza de sujeira abaixo.
+
+### O receio de fundo (e por que ele já está resolvido no motor)
+
+O medo do usuário: raça dá d6 numa perícia, Tropo também bonifica a mesma
+perícia, e o sistema de recálculo erra a conta (fica em d10 fantasma, ou
+zera) quando o jogador troca de raça depois. Investigação confirma que isso
+**não é um risco estrutural hoje**: `CriadorState.atributoBaseRacial()` e
+`periciaStartRawInternal()` são funções PURAS, recalculadas do zero a cada
+chamada, lendo simultaneamente `currentAncestryDef.habilidades`,
+`getMonstroSelecionado()` e `tropoSelecionado` — nunca somam
+incrementalmente nem guardam um valor combinado em cache. Um comentário no
+próprio código confirma que esse exato cenário (raça dá d6, Protagonista
+soma +1 tipo em cima) já foi resolvido e testado: "a pedido do usuário: o
+bônus do tropo não é o mesmo que perícia de raça que pode aumentar o valor
+máximo do teto dela" — ou seja, bônus de Tropo nunca estica o teto de
+compra de pontos (`pisoSemTropo`/`includeTropo=false` alimenta só o teto;
+o bônus de Tropo soma por cima só na exibição final). Esse é o contrato de
+segurança que o novo sistema genérico PRECISA preservar exatamente como
+está — não inventar um mecanismo novo, só parar de restringir esse mecanismo
+já correto a `compendioArteDaGuerraAtivo`.
+
+### Estado real dos dois sistemas hoje (achado por 2 agentes de pesquisa)
+
+**Monstro Heroico já é quase o sistema genérico que o usuário quer.** Zero
+`if` por id de monstro específico em todo o Kotlin — Vampiro, Lobisomem,
+Anjo etc. não têm nenhuma lógica bespoke, tudo passa por `habilidades[]`/
+`atributosBonus` genéricos (incluindo Vantagem grátis do Monstro de Retalhos,
+já usando `category="racial_edge"`/`traitId="GRANTED_EDGE"`, o mesmo padrão
+de raça). Não trava Ancestralidade (aditivo: raça normal + template por
+cima — nunca houve gate em `isSectionEnabled`). Dois gaps reais pra caber
+100% no modelo genérico: `atributosBonus` ainda é `Map<String,Int>` solto
+(3 pontos de conversão manual no código hoje, fácil de dobrar em
+`habilidades[]` de verdade) e `complicacoes` é texto livre sem vínculo com o
+catálogo real de Complicações (mesmo problema que a rodada 42 resolveu pra
+raça). Achado cruzado importante: 61 Vantagens em `vantagens.json`
+(categoria Monstruosas) referenciam os 8 ids de template hoje via campo
+`template`/`templatesRequired` — se os ids mudarem, esse vínculo precisa
+migrar junto.
+
+**Tropo (Arte da Guerra) é mais primitivo como dado E menos implementado do
+que o livro sugere.** `Tropo.kt` ainda usa o padrão antigo
+(`periciasGratuitas: Map<String,Int>`, `ganhaAoComprar: List<String>`, sem
+`habilidades[]`). O "sistema" de verdade é ~50 `if (tropoSelecionado?.id ==
+"tropo_X")` espalhados pelo `CriadorState.kt`. Mas ao ler CADA um dos 8
+tropos linha por linha, boa parte do que o LIVRO descreve nunca virou
+código — é só texto na UI (`TroposSection.kt`), sem nenhum efeito numérico:
+Posturas de Combate do Samurai (8 opções, todas sem efeito), Talento Shinobi
+(só "Místico" tem código; Alteração/Pés Leves/Passo das Sombras são só
+texto), Ferramentas do Kui (as 3 são só texto — Kui é o Tropo menos
+implementado dos 8, só concede slots de Técnica Chi de verdade), Caminho
+Sagrado + transe do Bu Xista (texto only), Histórico da Arma do Youxia
+(texto only), as 14 Técnicas do Artista Marcial (checklist sem efeito), e 9
+dos 12 resultados da tabela de Habilidades do Protagonista. Migrar "tudo que
+existe DE VERDADE" é bem menor que migrar "tudo que o livro descreve" — ver
+decisão D1 abaixo.
+
+O que ESTÁ implementado reduz a 3 mecanismos genéricos reutilizáveis,
+compartilhados por vários Tropos:
+
+1. **Desbloqueio de banco de poderes (slot) por Tropo** — "TECNICAS CHI"
+   (Samurai/Shinobi/Youxia/Bu Xista/Kui) e "TECNICAS ELEMENTAIS"
+   (Elementalista) são pseudo-Antecedentes-Arcanos que reaproveitam toda a
+   infraestrutura de poderes já existente, com a contagem de slots vindo de
+   uma fórmula pequena (`tecnicasIniciaisFromTropo`). Isso já é o mecanismo
+   de MAIOR valor pra generalizar.
+2. **Slot de Vantagem grátis filtrado por predicado** — o slot do
+   Protagonista (filtra por categoria conforme o resultado do dado) e o
+   slot de combate do Samurai são estruturalmente idênticos a DOIS
+   mecanismos que já existem fora de Tropo (`pathfinderFreeSlotId`,
+   `vantagemAdaptavelSelecionadaId`) — bom candidato a virar UM primitivo
+   "FreeAdvantageSlot(predicado)" compartilhado pelos 4, não só um recurso
+   de Tropo.
+3. **Bônus de perícia/atributo "relativo" (+1 tipo em cima do que já tem)
+   vs "piso fixo"** — já quase genérico: o mapa `periciasGratuitas` do
+   JSON já é lido sem checar qual Tropo é (`periciaStartRawInternal`,
+   trecho final da função). Só falta o schema conseguir expressar
+   "relativo" vs "fixo" e "alvo escolhido pelo jogador" vs "alvo fixo" (esse
+   último já existe pronto — é o mesmo `TARGET_ATTRIBUTE_OR_SKILL` que a
+   Seleção de raça já usa pra Kitsunemimi/Usagimimi/Gnomo).
+
+Dois Tropos ficam genuinamente bespoke mesmo depois de generalizar os 3
+mecanismos acima:
+
+- **Protagonista**: não é um "grant", é uma mini-mecânica própria — 5
+  tabelas de rolagem independentes (Técnicas/Perícia/Vantagem/Qualidades de
+  Herói/Habilidades), cada resultado despachando pra um sistema diferente
+  (perícia, atributo, Vantagem, Passo, slot de poder). Fica como lógica
+  dedicada por cima do motor genérico, do mesmo jeito que hoje um traço
+  bem específico de uma raça (ex.: Draconianos) já fica como exceção
+  pontual em cima do motor genérico de raça — não é regressão, é o mesmo
+  padrão que o resto do app já usa pra uma raça com regra própria.
+- **Samurai**: a regra de pular o pré-requisito de Estágio em Vantagens de
+  Liderança quando Conhecimento de Batalha ≥ d8 (`shouldIgnoreLeadershipStage`)
+  é uma exceção de regra de verdade, referenciada em 3 arquivos — fica como
+  está, hardcoded por id, em cima do motor novo.
+
+Achado à parte (não bloqueia o desenho, mas precisa de decisão): existe um
+9º Tropo no JSON (`tropo_mon`, "forma um vínculo com um Mon...") sem
+NENHUMA referência no Kotlin — dado morto/abandonado. E existe um SEGUNDO
+arquivo de Tropo (`crystal_tropos.json`, do livro Crystal Heart, ids
+`treino_schultz`/`treino_mira`/`treino_yara`/`treino_leighmya`) usando um
+campo `atributos_bonus` que nem existe no `Tropo.kt` atual — hoje
+provavelmente descartado silenciosamente pelo parser. O novo sistema
+genérico precisa decidir o que fazer com os dois.
+
+### Desenho proposto
+
+**Tipo de dado único** (substitui `Tropo.kt` E `MonstroTemplate.kt`):
+`Tropo(id, nome, categoria, origem, descricao, descricaoLite, habilidades:
+List<RacialAbility>)` — o MESMO tipo `RacialAbility` (com
+`category`/`traitId`/`targetRef`/`severity`) que raça já usa, não um tipo
+paralelo. Isso é o que garante, por construção, que o motor de cálculo
+usado por Tropo seja o MESMO motor já testado e correto de raça — não uma
+cópia. Três acréscimos novos ao vocabulário de `RacialTraitEffect`/
+`traitId` (usados por raça também, se algum dia fizer sentido, mas
+motivados por Tropo):
+- Um flag "relativo" no efeito de Atributo/Perícia (soma ao que já existe
+  em vez de definir um piso).
+- Um `traitId` novo tipo "ARCANE_SLOT_GRANT" (targetRef = chave do
+  Antecedente Arcano pseudo, ex. "TECNICAS CHI"; value = fórmula/quantidade
+  de slots).
+- Um `traitId` novo tipo "FREE_ADVANTAGE_SLOT" (targetRef = filtro —
+  categoria ou lista — de quais Vantagens o slot aceita), generalizando
+  também `pathfinderFreeSlotId`/`vantagemAdaptavelSelecionadaId` pro mesmo
+  mecanismo.
+
+**Gate de ativação genérico**: substitui as ~50 checagens de
+`compendioArteDaGuerraAtivo` em `isSectionEnabled`/`periciaStartRawInternal`/
+`atributoBaseRacial`/`ModifierEngine` por uma flag computada
+`modoTroposAtivo = compendioArteDaGuerraAtivo || tropoSistemaHabilitadoManualmente`
+— a primeira metade nunca desliga (regra obrigatória do livro), a segunda é
+um toggle de regra exposto pra qualquer livro (ex.: Wise Guys), independente
+de Ancestralidade estar ativa ou não naquele livro. A trava de Ancestralidade
+continua exatamente como hoje (só quando `tropoSelecionado != null`) — em
+livros que já escondem a aba de Ancestralidade por padrão (Wise Guys), a
+trava é automaticamente inócua, nada a fazer de especial aí.
+
+**Monstro Heroico vira Tropo com `categoria="MONSTRO"`, `origem="HORROR"`** —
+mesmos ids (`vampiro`, `lobisomem` etc., sem renomear) pra não quebrar os 61
+vínculos `templatesRequired` em `vantagens.json`. Continua SEM travar
+Ancestralidade (a trava de `isSectionEnabled` só liga quando o Tropo
+selecionado pede — Monstro nunca pediu, e não precisa passar a pedir).
+
+**Criação customizada**: novo tipo "Tropo" no dropdown de
+`SettingsDialog.kt` (mesmo padrão já usado por "Traço Racial"/"Variante de
+Raça" — armazenamento por livro via `CustomStorageManager`), reaproveitando
+o MESMO editor de traço já existente pra montar `habilidades[]`. O exemplo
+do usuário (Tropo "Trombadinha" pro Wise Guys) só precisa dos blocos mais
+simples (Vantagem/Complicação/perícia grátis) — nenhum Tropo customizado
+precisa dos mecanismos 1/2 acima pra funcionar, esses só existem pros 8
+Tropos oficiais do livro.
+
+### Fases (ordem de execução recomendada)
+
+1. **Infraestrutura aditiva**: novo tipo `Tropo` unificado + os 3
+   acréscimos ao vocabulário de efeito, SEM mudar nenhum comportamento
+   visível ainda (dados antigos continuam funcionando em paralelo).
+2. **Migrar Monstro Heroico** pro novo tipo — menor risco (já quase 100%
+   compatível), sem mudar comportamento (continua aditivo, sem travar
+   raça). Apaga `MonstroTemplate.kt`/`modoMonstroAtivo`/
+   `tipoMonstroSelecionado` no final da fase, substituídos pelo
+   `tropoSelecionado` unificado.
+3. **Gate de ativação genérico** — `modoTroposAtivo`, toggle de regra pra
+   qualquer livro. Nesta fase o toggle já existe pra todo livro, mas só
+   Arte da Guerra e Horror têm Tropos de catálogo pra oferecer (os outros
+   ficam com a lista vazia até ter conteúdo customizado).
+4. **Migrar os 8 Tropos do Arte da Guerra** pros 3 mecanismos genéricos +
+   as 2 exceções bespoke (Protagonista, Samurai) replugadas no novo motor.
+   Apaga `Tropo.kt` antigo (`periciasGratuitas`/`ganhaAoComprar`) e os ~50
+   `if (tropoSelecionado?.id == ...)` no final da fase.
+5. **Criação customizada de Tropo** em `SettingsDialog.kt`.
+6. **Regressão completa** (suite + `phase6_reliability_gate.sh`) + nova
+   rodada de auditoria documentando o resultado final.
+
+### Decisões que preciso da sua confirmação antes de começar a codificar
+
+- **D1 — Paridade, não expansão**: pra tudo que o livro descreve mas nunca
+  foi implementado (Posturas do Samurai, Talentos do Shinobi além de
+  Místico, etc.), a migração carrega o TEXTO adiante sem criar mecânica
+  nova nenhuma — mesmo estado de hoje (só descrição, sem efeito). Construir
+  essas mecânicas de verdade viraria um projeto à parte, bem maior, depois
+  desta migração fechar. Minha recomendação: sim, só paridade agora. Você
+  concorda, ou quer que algum desses vire mecânica de verdade já nesta
+  leva?
+- **D2 — `tropo_mon` (dado morto) e `crystal_tropos.json` (livro Crystal
+  Heart, schema incompatível)**: apago o `tropo_mon` órfão como parte da
+  limpeza (nunca foi usado), e trato Crystal Heart como fora de escopo
+  desta migração (fica pra depois, registrado como backlog)? Ou você quer
+  que eu já cheque se dá pra encaixar os dois no desenho novo?
+- **D3 — Confirmação do nome/mecanismo do toggle**: "sistema de Tropos"
+  como opção de regra em QUALQUER livro (Resumo/Regras da tela de criação),
+  independente da Ancestralidade estar ativa naquele livro ou não — é assim
+  que você imaginou, ou você quer o toggle em outro lugar da UI?
+
+Nenhuma edição de código feita nesta rodada além da limpeza de sujeira
+registrada acima (SummaryUtils.kt/ModifierEngine.kt).
