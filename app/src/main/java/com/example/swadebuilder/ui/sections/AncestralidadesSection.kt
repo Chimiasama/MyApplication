@@ -229,12 +229,32 @@ fun AncestralidadesSection(
             context.loadJsonAsset<List<HabilidadeCriacao>>("basico_habilidades_raciais.json")
         }.getOrElse { emptyList() }
     }
+    // Catálogo BRUTO, sem filtro de compêndio ativo — carregado à parte de
+    // `state.listaAncestralidadesJson` (que só tem as raças dos livros
+    // ligados na sessão atual — ver, no carregador de dados,
+    // localListaAncestralidadesJson/ancestryVisibleOrigins) porque
+    // "exclusivo desta raça" é uma pergunta
+    // sobre o CATÁLOGO INTEIRO do jogo, não sobre a sessão de agora. Bug
+    // real (achado pelo usuário testando o app): com só o Básico ativo,
+    // Androides "Construto" (também usado por Golens, Fantasia) aparecia
+    // marcado como exclusivo, porque Golens simplesmente não estava
+    // carregado — o cálculo via `state.listaAncestralidadesJson` estava
+    // certo pros dados que recebia, só que recebia o catálogo errado pra
+    // essa pergunta. `origem` fica sempre "BASICO" (valor default de
+    // RacialModifier, já que `ancestralidades.json` usa `livros: List<String>`
+    // em vez de `origem: String`) — irrelevante aqui, calcularIdsExclusivos
+    // só olha nome+id de traço, nunca origem.
+    val catalogoAncestralidadesBruto: List<RacialModifier> = remember {
+        runCatching {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades.json")
+        }.getOrElse { state.listaAncestralidadesJson }
+    }
     // Ids usados por só 1 raça em todo o catálogo — ver RacialTraitAuditFormatter
     // .calcularIdsExclusivos: diferente de RacialAbility.invisivel (que marca algo escondido
     // da UI por outro motivo), essa é a etiqueta "traço de balanceamento/narrativa exclusivo
     // desta raça" que o modo auditoria mostra.
-    val idsExclusivosPorRaca: Map<String, String> = remember(state.listaAncestralidadesJson) {
-        RacialTraitAuditFormatter.calcularIdsExclusivos(state.listaAncestralidadesJson)
+    val idsExclusivosPorRaca: Map<String, String> = remember(catalogoAncestralidadesBruto) {
+        RacialTraitAuditFormatter.calcularIdsExclusivos(catalogoAncestralidadesBruto)
     }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo

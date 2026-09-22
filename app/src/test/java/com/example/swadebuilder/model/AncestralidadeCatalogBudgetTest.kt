@@ -139,4 +139,58 @@ class AncestralidadeCatalogBudgetTest {
             falhas.isEmpty()
         )
     }
+
+    /**
+     * Regressão de um bug real relatado pelo usuário (testado no app de verdade, build da CI):
+     * com só o compêndio Básico ativo, `RacialTraitAuditFormatter.calcularIdsExclusivos` era
+     * chamada em `AncestralidadesSection.kt` com `state.listaAncestralidadesJson` — que só tem
+     * as raças dos livros ligados NA SESSÃO ATUAL (ver `DataLoader.ancestryVisibleOrigins`),
+     * não o catálogo inteiro. Androides "Construto" (`id=CONSTRUTO`) aparecia marcado
+     * "exclusivo-desta-raça" no modo auditoria, porque Golens (Fantasia, também usa
+     * `CONSTRUTO`, mesmo efeito mecânico) não estava carregado com só o Básico ativo — a
+     * função em si estava certa (não conta como exclusivo quando 2+ raças usam o id), só
+     * recebia um catálogo incompleto. O fix real é de wiring (a UI passa a carregar
+     * `ancestralidades.json` bruto, sem filtro de compêndio, só pra esta pergunta) — este
+     * teste não cobre o wiring (fora do alcance de um teste puro-JVM sem Context/Compose),
+     * só a premissa de dados que o fix depende: confirma que os dois ids realmente são
+     * compartilhados no catálogo oficial, então NUNCA deveriam aparecer como exclusivos
+     * quando `calcularIdsExclusivos` recebe o catálogo completo — e trava caso algum dia
+     * alguém desalinhe os dois ids sem querer (o que reverteria o comportamento certo do
+     * fix sem nenhum teste acusar).
+     */
+    @Test
+    fun `Construto de Androides e Golens compartilham o mesmo id, entao nunca deveria aparecer como exclusivo`() {
+        val texto = catalogFile().readText()
+        val racasJson: JsonArray = Json.parseToJsonElement(texto).jsonArray
+
+        val racas = racasJson.map { it.jsonObject }.map { obj ->
+            val habilidades = (obj["habilidades"] as? JsonArray)?.map { hElem ->
+                val h = hElem.jsonObject
+                RacialAbility(
+                    nome = h.strOrNull("nome") ?: "",
+                    descricao = h.strOrNull("descricao") ?: "",
+                    id = h.strOrNull("id")
+                )
+            } ?: emptyList()
+            RacialModifier(nome = obj.strOrNull("nome") ?: "", habilidades = habilidades)
+        }
+
+        val racasComConstruto = racas.filter { r -> r.habilidades.any { it.id == "CONSTRUTO" } }
+            .map { it.nome }
+            .distinct()
+        assertTrue(
+            "Esperava Androides E Golens com id=CONSTRUTO no catálogo real — achado: $racasComConstruto " +
+                "(se só 1 raça usa esse id agora, o cenário deste teste mudou; confira se o fix de " +
+                "AncestralidadesSection.kt ainda é necessário)",
+            racasComConstruto.size >= 2
+        )
+
+        val exclusivos = RacialTraitAuditFormatter.calcularIdsExclusivos(racas)
+        assertTrue(
+            "CONSTRUTO apareceu como exclusivo (${exclusivos["CONSTRUTO"]}) mesmo compartilhado " +
+                "entre $racasComConstruto — calcularIdsExclusivos só deve marcar um id como " +
+                "exclusivo quando exatamente 1 raça o usa no catálogo completo",
+            exclusivos["CONSTRUTO"] == null
+        )
+    }
 }

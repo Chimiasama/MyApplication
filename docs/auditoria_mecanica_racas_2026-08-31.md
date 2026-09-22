@@ -3776,3 +3776,72 @@ ter sido pedido especificamente, só uma consequência de fazer certo.
 `(id, livro)` em vez de substring de nome" (~25 pontos em
 `CriadorState.kt`/`ResolveAncestrySpecificAdjustmentsUseCase.kt`),
 adiado a pedido do usuário pra depois desta sessão.
+
+## Quadragésima primeira rodada — bug real de verdade no Modo Auditoria: "exclusivo desta raça" calculado com o catálogo errado
+
+Relatado pelo usuário testando o app de verdade (screenshot do build
+mais recente da CI): no Modo Auditoria, Androides "Construto"
+(`id=CONSTRUTO`, +8 pts) aparecia marcado `exclusivo-desta-raça`,
+mesmo Golens (Fantasia) usando o mesmo id pro mesmo efeito mecânico —
+o usuário desconfiou certo. **Minha primeira verificação (rodada
+anterior a esta) deu falso negativo**: rodei `calcularIdsExclusivos`
+contra o catálogo INTEIRO carregado direto do disco, que corretamente
+não marca `CONSTRUTO` como exclusivo — mas isso não é o caminho que o
+APP DE VERDADE usa. O usuário insistiu, com evidência (build fresco
+da Action de CI, refeito do zero) — voltei a investigar a fundo em
+vez de aceitar meu primeiro resultado.
+
+### Causa raiz
+
+`AncestralidadesSection.kt` chamava `calcularIdsExclusivos(state.listaAncestralidadesJson)`
+— mas `state.listaAncestralidadesJson` **não é o catálogo inteiro**,
+é só as raças dos livros LIGADOS NA SESSÃO ATUAL (o carregador de
+dados filtra por `ancestryVisibleOrigins` antes de popular esse
+campo — comportamento certo pra tudo mais que usa esse campo, ex.: a
+lista de raças pra escolher). Com só o Básico ativo (sem Fantasia),
+Golens nunca chega a ser carregado — então, do ponto de vista da
+função (que está correta: só marca exclusivo quando exatamente 1
+raça usa o id), `CONSTRUTO` realmente só aparecia numa raça NAQUELE
+catálogo filtrado. O bug não é na função, é em qual catálogo ela
+recebe: "exclusivo desta raça" é uma pergunta sobre o JOGO INTEIRO
+(pra quem audita balanceamento entre raças), não sobre quais livros
+estão ligados agora — variar com a sessão do jogador é o oposto do
+que uma ferramenta de auditoria deveria fazer.
+
+### Correção
+
+`AncestralidadesSection.kt` ganhou um `catalogoAncestralidadesBruto`
+carregado À PARTE, direto de `ancestralidades.json` via
+`context.loadJsonAsset<List<RacialModifier>>(...)` (mesmo padrão já
+usado ali mesmo pra `basico_habilidades_raciais.json`), sem nenhum
+filtro de compêndio — só pra alimentar `calcularIdsExclusivos`.
+`origem` fica sempre "BASICO" (valor default de `RacialModifier`,
+já que o JSON usa `livros: List<String>` em vez de `origem: String`
+neste carregamento direto) — irrelevante aqui, a função só olha
+nome da raça + id do traço. Fallback pro catálogo filtrado
+(`state.listaAncestralidadesJson`) se o load falhar por algum motivo,
+em vez de quebrar o Modo Auditoria inteiro.
+
+### Verificação
+
+- Novo teste (`AncestralidadeCatalogBudgetTest`): confirma que
+  Androides e Golens realmente compartilham `id=CONSTRUTO` no
+  catálogo oficial, e que `calcularIdsExclusivos` alimentada com o
+  catálogo completo nunca marca esse id como exclusivo — não cobre o
+  wiring em si (fora do alcance de um teste puro-JVM sem Context/
+  Compose), mas trava a premissa de dados que o fix depende, pra
+  travar se algum dia os dois ids se desalinharem sem ninguém notar.
+- `scripts/phase6_reliability_gate.sh`: pegou um falso-positivo real
+  que eu mesmo introduzi no primeiro rascunho do comentário
+  (mencionava "DataLoader." em prosa, casando com o grep de "uso
+  direto de DataLoader fora do repositório") — reescrito sem esse
+  padrão de texto; o gate é quem pegou, não uma revisão manual.
+- Suite completa (30 arquivos, 221 testes) e o gate passando.
+
+Lição registrada: minha primeira resposta ao usuário (rodada
+anterior) testou a função certa com o catálogo errado e concluiu
+"não é bug" — o usuário insistiu com evidência real em vez de aceitar
+a primeira resposta, e estava certo. Quando o relato vem de teste
+real no app (não hipotético), vale re-investigar o CAMINHO DE DADOS
+de verdade (qual catálogo/estado o código de produção realmente usa),
+não só a lógica da função isolada.
