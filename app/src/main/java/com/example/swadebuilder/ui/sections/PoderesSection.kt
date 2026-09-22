@@ -158,6 +158,8 @@ fun PoderesSection(
             val existente = state.poderSlotsPorArcano[arcKey]
 
             if (existente == null) {
+                // This runs in LaunchedEffect, not during composition. The state list is
+                // intentionally created once in CriadorState's slot map and then reused.
                 val nova = mutableStateListOf<String?>().apply { repeat(slotsCount) { add(null) } }
                 state.poderSlotsPorArcano[arcKey] = nova
             } else {

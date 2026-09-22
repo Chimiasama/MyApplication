@@ -2476,6 +2476,18 @@ class CriadorState {
     fun tamanhoExibido(): Int = ModifierEngine.sizeDisplay(this)
     fun resistenciaBase(): Int = ModifierEngine.toughnessBase(this)
 
+    /** Valores finais compartilhados pela UI e pelo snapshot de impressão. */
+    fun valorResistenciaTotal(): Int = ModifierEngine.toughnessBase(this)
+
+    fun valorApararTotal(): Int {
+        val lutar = periciasComIdiomas().firstOrNull { it.nome.keyify() == "LUTAR" }
+            ?.let(::rawTotalComSupers) ?: 0
+        val jutsu = periciasComIdiomas().firstOrNull { it.nome.keyify() == "JUTSU" }
+            ?.let(::rawTotalComSupers) ?: 0
+        return (2 + maxOf(lutar, jutsu) / 2 + ModifierEngine.sum(this, ModifierTarget.PARRY))
+            .coerceAtLeast(0)
+    }
+
     fun calculaAtaqueDesarmado(): Pair<String, String> {
         val modifiers = mutableListOf<String>()
         var steps = 0

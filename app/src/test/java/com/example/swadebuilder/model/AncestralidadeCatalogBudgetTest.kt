@@ -93,6 +93,32 @@ class AncestralidadeCatalogBudgetTest {
     }
 
     @Test
+    fun `bonus de atributo do catalogo usa traitId e alvo estruturados`() {
+        val racas: JsonArray = Json.parseToJsonElement(catalogFile().readText()).jsonArray
+        val boosts = racas.flatMap { ancestry ->
+            (ancestry.jsonObject["habilidades"] as? JsonArray).orEmpty().map { it.jsonObject }
+        }.filter { it.strOrNull("traitId") == "ATTRIBUTE_BOOST" }
+
+        assertTrue("Catálogo não contém bônus de atributo estruturados", boosts.isNotEmpty())
+        val targetsByLegacyId = mapOf("RESISTENTE" to "Vigor", "FORTE" to "Força")
+        targetsByLegacyId.forEach { (legacyId, expectedTarget) ->
+            val ability = boosts.firstOrNull { it.strOrNull("id") == legacyId }
+            assertTrue("Não encontrei $legacyId migrado para ATTRIBUTE_BOOST", ability != null)
+            assertTrue(
+                "$legacyId deveria apontar para $expectedTarget, mas foi $ability",
+                ability?.strOrNull("targetRef") == expectedTarget
+            )
+        }
+        boosts.forEach { ability ->
+            val target = ability.strOrNull("targetRef")
+            assertTrue(
+                "ATTRIBUTE_BOOST sem atributo alvo: $ability",
+                target in setOf("Agilidade", "Astúcia", "Espírito", "Força", "Vigor")
+            )
+        }
+    }
+
+    @Test
     fun `toda raca oficial fecha no orcamento de pontos raciais dela mesma`() {
         val texto = catalogFile().readText()
         val racas: JsonArray = Json.parseToJsonElement(texto).jsonArray

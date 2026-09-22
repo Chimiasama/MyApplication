@@ -191,6 +191,10 @@ class CriadorStateFullFlowTest {
         val elfos = racaReal("ELFOS", "BASICO")
         val humanos = racaReal("HUMANOS", "BASICO")
 
+        val agil = elfos.habilidades.first { it.id == "AGIL" }
+        assertEquals("ATTRIBUTE_BOOST", agil.traitId)
+        assertEquals("Agilidade", agil.targetRef)
+
         val state = CriadorState()
         state.updateGameData(snapshotWith(listOf(elfos, humanos)))
         state.ancestralidade = "ELFOS"
