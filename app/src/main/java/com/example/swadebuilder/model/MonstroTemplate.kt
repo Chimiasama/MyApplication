@@ -104,7 +104,7 @@ data class MonstroHabilidade(
  *   rótulo antes dos ":" (mesmo corte que ModifierEngine já faz pra aplicar
  *   a mecânica).
  */
-fun MonstroTemplate.paraCaracteristicas(): List<String> {
+fun MonstroTemplate.paraCaracteristicas(allVantagens: List<Vantagem> = emptyList()): List<String> {
     val atributosSinteticos = atributosBonus
         .filterKeys { it.keyify() != "FE" }
         .map { (atributo, passos) ->
@@ -121,7 +121,8 @@ fun MonstroTemplate.paraCaracteristicas(): List<String> {
     }
 
     val linhas = RacialCaracteristicasResolver.resolver(
-        habilidades = atributosSinteticos + listOfNotNull(periciaSintetica) + habilidadesConvertidas
+        habilidades = atributosSinteticos + listOfNotNull(periciaSintetica) + habilidadesConvertidas,
+        allVantagens = allVantagens
     ).toMutableList()
 
     complicacoes.forEach { linhas += it.substringBefore(":").trim() }

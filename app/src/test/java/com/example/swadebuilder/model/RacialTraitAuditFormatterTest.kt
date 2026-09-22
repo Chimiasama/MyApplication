@@ -99,6 +99,46 @@ class RacialTraitAuditFormatterTest {
     }
 
     @Test
+    fun `traco migrado pro par generico ATTRIBUTE_BOOST ainda acha o LABEL do id original`() {
+        // Achado real (auditoria pedida pelo usuário): a migração de Atributo/Perícia
+        // Aumentada pra traitId="ATTRIBUTE_BOOST"/"SKILL_BOOST" (id mantido só pra
+        // identidade/auditoria) fazia a formatação buscar LABEL/catálogo oficial pela chave
+        // RESOLVIDA ("ATTRIBUTE_BOOST", sem entrada própria), perdendo o match do id
+        // ORIGINAL ("ARMADURA", que tem LABEL "Armadura +2") e caindo no ramo de "sem LABEL
+        // nem catálogo" mesmo com um label real cadastrado.
+        val hab = RacialAbility(
+            nome = "skin qualquer",
+            descricao = "",
+            id = "ARMADURA",
+            traitId = "ATTRIBUTE_BOOST",
+            targetRef = "VIGOR"
+        )
+        val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
+        assertTrue(linhas[0].contains("[id=ATTRIBUTE_BOOST"))
+        assertTrue(!linhas[0].contains("sem LABEL nem catálogo"))
+        assertTrue(linhas[0].contains("Armadura +2"))
+    }
+
+    @Test
+    fun `GRANTED_EDGE calcula o custo dinamicamente pelo Estagio da Vantagem real, nao fixo em 2`() {
+        val vantagemExperiente = Vantagem(
+            id = "vantagem_experiente_teste",
+            nome = "Vantagem Experiente Teste",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Experiente")
+        )
+        val hab = RacialAbility(
+            nome = "skin qualquer",
+            descricao = "",
+            traitId = "GRANTED_EDGE",
+            targetRef = "Vantagem Experiente Teste",
+            category = "racial_edge"
+        )
+        val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial, allVantagens = listOf(vantagemExperiente))
+        assertTrue(linhas[0].contains("+3 pts"))
+    }
+
+    @Test
     fun `calcularIdsExclusivos so marca ids usados por exatamente uma raca`() {
         val racaA = RacialModifier(
             nome = "Raça A",

@@ -78,12 +78,16 @@ class ResolveVariantPointBudgetUseCase {
          * (oficial ou custom) representa Vantagem/Complicação de graça como
          * traço vinculado por id ali (traitId=GRANTED_EDGE/RACIAL_HINDRANCE +
          * targetRef), nunca mais como string solta em vantagensGratis/desvantagens.
+         * `allVantagens` (catálogo geral, opcional) permite cobrar o custo REAL de um
+         * GRANTED_EDGE pelo Estágio da Vantagem concedida em vez do fallback fixo de 2 —
+         * ver RacialTraitPointCatalog.custoDe/custoDeVantagem.
          */
-        fun itensRemoviveisDe(base: RacialModifier): List<VariantBudgetItem> =
-            base.habilidades.map { habilidadeComoItem(it) }
+        fun itensRemoviveisDe(base: RacialModifier, allVantagens: List<Vantagem> = emptyList()): List<VariantBudgetItem> =
+            base.habilidades.map { habilidadeComoItem(it, allVantagens) }
 
         /** Valor de livro total da raça base: soma do custo de TODOS os itens removíveis dela. */
-        fun valorTotalDe(base: RacialModifier): Int = itensRemoviveisDe(base).sumOf { it.custo }
+        fun valorTotalDe(base: RacialModifier, allVantagens: List<Vantagem> = emptyList()): Int =
+            itensRemoviveisDe(base, allVantagens).sumOf { it.custo }
 
         // Rótulo mecânico (ex.: "Atributo aumentado d6: Vigor", "Voo (Movimentação
         // 12)") quando o id do traço resolve pra um efeito/rótulo conhecido em
@@ -94,7 +98,7 @@ class ResolveVariantPointBudgetUseCase {
         // internal (não private): reaproveitado por ValidateAncestryOptionBudgetsUseCase
         // pra achar o custo de itens removidos por uma opção de Seleção/Variante,
         // mesma lógica de custo que o editor de Variante custom já usa.
-        internal fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem {
+        internal fun habilidadeComoItem(habilidade: RacialAbility, allVantagens: List<Vantagem> = emptyList()): VariantBudgetItem {
             val id = habilidade.id?.let { it.ifBlank { null } }
             // Efeito/custo pelo id RESOLVIDO (traitId ?: id — ver resolvedTraitId()),
             // não pelo id cru: mesmo padrão já usado por RacialAbility.resolvedPontos()/
@@ -143,26 +147,22 @@ class ResolveVariantPointBudgetUseCase {
                     resolvedId,
                     value = habilidade.value,
                     severity = habilidade.severity,
-                    pontos = habilidade.pontos
+                    pontos = habilidade.pontos,
+                    targetRef = habilidade.targetRef,
+                    nome = habilidade.nome,
+                    allVantagens = allVantagens
                 ) * vezes,
                 habilidadeId = id
             )
         }
 
         /**
-         * Custo de adicionar uma Vantagem do catálogo geral como traço racial
-         * da Variante: não existe uma escala oficial de "pontos de Vantagem"
-         * no livro, então usa o Estágio (Novato/Experiente/Veterano/Heroico)
-         * como proxy de força — mesma ideia de "uma Vantagem grátis custa 2"
-         * já usada em RacialTraitPointCatalog, um degrau a mais por Estágio
-         * acima de Novato.
+         * Custo de adicionar uma Vantagem do catálogo geral como traço racial da Variante —
+         * delega pra RacialTraitPointCatalog.custoDeVantagem, a mesma fórmula que
+         * custoDe("GRANTED_EDGE", ...) agora usa pra cobrar o custo real (por Estágio) de um
+         * GRANTED_EDGE oficial, em vez de duas cópias divergentes da mesma escala.
          */
-        fun custoDeAdicionarVantagem(vantagem: Vantagem): Int = when (vantagem.requisitos.estagio.trim().lowercase()) {
-            "experiente" -> 3
-            "veterano" -> 4
-            "heroico", "lendário", "lendario" -> 5
-            else -> 2 // Novato ou sem estágio definido
-        }
+        fun custoDeAdicionarVantagem(vantagem: Vantagem): Int = RacialTraitPointCatalog.custoDeVantagem(vantagem)
 
         fun vantagemComoItemAdicionado(vantagem: Vantagem): VariantBudgetItem = VariantBudgetItem(
             label = vantagem.nome,

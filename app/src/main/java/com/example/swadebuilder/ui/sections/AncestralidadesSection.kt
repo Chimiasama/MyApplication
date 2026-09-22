@@ -1276,7 +1276,7 @@ fun AncestralidadesSection(
                                                 color = MaterialTheme.colorScheme.tertiary
                                             )
                                             Spacer(Modifier.height(2.dp))
-                                            RacialTraitAuditFormatter.formatar(habilidadesResolvidas, catalogoOficialHabilidades, idsExclusivosPorRaca)
+                                            RacialTraitAuditFormatter.formatar(habilidadesResolvidas, catalogoOficialHabilidades, idsExclusivosPorRaca, state.listaVantagens)
                                                 .forEach { linha ->
                                                     Text(
                                                         text = "• $linha",
@@ -1297,7 +1297,8 @@ fun AncestralidadesSection(
                                             }
 
                                             val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                                habilidades = habilidadesResolvidas
+                                                habilidades = habilidadesResolvidas,
+                                                allVantagens = state.listaVantagens
                                             )
 
                                             if (caracteristicas.isNotEmpty()) {

@@ -1019,14 +1019,52 @@ object RacialTraitPointCatalog {
         "PENALIDADE_ATRIBUTO_2" to -3
     )
 
-    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
-     * Ao contrário de efeitoDe(), não recebe targetRef: o custo de ATTRIBUTE_BOOST/SKILL_BOOST
-     * só depende de value (quanto foi concedido), nunca de qual atributo/perícia recebeu. */
+    /**
+     * Custo em pontos de conceder uma Vantagem do catálogo geral como traço racial de graça
+     * (GRANTED_EDGE/racial_edge) — não existe uma escala oficial de "pontos de Vantagem" no
+     * livro, então usa o Estágio (Novato/Experiente/Veterano/Heroico) como proxy de força, um
+     * degrau a mais por Estágio acima de Novato (mesma calibração de "uma Vantagem grátis
+     * custa 2" já usada pros ids sem Vantagem de catálogo vinculada, ver CUSTOS). Única fonte
+     * desta fórmula — [custoDe] (abaixo) e
+     * `ResolveVariantPointBudgetUseCase.custoDeAdicionarVantagem` delegam pra cá.
+     */
+    fun custoDeVantagem(vantagem: Vantagem): Int = when (vantagem.requisitos.estagio.trim().lowercase()) {
+        "experiente" -> 3
+        "veterano" -> 4
+        "heroico", "lendário", "lendario" -> 5
+        else -> 2 // Novato ou sem estágio definido
+    }
+
+    // Acha, no catálogo geral, a Vantagem concedida por um traço GRANTED_EDGE/racial_edge —
+    // mesma cadeia de prioridade de identificador que vantagensGratisEfetivas() já usa
+    // (targetRef, com fallback pro nome de exibição do traço): por id primeiro (formato mais
+    // robusto contra reskin/acento/pontuação, ex.: Demônios targetRef="aa_demonio"), com
+    // fallback por nome (ex.: Kitsunemimi targetRef="Cativar o Ambiente", que não tem id
+    // próprio de catálogo cadastrado no traço).
+    private fun vantagemConcedidaPor(targetRef: String?, nome: String?, allVantagens: List<Vantagem>): Vantagem? {
+        val alvo = targetRef?.takeIf { it.isNotBlank() } ?: nome?.takeIf { it.isNotBlank() } ?: return null
+        val chave = alvo.keyify()
+        return allVantagens.firstOrNull { it.id.keyify() == chave }
+            ?: allVantagens.firstOrNull { it.nome.keyify() == chave }
+    }
+
+    /**
+     * Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
+     * Ao contrário de efeitoDe(), não recebe targetRef pros ids ATTRIBUTE_BOOST/SKILL_BOOST: o
+     * custo desses só depende de value (quanto foi concedido), nunca de qual atributo/perícia
+     * recebeu. GRANTED_EDGE é diferente: precisa saber QUAL Vantagem foi concedida pra cobrar
+     * o Estágio real dela (ver [custoDeVantagem]) — por isso os três últimos parâmetros, todos
+     * opcionais (chamadas que não os passam mantêm o fallback fixo de 2 pontos de antes, sem
+     * regressão pra quem não tem o catálogo de Vantagens à mão nesse ponto do código).
+     */
     fun custoDe(
         id: String?,
         value: Int = 1,
         severity: String? = null,
-        pontos: Int = 0
+        pontos: Int = 0,
+        targetRef: String? = null,
+        nome: String? = null,
+        allVantagens: List<Vantagem> = emptyList()
     ): Int {
         if (pontos != 0) return pontos
         if (id == null) return 0
@@ -1053,7 +1091,15 @@ object RacialTraitPointCatalog {
             // Ponto de Perícia/Atributo concedido ou tirado, o mesmo peso já
             // usado por BONUS_PERICIA_1/PENALIDADE_PERICIA_1 neste catálogo.
             "PERICIA_POINTS_BONUS", "ATRIBUTO_POINTS_BONUS" -> value
-            "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
+            // Achado real (auditoria pedida pelo usuário): custo fixo de 2 não escalava com o
+            // Estágio da Vantagem de verdade concedida (ex.: uma Vantagem Experiente custa 3,
+            // não 2) — sem Vantagem resolvível (sem targetRef/nome, ou catálogo não passado
+            // pra esta chamada), mantém o fallback fixo de 2 de antes (nenhuma das Vantagens
+            // hoje concedidas por raça é acima de Novato, então este fallback não muda nada
+            // pro catálogo atual — só corrige o cálculo pra quando uma raça futura conceder
+            // algo mais forte).
+            "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" ->
+                vantagemConcedidaPor(targetRef, nome, allVantagens)?.let { custoDeVantagem(it) } ?: 2
             "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
             // Complicações reais de complicacoes.json com severidade "Menor ou
             // Maior" (a raça escolhe qual) — CUSTOS sozinho não sabe qual

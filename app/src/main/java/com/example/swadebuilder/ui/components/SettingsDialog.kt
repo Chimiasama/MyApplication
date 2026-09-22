@@ -1828,7 +1828,7 @@ fun CustomContentManageDialog(
                                                         // raça base estática — sem isso não dava pra sobrescrever
                                                         // nada que a opção concede, só a raça base como um todo.
                                                         val habilidadeItems = remember(varianteBaseRaca, escopoAtual) {
-                                                            val baseItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
+                                                            val baseItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca, state.listaVantagens)
                                                                 .filter { it.habilidadeId != null }
                                                             val opcaoItems = escopoAtual?.pacote?.tracosParaAdicionar.orEmpty().map { traco ->
                                                                 com.example.swadebuilder.model.usecase.VariantBudgetItem(
@@ -1869,12 +1869,12 @@ fun CustomContentManageDialog(
                                                                     .get(varianteBaseRaca.nome.keyify(), canonicalOriginKey(varianteBaseRaca.origem))
                                                                     ?.let { config ->
                                                                         com.example.swadebuilder.model.usecase.ValidateAncestryOptionBudgetsUseCase()
-                                                                            .execute(varianteBaseRaca, config)
+                                                                            .execute(varianteBaseRaca, config, state.listaVantagens)
                                                                             .firstOrNull { resultado -> resultado.optionId == escopoAtual.id }
                                                                     }
                                                             }
                                                             viaOpcao?.saldo
-                                                                ?: com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca)
+                                                                ?: com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca, state.listaVantagens)
                                                         }
                                                         val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
@@ -2493,7 +2493,7 @@ fun CustomContentManageDialog(
                                                     if (baseRaca == null) {
                                                         statusMessage = "Selecione a raça base da Variante."
                                                     } else {
-                                                        val habilidadeItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
+                                                        val habilidadeItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca, state.listaVantagens)
                                                             .filter { it.habilidadeId != null }
 
                                                         val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
@@ -2514,7 +2514,7 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
 
-                                                        val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
+                                                        val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca, state.listaVantagens)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
                                                             valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
                                                             orcamento = baseRaca.pontosRaciaisEsperados,

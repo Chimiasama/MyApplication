@@ -64,7 +64,7 @@ fun TipoMonstroSection(
                             modifier = Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp)
                         )
 
-                        val caracteristicas = template.paraCaracteristicas()
+                        val caracteristicas = template.paraCaracteristicas(state.listaVantagens)
                         if (caracteristicas.isNotEmpty()) {
                             Text(
                                 text = "Características:",

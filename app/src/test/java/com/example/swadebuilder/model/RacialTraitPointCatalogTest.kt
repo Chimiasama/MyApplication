@@ -19,6 +19,68 @@ class RacialTraitPointCatalogTest {
         assertEquals(0, RacialTraitPointCatalog.custoDe("ID_QUE_NAO_EXISTE"))
     }
 
+    private fun vantagemDeEstagio(estagio: String) = Vantagem(
+        id = "v_${estagio.lowercase()}",
+        nome = "Vantagem $estagio Teste",
+        categoria = Categoria.COMBATE,
+        requisitos = Requisito(estagio = estagio)
+    )
+
+    @Test
+    fun `custoDeVantagem escala com o Estagio da Vantagem, Novato 2 ate Heroico ou Lendario 5`() {
+        assertEquals(2, RacialTraitPointCatalog.custoDeVantagem(vantagemDeEstagio("Novato")))
+        assertEquals(3, RacialTraitPointCatalog.custoDeVantagem(vantagemDeEstagio("Experiente")))
+        assertEquals(4, RacialTraitPointCatalog.custoDeVantagem(vantagemDeEstagio("Veterano")))
+        assertEquals(5, RacialTraitPointCatalog.custoDeVantagem(vantagemDeEstagio("Heroico")))
+        assertEquals(5, RacialTraitPointCatalog.custoDeVantagem(vantagemDeEstagio("Lendário")))
+    }
+
+    @Test
+    fun `GRANTED_EDGE sem catalogo de Vantagens passado mantem o fallback fixo de 2, sem regressao`() {
+        assertEquals(2, RacialTraitPointCatalog.custoDe("GRANTED_EDGE", targetRef = "Vantagem Experiente Teste"))
+    }
+
+    @Test
+    fun `GRANTED_EDGE com catalogo de Vantagens cobra o custo real pelo Estagio, nao fixo em 2`() {
+        val vantagens = listOf(vantagemDeEstagio("Experiente"))
+        val custo = RacialTraitPointCatalog.custoDe(
+            "GRANTED_EDGE",
+            targetRef = "Vantagem Experiente Teste",
+            allVantagens = vantagens
+        )
+        assertEquals(3, custo)
+    }
+
+    @Test
+    fun `GRANTED_EDGE acha a Vantagem por id quando targetRef eh o id do catalogo, nao o nome de exibicao`() {
+        // Mesmo padrão de Demônios "Antecedente Arcano (Demônio)": targetRef="aa_demonio" (id
+        // do catálogo, não o nome "ANTECEDENTE ARCANO (Demônio)") — mais robusto contra
+        // reskin/pontuação do que casar só por nome.
+        val vantagem = Vantagem(
+            id = "aa_demonio_teste",
+            nome = "ANTECEDENTE ARCANO (Demônio Teste)",
+            categoria = Categoria.PODER,
+            requisitos = Requisito(estagio = "Veterano")
+        )
+        val custo = RacialTraitPointCatalog.custoDe(
+            "GRANTED_EDGE",
+            targetRef = "aa_demonio_teste",
+            allVantagens = listOf(vantagem)
+        )
+        assertEquals(4, custo)
+    }
+
+    @Test
+    fun `GRANTED_EDGE sem targetRef cai pro nome da habilidade, mesma cadeia de vantagensGratisEfetivas`() {
+        val vantagem = vantagemDeEstagio("Experiente")
+        val custo = RacialTraitPointCatalog.custoDe(
+            "GRANTED_EDGE",
+            nome = "Vantagem Experiente Teste",
+            allVantagens = listOf(vantagem)
+        )
+        assertEquals(3, custo)
+    }
+
     @Test
     fun `tamanho mais e menos 1 tem sinais opostos apos a correcao da colisao de id`() {
         assertEquals(1, RacialTraitPointCatalog.custoDe("TAMANHO_MAIS_1"))

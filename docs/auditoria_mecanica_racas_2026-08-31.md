@@ -3845,3 +3845,115 @@ a primeira resposta, e estava certo. Quando o relato vem de teste
 real no app (não hipotético), vale re-investigar o CAMINHO DE DADOS
 de verdade (qual catálogo/estado o código de produção realmente usa),
 não só a lógica da função isolada.
+
+## Quadragésima segunda rodada — racial_hindrance/racial_edge: três bugs reais no caminho de Vantagem/Complicação automática
+
+O usuário testou um Avianos no Modo Auditoria e viu `category=racial_hindrance`
+pra "Não Sabe Nadar", e perguntou se isso era "legado do método antigo" —
+`category="racial_hindrance"`/`"racial_edge"` (+ opcionalmente
+`traitId="RACIAL_HINDRANCE"`/`"GRANTED_EDGE"` + `targetRef` quando o traço é
+reskinado) **não é legado**: é o mecanismo ATUAL, o mesmo já usado por todo o
+resto do app (RacialCaracteristicasResolver, ApplyAncestryChangeCoordinatorUseCase,
+CriadorState.aplicarAncestralidade). Não existe um sistema "de traços" separado
+que devesse substituí-lo — os traços SÃO esse mecanismo. Mas investigar a fundo,
+a pedido do usuário, achou três bugs reais nesse caminho (confirmados por
+inspeção de código, não hipotéticos) — os três corrigidos nesta rodada, mantendo
+`category`/`severity` como mecanismo (decisão explícita do usuário: "vamos
+continuar usando os racial_hindrance, então, severity, etc").
+
+### Bug 1 — rótulo de auditoria perdia o LABEL/catálogo de um traço migrado pro par genérico
+
+`RacialTraitAuditFormatter.formatarUm()` buscava `LABEL`/catálogo oficial pela
+chave RESOLVIDA (`hab.resolvedTraitId()` — `traitId ?: id`). Efeito colateral
+não percebido da migração de Atributo/Perícia Aumentada (rodada 39, que deu
+`traitId="ATTRIBUTE_BOOST"/"SKILL_BOOST"` a ~27 ids, mantendo o `id` original só
+pra identidade/auditoria): qualquer um desses traços perdia o match do seu
+LABEL real (cadastrado sob o id ORIGINAL, ex. "SENTIDOS_AGUCADOS") porque a
+busca agora ia por "ATTRIBUTE_BOOST"/"SKILL_BOOST", que não tem entrada
+própria — caía no ramo "sem LABEL nem catálogo" mesmo tendo um label real.
+Corrigido: `LABEL`/catálogo oficial/`CUSTOS` agora buscam por `hab.id` cru
+(com fallback pro id resolvido só se `id` for nulo/vazio); `resolvedTraitId()`
+continua sendo o que decide o EFEITO mecânico (`efeitoDe`) e o cabeçalho.
+
+### Bug 2 — `resolvedDesvantagens()` nunca lia `targetRef`, ao contrário do irmão `resolvedVantagensGratis()`
+
+`RacialModifier.resolvedVantagensGratis()`/`resolvedDesvantagens()` reimplementavam,
+com uma cópia própria e divergente, a mesma leitura que as funções de topo de
+arquivo `vantagensGratisEfetivas()`/`desvantagensEfetivas()` já faziam CORRETO
+(inclusive com o dedup por `racialGrantDedupeKey()`, que a versão em método não
+tinha). A cópia do método tinha uma assimetria: o ramo `category=="racial_edge"`
+de `resolvedVantagensGratis()` já priorizava `targetRef` sobre `hab.nome`
+(`hab.targetRef ?: hab.id ?: hab.nome`), mas o ramo equivalente de
+`resolvedDesvantagens()` (`category=="racial_hindrance"`) nunca olhava
+`targetRef`, só `hab.nome` — uma Complicação reskinada por `targetRef` (ex.:
+Draconianos "Mal-Humorado" concedendo a Complicação real "Arrogante") virava a
+desvantagem automática com o NOME DE EXIBIÇÃO da raça em vez do nome real do
+catálogo de Complicações, quebrando silenciosamente o vínculo com
+`complicacoes.json` — exatamente o risco que o usuário descreveu (traço sem
+link explícito pro catálogo real). Esses dois métodos são o caminho REAL usado
+por `CriadorState.aplicarAncestralidade()` e `ApplyAncestryChangeCoordinatorUseCase`
+pra conceder Vantagem/Complicação automática — não é auditoria, é mecânica de
+personagem de verdade. Corrigido fazendo os dois métodos DELEGAREM pras funções
+de topo de arquivo já corretas, em vez de manter duas implementações divergentes.
+
+### Bug 3 — GRANTED_EDGE cobrava sempre 2 pontos fixos, nunca o Estágio real da Vantagem
+
+`RacialTraitPointCatalog.custoDe("GRANTED_EDGE", ...)` retornava `2` fixo,
+ignorando que o custo de uma Vantagem de catálogo deveria escalar pelo Estágio
+dela (Novato=2/Experiente=3/Veterano=4/Heroico ou Lendário=5) — fórmula que já
+existia, correta, mas SÓ no editor de Variante custom
+(`ResolveVariantPointBudgetUseCase.custoDeAdicionarVantagem`), nunca alimentada
+de volta pro cálculo de ponto de uma raça OFICIAL. Mesmo achado, forma
+hardcoded, na aba Ancestralidades: `RacialCaracteristicasResolver.resolver()`
+tinha um `formatPts(2)` literal pra toda linha "Vantagem Racial:", em vez de
+olhar o Estágio de verdade. **Hoje isso não muda nenhum número visível** (as 3
+Vantagens concedidas por `GRANTED_EDGE` no catálogo atual — Kitsunemimi
+"Cativar o Ambiente", Tanukimimi "Impulso", Demônios "aa_demonio" — são todas
+Novato, cost=2 de qualquer jeito), mas é um bug real de cálculo, não uma
+hipótese: uma raça futura concedendo uma Vantagem Experiente+ cobraria errado
+sem essa correção. Extraída a fórmula pra um único lugar
+(`RacialTraitPointCatalog.custoDeVantagem(vantagem: Vantagem)`), com
+`ResolveVariantPointBudgetUseCase.custoDeAdicionarVantagem` agora delegando pra
+lá em vez de manter uma segunda cópia. `custoDe()` ganhou três parâmetros
+opcionais (`targetRef`, `nome`, `allVantagens`, todos com default seguro —
+chamadas que não os passam mantêm o fallback fixo de 2, sem regressão) pra
+resolver QUAL Vantagem foi concedida (por id primeiro — mais robusto contra
+reskin/acento/pontuação, ex. `targetRef="aa_demonio"` — com fallback por nome)
+e cobrar o Estágio real dela. Threaded o catálogo de Vantagens
+(`state.listaVantagens`) até os pontos reais de cálculo que já tinham acesso a
+ele: `RacialCaracteristicasResolver.resolver()` (aba Ancestralidades e Monstro
+Heroico), `RacialTraitAuditFormatter.formatar()` (Modo Auditoria),
+`ResolveVariantPointBudgetUseCase.itensRemoviveisDe/valorTotalDe/habilidadeComoItem`
+e `ValidateAncestryOptionBudgetsUseCase.execute()` (editor de Variante custom,
+orçamento de cada opção de raça com Seleção).
+
+### Verificação
+
+- `RacialModifierGrantsTest.kt` (novo): prova que `resolvedDesvantagens()`
+  agora prioriza `targetRef` igual `resolvedVantagensGratis()` já fazia, e que
+  sem `targetRef` o comportamento de antes (nome cru + severidade) continua
+  intacto.
+- `RacialTraitPointCatalogTest.kt`: `custoDeVantagem` escalando Novato(2) até
+  Heroico/Lendário(5); `custoDe("GRANTED_EDGE", ...)` cobrando o custo real
+  quando o catálogo de Vantagens é passado (por `targetRef`-como-id, por
+  `targetRef`-como-nome e por fallback no `nome` do traço), e mantendo o
+  fallback fixo de 2 quando não é passado (sem regressão nos ~205 ids já
+  calibrados).
+- `RacialTraitAuditFormatterTest.kt`: traço com `traitId="ATTRIBUTE_BOOST"` +
+  `id` com LABEL real agora acha o label (antes caía em "sem LABEL nem
+  catálogo"); `GRANTED_EDGE` com uma Vantagem Experiente no catálogo mostra
+  "+3 pts", não "+2 pts".
+- Suite completa (32 arquivos, ~230 testes) e
+  `scripts/phase6_reliability_gate.sh` passando (mesmo WARN pré-existente de
+  tamanho de `CriadorState.kt`, sem regressão nova).
+
+Migração de `targetRef` explícito nos ~90 traços `racial_hindrance`/~13
+`racial_edge` que hoje só têm `category` (sem `traitId`/`targetRef`, casando
+com o catálogo real só via `hab.nome`) fica de fora desta rodada: hoje esses
+traços já usam como `nome` o nome real da Complicação/Vantagem (não há skin
+pra desfazer), então o link "explícito" já existe via nome — o risco
+concreto que o usuário descreveu (link perdido por reskin) só se materializa
+nos casos COM skin, que já têm `targetRef` ou foram cobertos pelos 3 bugs
+acima. Backlog, não bug: migrar esses ids também pra `targetRef` deixaria a
+identificação robusta contra futura mudança de nome de exibição, mas não
+corrige nenhum comportamento errado hoje.

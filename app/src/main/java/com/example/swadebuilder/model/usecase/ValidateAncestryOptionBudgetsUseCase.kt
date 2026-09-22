@@ -6,6 +6,7 @@ import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionType
 import com.example.swadebuilder.model.TraitAddition
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 
 /**
@@ -44,13 +45,13 @@ class ValidateAncestryOptionBudgetsUseCase {
         val dentroDoOrcamento: Boolean
     )
 
-    fun execute(base: RacialModifier, config: AncestryVariantConfig): List<OptionBudgetResult> {
-        val valorBaseRaca = ResolveVariantPointBudgetUseCase.valorTotalDe(base)
+    fun execute(base: RacialModifier, config: AncestryVariantConfig, allVantagens: List<Vantagem> = emptyList()): List<OptionBudgetResult> {
+        val valorBaseRaca = ResolveVariantPointBudgetUseCase.valorTotalDe(base, allVantagens)
         val orcamento = base.pontosRaciaisEsperados
         val results = mutableListOf<OptionBudgetResult>()
 
         config.grupoVariante?.opcoes?.forEach { opcao ->
-            results += validarPacote(opcao.id, opcao.nome, opcao.pacoteFixo, base, valorBaseRaca, orcamento)
+            results += validarPacote(opcao.id, opcao.nome, opcao.pacoteFixo, base, valorBaseRaca, orcamento, allVantagens)
         }
 
         config.selecoes
@@ -63,7 +64,8 @@ class ValidateAncestryOptionBudgetsUseCase {
                         pacoteOpcao.pacote,
                         base,
                         valorBaseRaca,
-                        orcamento
+                        orcamento,
+                        allVantagens
                     )
                 }
             }
@@ -77,9 +79,10 @@ class ValidateAncestryOptionBudgetsUseCase {
         pacote: ResolvedTraitPackage,
         base: RacialModifier,
         valorBaseRaca: Int,
-        orcamento: Int
+        orcamento: Int,
+        allVantagens: List<Vantagem>
     ): OptionBudgetResult {
-        val itensRemovidos = itensRemovidosDoPacote(pacote, base)
+        val itensRemovidos = itensRemovidosDoPacote(pacote, base, allVantagens)
         val itensAdicionados = itensAdicionadosDoPacote(pacote)
         val resultado = ResolveVariantPointBudgetUseCase().resolve(
             valorBaseRaca = valorBaseRaca,
@@ -100,7 +103,7 @@ class ValidateAncestryOptionBudgetsUseCase {
     // (mesmo casamento que CriadorState.applyAncestryVariantAdjustments já
     // usa pra aplicar a opção de verdade) — o custo de remover é o custo que
     // aquele traço JÁ tem na raça base, não um valor novo.
-    private fun itensRemovidosDoPacote(pacote: ResolvedTraitPackage, base: RacialModifier): List<VariantBudgetItem> {
+    private fun itensRemovidosDoPacote(pacote: ResolvedTraitPackage, base: RacialModifier, allVantagens: List<Vantagem>): List<VariantBudgetItem> {
         val porNome = pacote.tracosParaRemoverPorNome.map { it.keyify() }.toSet()
         val porId = pacote.tracosParaRemoverPorId.map { it.keyify() }.toSet()
         if (porNome.isEmpty() && porId.isEmpty()) return emptyList()
@@ -108,7 +111,7 @@ class ValidateAncestryOptionBudgetsUseCase {
             .filter { hab ->
                 (hab.id != null && hab.id.keyify() in porId) || hab.nome.keyify() in porNome
             }
-            .map { ResolveVariantPointBudgetUseCase.habilidadeComoItem(it) }
+            .map { ResolveVariantPointBudgetUseCase.habilidadeComoItem(it, allVantagens) }
     }
 
     // Itens adicionados: toda lista de TraitAddition do pacote (positivos,

@@ -46,23 +46,35 @@ object RacialTraitAuditFormatter {
     fun formatar(
         habilidades: List<RacialAbility>,
         catalogoOficial: List<HabilidadeCriacao>,
-        idsExclusivos: Map<String, String> = emptyMap()
+        idsExclusivos: Map<String, String> = emptyMap(),
+        allVantagens: List<Vantagem> = emptyList()
     ): List<String> {
         val catalogoPorId = catalogoOficial
             .filter { !it.id.isNullOrBlank() }
             .associateBy { it.id!!.keyify() }
-        return habilidades.map { formatarUm(it, catalogoPorId, idsExclusivos) }
+        return habilidades.map { formatarUm(it, catalogoPorId, idsExclusivos, allVantagens) }
     }
 
     private fun formatarUm(
         hab: RacialAbility,
         catalogoPorId: Map<String, HabilidadeCriacao>,
-        idsExclusivos: Map<String, String>
+        idsExclusivos: Map<String, String>,
+        allVantagens: List<Vantagem>
     ): String {
         val idBruto = hab.resolvedTraitId()
         val chave = idBruto.keyify()
+        // Id CRU (hab.id, não resolvedTraitId()) pra achar LABEL/catálogo oficial: um traço
+        // migrado pro par genérico ATTRIBUTE_BOOST/SKILL_BOOST (traitId parametrizado +
+        // targetRef, id mantido só pra identidade/auditoria — ver migração de
+        // Atributo/Perícia Aumentada) tem LABEL/entrada cadastrados sob o id ORIGINAL
+        // ("SENTIDOS_AGUCADOS", "CAES_DE_GUARDA" etc.), não sob "ATTRIBUTE_BOOST"/
+        // "SKILL_BOOST" — buscar por `chave` (resolvida) aqui perdia esse match e a linha de
+        // auditoria caía no ramo "sem LABEL nem catálogo" mesmo com um label real cadastrado.
+        // `chave` continua sendo o que decide o EFEITO mecânico (efeitoDe já sabe interpretar
+        // o par genérico via targetRef/value) e o que aparece no cabeçalho (idBruto).
+        val chaveLabel = (hab.id?.takeIf { it.isNotBlank() } ?: idBruto).keyify()
         val categoria = hab.category
-        val pontos = hab.resolvedPontos()
+        val pontos = hab.resolvedPontos(allVantagens)
         val pontosStr = if (pontos != 0) " · ${if (pontos > 0) "+" else ""}$pontos pts" else ""
         val exclusivoDe = idsExclusivos[chave]
 
@@ -91,15 +103,15 @@ object RacialTraitAuditFormatter {
             return "$cabecalho Complicação concedida ao personagem: $alvo$sev$pontosStr"
         }
 
-        val entradaCatalogo = catalogoPorId[chave]
-        val label = RacialTraitPointCatalog.LABEL[chave]
+        val entradaCatalogo = catalogoPorId[chaveLabel]
+        val label = RacialTraitPointCatalog.LABEL[chaveLabel]
         val efeito = RacialTraitPointCatalog.efeitoDe(chave, hab.targetRef, hab.value)
         // Custo calibrado no catálogo interno (RacialTraitPointCatalog.CUSTOS) sem LABEL/
         // catálogo oficial: o padrão de um traço bem específico de uma raça, sem equivalente
         // genérico no livro de criação — não confundir com "sem definição nenhuma". Ver
         // RacialTraitPointCatalog.kt: "sem equivalente oficial... o custo é julgamento próprio
         // calibrado na mesma escala do catálogo oficial".
-        val custoCatalogado = RacialTraitPointCatalog.CUSTOS[chave]
+        val custoCatalogado = RacialTraitPointCatalog.CUSTOS[chaveLabel]
 
         val definicao = when {
             entradaCatalogo != null ->
