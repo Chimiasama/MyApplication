@@ -8,7 +8,6 @@ enum class ModifierTarget {
     SIZE_DISPLAY,
     SIZE_TOUGHNESS,
     TOUGHNESS_FLAT,
-    ARMOR,
     PACE,
     PARRY
 }
@@ -37,34 +36,6 @@ object ModifierEngine {
 
     fun collect(state: CriadorState): List<Modifier> {
         val modifiers = mutableListOf<Modifier>()
-
-        // 1. Equipamento (Armadura)
-        state.equipamentosComprados.forEach { item ->
-            val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)
-                ?.content?.toIntOrNull() ?: 0
-
-            if (armorVal > 0) {
-                // Checa se é item de Mecha/Veículo que não deve somar
-                val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
-                    s.contains("VEICULO") || s.contains("VEÍCULO") ||
-                            s.contains("CHASSIS") || s.contains("MECHA")
-                } == true
-
-                val shouldExclude = isMechaOrVehicle
-
-                if (!shouldExclude) {
-                    modifiers.add(
-                        Modifier(
-                            id = "equip_${item.nome.keyify()}",
-                            sourceType = SourceType.OUTRO,
-                            sourceName = item.nome,
-                            target = ModifierTarget.ARMOR,
-                            value = armorVal
-                        )
-                    )
-                }
-            }
-        }
 
         // 1b. Penalidade de Movimentação por Força insuficiente (livro básico, "Força
         // Mínima > Armadura/Equipamento Vestidos"): -1 Movimentação por passo de tipo de
@@ -300,10 +271,9 @@ object ModifierEngine {
                         modifiers.add(Modifier("racial_trait_${id}_size_tough", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_TOUGHNESS, efeito.valor * vezes))
                     }
                     // Armadura Natural não vira Modifier aqui — a Armadura final
-                    // do personagem é resolvida à parte
-                    // (ResolveAncestrySpecificAdjustmentsUseCase.naturalArmorFromRace,
-                    // que já lê este mesmo efeito por id), não pelo
-                    // ModifierTarget.ARMOR deste motor.
+                    // do personagem é resolvida à parte, em
+                    // ResolveAncestrySpecificAdjustmentsUseCase.naturalArmorFromRace,
+                    // que já lê este mesmo efeito por id.
                     is RacialTraitEffect.ArmaduraBonus -> Unit
                     is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao, vezes) }
                     is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum,
@@ -358,9 +328,6 @@ object ModifierEngine {
 
         // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
-            if (vant.id == "couro_blindado") {
-                modifiers.add(Modifier("edge_couro_blindado_armor", SourceType.VANTAGEM, vant.nome, ModifierTarget.ARMOR, 4))
-            }
             if (vant.id == Constants.ID_MUSCULOSO) {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))

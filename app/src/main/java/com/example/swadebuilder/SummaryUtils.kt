@@ -83,10 +83,6 @@ fun buildRacialTraitsList(
             removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
         }
 
-        if (especieIdAtual == "elfos" && racialTraitKeys.contains("COMUNITARIO")) {
-            removeAll { it.keyify() == "DESASTRADO" }
-        }
-
         // Pacote Cultural de Humanos (Fantasia): Adaptável removido/Fraqueza
         // Ambiental e Penalidade em Cavalgar adicionados não são mais um
         // "when" hardcoded aqui — CriadorState.applyAncestryVariantAdjustments
@@ -98,10 +94,6 @@ fun buildRacialTraitsList(
 
         if (isCentauxGazela) {
             removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }
-        }
-
-        if (especieIdAtual == "draconianos") {
-            removeAll { it.keyify() == "ARROGANTE" }
         }
 
         if (especieIdAtual == "mineradores_geneticos") {

@@ -247,7 +247,6 @@ class ScifiAncestryVariantSyncTest {
 
         assertTrue(mods.any { it.id == "racial_trait_LENTO_pace" && it.value == -1 })
         assertTrue(mods.any { it.id == "racial_trait_RESISTENCIA_res" && it.value == 2 })
-        assertFalse(mods.any { it.target == ModifierTarget.ARMOR && it.sourceType == SourceType.ANCESTRALIDADE })
     }
 
     @Test
