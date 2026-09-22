@@ -48,6 +48,77 @@ data class MonstroTemplate(
     }
 }
 
+// Complicações de MonstroTemplate.complicacoes que citam, no próprio texto do livro, uma
+// Complicação real do catálogo geral com severidade explícita — conferido contra
+// complicacoes.json (id/severity reais) na migração pro sistema de Tropo (ver
+// docs/auditoria_mecanica_racas_2026-08-31.md rodada 43): Anjo "Complicação Voto (Maior)",
+// Monstro de Retalhos "Complicação Sem Noção" (catálogo só tem severidade "maior") e "Fobia
+// (Maior)", Vampiro "tratado como Hábito (Maior)", Revivido "Voto (Maior)". As ~13 restantes
+// (as várias "Fraqueza (X)" e afins) são específicas do livro de Horror, sem Complicação de
+// catálogo equivalente — ficam narrativas mesmo, sem targetRef (mesmo padrão de uma
+// Complicação de raça sem reskin, ex. Avianos "Não Sabe Nadar" antes do vínculo existir).
+private data class MonstroComplicacaoLink(val monstroId: String, val textoContem: String, val targetRef: String, val severity: String)
+
+private val MONSTRO_COMPLICACAO_LINKS = listOf(
+    MonstroComplicacaoLink("anjo", "Servo do Paraíso", "voto", "Maior"),
+    MonstroComplicacaoLink("monstro_retalhos", "Confusão", "sem_nocao", "Maior"),
+    MonstroComplicacaoLink("monstro_retalhos", "Fogo Mau", "fobia", "Maior"),
+    MonstroComplicacaoLink("vampiro", "Fome", "habito", "Maior"),
+    MonstroComplicacaoLink("revivido", "Vingança", "voto", "Maior")
+)
+
+/**
+ * Converte um MonstroTemplate (Horror) pro tipo Tropo unificado (ver rodada 43): mesmo
+ * formato `habilidades: List<RacialAbility>` que raça/Tropo de Arte da Guerra usam.
+ * `atributosBonus` vira ATTRIBUTE_BOOST/SKILL_BOOST (Fé é perícia, o resto é atributo) —
+ * mesma conversão que `paraCaracteristicas()` já fazia, só que agora vira dado real em vez
+ * de sintético-na-hora; `habilidades[]` passa direto (já usa o mesmo formato); cada string de
+ * `complicacoes` vira uma RacialAbility `category="racial_hindrance"`, com `targetRef`
+ * explícito só nos 5 casos verificados contra o catálogo (ver MONSTRO_COMPLICACAO_LINKS
+ * acima) — preserva o comportamento atual (ModifierEngine já lê o texto antes de ":" como
+ * nome da Complicação) e, nesses 5 casos, além disso vincula com o id real.
+ */
+fun MonstroTemplate.paraTropo(): Tropo {
+    val atributoHabilidades = atributosBonus.entries
+        .filterNot { it.key.keyify() == "FE" }
+        .map { (atributo, passos) ->
+            RacialAbility(nome = atributo, descricao = "", traitId = "ATTRIBUTE_BOOST", targetRef = atributo, value = passos, invisivel = true)
+        }
+    val feEntry = atributosBonus.entries.firstOrNull { it.key.keyify() == "FE" }
+    val periciaHabilidade = feEntry?.let {
+        RacialAbility(nome = "Fé", descricao = "", traitId = "SKILL_BOOST", targetRef = "Fé", value = it.value, invisivel = true)
+    }
+    val habilidadesConvertidas = habilidades.map {
+        RacialAbility(
+            nome = it.nome, descricao = it.descricao, descricaoLite = it.descricaoLite,
+            id = it.id, category = it.category, traitId = it.traitId, targetRef = it.targetRef,
+            armasNaturais = it.armasNaturais
+        )
+    }
+    val complicacaoHabilidades = complicacoes.mapIndexed { i, texto ->
+        val label = texto.substringBefore(":").trim()
+        val link = MONSTRO_COMPLICACAO_LINKS.firstOrNull { it.monstroId == id && label.contains(it.textoContem, ignoreCase = true) }
+        RacialAbility(
+            nome = label,
+            descricao = texto,
+            descricaoLite = complicacoesLite?.getOrNull(i),
+            id = "MONSTRO_${id}_COMPLICACAO_$i".keyify(),
+            category = "racial_hindrance",
+            targetRef = link?.targetRef,
+            severity = link?.severity
+        )
+    }
+    return Tropo(
+        id = id,
+        nome = nome,
+        categoria = "MONSTRO",
+        origem = "HORROR",
+        descricao = descricao,
+        descricaoLite = descricaoLite,
+        habilidades = atributoHabilidades + listOfNotNull(periciaHabilidade) + habilidadesConvertidas + complicacaoHabilidades
+    )
+}
+
 @Serializable
 data class MonstroHabilidade(
     val nome: String,
