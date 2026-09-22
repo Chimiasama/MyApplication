@@ -728,50 +728,38 @@ class CriadorState {
     }
 
     /**
-     * Reconcilia `vantagensRaciais` com as Vantagens grátis que `habilidadesDoTropoResolvidas`
-     * concede AGORA contra o que concedia antes de alguma mudança (troca de Tropo, ou só de
-     * uma TropoEscolha — ex.: Artista Marcial "Potencial Físico" concede uma Vantagem
-     * DIFERENTE conforme a escolha: Esquiva/Bloquear/Reflexos de Combate), e recalcula
-     * atributo/perícia (`recalcularPontosAtributo`/`rebuildAllPericiaStacks`) porque o PISO
-     * pode ter mudado junto (bônus relativo aparecendo/sumindo com a troca) — mesmo motivo de
-     * segurança que `aplicarTipoMonstro` já usa pra Monstro Heroico, agora genérico pra
-     * qualquer Tropo.
+     * Vantagens grátis que `habilidadesDoTropoResolvidas` concede AGORA — mesmo mecanismo de
+     * `vantagensGratisEfetivas()` que raça/Monstro usam (`category="racial_edge"`/
+     * `traitId="GRANTED_EDGE"`), com o targetRef já resolvido por TropoEscolha (ver
+     * `habilidadesDoTropoResolvidas`). `targetRef` de um GRANTED_EDGE de Tropo é sempre um id
+     * real de `listaVantagens` (mesma convenção que `Tropo.ganhaAoComprar` já usa) — nomes que
+     * não batem com nenhum id são ignorados aqui (não quebram nada, só não resolvem).
      */
-    private fun reconciliarGrantsDoTropo(grantsAnteriores: List<String>): List<String> {
-        val feedback = mutableListOf<String>()
-        val grantsNovos = vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
-        val novasKeys = grantsNovos.map { it.keyify() }
-        grantsAnteriores
-            .filterNot { it.keyify() in novasKeys }
-            .forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
-        grantsNovos.forEach { grant ->
-            if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
-                vantagensRaciais.add(grant)
-            }
-        }
-
-        recalcularPontosAtributo(feedback)
-        rebuildAllPericiaStacks(feedback)
-
-        if (feedback.isNotEmpty()) {
-            anotacoes += "\n• " + feedback.joinToString("\n• ")
-        }
-        return feedback
-    }
+    private fun tropoVantagensGratisIds(): List<String> =
+        vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
 
     /**
-     * Troca o Tropo selecionado — sistema de Tropo genérico (rodada 43 do audit doc). Limpa
-     * qualquer TropoEscolha feita pro Tropo anterior (não fazem sentido pro novo — podem nem
-     * ser opções válidas nele) antes de reconciliar as Vantagens grátis concedidas. Complicações
-     * automáticas de Tropo (nenhum Tropo oficial concede uma hoje) ficam de fora por ora — se
-     * um Tropo customizado algum dia precisar disso, o padrão é o mesmo de
-     * `aplicarAncestralidade` (`desvantagensAutomaticas`), só que ainda não está religado aqui.
+     * Reconcilia `vantagensSelecionadas`/`vantagensAutomaticasDoTropo` com as Vantagens que
+     * `habilidadesDoTropoResolvidas` concede AGORA — a MESMA lista/mecanismo que
+     * `Tropo.ganhaAoComprar` já usa em `selecionarTropo()` (não uma lista paralela nova), só
+     * que alimentada pelo novo `habilidades[]` em vez do campo antigo. Chamada tanto de dentro
+     * de `selecionarTropo()` (ao trocar de Tropo) quanto de `escolherTropoOpcao()` (uma
+     * TropoEscolha pode trocar QUAL Vantagem é concedida, não só um número — ex.: Artista
+     * Marcial "Potencial Físico": Agilidade->Esquiva, Força->Bloquear, Vigor->Reflexos de
+     * Combate).
      */
-    fun aplicarTropo(novoTropo: Tropo?): List<String> {
-        val grantsAnteriores = vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
-        tropoSelecionado = novoTropo
-        tropoEscolhasFeitas.clear()
-        return reconciliarGrantsDoTropo(grantsAnteriores)
+    private fun reconciliarGrantsDeHabilidadesDoTropo(idsAnteriores: List<String>) {
+        val idsNovos = tropoVantagensGratisIds()
+        idsAnteriores
+            .filterNot { it in idsNovos }
+            .forEach { vantId -> vantagensSelecionadas.removeAll { it.id == vantId }; vantagensAutomaticasDoTropo.remove(vantId) }
+        idsNovos.forEach { vantId ->
+            if (vantagensSelecionadas.none { it.id == vantId }) {
+                val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+                vantagensSelecionadas += vant
+                vantagensAutomaticasDoTropo += vant.id
+            }
+        }
     }
 
     /**
@@ -5218,15 +5206,24 @@ class CriadorState {
         return if (feita != null && escolha.opcoes.any { it.equals(feita, ignoreCase = true) }) feita else escolha.padrao
     }
 
-    fun escolherTropoOpcao(escolhaId: String, valor: String): List<String> {
+    fun escolherTropoOpcao(escolhaId: String, valor: String, feedbackMessages: MutableList<String> = mutableListOf()) {
         // Antes da troca: precisa ler habilidadesDoTropoResolvidas com a escolha ANTIGA ainda
         // valendo, senão o "grant anterior" já sairia calculado com o valor novo (ex.: Artista
         // Marcial "Potencial Físico" — trocar de Agilidade pra Força precisa saber que a
         // Vantagem Esquiva (ligada à opção antiga) deixou de valer, pra poder trocar por
-        // Bloquear).
-        val grantsAnteriores = vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
+        // Bloquear). Mesma reconciliação que selecionarTropo() já faz pro Tropo inteiro, só
+        // que aqui é só a Vantagem ligada a ESTA escolha que pode ter mudado — o resto de
+        // vantagensAutomaticasDoTropo (ganhaAoComprar, outras habilidades[] sem escolha) fica
+        // intacto.
+        val idsAnteriores = tropoVantagensGratisIds()
         tropoEscolhasFeitas[escolhaId] = valor
-        return reconciliarGrantsDoTropo(grantsAnteriores)
+        reconciliarGrantsDeHabilidadesDoTropo(idsAnteriores)
+
+        recalcularPontosAtributo(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages)
+        if (feedbackMessages.isNotEmpty()) {
+            anotacoes += "\n• " + feedbackMessages.joinToString("\n• ")
+        }
     }
 
     /**
@@ -7362,6 +7359,19 @@ class CriadorState {
 
         if (novoTropo != null) {
             novoTropo.ganhaAoComprar.forEach { vantId ->
+                val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+                if (vantagensSelecionadas.none { it.id == vant.id }) {
+                    vantagensSelecionadas += vant
+                    vantagensAutomaticasDoTropo += vant.id
+                }
+            }
+            // Sistema de Tropo genérico (rodada 43): mesmo mecanismo acima, só que lendo
+            // habilidades[] (category=racial_edge/traitId=GRANTED_EDGE) em vez do campo antigo
+            // ganhaAoComprar — os dois convivem enquanto os 9 Tropos oficiais ainda não
+            // migraram totalmente pro novo campo (ver Fase 4). vantagensAutomaticasDoTropo.clear()
+            // já rodou pro Tropo ANTERIOR no topo desta função, então aqui só falta ADICIONAR,
+            // não precisa diferenciar contra nada.
+            tropoVantagensGratisIds().forEach { vantId ->
                 val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
                 if (vantagensSelecionadas.none { it.id == vant.id }) {
                     vantagensSelecionadas += vant
