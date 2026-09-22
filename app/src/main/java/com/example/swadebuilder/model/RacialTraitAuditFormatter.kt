@@ -31,11 +31,24 @@ object RacialTraitAuditFormatter {
      * Puramente estrutural (conta ocorrências em `habilidades[].id` por raça) — não tenta
      * adivinhar se existe lógica hardcoded em outro arquivo Kotlin amarrada a esse id (isso
      * exigiria buscar o id no resto do código-fonte, o que este objeto não faz).
+     *
+     * Ignora de propósito toda habilidade `category="racial_hindrance"`/`"racial_edge"`
+     * (Vantagem/Complicação CONCEDIDA, não um traço em si — ver a doc da classe): esse tipo
+     * de entrada sempre aponta pra um item JÁ existente no catálogo geral de Vantagens/
+     * Complicações, então nunca é "traço sem equivalente genérico", mesmo quando só uma raça
+     * hoje a concede automaticamente. Bug real relatado pelo usuário: Androides "Pacifista"
+     * aparecia marcado "exclusivo-desta-raça" só porque nenhuma OUTRA raça concede Pacifista
+     * de graça — mas a Complicação Pacifista em si é universal, qualquer personagem de
+     * qualquer raça pode escolhê-la na aba Complicações. O `id` de uma entrada
+     * racial_hindrance/racial_edge é só o marcador interno do mecanismo de concessão (ver
+     * `RacialTraitAuditFormatter.formatarUm`), nunca uma alegação sobre quantas raças
+     * compartilham o CONTEÚDO concedido.
      */
     fun calcularIdsExclusivos(todasAsRacas: List<RacialModifier>): Map<String, String> {
         val porId = mutableMapOf<String, MutableSet<String>>()
         todasAsRacas.forEach { raca ->
             raca.habilidades.forEach { hab ->
+                if (hab.category == "racial_hindrance" || hab.category == "racial_edge") return@forEach
                 val chave = hab.id?.keyify() ?: return@forEach
                 porId.getOrPut(chave) { mutableSetOf() }.add(raca.nome)
             }

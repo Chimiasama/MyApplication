@@ -154,4 +154,34 @@ class RacialTraitAuditFormatterTest {
         val exclusivos = RacialTraitAuditFormatter.calcularIdsExclusivos(listOf(racaA, racaB))
         assertEquals(mapOf("SO_A" to "Raça A"), exclusivos)
     }
+
+    @Test
+    fun `racial_hindrance e racial_edge nunca contam pra exclusividade, mesmo sendo a unica raca com aquele id`() {
+        // Bug real relatado pelo usuário: Androides "Pacifista" aparecia com a etiqueta
+        // "exclusivo-desta-raça" no Modo Auditoria — Pacifista é uma Complicação universal
+        // (todo livro tem ela em complicacoes.json, qualquer raça pode escolhê-la), só que
+        // Androides é a única raça que a CONCEDE de graça. "Exclusivo desta raça" nunca
+        // deveria se aplicar a uma Vantagem/Complicação concedida (racial_edge/
+        // racial_hindrance) — só a um traço mecânico sem equivalente genérico de verdade.
+        val androides = RacialModifier(
+            nome = "Androides",
+            habilidades = listOf(
+                RacialAbility(nome = "Pacifista", descricao = "", id = "PACIFISTA", category = "racial_hindrance", severity = "Maior"),
+                RacialAbility(nome = "Carismático (racial)", descricao = "", id = "CARISMATICO", category = "racial_edge")
+            )
+        )
+        val outraRaca = RacialModifier(
+            nome = "Outra Raça",
+            habilidades = listOf(RacialAbility(nome = "Traço Qualquer", descricao = "", id = "TRACO_QUALQUER"))
+        )
+
+        val exclusivos = RacialTraitAuditFormatter.calcularIdsExclusivos(listOf(androides, outraRaca))
+
+        assertTrue(!exclusivos.containsKey("PACIFISTA"))
+        assertTrue(!exclusivos.containsKey("CARISMATICO"))
+
+        val linhas = RacialTraitAuditFormatter.formatar(androides.habilidades, catalogoOficial, exclusivos)
+        assertTrue(!linhas[0].contains("exclusivo-desta-raça"))
+        assertTrue(!linhas[1].contains("exclusivo-desta-raça"))
+    }
 }

@@ -6408,6 +6408,24 @@ class CriadorState {
         }
 
         syncPoderesSelecionadosFromSlots()
+
+        // Restrição de Transição favorita (Usagimimi, Arte da Guerra): só permite Elementalista
+        // (ou nenhum Tropo) — ver isUsagimimiTransicaoRestrictionActive()/
+        // podeSelecionarTropoPorRestricoesAtuais(). Antes, trocar de Ancestralidade com um
+        // Tropo selecionado era bloqueado na própria UI (ver isSectionEnabled — travava a
+        // aba Ancestralidades sempre que havia Tropo escolhido), então essa combinação nunca
+        // surgia sozinha. Com a trava removida (rodada 46 — o motor de Tropo/raça já é puro/
+        // recalculado do zero a cada chamada, não precisa mais dessa defesa), virar Usagimimi
+        // com Transição já escolhida de uma sessão anterior, enquanto um Tropo incompatível
+        // segue selecionado, precisa da mesma correção automática que qualquer outra
+        // invalidação de raça já recebe aqui.
+        if (!podeSelecionarTropoPorRestricoesAtuais(tropoSelecionado)) {
+            val tropoRemovido = tropoSelecionado
+            selecionarTropo(null, feedbackMessages)
+            if (tropoRemovido != null) {
+                feedbackMessages.add("Tropo '${tropoRemovido.nome}' removido: Usagimimi com Transição favorita só permite Elementalista (ou nenhum Tropo).")
+            }
+        }
     }
 
     private fun atendeRequisitosMantidos(v: Vantagem): Boolean {
@@ -6555,15 +6573,16 @@ class CriadorState {
             }
         }
 
-        // Um Tropo de verdade foi escolhido (qualquer livro com o sistema ligado, não só
-        // Arte da Guerra): trava Ancestralidade — mesmo motivo de sempre, evitar trocar de
-        // raça por baixo do pano com bônus de Tropo já aplicados em cima dela (ver
-        // atributoBaseRacial/periciaStartRawInternal). Volta a liberar assim que o jogador
-        // escolher "nenhum Tropo" de novo.
-        return when (section) {
-            MainSection.ANCESTRALIDADES -> false
-            else -> true
-        }
+        // Um Tropo de verdade foi escolhido (qualquer livro com o sistema ligado, não só Arte
+        // da Guerra): NÃO trava mais Ancestralidade (rodada 46). A trava antiga vinha do
+        // sistema de Tropo original do Arte da Guerra, que calculava atributo/perícia de
+        // forma incremental e podia perder conta ao trocar de raça com bônus de Tropo já
+        // aplicados por cima. O motor atual (atributoBaseRacial/periciaStartRawInternal) é
+        // puro — recalcula do zero, lendo raça + Tropo juntos a cada chamada — então trocar de
+        // Ancestralidade com um Tropo selecionado é seguro, sem esse risco estrutural. Ver
+        // aplicarAncestralidade() pra correção automática do único caso que ainda pode ficar
+        // inválido (Usagimimi + Transição favorita só permite Elementalista).
+        return true
     }
 
     // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)

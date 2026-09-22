@@ -10,9 +10,11 @@ import org.junit.Test
 /**
  * Gate de ativação genérico do sistema de Tropo (rodada 43 do audit doc): `modoTroposAtivo`
  * (Arte da Guerra sempre liga; qualquer outro livro só liga pela checkbox manual) e
- * `isSectionEnabled()` — trava Ancestralidade quando um Tropo de verdade está selecionado
- * (qualquer livro), mas só bloqueia TODAS as outras abas até a primeira escolha quando o
- * livro OBRIGA escolher um Tropo (hoje só Arte da Guerra).
+ * `isSectionEnabled()` — só bloqueia TODAS as outras abas até a primeira escolha quando o
+ * livro OBRIGA escolher um Tropo (hoje só Arte da Guerra). A trava de Ancestralidade quando
+ * um Tropo está selecionado foi removida na rodada 46 (o motor de raça+Tropo é puro/
+ * recalculado do zero a cada chamada — não precisa mais dessa defesa; ver
+ * CriadorState.isSectionEnabled/aplicarAncestralidade).
  */
 class TropoGateTest {
 
@@ -46,12 +48,12 @@ class TropoGateTest {
     }
 
     @Test
-    fun `arte da guerra ativo com tropo escolhido trava so Ancestralidade, libera o resto`() {
+    fun `arte da guerra ativo com tropo escolhido libera tudo, inclusive Ancestralidade`() {
         val state = estadoBase()
         state.compendioArteDaGuerraAtivo = true
         state.tropoSelecionado = tropoQualquer
 
-        assertFalse(state.isSectionEnabled(MainSection.ANCESTRALIDADES))
+        assertTrue(state.isSectionEnabled(MainSection.ANCESTRALIDADES))
         assertTrue(state.isSectionEnabled(MainSection.VANTAGENS))
         assertTrue(state.isSectionEnabled(MainSection.COMPLICACOES))
         assertTrue(state.isSectionEnabled(MainSection.TROPOS))
@@ -71,24 +73,13 @@ class TropoGateTest {
     }
 
     @Test
-    fun `outro livro com checkbox manual ligada e um tropo de verdade escolhido trava Ancestralidade tambem`() {
+    fun `outro livro com checkbox manual ligada e um tropo de verdade escolhido tambem libera Ancestralidade`() {
         val state = estadoBase()
         state.modoTroposHabilitadoManualmente = true
         state.tropoSelecionado = tropoQualquer
 
-        assertFalse(state.isSectionEnabled(MainSection.ANCESTRALIDADES))
-        assertTrue(state.isSectionEnabled(MainSection.VANTAGENS))
-    }
-
-    @Test
-    fun `voltar para nenhum tropo destrava Ancestralidade de novo`() {
-        val state = estadoBase()
-        state.modoTroposHabilitadoManualmente = true
-        state.tropoSelecionado = tropoQualquer
-        assertFalse(state.isSectionEnabled(MainSection.ANCESTRALIDADES))
-
-        state.tropoSelecionado = null
         assertTrue(state.isSectionEnabled(MainSection.ANCESTRALIDADES))
+        assertTrue(state.isSectionEnabled(MainSection.VANTAGENS))
     }
 
     @Test

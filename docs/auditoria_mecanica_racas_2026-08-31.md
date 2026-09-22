@@ -4601,3 +4601,105 @@ Android funcional). Fase 7 (criação customizada de Tropo em
 SettingsDialog) e o Modo Auditoria de Tropo continuam pendentes, sem
 relação direta com este pedido. `crystal_tropos.json` (achado obsoleto,
 Fase 8) e a rodada final de regressão completa também seguem para depois.
+
+## Quadragésima sexta rodada — remove a trava de Ancestralidade com Tropo selecionado; bug real no Modo Auditoria (racial_hindrance marcado "exclusivo desta raça")
+
+Duas coisas na mesma rodada — o usuário mandou as duas juntas, uma na
+mensagem principal (testando o Básico, viu a aba Tropos dizendo "Sem tropo
+permite alterar Ancestralidade" e perguntou se essa trava ainda fazia
+sentido) e outra mandada no meio do turno (Modo Auditoria mostrando
+Androides "Pacifista" como `exclusivo-desta-raça`, quando Pacifista é uma
+Complicação real do catálogo geral).
+
+### Trava de Ancestralidade — investigação antes de mexer
+
+`isSectionEnabled()` travava `MainSection.ANCESTRALIDADES` sempre que
+`tropoSelecionado != null`, comentário original: "evitar trocar de raça
+por baixo do pano com bônus de Tropo já aplicados em cima dela". O usuário
+lembrou que essa trava nasceu no sistema ANTIGO de Tropo do Arte da
+Guerra ("gambiarra feia, mal feita") e perguntou se o motor atual (o que
+essa migração toda construiu) ainda precisa dela.
+
+Investiguei antes de tirar, não assumi que era só texto:
+
+- `atributoBaseRacial()`/`periciaStartRawInternal()` são PURAS — recalculam
+  do zero a cada chamada, lendo `ancestralidade` e `tropoSelecionado`
+  juntos. Não existe estado incremental que ficaria desatualizado ao
+  trocar de raça — a mesma conclusão estrutural da rodada 43 (por isso o
+  medo original de d6→d8→d10 já era estruturalmente impossível).
+- `CriadorState.aplicarAncestralidade()` (o fluxo real de troca de raça,
+  via `ApplyAncestryChangeCoordinatorUseCase`) já é construído com Tropo
+  em mente, não é código novo pra isso: `automaticTropoAdvantageIds`/
+  `additionalProtectedAdvantageIds` protegem Vantagens concedidas pelo
+  Tropo durante toda a reconciliação, e
+  `RemoveInvalidAdvantagesAfterAncestryChangeUseCase` já remove (com
+  reembolso correto) qualquer Vantagem que deixe de atender requisitos
+  após a troca — inclusive as concedidas pelo Tropo, se for o caso.
+  `tropoSelecionado`/estado de escolha do Tropo nunca é tocado por essa
+  função — só a raça muda.
+- Único risco real encontrado (não hipotético): a restrição "Usagimimi
+  com Transição favorita só permite o Tropo Elementalista"
+  (`isUsagimimiTransicaoRestrictionActive`/
+  `podeSelecionarTropoPorRestricoesAtuais`) só era validada no momento de
+  ESCOLHER um Tropo, nunca ao trocar de raça — porque, com a trava antiga,
+  trocar de raça com um Tropo selecionado era impossível, então essa
+  combinação nunca surgia sozinha. Removendo a trava, virar Usagimimi (com
+  `usagimimiPericiaEscolhida="Transição"` remanescente de uma raça
+  anterior — esse campo nunca foi resetado ao trocar de raça) enquanto um
+  Tropo incompatível (ex.: Samurai) está selecionado passa a ser
+  alcançável.
+
+**Correção**: removida a trava (`isSectionEnabled` retorna `true` pra
+Ancestralidade em qualquer caso com Tropo selecionado agora). Adicionada
+ao fim de `aplicarAncestralidade()` a mesma correção automática que outras
+invalidações de raça já recebem ali — se `!podeSelecionarTropoPorRestricoesAtuais(tropoSelecionado)`
+depois da troca, remove o Tropo (`selecionarTropo(null, ...)`) com
+mensagem de feedback explicando o motivo. `TroposSection.kt`: texto da
+opção "Nenhum" atualizado (não promete mais "liberar Ancestralidade"; pro
+Arte da Guerra, mantém o aviso de que o resto da ficha segue bloqueado até
+uma escolha de verdade — isso não mudou, é regra do livro).
+
+### Bug real no Modo Auditoria — "exclusivo desta raça" não deveria nunca marcar racial_hindrance/racial_edge
+
+`RacialTraitAuditFormatter.calcularIdsExclusivos()` conta em quantas
+raças o MESMO `hab.id` aparece em `habilidades[]`; se só 1, marca
+"exclusivo desta raça" no cabeçalho do Modo Auditoria. Isso é a pergunta
+certa pra um traço mecânico de verdade (ex.: "Magia Gnômica"), mas é a
+pergunta ERRADA pra uma entrada `category="racial_hindrance"`/
+`"racial_edge"` — essas SEMPRE apontam pra um item que já existe no
+catálogo geral de Vantagens/Complicações (é literalmente o que o
+mecanismo faz: conceder algo do catálogo). Androides "Pacifista"
+(`id=PACIFISTA`, `category=racial_hindrance`) é a única raça cujas
+`habilidades[]` concedem Pacifista de graça — mas a Complicação Pacifista
+em si está em `complicacoes.json` de TODOS os livros (Básico, Fantasia,
+Horror, Sci-Fi, Wiseguys, Arte da Guerra, Cidade do Sol a Vapor,
+Deadlands, Pathfinder), qualquer personagem de qualquer raça pode
+escolhê-la na aba Complicações. "Exclusivo desta raça" nunca deveria se
+aplicar aqui.
+
+Corrigido: `calcularIdsExclusivos()` agora ignora toda habilidade
+`category="racial_hindrance"`/`"racial_edge"` ao contar — essas nunca
+entram no mapa de exclusividade, então nunca ganham a etiqueta. Rodei um
+script comparando o resultado antes/depois contra o catálogo inteiro pra
+medir o alcance real do bug: **27 ids** deixam de ser marcados errado
+(`ALMOFADINHA`, `ANALFABETO`, `ATRAENTE`, `CODIGO_DE_HONRA`, `FOBIA`,
+`FURIOSO`, `PACIFISTA`, `SEM_ESCRUPULOS`, `SUSPEITOSO` etc.) — confirma
+que não era um caso isolado do Androides, era sistemático em toda entrada
+racial_hindrance/racial_edge cujo id não coincide com o de nenhuma outra
+raça (a maioria delas).
+
+### Verificação
+
+`RacialTraitAuditFormatterTest.kt`: novo teste prova que Androides
+"Pacifista"/"Carismático" (racial_hindrance/racial_edge) nunca entram no
+mapa de exclusividade nem ganham a etiqueta, mesmo sendo a única raça com
+aquele id. `TropoGateTest.kt`: reescrito pra refletir que Ancestralidade
+fica sempre liberada. `CriadorStateTrocarRacaComTropoTest.kt` (novo):
+troca de raça com Tropo selecionado preserva o Tropo quando não há
+restrição; e prova a correção automática Usagimimi+Transição (remove
+Samurai, mantém Elementalista). 299 testes (harness standalone), gate
+phase6 ok. `TroposSection.kt`/`AncestralidadesSection.kt` (Compose) —
+revisados manualmente; confirmei que `UnifiedScreen.kt` já encana
+`isSectionEnabled(ANCESTRALIDADES)` direto pro `supersLocked` de
+`AncestralidadesSection`, então a correção em `CriadorState.kt` já basta,
+sem precisar duplicar lógica na UI.
