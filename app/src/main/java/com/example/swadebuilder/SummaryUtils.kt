@@ -9,6 +9,8 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitEffect
+import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.keyify
@@ -497,16 +499,27 @@ fun buildSummaryLines(
                     ?: 0
             }
 
-        val garcaParryBonus =
-            if (
-                personagem.compendioArteDaGuerraAtivo &&
-                especieIdAtual == "humano" &&
-                CriadorState.signoIdFromNome(personagem.signoAdgSelecionado) == "GARCA"
-            ) 1 else 0
+        // Bônus/penalidade de Aparar vindo de um traço racial ESTÁTICO (ex.:
+        // Garça "Aparar +1 (Garça)", id="APARAR"; Tanukimimi "Aparar Baixo",
+        // id="APARAR_BAIXO") — lido pelo mesmo catálogo genérico
+        // (RacialTraitPointCatalog.efeitoDe/ApararBonus) que ModifierEngine
+        // já usa pra qualquer raça, em vez de checar por Signo/raça
+        // específica. Antes só a Garça tinha esse bônus aqui, hardcoded por
+        // id de Signo (achado real: Tanukimimi tem o traço oposto,
+        // "APARAR_BAIXO", category=racial_trait_negative — nunca cai em
+        // `desvantagensRaciais`, então o `apararBaixoMod` acima nunca o via;
+        // esse scan genérico cobre os dois, sem precisar saber o nome de
+        // nenhuma raça).
+        val racialTraitApararBonus = (ancestralidadeAtual ?: ancestralidadeNomeObj)
+            ?.habilidades
+            ?.sumOf { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.ApararBonus) efeito.valor * hab.vezes.coerceAtLeast(1) else 0
+            } ?: 0
 
         val total =
             base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower +
-                apararBaixoMod + racialParryBonus + garcaParryBonus
+                apararBaixoMod + racialParryBonus + racialTraitApararBonus
         return total.coerceAtLeast(0)
     }
 

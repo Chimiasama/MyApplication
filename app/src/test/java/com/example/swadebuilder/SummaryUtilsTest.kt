@@ -444,12 +444,18 @@ class SummaryUtilsTest {
 
     @Test
     fun `buildSummaryLines aplica aparar mais um do signo garca para humanos adg`() {
+        // Garça concede Aparar +1 por um traço REAL (id="APARAR", já resolvido
+        // em habilidades[] por applyAncestryVariantAdjustments quando o Signo
+        // está ativo — mesma injeção que qualquer outra Seleção usa), lido
+        // pelo catálogo genérico (RacialTraitPointCatalog.ApararBonus) — não
+        // mais um `if` checando o id do Signo. `signoAdgSelecionado` some do
+        // fixture porque não é mais lido por calcAparar(); o que importa é a
+        // raça já vir com o traço, como currentAncestryDef traria de verdade.
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Garca",
                 pericias = mapOf("Lutar" to 4),
                 ancestralidade = "HUMANOS",
-                signoAdgSelecionado = "Garça",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
                 complicacoes = emptyList(),
@@ -466,7 +472,14 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "HUMANOS",
                     origem = "ARTE_DA_GUERRA",
-                    especieId = "humano"
+                    especieId = "humano",
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Aparar +1 (Garça)",
+                            descricao = "",
+                            id = "APARAR"
+                        )
+                    )
                 )
             ),
             listaMonstros = emptyList(),
@@ -479,6 +492,57 @@ class SummaryUtilsTest {
         )
 
         assertTrue(lines.contains("Aparar: 5"))
+    }
+
+    @Test
+    fun `buildSummaryLines aplica aparar baixo de um traco racial estatico qualquer, nao so Garca`() {
+        // Prova de que o mecanismo é genérico (funciona pra QUALQUER raça com
+        // um traço ApararBonus, não só Garça): Tanukimimi tem "Aparar Baixo"
+        // (id=APARAR_BAIXO, category=racial_trait_negative) — um achado real
+        // desta migração, nunca coberto pelo `apararBaixoMod` (que só lê
+        // desvantagensRaciais, e esse traço não é uma Complicação concedida).
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Tanuki",
+                pericias = mapOf("Lutar" to 4),
+                ancestralidade = "TANUKIMIMI",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                atributos = emptyMap(),
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "TANUKIMIMI",
+                    origem = "ARTE_DA_GUERRA",
+                    especieId = "tanukimimi",
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
+                            descricao = "",
+                            id = "APARAR_BAIXO",
+                            category = "racial_trait_negative"
+                        )
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        assertTrue(lines.contains("Aparar: 3"))
     }
 
     @Test

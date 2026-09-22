@@ -3701,3 +3701,78 @@ Pendente, explicitamente fora desta rodada: os ids de Signo de
 Nascença (ver acima) e o outro item de backlog ainda aberto
 ("robustecer despacho por `(id, livro)` em vez de substring de
 nome").
+
+## Quadragésima rodada — política sobre bônus situacionais de Signo (fechado, não implementar) + Garça migrada pro traço genérico de Aparar
+
+Duas listas pedidas pelo usuário antes de mexer em código (rodada 39):
+efeitos de Signo sem gancho mecânico, e a duplicação Garça/`SummaryUtils`.
+
+### Política definida pelo usuário: bônus só-de-sessão não viram mecânica no app
+
+Resposta direta às 2 listas: efeitos que só se aplicam "durante o jogo"
+(bônus de um teste específico, bônus de Reação, penalidade numa
+manobra específica etc.) **não devem ganhar implementação numérica no
+app** — são coisas que o mestre/jogador aplicam na mesa, não algo que
+a ficha calcula na criação do personagem. O traço continua existindo
+(id + descrição, já é assim hoje via `anotacoes` em
+`AncestryVariantRegistry`), só não precisa de um `RacialTraitEffect`
+novo por trás.
+
+Isso fecha a Lista 1 inteira (Tigre, Boi/Brutamontes, Lebre/Bene,
+Macaco/d4+1, Raposa/Reação, Lobo/Reação Inicial, Tartaruga/Finalização,
+Urso/Exausto, Serpente) como **corretas do jeito que estão** — não é
+mais um "gap conhecido", é uma decisão de escopo do próprio dono do
+projeto. Nenhuma mudança de código necessária.
+
+### Garça: migrada pro traço genérico de Aparar (não mais checagem por Signo)
+
+Confirmado o que o usuário pediu pra verificar: existe sim um traço
+genérico de Aparar no catálogo (`RacialTraitPointCatalog.EFEITOS["APARAR"]
+= ApararBonus(1)`, já consumido por `ModifierEngine` pra qualquer
+outra raça) — Garça só não passava por ele porque `SummaryUtils.calcAparar()`
+tinha um `if` dedicado (`signoIdFromNome(...) == "GARCA"`) em vez de ler o
+traço de verdade.
+
+Achado no caminho, investigando a fundo: `SummaryUtils.buildSummaryLines()`
+**não é** um pipeline "só do PDF" como uma rodada anterior tinha
+registrado — é a ÚNICA fonte do valor "Aparar" mostrado tanto no PDF
+quanto na aba Resumo do app ao vivo (`ResumoSection.kt` chama
+`rememberSummarySections` → `buildSummaryLines`). `ModifierEngine`'s
+`ApararBonus`/`ModifierTarget.PARRY` (o caminho "certo") na verdade não
+é lido por NENHUMA tela hoje — `SummaryUtils` sempre foi a única
+implementação de verdade, com sua própria checagem paralela em vez de
+usar o catálogo genérico.
+
+**Corrigido**: `garcaParryBonus` (hardcoded) virou `racialTraitApararBonus`
+— soma `RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)`
+sobre `(ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades`,
+somando `efeito.valor * vezes` pra qualquer `ApararBonus` encontrado —
+sem checar Signo, sem checar raça, só o traço de verdade.
+
+**Achado de quebra, corrigindo um segundo gap nunca notado**: Tanukimimi
+(Arte da Guerra) tem "Aparar Baixo" (id=`APARAR_BAIXO`,
+`category=racial_trait_negative`) — o `apararBaixoMod` já existente só
+lê `desvantagensRaciais` (populada só por Complicações CONCEDIDAS, não
+por traços simples negativos), então esse -1 nunca aparecia em nenhum
+Aparar mostrado antes desta rodada. O novo scan genérico cobre positivo
+E negativo pelo mesmo mecanismo, então corrige os dois de graça — sem
+ter sido pedido especificamente, só uma consequência de fazer certo.
+
+### Verificação
+
+- Teste existente da Garça (`SummaryUtilsTest`) atualizado: em vez de
+  simular a raça com `signoAdgSelecionado="Garça"` e nenhum traço em
+  `habilidades[]` (testava o atalho hardcoded, não o mecanismo real),
+  agora passa a raça já com o traço `id="APARAR"` — como
+  `currentAncestryDef` traria de verdade depois da resolução do Signo.
+- Teste novo pra Tanukimimi: prova que o mecanismo é genérico (funciona
+  pra qualquer raça com um traço `ApararBonus`, positivo ou negativo),
+  não só pra Garça.
+- Suite completa (30 arquivos, 220 testes) e
+  `scripts/phase6_reliability_gate.sh` passando (mesmo WARN
+  pré-existente de tamanho de `CriadorState.kt`, sem regressão nova).
+
+Único item de backlog ainda em aberto: "robustecer despacho por
+`(id, livro)` em vez de substring de nome" (~25 pontos em
+`CriadorState.kt`/`ResolveAncestrySpecificAdjustmentsUseCase.kt`),
+adiado a pedido do usuário pra depois desta sessão.
