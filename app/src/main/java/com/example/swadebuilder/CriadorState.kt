@@ -5133,6 +5133,25 @@ class CriadorState {
     var meioElfoAgil by mutableStateOf(false)
     var meioDemonioAA by mutableStateOf(false)
 
+    // Gate de ativação genérico do sistema de Tropo (rodada 43 do audit doc) — checkbox de
+    // regra na tela de criação, disponível em QUALQUER livro (mesmo sem nenhum Tropo de
+    // catálogo pra oferecer ainda; nesse caso a aba Tropo só mostra "nenhum Tropo escolhido",
+    // sem efeito mecânico nenhum). Arte da Guerra não usa esta flag pra se ativar — ela é
+    // sempre obrigatória lá (ver modoTroposAtivo), então a UI da checkbox deve mostrar
+    // marcado e travado (sem poder desmarcar) sempre que compendioArteDaGuerraAtivo, mas o
+    // valor desta variável em si só importa pros DEMAIS livros (ela pode ficar false o tempo
+    // todo com Arte da Guerra ativo — modoTroposAtivo ainda dá true pelo outro lado do OR).
+    var modoTroposHabilitadoManualmente by mutableStateOf(false)
+
+    /**
+     * Sistema de Tropo genérico ligado nesta sessão — trava a Ancestralidade (ver
+     * isSectionEnabled) assim que um Tropo for escolhido, disponibiliza a aba Tropo. Arte da
+     * Guerra sempre liga (regra obrigatória do livro, não dá pra desmarcar); qualquer outro
+     * livro liga só se o jogador marcar a checkbox manualmente.
+     */
+    val modoTroposAtivo: Boolean
+        get() = compendioArteDaGuerraAtivo || modoTroposHabilitadoManualmente
+
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
     val vantagensAutomaticasDoProtagonista = mutableStateListOf<String>()
@@ -6518,25 +6537,30 @@ class CriadorState {
 
     fun isSectionEnabled(section: MainSection): Boolean {
         if (modoProgressaoAtivo) return true
-        if (!compendioArteDaGuerraAtivo) return true
+        if (!modoTroposAtivo) return true
 
-        return if (tropoSelecionado == null) {
-            // "Locked Mode" (No Trope selected yet):
-            // Can see Summary, Ancestry, and Trope selection.
-            // Other tabs are disabled.
-            when (section) {
+        if (tropoSelecionado == null) {
+            // Pré-escolha ("Locked Mode"): só bloqueia TUDO (exceto Resumo/Ancestralidade/
+            // Tropos) quando o livro OBRIGA escolher um Tropo — hoje só Arte da Guerra (ver
+            // modoTroposAtivo). Pros demais livros (sistema ligado pela checkbox manual,
+            // opcional), "nenhum Tropo escolhido" é um estado final válido — nunca faz
+            // sentido travar o resto da ficha só porque o jogador ainda não visitou a aba
+            // Tropo pra confirmar que não quer nenhum.
+            if (!compendioArteDaGuerraAtivo) return true
+            return when (section) {
                 MainSection.RESUMO, MainSection.ANCESTRALIDADES, MainSection.TROPOS -> true
                 else -> false
             }
-        } else {
-            // "Unlocked Mode" (Trope selected):
-            // Ancestry is now LOCKED (disabled).
-            // Trope is ENABLED (to change back to 'None').
-            // All other tabs are ENABLED.
-            when (section) {
-                MainSection.ANCESTRALIDADES -> false
-                else -> true
-            }
+        }
+
+        // Um Tropo de verdade foi escolhido (qualquer livro com o sistema ligado, não só
+        // Arte da Guerra): trava Ancestralidade — mesmo motivo de sempre, evitar trocar de
+        // raça por baixo do pano com bônus de Tropo já aplicados em cima dela (ver
+        // atributoBaseRacial/periciaStartRawInternal). Volta a liberar assim que o jogador
+        // escolher "nenhum Tropo" de novo.
+        return when (section) {
+            MainSection.ANCESTRALIDADES -> false
+            else -> true
         }
     }
 

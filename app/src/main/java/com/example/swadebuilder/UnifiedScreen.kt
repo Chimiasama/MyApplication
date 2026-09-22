@@ -647,7 +647,12 @@ internal fun availableSectionsFor(state: CriadorState): List<MainSection> {
     if ((!state.compendioWiseguysAtivo || state.wiseguysHabilitaRacas) && !state.compendioDeadlandsAtivo) {
         sections += MainSection.ANCESTRALIDADES
     }
-    if (state.compendioArteDaGuerraAtivo) {
+    // Aba Tropo: aparece pra qualquer livro com o sistema de Tropo ligado (obrigatório no
+    // Arte da Guerra, ou ligado manualmente na checkbox de regra em qualquer outro livro —
+    // ver CriadorState.modoTroposAtivo), não só Arte da Guerra. O bloqueio total das demais
+    // abas (isAdgLockedMode) continua exclusivo do Arte da Guerra — só ele obriga escolher
+    // um Tropo antes de liberar o resto da ficha.
+    if (state.modoTroposAtivo) {
         sections += MainSection.TROPOS
         if (state.isAdgLockedMode) {
             return sections
