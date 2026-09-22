@@ -1,6 +1,6 @@
 [versions]
 # Build / Kotlin
-agp = "9.4.0"
+agp = "9.4.1"
 kotlin = "2.4.20"
 
 # AndroidX / Google libs (non-Compose BOM)

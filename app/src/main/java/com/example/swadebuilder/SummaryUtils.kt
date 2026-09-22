@@ -135,13 +135,12 @@ fun buildRacialTraitsList(
         habilidadesRaciaisBase
             .map { it.substringBefore("(").trim() }
             .filter {
-                val key = it.keyify()
-                when {
-                    key == "AQUATICO" -> elem == "AGUA"
-                    key == "AR INTERNO" -> elem == "AR"
-                    key == "RAPIDO" -> elem == "FOGO"
-                    key == "SOLIDO COMO ROCHA" -> elem == "TERRA"
-                    key == "RESISTENCIA AMBIENTAL" || key == "FORASTEIRO" -> true
+                when (val key = it.keyify()) {
+                    "AQUATICO" -> elem == "AGUA"
+                    "AR INTERNO" -> elem == "AR"
+                    "RAPIDO" -> elem == "FOGO"
+                    "SOLIDO COMO ROCHA" -> elem == "TERRA"
+                    "RESISTENCIA AMBIENTAL", "FORASTEIRO" -> true
                     else -> true
                 }
             }

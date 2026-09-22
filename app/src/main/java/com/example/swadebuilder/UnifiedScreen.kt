@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -20,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
@@ -112,7 +112,6 @@ fun UnifiedScreen(
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>,
-    modoOficialAtivo: Boolean = false,
     onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit,
 ) {
@@ -204,7 +203,7 @@ fun UnifiedScreen(
         } catch (e: Exception) {
             // Não interrompe o fluxo com UI (é autosave em segundo plano), mas
             // registra no Logcat para não mascarar falhas reais de gravação.
-            android.util.Log.w("AutoSave", "Falha ao salvar automaticamente o personagem", e)
+            Log.w("AutoSave", "Falha ao salvar automaticamente o personagem", e)
         }
     }
 
@@ -556,9 +555,6 @@ private fun SectionDetailPane(
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -568,8 +564,7 @@ private fun SectionDetailPane(
             Box(Modifier.fillMaxSize()) {
                 SummaryTabContent(
                     state = state,
-                    viewModel = viewModel,
-                    onShowMessage = onShowMessage
+                    viewModel = viewModel
                 )
 
                 TextButton(
@@ -852,8 +847,7 @@ private fun ProgressionDetailContent(
         )
         else -> SummaryTabContent(
             state = state,
-            viewModel = viewModel,
-            onShowMessage = onShowMessage,
+            viewModel = viewModel
         )
     }
 }
@@ -878,8 +872,7 @@ private fun CreationDetailContent(
     when (selectedSection) {
         MainSection.RESUMO -> SummaryTabContent(
             state = state,
-            viewModel = viewModel,
-            onShowMessage = onShowMessage,
+            viewModel = viewModel
         )
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
@@ -1015,8 +1008,7 @@ private fun CreationDetailContent(
         )
         else -> SummaryTabContent(
             state = state,
-            viewModel = viewModel,
-            onShowMessage = onShowMessage,
+            viewModel = viewModel
         )
     }
 }
@@ -1025,7 +1017,6 @@ private fun CreationDetailContent(
 private fun SummaryTabContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onShowMessage: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -1042,17 +1033,6 @@ private fun SummaryTabContent(
             pendingCropUri = it
         }
     }
-    val portraitFile = remember(state.portraitFileName, context) {
-        state.portraitFileName?.let {
-            try {
-                val portraitsDir = File(context.filesDir, "portraits")
-                SecurityUtils.getSafeChildFile(portraitsDir, it)
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
-    val portraitUri = portraitFile?.takeIf { it.exists() }?.let(Uri::fromFile)
 
     if (pendingCropUri != null || pendingCropFileName != null) {
         com.example.swadebuilder.ui.dialogs.ImageCropperDialog(
@@ -1080,7 +1060,6 @@ private fun SummaryTabContent(
         // Pass image selection data to SummaryContent which now houses the placeholder
         SummaryContent(
             state = state,
-            imageUri = portraitUri,
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
