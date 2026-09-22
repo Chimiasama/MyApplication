@@ -3912,6 +3912,23 @@ class CriadorState {
         val pisoSemTropo = modifiedBase
         if (!includeTropo) return pisoSemTropo
 
+        // Sistema de Tropo genérico (ver docs/auditoria_mecanica_racas_2026-08-31.md rodada
+        // 43): mesmo mecanismo do loop equivalente em atributoBaseRacial() acima, só que pra
+        // PericiaStep — `relativo=true` (traitId SKILL_STEP_UP) soma passos ACIMA de
+        // pisoSemTropo; `relativo=false` (traitId SKILL_BOOST) é piso fixo a partir de
+        // pisoSemTropo. Substitui, pra qualquer Tropo migrado pra `habilidades[]`, os blocos
+        // hardcoded por id logo abaixo.
+        tropoSelecionado?.habilidades?.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
+                modifiedBase = if (efeito.relativo) {
+                    maxOf(modifiedBase, applySuperStepsFrom(pisoSemTropo, efeito.passos))
+                } else {
+                    maxOf(modifiedBase, 4 + efeito.passos * 2)
+                }
+            }
+        }
+
         // Arte da Guerra - Protagonista: livro diz "Essa perícia é aumentada
         // em um tipo de dado" — bônus RELATIVO ao que o herói já tem (de
         // raça, por exemplo), não um piso fixo de d6. Isso é a sinergia
@@ -5767,6 +5784,26 @@ class CriadorState {
         // máximo do teto dela").
         val pisoSemTropo = modifiedBase
         if (!includeTropo) return pisoSemTropo
+
+        // Sistema de Tropo genérico (ver docs/auditoria_mecanica_racas_2026-08-31.md rodada
+        // 43): qualquer Tropo com uma AtributoStep em `habilidades[]` sobe este atributo —
+        // `relativo=true` (traitId ATTRIBUTE_STEP_UP) soma passos ACIMA de pisoSemTropo via
+        // applySuperStepsFrom (ex.: raça já dá d6, Tropo diz "+1 tipo", vira d8, nunca trava
+        // em d6); `relativo=false` (traitId ATTRIBUTE_BOOST, piso fixo) funciona igual a um
+        // traço de raça, só que a partir de pisoSemTropo em vez de 4 — nos dois casos nunca
+        // entra no cálculo do teto (só roda quando includeTropo=true, acima). Substitui, pra
+        // qualquer Tropo migrado pra `habilidades[]`, os blocos hardcoded por id que ainda
+        // existem logo abaixo pros Tropos não migrados.
+        tropoSelecionado?.habilidades?.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                modifiedBase = if (efeito.relativo) {
+                    maxOf(modifiedBase, applySuperStepsFrom(pisoSemTropo, efeito.passos))
+                } else {
+                    maxOf(modifiedBase, 4 + 2 * efeito.passos)
+                }
+            }
+        }
 
         // Arte da Guerra - Protagonista (Qualidades de Herói): livro diz
         // "aumenta [o atributo] em um tipo de dado" — é um bônus RELATIVO ao

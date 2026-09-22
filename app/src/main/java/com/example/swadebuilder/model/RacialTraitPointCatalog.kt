@@ -62,8 +62,14 @@ import com.example.swadebuilder.util.keyify
  * diz o quê e quanto.
  */
 sealed class RacialTraitEffect {
-    data class AtributoStep(val atributo: String, val passos: Int = 1) : RacialTraitEffect()
-    data class PericiaStep(val pericia: String, val passos: Int = 1) : RacialTraitEffect()
+    // `relativo=true` soma `passos` ACIMA do que a fonte anterior (raça, Monstro etc.) já
+    // concedeu, em vez de definir um piso fixo — ex.: Tropo "Protagonista" (Arte da Guerra)
+    // diz "aumenta esta perícia em um tipo de dado": se a raça já dá d6, vira d8, não trava
+    // em d6. Só usado por Tropo hoje (raça sempre concede piso fixo) — ver
+    // CriadorState.atributoBaseRacial()/periciaStartRawInternal(), que aplicam isso via
+    // applySuperStepsFrom(pisoSemTropo, passos) em vez de maxOf(base, 4 + passos*2).
+    data class AtributoStep(val atributo: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
+    data class PericiaStep(val pericia: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
     // Bônus fixo (não "passo de dado") de Resistência/Passo/Aparar — mesma
     // ideia de AtributoStep/PericiaStep, só que pra alvos que o ModifierEngine
     // já trata como valor plano (ModifierTarget.TOUGHNESS_FLAT/PACE/PARRY),
@@ -291,6 +297,12 @@ object RacialTraitPointCatalog {
         return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
             "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
+            // Versão "relativa" de ATTRIBUTE_BOOST/SKILL_BOOST — soma `value` passos ACIMA do
+            // que já existe (ver RacialTraitEffect.AtributoStep/PericiaStep.relativo) em vez de
+            // definir um piso fixo. Só Tropo usa isso hoje (ex.: Protagonista "aumenta em um
+            // tipo de dado").
+            "ATTRIBUTE_STEP_UP" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value, relativo = true) else RacialTraitEffect.Nenhum
+            "SKILL_STEP_UP" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value, relativo = true) else RacialTraitEffect.Nenhum
             "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
             "PACE_CHANGE" -> RacialTraitEffect.PassoBonus(value)
             "PARRY_BOOST" -> RacialTraitEffect.ApararBonus(value)
@@ -1069,7 +1081,7 @@ object RacialTraitPointCatalog {
         if (pontos != 0) return pontos
         if (id == null) return 0
         return when (val key = id.keyify()) {
-            "ATTRIBUTE_BOOST" -> value * 2
+            "ATTRIBUTE_BOOST", "ATTRIBUTE_STEP_UP" -> value * 2
             // Achado real (rodada 36): fórmula antiga era `if (value>=1) 2
             // else 1` — invertida em relação ao catálogo oficial
             // (pericia_racial_d4 custa 1, pericia_racial_d6 custa 2, ver
@@ -1085,7 +1097,7 @@ object RacialTraitPointCatalog {
             // custo de SKILL_BOOST é `value + 1`, não `value` puro:
             // passos=0 (d4) = 1pt, passos=1 (d6) = 2pt — bate exatamente
             // com os dois tiers oficiais.
-            "SKILL_BOOST" -> value + 1
+            "SKILL_BOOST", "SKILL_STEP_UP" -> value + 1
             // Só usado se quem criar o traço deixar `custo` em 0 (o editor
             // sempre pede um valor explícito) — 1 ponto de orçamento por
             // Ponto de Perícia/Atributo concedido ou tirado, o mesmo peso já
