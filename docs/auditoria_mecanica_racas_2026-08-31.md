@@ -4161,3 +4161,120 @@ Tropos oficiais do livro.
 
 Nenhuma edição de código feita nesta rodada além da limpeza de sujeira
 registrada acima (SummaryUtils.kt/ModifierEngine.kt).
+
+### Refinamentos do desenho (segunda rodada de discussão, mesmo dia)
+
+Resposta do usuário às 3 decisões acima trouxe requisitos concretos novos,
+registrados aqui antes de codificar:
+
+**Visibilidade de Vantagem Monstruosa/de-Tropo — corrigir a base do gate.**
+Hoje `ContentVisibility.kt` esconde `Categoria.MONSTRUOSAS` com um check
+fixo no enum (`vant.categoria == Categoria.MONSTRUOSAS && !modoMonstroAtivo`)
+— isso é problema duplo: (1) esconde pela flag de REGRA do livro
+(`modoMonstroAtivo`), não por "o Tropo selecionado agora é de fato um
+monstro" — com o novo design (escolher "nenhum Tropo" mesmo de sistema
+ativo, ver abaixo), um caçador de monstros que ligou o sistema mas não
+escolheu nenhum Tropo continuaria vendo Vantagens Monstruosas à toa; (2)
+não generaliza pra categoria CUSTOMIZADA — uma Vantagem customizada
+vinculada a um Tropo customizado (ex.: categoria "Mafioso" do Wise Guys)
+não passa por nenhum equivalente desse gate, então nunca fica
+escondida/mostrada corretamente por padrão nenhum hoje. A correção: o gate
+de visibilidade tem que virar genérico, baseado no campo já existente
+`Vantagem.requisitos.templatesRequired` (o mesmo mecanismo de 61 entradas
+em `vantagens.json` hoje) contra o Tropo REALMENTE selecionado agora — não
+mais um `if categoria == X` hardcoded. Isso já funciona pra qualquer
+categoria, oficial ou customizada, sem precisar de nenhum enum novo:
+"esta Vantagem exige Tropo Y" + "Tropo Y não é o selecionado agora" =
+escondida, sempre, custom ou não.
+
+**Consolidação de aba**: a aba "Monstro" (Horror) e a aba "Tropo" (Arte da
+Guerra) de hoje deixam de existir como estão — viram UMA aba nova só,
+"Tropo", mostrando a info de qualquer um dos dois hoje. Confirmado.
+
+**Dois níveis de opt-in, não um só**: (1) toggle de REGRA "usar sistema de
+Tropos" na tela de criação — em todo livro, mas Arte da Guerra (e, por
+decisão nova do usuário, também Crystal Heart, ver abaixo) vem marcado E
+travado, sem poder desmarcar. (2) DENTRO da aba Tropo, mesmo com o sistema
+ligado, o jogador pode escolher "nenhum Tropo" — EXCETO nos livros cuja
+regra obriga escolher um (Arte da Guerra sempre; Crystal Heart pela nova
+decisão). Em Horror, por exemplo, o sistema pode estar ligado e o jogador
+ainda assim escolher "nenhum" (ex.: um caçador de monstros que não é, ele
+mesmo, um monstro).
+
+**Critério pra "isso vira mecânica de ID" vs "isso vira só um ID
+descritivo/fantasma"** — o MESMO critério já usado nas raças (rodada 40):
+efeito que mexe em dado de perícia/atributo, ou concede Vantagem/
+Complicação de verdade, PRECISA de implementação mecânica real por id
+(entra na sequência que o motor de fato calcula). Efeito puramente
+descritivo/de mesa — algo que o jogador aplica ele mesmo DURANTE o jogo
+(ex.: "+2 Intimidar nesta postura", que é um modificador de teste situacional,
+não uma característica permanente de ficha) — vira só um id "fantasma",
+registrado pra identidade/auditoria, sem cálculo nenhum, mesmo padrão de
+Complicações puramente narrativas como Almofadinha. Isso muda a
+classificação de D1: não é "carregar tudo como texto sem mexer" — é ir
+tropo por tropo, mecânica por mecânica, e classificar cada uma nessas duas
+categorias antes de decidir o que vira id mecânico de verdade. Esse
+trabalho de classificação (posturas do Samurai, talentos do Shinobi,
+Caminho do Bu Xista, Ferramentas do Kui, Histórico da Arma do Youxia, as 14
+técnicas do Artista Marcial, a tabela de Habilidades do Protagonista — cada
+sub-opção precisa ir linha por linha contra o texto do livro) fica pra
+dentro da Fase 4 (migração dos 8 Tropos), não dá pra fechar de memória
+agora.
+
+**Modo Auditoria pra Tropo**: o usuário quer o mesmo mecanismo de "Modo
+Auditoria: ID de traço" que Ancestralidades já tem
+(`RacialTraitAuditFormatter`/toggle em `AncestralidadesSection.kt`), agora
+também pra Tropo — pra poder conferir exatamente o que cada Tropo concede.
+Como o novo `Tropo` unificado passa a carregar `habilidades: List<RacialAbility>`
+(o mesmo tipo que raça usa), isso deveria ser bem barato: reaproveitar o
+MESMO `RacialTraitAuditFormatter` (ele já opera sobre `List<RacialAbility>`,
+não sabe nem precisa saber se veio de raça ou de Tropo) e só espelhar o
+toggle na nova aba Tropo. Adicionado como entregável explícito da Fase 4/5.
+
+**`tropo_mon` é real, não é lixo** — conferido em `adg_tropos.json`: é um
+9º Tropo de verdade do Arte da Guerra ("Mon" — vínculo com uma criatura
+companheira, ganha "Forma Bestial" restrita ao Mon + sentidos
+compartilhados, o Mon evolui como Carta Selvagem própria), com descrição
+completa e `tecnicas_iniciais: 1`. NUNCA foi implementado (zero código) —
+e as duas Vantagens que ele concederia ao comprar (`treinamento_mon`,
+`vinculo_mon`) também não existem em `vantagens.json`. Ou seja: conteúdo
+começado (dado) e nunca terminado (nem as Vantagens, nem o código), não
+dado morto pra apagar. Decisão que falta: terminar de verdade (autorar as
+2 Vantagens + implementar via Fase 4, já que o motor novo deixa isso mais
+barato) ou deixar pra depois. `crystal_tropos.json` (achado da rodada
+anterior, schema incompatível) pode ser apagado — usuário confirma que não
+lembra de ter decidido usar aquilo.
+
+**Escopo novo: Crystal Heart também vira "Tropo obrigatório"** — mesma
+regra do Arte da Guerra (sistema travado ligado, jogador tem que escolher
+um Tropo, não pode "nenhum"). Nesse livro, "Agente da SIM" (hoje uma
+Vantagem reskinada) viraria o Tropo. Isso soma um 3º livro-alvo à migração
+(além de Arte da Guerra e Horror), com conteúdo pra autorar do zero (não é
+migração de algo que já existe, é construir um Tropo novo).
+
+**Pergunta em aberto do usuário — generalizar "se livro X, conceda Y" pro
+sistema de Tropo**: proposta de ir além de Arte da Guerra/Horror/Crystal
+Heart e usar Tropo pra substituir os vários `if (compendioXAtivo) conceda Y`
+hardcoded espalhados pelo app — exemplo dado: livro de Supers viraria Tropo
+obrigatório "Humano Normal vs. Super-Herói", e escolher Super-Herói
+concede a Vantagem de Superpoderes que hoje é injetada via flag de livro.
+
+Minha resposta (registrada, não é decisão fechada — fica pro usuário
+confirmar antes de entrar em qualquer plano de fase pra isso): o padrão
+Tropo se encaixa bem numa coisa BEM específica — "o jogador faz UMA escolha
+de arquétipo, cedo na criação, que trava (ou não) e libera um pacote fixo
+de concessões". Isso bate com Arte da Guerra/Horror/Crystal Heart. Mas nem
+todo `if (compendioXAtivo)` do app é esse formato — bastante coisa hoje é
+só "este livro está ativo, então mais opções de catálogo ficam visíveis"
+(ex.: Fantasia liberando mais raças), que é uma pergunta de CATÁLOGO, não
+de escolha de arquétipo — forçar isso a virar Tropo também seria empurrar
+uma UX errada pra um problema que não é esse. Minha recomendação: manter a
+porta aberta (o motor genérico, depois de provado nos 3 livros já
+confirmados, atende esse caso trivialmente se algum dia fizer sentido), mas
+NÃO expandir o escopo desta migração pra converter outros livros agora —
+cada candidato futuro (Supers incluso) merece a mesma pergunta que decidiu
+Crystal Heart: "isso é uma escolha de arquétipo de personagem, ou só uma
+regra de catálogo?" — e checar contra o livro de verdade (ex.: será que o
+Companion de Supers realmente descreve um PJ "Humano Normal" convivendo
+como opção padrão, ou é sempre assumido que todo PJ tem poderes?) antes de
+comprometer qualquer trabalho.
