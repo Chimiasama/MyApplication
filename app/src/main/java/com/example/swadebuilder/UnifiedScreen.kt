@@ -115,7 +115,6 @@ fun UnifiedScreen(
     modoOficialAtivo: Boolean = false,
     onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit,
-    onRequestProgression: () -> Unit
 ) {
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
@@ -272,11 +271,7 @@ fun UnifiedScreen(
                         listaSuperPoderes = listaSuperPoderes,
                         equipamentoCategorias = equipamentoCategorias,
                         superequipCategorias = superequipCategorias,
-                        onClearRequested = {
-                            onUserFeedback()
-                        },
                         onShowMessage = onShowMessage,
-                        onRequestProgression = onRequestProgression,
                         onSelectAncestralidade = { nome ->
                             val key = nome.uppercase().semAcentos()
                             if (key != state.ancestralidade) {
@@ -348,11 +343,7 @@ fun UnifiedScreen(
                     listaSuperPoderes = listaSuperPoderes,
                     equipamentoCategorias = equipamentoCategorias,
                     superequipCategorias = superequipCategorias,
-                    onClearRequested = {
-                        onUserFeedback()
-                    },
                     onShowMessage = onShowMessage,
-                    onRequestProgression = onRequestProgression,
                     onSelectAncestralidade = { nome ->
                         val key = nome.uppercase().semAcentos()
                         if (key != state.ancestralidade) {
@@ -560,9 +551,7 @@ private fun SectionDetailPane(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
-    onRequestProgression: () -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
@@ -580,9 +569,7 @@ private fun SectionDetailPane(
                 SummaryTabContent(
                     state = state,
                     viewModel = viewModel,
-                    onClearRequested = onClearRequested,
-                    onShowMessage = onShowMessage,
-                    onRequestProgression = onRequestProgression
+                    onShowMessage = onShowMessage
                 )
 
                 TextButton(
@@ -599,9 +586,7 @@ private fun SectionDetailPane(
                 selectedSection = selectedSection,
                 equipamentoCategorias = equipamentoCategorias,
                 superequipCategorias = superequipCategorias,
-                onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
-                onRequestProgression = onRequestProgression,
                 onUseProgress = onUseProgress,
                 onUserFeedback = onUserFeedback
             )
@@ -613,9 +598,7 @@ private fun SectionDetailPane(
                 listaSuperPoderes = listaSuperPoderes,
                 equipamentoCategorias = equipamentoCategorias,
                 superequipCategorias = superequipCategorias,
-                onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
-                onRequestProgression = onRequestProgression,
                 onSelectAncestralidade = onSelectAncestralidade,
                 onUserFeedback = onUserFeedback
             )
@@ -707,9 +690,7 @@ private fun ProgressionDetailContent(
     selectedSection: MainSection,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
-    onRequestProgression: () -> Unit,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -872,9 +853,7 @@ private fun ProgressionDetailContent(
         else -> SummaryTabContent(
             state = state,
             viewModel = viewModel,
-            onClearRequested = onClearRequested,
             onShowMessage = onShowMessage,
-            onRequestProgression = onRequestProgression
         )
     }
 }
@@ -888,9 +867,7 @@ private fun CreationDetailContent(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
-    onRequestProgression: () -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -902,9 +879,7 @@ private fun CreationDetailContent(
         MainSection.RESUMO -> SummaryTabContent(
             state = state,
             viewModel = viewModel,
-            onClearRequested = onClearRequested,
             onShowMessage = onShowMessage,
-            onRequestProgression = onRequestProgression
         )
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
@@ -1041,9 +1016,7 @@ private fun CreationDetailContent(
         else -> SummaryTabContent(
             state = state,
             viewModel = viewModel,
-            onClearRequested = onClearRequested,
             onShowMessage = onShowMessage,
-            onRequestProgression = onRequestProgression
         )
     }
 }
@@ -1052,9 +1025,7 @@ private fun CreationDetailContent(
 private fun SummaryTabContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
-    onRequestProgression: () -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()

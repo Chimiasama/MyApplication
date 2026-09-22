@@ -476,9 +476,7 @@ fun buildSummaryLines(
             .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
             .sumOf { it.steps }
         val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
-        val jutsuComSupers = jutsuRawBase
-
-        val base = 2 + (max(lutarComSupers, jutsuComSupers) / 2)
+        val base = 2 + (max(lutarComSupers, jutsuRawBase) / 2)
 
         val bloquearBonus =
             if (personagem.vantagens.contains(Constants.ID_BLOQUEAR)) 1 else 0

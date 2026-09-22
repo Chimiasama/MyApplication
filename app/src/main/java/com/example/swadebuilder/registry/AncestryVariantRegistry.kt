@@ -491,7 +491,7 @@ object AncestryVariantRegistry {
                         // Id igual ao de habilidades[] na raça base (dedupe por
                         // addIfAbsent em CriadorState.kt), senão soma duas vezes.
                         tracosParaAdicionar = listOf(
-                            TraitAddition("FORTE", "FORTE"),
+                            TraitAddition("FORTE", "FORTE", traitId = "ATTRIBUTE_BOOST", targetRef = "Força"),
                             TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR")
                         )
                     )
@@ -1180,7 +1180,7 @@ object AncestryVariantRegistry {
                         nome = "Herança Élfica (Agilidade d6)",
                         pacote = ResolvedTraitPackage(
                             tracosParaRemoverPorId = listOf("HERANCA"),
-                            tracosParaAdicionar = listOf(TraitAddition("Ágil", "AGIL"))
+                            tracosParaAdicionar = listOf(TraitAddition("Ágil", "AGIL", traitId = "ATTRIBUTE_BOOST", targetRef = "Agilidade"))
                         )
                     ),
                     FixedPackageOption(
@@ -1322,7 +1322,7 @@ object AncestryVariantRegistry {
                         nome = "Boi",
                         pacote = ResolvedTraitPackage(
                             tracosParaAdicionar = listOf(
-                                TraitAddition("Força d6 (Boi)", "FORTE"),
+                                TraitAddition("Força d6 (Boi)", "FORTE", traitId = "ATTRIBUTE_BOOST", targetRef = "Força"),
                                 TraitAddition("Bônus de Perícia (+1): Atletismo (esforço físico)", "BONUS_PERICIA_1")
                             ),
                             anotacoes = listOf(
@@ -1374,7 +1374,7 @@ object AncestryVariantRegistry {
                         nome = "Dragão",
                         pacote = ResolvedTraitPackage(
                             tracosParaAdicionar = listOf(
-                                TraitAddition("Espírito d6 (Dragão)", "ESPIRITUAL"),
+                                TraitAddition("Espírito d6 (Dragão)", "ESPIRITUAL", traitId = "ATTRIBUTE_BOOST", targetRef = "Espírito"),
                                 TraitAddition(
                                     "Bônus de Perícia (+1): Conhecimento Geral (situação desconhecida)",
                                     "BONUS_PERICIA_1"
@@ -1396,7 +1396,7 @@ object AncestryVariantRegistry {
                         id = "macaco",
                         nome = "Macaco",
                         pacote = ResolvedTraitPackage(
-                            tracosParaAdicionar = listOf(TraitAddition("Astúcia d6 (Macaco)", "ASTUCIA")),
+                            tracosParaAdicionar = listOf(TraitAddition("Astúcia d6 (Macaco)", "ASTUCIA", traitId = "ATTRIBUTE_BOOST", targetRef = "Astúcia")),
                             anotacoes = listOf(
                                 "Perícias não treinadas de Astúcia rolam d4+1 em vez do padrão (sem valer pro dado selvagem) — ainda não modelado."
                             )
@@ -1435,7 +1435,7 @@ object AncestryVariantRegistry {
                         id = "urso",
                         nome = "Urso",
                         pacote = ResolvedTraitPackage(
-                            tracosParaAdicionar = listOf(TraitAddition("Vigor d6 (Urso)", "VIGOROSO")),
+                            tracosParaAdicionar = listOf(TraitAddition("Vigor d6 (Urso)", "VIGOROSO", traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor")),
                             anotacoes = listOf("Penalidade de Exausto reduzida pra -1 em vez de -2 — ainda não modelada.")
                         )
                     )

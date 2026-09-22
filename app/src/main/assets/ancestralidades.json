@@ -39,7 +39,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias."
+    "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias.",
+    "tags": []
   },
   {
     "id": "anc_anoes_basico",
@@ -74,7 +75,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana."
+    "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana.",
+    "tags": []
   },
   {
     "id": "anc_avianos_basico",
@@ -127,9 +129,7 @@
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
     "especieId": "avianos",
-    "tags": [
-      "asas"
-    ]
+    "tags": []
   },
   {
     "id": "anc_aquarianos_basico",
@@ -169,7 +169,8 @@
       "BASICO"
     ],
     "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso.",
-    "especieId": "aquarianos"
+    "especieId": "aquarianos",
+    "tags": []
   },
   {
     "id": "anc_elfos_basico",
@@ -206,7 +207,8 @@
       "BASICO"
     ],
     "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno.",
-    "especieId": "elfos"
+    "especieId": "elfos",
+    "tags": []
   },
   {
     "id": "anc_meio_elfos_basico",
@@ -239,7 +241,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Nascidos da união entre elfos e humanos, podem herdar elegância sem a fragilidade élfica; a acolhida das duas famílias é incerta e costumam viver cerca de um século."
+    "descricaoLite": "Nascidos da união entre elfos e humanos, podem herdar elegância sem a fragilidade élfica; a acolhida das duas famílias é incerta e costumam viver cerca de um século.",
+    "tags": []
   },
   {
     "id": "anc_humanos_basico",
@@ -258,7 +261,8 @@
       "BASICO"
     ],
     "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
-    "especieId": "humano"
+    "especieId": "humano",
+    "tags": []
   },
   {
     "id": "anc_pequeninos_basico",
@@ -300,7 +304,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas."
+    "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas.",
+    "tags": []
   },
   {
     "id": "anc_rakashanos_basico",
@@ -379,7 +384,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos."
+    "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos.",
+    "tags": []
   },
   {
     "id": "anc_saurios_basico",
@@ -434,7 +440,8 @@
       "BASICO"
     ],
     "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
-    "especieId": "saurios"
+    "especieId": "saurios",
+    "tags": []
   },
   {
     "id": "anc_anoes_fantasia",
@@ -470,7 +477,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Baixos e corpulentos, vêm de grandes cavernas ou fortalezas montanhosas; séculos de conflito com povos hostis moldaram um caráter altivo e voltado à guerra."
+    "descricaoLite": "Baixos e corpulentos, vêm de grandes cavernas ou fortalezas montanhosas; séculos de conflito com povos hostis moldaram um caráter altivo e voltado à guerra.",
+    "tags": []
   },
   {
     "id": "anc_aquarianos_fantasia",
@@ -511,7 +519,8 @@
       "FANTASIA"
     ],
     "descricaoLite": "Aparecem em formas variadas, de criaturas com cabeça de peixe a humanoides com guelras discretas; adaptados à pressão das profundezas, mas fragilizados pelo ar seco e pelo calor da superfície.",
-    "especieId": "aquarianos"
+    "especieId": "aquarianos",
+    "tags": []
   },
   {
     "id": "anc_avianos_fantasia",
@@ -560,9 +569,7 @@
         "descricaoLite": "Voam a 12 quadros de Movimentação por rodada, recorrendo a Atletismo para manobras."
       }
     ],
-    "tags": [
-      "asas"
-    ],
+    "tags": [],
     "livros": [
       "FANTASIA"
     ],
@@ -605,9 +612,7 @@
         "descricaoLite": "Estão vinculados por um Voto a servir a divindade que os criou."
       }
     ],
-    "tags": [
-      "asas"
-    ],
+    "tags": [],
     "livros": [
       "FANTASIA"
     ],
@@ -666,7 +671,8 @@
       "FANTASIA"
     ],
     "pontosRaciaisEsperados": 4,
-    "descricaoLite": "Metade humanos, metade equinos, com estatura geralmente próxima à humana; a categoria inclui variações como descendentes de zebras ou pégasos."
+    "descricaoLite": "Metade humanos, metade equinos, com estatura geralmente próxima à humana; a categoria inclui variações como descendentes de zebras ou pégasos.",
+    "tags": []
   },
   {
     "nome": "DESCENDENTE ELEMENTAL",
@@ -700,7 +706,8 @@
       "FANTASIA"
     ],
     "descricaoLite": "Carregam no sangue a marca de um dos quatro elementos naturais; por fora parecem humanos comuns, mas exibem sinais sutis de cor, cabelo ou voz que denunciam sua ligação com ar, terra, fogo ou água.",
-    "especieId": "descendente_elemental"
+    "especieId": "descendente_elemental",
+    "tags": []
   },
   {
     "nome": "DRACONIANOS",
@@ -781,9 +788,7 @@
         "descricaoLite": "Após dez minutos expostos a temperaturas abaixo de 18°C, sofrem -1 em testes de Agilidade, Força e Vigor."
       }
     ],
-    "tags": [
-      "arma_de_sopro"
-    ],
+    "tags": [],
     "livros": [
       "FANTASIA"
     ],
@@ -826,7 +831,8 @@
       "FANTASIA"
     ],
     "descricaoLite": "Longevos e de compleição esguia, reconhecíveis pelas orelhas pontudas e pelos olhos marcantes; habitam bosques densos ou vales escondidos e cultivam ligação espiritual com o mundo.",
-    "especieId": "elfos"
+    "especieId": "elfos",
+    "tags": []
   },
   {
     "nome": "FADAS",
@@ -880,9 +886,7 @@
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 6."
       }
     ],
-    "tags": [
-      "asas"
-    ],
+    "tags": [],
     "livros": [
       "FANTASIA"
     ],
@@ -940,7 +944,8 @@
       "FANTASIA"
     ],
     "descricaoLite": "Humanoides miúdos que preferem esconderijos como matas fechadas ou grutas montanhosas; embora lembrem os pequeninos, têm corpo mais proporcional e menos pelos.",
-    "especieId": "gnomo"
+    "especieId": "gnomo",
+    "tags": []
   },
   {
     "nome": "GOBLINS",
@@ -991,7 +996,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Conhecidos pela índole briguenta, costumam viver subordinados a espécies maiores, servindo como batedores ou mão de obra; suas tribos raramente duram, e a vida é curta em meio a tantas ameaças."
+    "descricaoLite": "Conhecidos pela índole briguenta, costumam viver subordinados a espécies maiores, servindo como batedores ou mão de obra; suas tribos raramente duram, e a vida é curta em meio a tantas ameaças.",
+    "tags": []
   },
   {
     "nome": "GOLENS",
@@ -1074,7 +1080,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Autômatos fabricados por magos ou inventores para vigiar seus domínios; a maioria age sem vontade própria, mas alguns despertam consciência por acidente, feitiço ou intervenção divina."
+    "descricaoLite": "Autômatos fabricados por magos ou inventores para vigiar seus domínios; a maioria age sem vontade própria, mas alguns despertam consciência por acidente, feitiço ou intervenção divina.",
+    "tags": []
   },
   {
     "id": "anc_humanos_fantasia",
@@ -1101,7 +1108,8 @@
       "Povo da Montanha",
       "Povo do Mar",
       "Senhores dos Cavalos"
-    ]
+    ],
+    "tags": []
   },
   {
     "nome": "INFERNAIS",
@@ -1162,7 +1170,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Descendem de linhagens demoníacas e costumam carregar algum sinal físico dessa herança, como chifres, cauda ou pupilas verticais; nem sempre são malignos, mas convivem com a desconfiança alheia."
+    "descricaoLite": "Descendem de linhagens demoníacas e costumam carregar algum sinal físico dessa herança, como chifres, cauda ou pupilas verticais; nem sempre são malignos, mas convivem com a desconfiança alheia.",
+    "tags": []
   },
   {
     "id": "anc_insetoides_fantasia",
@@ -1239,7 +1248,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Povo de aparência insetoide, aqui numa variante que lembra formigas; vêm de sociedades rigidamente organizadas em papéis definidos desde o nascimento, com forte senso de obediência."
+    "descricaoLite": "Povo de aparência insetoide, aqui numa variante que lembra formigas; vêm de sociedades rigidamente organizadas em papéis definidos desde o nascimento, com forte senso de obediência.",
+    "tags": []
   },
   {
     "id": "anc_meio_elfos_fantasia",
@@ -1273,7 +1283,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Nascidos do cruzamento entre humanos e elfos, herdam ora a elegância élfica, ora a versatilidade humana; a acolhida das duas famílias é incerta, e vivem em média um século."
+    "descricaoLite": "Nascidos do cruzamento entre humanos e elfos, herdam ora a elegância élfica, ora a versatilidade humana; a acolhida das duas famílias é incerta, e vivem em média um século.",
+    "tags": []
   },
   {
     "nome": "MEIO-GIGANTES",
@@ -1349,7 +1360,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Vivem isolados em terrenos hostis, como desfiladeiros e serras remotas; a força descomunal os torna ideais para enfrentar ambientes selvagens."
+    "descricaoLite": "Vivem isolados em terrenos hostis, como desfiladeiros e serras remotas; a força descomunal os torna ideais para enfrentar ambientes selvagens.",
+    "tags": []
   },
   {
     "nome": "MEIO-ORCS",
@@ -1382,7 +1394,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Frutos do cruzamento entre orcs e humanos, ou entre dois de sua própria espécie, tendem a ser aceitos entre os orcs e evitados pelos demais povos; a aparência varia muito, de robusta a quase indistinguível da humana."
+    "descricaoLite": "Frutos do cruzamento entre orcs e humanos, ou entre dois de sua própria espécie, tendem a ser aceitos entre os orcs e evitados pelos demais povos; a aparência varia muito, de robusta a quase indistinguível da humana.",
+    "tags": []
   },
   {
     "nome": "MINOTAUROS",
@@ -1464,7 +1477,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Corpo humanoide com cabeça e força de touro; sejam criação divina ou espécie de cultura própria, destacam-se pelo temperamento difícil e pela força bruta em combates diretos."
+    "descricaoLite": "Corpo humanoide com cabeça e força de touro; sejam criação divina ou espécie de cultura própria, destacam-se pelo temperamento difícil e pela força bruta em combates diretos.",
+    "tags": []
   },
   {
     "nome": "OGROS",
@@ -1553,7 +1567,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Tribais e orgulhosos, tidos por outros povos como brutos e cruéis; celebram grandes banquetes e histórias de bravura, vivendo como nômades ou dominando passagens e cavernas junto de parentes próximos."
+    "descricaoLite": "Tribais e orgulhosos, tidos por outros povos como brutos e cruéis; celebram grandes banquetes e histórias de bravura, vivendo como nômades ou dominando passagens e cavernas junto de parentes próximos.",
+    "tags": []
   },
   {
     "nome": "ORCS",
@@ -1613,7 +1628,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Vistos de fora como violentos e implacáveis, mas entendem sua conduta como simples lei do mais forte; o poder nas tribos é conquistado no combate direto, não por manipulação política."
+    "descricaoLite": "Vistos de fora como violentos e implacáveis, mas entendem sua conduta como simples lei do mais forte; o poder nas tribos é conquistado no combate direto, não por manipulação política.",
+    "tags": []
   },
   {
     "id": "anc_pequeninos_fantasia",
@@ -1656,7 +1672,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Baixos, peludos e de temperamento afável, apreciam prazeres simples como boa comida e música; raramente buscam aventura, preferindo o aconchego de pequenas comunidades unidas."
+    "descricaoLite": "Baixos, peludos e de temperamento afável, apreciam prazeres simples como boa comida e música; raramente buscam aventura, preferindo o aconchego de pequenas comunidades unidas.",
+    "tags": []
   },
   {
     "nome": "POVO RATAZANA",
@@ -1755,7 +1772,8 @@
       "FANTASIA"
     ],
     "pontosRaciaisEsperados": 3,
-    "descricaoLite": "Adaptados a viver à margem, com corpo peludo e curvado, rosto de roedor e cauda sem pelos; costumam ocupar esgotos e áreas abandonadas, em grupos que se desfazem facilmente diante de perigo ou vantagem."
+    "descricaoLite": "Adaptados a viver à margem, com corpo peludo e curvado, rosto de roedor e cauda sem pelos; costumam ocupar esgotos e áreas abandonadas, em grupos que se desfazem facilmente diante de perigo ou vantagem.",
+    "tags": []
   },
   {
     "nome": "POVO RATO",
@@ -1811,7 +1829,8 @@
       "FANTASIA"
     ],
     "descricaoLite": "Pequenas criaturas que lembram ratos comuns, porém bípedes e pensantes; suas origens são incertas, podendo vir de mutação mágica ou de uma existência antiga escondida das demais espécies.",
-    "especieId": "povo_rato"
+    "especieId": "povo_rato",
+    "tags": []
   },
   {
     "nome": "POVO SERPENTE",
@@ -1888,7 +1907,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Humanoides de cabeça ofídica originários de tocas ou ninhos afastados; existem várias linhagens, inspiradas em diferentes tipos de serpentes, das constritoras às peçonhentas."
+    "descricaoLite": "Humanoides de cabeça ofídica originários de tocas ou ninhos afastados; existem várias linhagens, inspiradas em diferentes tipos de serpentes, das constritoras às peçonhentas.",
+    "tags": []
   },
   {
     "id": "anc_rakashanos_fantasia",
@@ -1969,7 +1989,8 @@
       "FANTASIA"
     ],
     "pontosRaciaisEsperados": 3,
-    "descricaoLite": "Felinos humanoides com pelagem que remete a tigres, leopardos ou gatos exóticos, além de garras e presas afiadas; transitam entre cidades próprias e os limites da sociedade comum, usando charme para conquistar confiança apesar da desconfiança que despertam."
+    "descricaoLite": "Felinos humanoides com pelagem que remete a tigres, leopardos ou gatos exóticos, além de garras e presas afiadas; transitam entre cidades próprias e os limites da sociedade comum, usando charme para conquistar confiança apesar da desconfiança que despertam.",
+    "tags": []
   },
   {
     "nome": "RENASCIDOS",
@@ -2047,7 +2068,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Raros descendentes de um vampiro com um ser vivo; a maioria não sobrevive à infância, mas os que resistem ganham força incomum. Não são mortos-vivos, ainda que a pele pálida e o vínculo com o além causem desconforto em animais e pessoas."
+    "descricaoLite": "Raros descendentes de um vampiro com um ser vivo; a maioria não sobrevive à infância, mas os que resistem ganham força incomum. Não são mortos-vivos, ainda que a pele pálida e o vínculo com o além causem desconforto em animais e pessoas.",
+    "tags": []
   },
   {
     "id": "anc_saurios_fantasia",
@@ -2103,7 +2125,8 @@
       "FANTASIA"
     ],
     "descricaoLite": "Homens-lagarto de regiões extremas, como pântanos, desertos ou selvas, que construíram civilizações isoladas e pouco conhecidas fora de seu território.",
-    "especieId": "saurios"
+    "especieId": "saurios",
+    "tags": []
   },
   {
     "nome": "TRANSMORFOS",
@@ -2136,7 +2159,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Capazes de assumir a aparência de outras pessoas, movem-se disfarçados pela sociedade, alguns para enganar ou roubar, outros para se apresentar em espetáculos; sob a forma verdadeira, revelam um humanoide cinzento e sem expressão, de olhos vazios."
+    "descricaoLite": "Capazes de assumir a aparência de outras pessoas, movem-se disfarçados pela sociedade, alguns para enganar ou roubar, outros para se apresentar em espetáculos; sob a forma verdadeira, revelam um humanoide cinzento e sem expressão, de olhos vazios.",
+    "tags": []
   },
   {
     "id": "anc_androides_horror",
@@ -2178,7 +2202,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias."
+    "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias.",
+    "tags": []
   },
   {
     "id": "anc_anoes_horror",
@@ -2213,7 +2238,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana."
+    "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana.",
+    "tags": []
   },
   {
     "id": "anc_avianos_horror",
@@ -2266,9 +2292,7 @@
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
     "especieId": "avianos",
-    "tags": [
-      "asas"
-    ]
+    "tags": []
   },
   {
     "id": "anc_aquarianos_horror",
@@ -2308,7 +2332,8 @@
       "HORROR"
     ],
     "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso.",
-    "especieId": "aquarianos"
+    "especieId": "aquarianos",
+    "tags": []
   },
   {
     "id": "anc_elfos_horror",
@@ -2345,7 +2370,8 @@
       "HORROR"
     ],
     "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno.",
-    "especieId": "elfos"
+    "especieId": "elfos",
+    "tags": []
   },
   {
     "id": "anc_meio_elfos_horror",
@@ -2378,7 +2404,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Nascidos da união entre elfos e humanos, podem herdar elegância sem a fragilidade élfica; a acolhida das duas famílias é incerta e costumam viver cerca de um século."
+    "descricaoLite": "Nascidos da união entre elfos e humanos, podem herdar elegância sem a fragilidade élfica; a acolhida das duas famílias é incerta e costumam viver cerca de um século.",
+    "tags": []
   },
   {
     "id": "anc_humanos_horror",
@@ -2397,7 +2424,8 @@
       "HORROR"
     ],
     "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
-    "especieId": "humano"
+    "especieId": "humano",
+    "tags": []
   },
   {
     "id": "anc_pequeninos_horror",
@@ -2439,7 +2467,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas."
+    "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas.",
+    "tags": []
   },
   {
     "id": "anc_rakashanos_horror",
@@ -2518,7 +2547,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos."
+    "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos.",
+    "tags": []
   },
   {
     "id": "anc_saurios_horror",
@@ -2573,7 +2603,8 @@
       "HORROR"
     ],
     "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
-    "especieId": "saurios"
+    "especieId": "saurios",
+    "tags": []
   },
   {
     "id": "anc_anoes_scifi",
@@ -2713,9 +2744,7 @@
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
     ],
-    "tags": [
-      "asas"
-    ],
+    "tags": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3769,7 +3798,8 @@
       "WISEGUYS"
     ],
     "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
-    "especieId": "humano"
+    "especieId": "humano",
+    "tags": []
   },
   {
     "id": "anc_bogovia",
@@ -3945,7 +3975,8 @@
     ],
     "descricaoLite": "Grupo variado que absorve os valores da família ou do clã em que foi criado; é possível escolher um signo de nascimento ligado a um mês específico, que sugere traços de personalidade, ou simplesmente seguir como humano padrão.",
     "especieId": "humano",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_akaimimi",
@@ -3993,7 +4024,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Descendem de uma bênção espiritual ligada ao panda-vermelho, o que os inclina naturalmente à introspecção, à busca espiritual e ao pensamento filosófico.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_araiguma",
@@ -4057,7 +4089,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Carregam a herança de um espírito-guaxinim travesso e esperto, conhecido por aprontar confusões, escapar das consequências e experimentar tudo o que a vida oferece.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_inumimi",
@@ -4116,7 +4149,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Sua linhagem remonta a espíritos caninos célebres por proteger e acompanhar os humanos, o que os torna símbolos vivos de lealdade e retidão.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_kitsunemimi",
@@ -4161,7 +4195,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Herdeiros de espíritos-raposa, costumam ser vistos como espertos demais para o próprio bem, assim como seus ancestrais místicos.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_nekomimi",
@@ -4206,7 +4241,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Descendentes de espíritos felinos, têm fama de preguiçosos, vaidosos e imprevisíveis, sempre testando a sorte de alguma maneira.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_tanukimimi",
@@ -4260,7 +4296,8 @@
     ],
     "descricaoLite": "Vistos entre seus parentes espirituais como os medianos e simpáticos: têm convicções próprias, mas raramente se destacam em algo específico.",
     "especieId": "tanukimimi",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_usagimimi",
@@ -4302,7 +4339,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Descendem de espíritos de lebre que um dia habitaram corpos mortais entre os humanos, deixando suas características para as gerações seguintes.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_terracota_adg",
@@ -4357,7 +4395,8 @@
     ],
     "descricaoLite": "Almas de qualquer linhagem que retornam para resolver algo inacabado; ganham corpo a partir de argila moldada e impregnada de grande energia espiritual (Chi).",
     "especieId": "terracota",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_umvee",
@@ -4407,7 +4446,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Segundo sua própria tradição oral, seriam os guardiões originais da natureza, surgidos sob o luar antes mesmo dos humanos existirem.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_feral",
@@ -4489,7 +4529,8 @@
     ],
     "descricaoLite": "Descendem de guerreiros que invocaram uma fera em batalha e não perderam a razão; o resultado é uma linhagem híbrida, metade ancestral, metade animal selvagem.",
     "especieId": "feral",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_onigem_adg",
@@ -4535,7 +4576,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Carregam sangue de oni na linhagem, seja por descendência direta ou por traços que ainda se manifestam gerações depois.",
-    "pontosRaciaisEsperados": 3
+    "pontosRaciaisEsperados": 3,
+    "tags": []
   },
   {
     "id": "anc_humano_csv",
@@ -4553,7 +4595,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "especieId": "humano"
+    "especieId": "humano",
+    "tags": []
   },
   {
     "id": "anc_demonio_csv",
@@ -4582,7 +4625,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "pontosRaciaisEsperados": 0
+    "pontosRaciaisEsperados": 0,
+    "tags": []
   },
   {
     "id": "anc_meio_demonio_csv",
@@ -4599,7 +4643,8 @@
     ],
     "livros": [
       "CIDADE_SOL_VAPOR"
-    ]
+    ],
+    "tags": []
   },
   {
     "id": "anc_anjo_csv",
@@ -4624,9 +4669,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "tags": [
-      "asas"
-    ]
+    "tags": []
   },
   {
     "id": "anc_humano_deadlands",
@@ -4644,7 +4687,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "especieId": "humano"
+    "especieId": "humano",
+    "tags": []
   },
   {
     "id": "anc_anaopathfinder",
@@ -4702,7 +4746,8 @@
       "PATHFINDER"
     ],
     "especieId": "anao",
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_elfopathfinder",
@@ -4766,7 +4811,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_gnomopathfinder",
@@ -4835,7 +4881,8 @@
       "PATHFINDER"
     ],
     "especieId": "gnomo",
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_halflingpathfinder",
@@ -4900,7 +4947,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_humanopathfinder",
@@ -4927,7 +4975,8 @@
       "PATHFINDER"
     ],
     "especieId": "humano",
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_meio_elfopathfinder",
@@ -4960,7 +5009,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_meio_orcpathfinder",
@@ -5011,7 +5061,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "pontosRaciaisEsperados": 4
+    "pontosRaciaisEsperados": 4,
+    "tags": []
   },
   {
     "id": "anc_androides_super",
@@ -5053,7 +5104,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias."
+    "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias.",
+    "tags": []
   },
   {
     "id": "anc_anoes_super",
@@ -5088,7 +5140,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana."
+    "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana.",
+    "tags": []
   },
   {
     "id": "anc_avianos_super",
@@ -5141,9 +5194,7 @@
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
     "especieId": "avianos",
-    "tags": [
-      "asas"
-    ]
+    "tags": []
   },
   {
     "id": "anc_aquarianos_super",
@@ -5183,7 +5234,8 @@
       "SUPER"
     ],
     "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso.",
-    "especieId": "aquarianos"
+    "especieId": "aquarianos",
+    "tags": []
   },
   {
     "id": "anc_elfos_super",
@@ -5220,7 +5272,8 @@
       "SUPER"
     ],
     "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno.",
-    "especieId": "elfos"
+    "especieId": "elfos",
+    "tags": []
   },
   {
     "id": "anc_meio_elfos_super",
@@ -5253,7 +5306,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Nascidos da união entre elfos e humanos, podem herdar elegância sem a fragilidade élfica; a acolhida das duas famílias é incerta e costumam viver cerca de um século."
+    "descricaoLite": "Nascidos da união entre elfos e humanos, podem herdar elegância sem a fragilidade élfica; a acolhida das duas famílias é incerta e costumam viver cerca de um século.",
+    "tags": []
   },
   {
     "id": "anc_humanos_super",
@@ -5272,7 +5326,8 @@
       "SUPER"
     ],
     "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
-    "especieId": "humano"
+    "especieId": "humano",
+    "tags": []
   },
   {
     "id": "anc_pequeninos_super",
@@ -5314,7 +5369,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas."
+    "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas.",
+    "tags": []
   },
   {
     "id": "anc_rakashanos_super",
@@ -5393,7 +5449,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos."
+    "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos.",
+    "tags": []
   },
   {
     "id": "anc_saurios_super",
@@ -5448,6 +5505,7 @@
       "SUPER"
     ],
     "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
-    "especieId": "saurios"
+    "especieId": "saurios",
+    "tags": []
   }
 ]

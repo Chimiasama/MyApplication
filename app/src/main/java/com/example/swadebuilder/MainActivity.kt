@@ -1033,10 +1033,7 @@ class MainActivity : ComponentActivity() {
                                                     snackHost.showSnackbar(message)
                                                 }
                                             },
-                                            onUserFeedback        = triggerFeedback,
-                                            onRequestProgression  = {
-                                                requestNavigation(PendingNavigationAction.StartProgression)
-                                            }
+                                            onUserFeedback        = triggerFeedback
                                         )
                                     }
                                 }

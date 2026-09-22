@@ -302,9 +302,6 @@ fun PericiasContent(
     val periciaNomeKeys = remember(periciasBase) {
         periciasBase.associateWith { it.nome.keyify() }
     }
-    val periciaOrigensUpper = remember(periciasBase) {
-        periciasBase.associateWith { it.origem?.uppercase() }
-    }
     val periciaIsIdioma = remember(periciasBase) {
         periciasBase.associateWith { state.isIdiomaPericia(it) }
     }
