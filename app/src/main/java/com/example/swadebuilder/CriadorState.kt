@@ -44,6 +44,7 @@ import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitEffect
 import com.example.swadebuilder.model.RacialTraitPointCatalog
@@ -63,6 +64,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.desvantagensEfetivas
+import com.example.swadebuilder.model.escolhaTropoReferenciada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.vantagensGratisEfetivas
 import com.example.swadebuilder.model.ids.ModuleIds
@@ -3918,7 +3920,7 @@ class CriadorState {
         // pisoSemTropo; `relativo=false` (traitId SKILL_BOOST) é piso fixo a partir de
         // pisoSemTropo. Substitui, pra qualquer Tropo migrado pra `habilidades[]`, os blocos
         // hardcoded por id logo abaixo.
-        tropoSelecionado?.habilidades?.forEach { hab ->
+        habilidadesDoTropoResolvidas.forEach { hab ->
             val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
                 modifiedBase = if (efeito.relativo) {
@@ -5136,6 +5138,38 @@ class CriadorState {
     val vantagensAutomaticasDoProtagonista = mutableStateListOf<String>()
     val vantagensSlotProtagonista = mutableStateListOf<String>()
 
+    // Escolhas de TropoEscolha feitas pelo jogador (ver Tropo.escolhas/targetRefPorEscolhaTropo)
+    // — chave é o id da TropoEscolha, valor é a opção escolhida (sempre uma de
+    // TropoEscolha.opcoes). Ex.: Kensai (Youxia) grava aqui qual perícia o jogador vinculou à
+    // Arma Predileta. Sem entrada aqui pra uma escolha existente, tropoEscolhaAtual() cai no
+    // `padrao` dela — nunca deixa a ficha sem alvo resolvido.
+    val tropoEscolhasFeitas = mutableStateMapOf<String, String>()
+
+    /** Opção atual pra uma TropoEscolha (a que o jogador marcou, ou o padrão dela). */
+    fun tropoEscolhaAtual(escolhaId: String): String? {
+        val escolha = tropoSelecionado?.escolhas?.firstOrNull { it.id == escolhaId } ?: return null
+        val feita = tropoEscolhasFeitas[escolhaId]
+        return if (feita != null && escolha.opcoes.any { it.equals(feita, ignoreCase = true) }) feita else escolha.padrao
+    }
+
+    fun escolherTropoOpcao(escolhaId: String, valor: String) {
+        tropoEscolhasFeitas[escolhaId] = valor
+    }
+
+    /**
+     * `tropoSelecionado?.habilidades`, mas com todo `targetRef` que referencia uma
+     * TropoEscolha (ver `escolhaTropoReferenciada()`) já substituído pela opção atual —
+     * `atributoBaseRacial`/`periciaStartRawInternal`/`ModifierEngine` e qualquer leitura de
+     * Vantagem/Complicação concedida por Tropo devem ler DAQUI, nunca de
+     * `tropoSelecionado?.habilidades` direto, senão um Tropo com escolha (ex.: Kensai) nunca
+     * resolve pra um alvo de verdade.
+     */
+    val habilidadesDoTropoResolvidas: List<RacialAbility>
+        get() = tropoSelecionado?.habilidades.orEmpty().map { hab ->
+            val escolhaId = hab.targetRef.escolhaTropoReferenciada() ?: return@map hab
+            hab.copy(targetRef = tropoEscolhaAtual(escolhaId) ?: hab.targetRef)
+        }
+
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
     val desvantagensRaciais = mutableStateListOf<String>()
@@ -5794,7 +5828,7 @@ class CriadorState {
         // entra no cálculo do teto (só roda quando includeTropo=true, acima). Substitui, pra
         // qualquer Tropo migrado pra `habilidades[]`, os blocos hardcoded por id que ainda
         // existem logo abaixo pros Tropos não migrados.
-        tropoSelecionado?.habilidades?.forEach { hab ->
+        habilidadesDoTropoResolvidas.forEach { hab ->
             val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
                 modifiedBase = if (efeito.relativo) {

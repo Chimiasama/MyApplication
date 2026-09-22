@@ -305,7 +305,7 @@ object ModifierEngine {
             // Movimentação, traitId=PACE_CHANGE) — um bônus fixo que nenhuma raça concede hoje,
             // mas que já tem mecanismo genérico pronto (RacialTraitEffect.PassoBonus), sem
             // precisar de um alvo novo no ModifierEngine.
-            state.tropoSelecionado?.habilidades?.forEach { hab ->
+            state.habilidadesDoTropoResolvidas.forEach { hab ->
                 val tid = hab.resolvedTraitId()
                 val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
                 if (efeito !is RacialTraitEffect.Nenhum) {
