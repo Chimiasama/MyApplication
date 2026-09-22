@@ -728,6 +728,53 @@ class CriadorState {
     }
 
     /**
+     * Reconcilia `vantagensRaciais` com as Vantagens grátis que `habilidadesDoTropoResolvidas`
+     * concede AGORA contra o que concedia antes de alguma mudança (troca de Tropo, ou só de
+     * uma TropoEscolha — ex.: Artista Marcial "Potencial Físico" concede uma Vantagem
+     * DIFERENTE conforme a escolha: Esquiva/Bloquear/Reflexos de Combate), e recalcula
+     * atributo/perícia (`recalcularPontosAtributo`/`rebuildAllPericiaStacks`) porque o PISO
+     * pode ter mudado junto (bônus relativo aparecendo/sumindo com a troca) — mesmo motivo de
+     * segurança que `aplicarTipoMonstro` já usa pra Monstro Heroico, agora genérico pra
+     * qualquer Tropo.
+     */
+    private fun reconciliarGrantsDoTropo(grantsAnteriores: List<String>): List<String> {
+        val feedback = mutableListOf<String>()
+        val grantsNovos = vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
+        val novasKeys = grantsNovos.map { it.keyify() }
+        grantsAnteriores
+            .filterNot { it.keyify() in novasKeys }
+            .forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
+        grantsNovos.forEach { grant ->
+            if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
+                vantagensRaciais.add(grant)
+            }
+        }
+
+        recalcularPontosAtributo(feedback)
+        rebuildAllPericiaStacks(feedback)
+
+        if (feedback.isNotEmpty()) {
+            anotacoes += "\n• " + feedback.joinToString("\n• ")
+        }
+        return feedback
+    }
+
+    /**
+     * Troca o Tropo selecionado — sistema de Tropo genérico (rodada 43 do audit doc). Limpa
+     * qualquer TropoEscolha feita pro Tropo anterior (não fazem sentido pro novo — podem nem
+     * ser opções válidas nele) antes de reconciliar as Vantagens grátis concedidas. Complicações
+     * automáticas de Tropo (nenhum Tropo oficial concede uma hoje) ficam de fora por ora — se
+     * um Tropo customizado algum dia precisar disso, o padrão é o mesmo de
+     * `aplicarAncestralidade` (`desvantagensAutomaticas`), só que ainda não está religado aqui.
+     */
+    fun aplicarTropo(novoTropo: Tropo?): List<String> {
+        val grantsAnteriores = vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
+        tropoSelecionado = novoTropo
+        tropoEscolhasFeitas.clear()
+        return reconciliarGrantsDoTropo(grantsAnteriores)
+    }
+
+    /**
      * Optimized: Memoize the ancestry definition for the currently selected ancestry.
      * This avoids re-running filters and variant application logic (which creates object copies)
      * every time a UI element needs to check racial traits (e.g. for complications, edges, attributes).
@@ -5171,8 +5218,15 @@ class CriadorState {
         return if (feita != null && escolha.opcoes.any { it.equals(feita, ignoreCase = true) }) feita else escolha.padrao
     }
 
-    fun escolherTropoOpcao(escolhaId: String, valor: String) {
+    fun escolherTropoOpcao(escolhaId: String, valor: String): List<String> {
+        // Antes da troca: precisa ler habilidadesDoTropoResolvidas com a escolha ANTIGA ainda
+        // valendo, senão o "grant anterior" já sairia calculado com o valor novo (ex.: Artista
+        // Marcial "Potencial Físico" — trocar de Agilidade pra Força precisa saber que a
+        // Vantagem Esquiva (ligada à opção antiga) deixou de valer, pra poder trocar por
+        // Bloquear).
+        val grantsAnteriores = vantagensGratisEfetivas(habilidadesDoTropoResolvidas)
         tropoEscolhasFeitas[escolhaId] = valor
+        return reconciliarGrantsDoTropo(grantsAnteriores)
     }
 
     /**
