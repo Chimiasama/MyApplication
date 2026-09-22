@@ -53,18 +53,36 @@ data class MonstroTemplate(
 // complicacoes.json (id/severity reais) na migração pro sistema de Tropo (ver
 // docs/auditoria_mecanica_racas_2026-08-31.md rodada 43): Anjo "Complicação Voto (Maior)",
 // Monstro de Retalhos "Complicação Sem Noção" (catálogo só tem severidade "maior") e "Fobia
-// (Maior)", Vampiro "tratado como Hábito (Maior)", Revivido "Voto (Maior)". As ~13 restantes
-// (as várias "Fraqueza (X)" e afins) são específicas do livro de Horror, sem Complicação de
-// catálogo equivalente — ficam narrativas mesmo, sem targetRef (mesmo padrão de uma
-// Complicação de raça sem reskin, ex. Avianos "Não Sabe Nadar" antes do vínculo existir).
-private data class MonstroComplicacaoLink(val monstroId: String, val textoContem: String, val targetRef: String, val severity: String)
+// (Maior)", Vampiro "tratado como Hábito (Maior)", Revivido "Voto (Maior)". Múmia "Lento:
+// Movimentação reduzida em 1..." bate palavra por palavra com a versão Menor da Complicação
+// real "Lento" do catálogo — esse caso, diferente dos outros 5 (puramente narrativos mesmo
+// vinculados, igual qualquer Voto/Hábito/Fobia/Sem Noção normal), tem efeito numérico real
+// (RacialTraitPointCatalog.EFEITOS["LENTO"] = PassoBonus(-1)), por isso ganha também
+// traitId=PACE_CHANGE explícito — sem isso, a Complicação aparecia na lista mas nunca
+// reduzia a Movimentação de verdade (igual o texto solto de complicacoes[] já fazia antes
+// desta migração). Auditoria mais profunda (rodada 43, a pedido do usuário) não achou mais
+// nenhum outro caso real: o catálogo geral não tem uma Complicação genérica "Fraqueza (X)"/
+// "Vulnerabilidade a dano de X" equivalente às ~12 "Fraqueza (Prata)/(Fogo)/(Estaca)/..." dos
+// outros templates (VULNERABILIDADE do catálogo é sobre exposição a substância — Distraído/
+// Fadiga —, não sobre dano extra de um tipo de arma/elemento) — ficam narrativas mesmo, sem
+// targetRef (mesmo padrão de uma Complicação de raça sem reskin, ex. Avianos "Não Sabe
+// Nadar" antes do vínculo existir).
+private data class MonstroComplicacaoLink(
+    val monstroId: String,
+    val textoContem: String,
+    val targetRef: String,
+    val severity: String,
+    val traitId: String? = null,
+    val value: Int = 1
+)
 
 private val MONSTRO_COMPLICACAO_LINKS = listOf(
     MonstroComplicacaoLink("anjo", "Servo do Paraíso", "voto", "Maior"),
     MonstroComplicacaoLink("monstro_retalhos", "Confusão", "sem_nocao", "Maior"),
     MonstroComplicacaoLink("monstro_retalhos", "Fogo Mau", "fobia", "Maior"),
     MonstroComplicacaoLink("vampiro", "Fome", "habito", "Maior"),
-    MonstroComplicacaoLink("revivido", "Vingança", "voto", "Maior")
+    MonstroComplicacaoLink("revivido", "Vingança", "voto", "Maior"),
+    MonstroComplicacaoLink("mumia", "Lento", "lento", "Menor", traitId = "PACE_CHANGE", value = -1)
 )
 
 /**
@@ -104,7 +122,9 @@ fun MonstroTemplate.paraTropo(): Tropo {
             descricaoLite = complicacoesLite?.getOrNull(i),
             id = "MONSTRO_${id}_COMPLICACAO_$i".keyify(),
             category = "racial_hindrance",
+            traitId = link?.traitId,
             targetRef = link?.targetRef,
+            value = link?.value ?: 1,
             severity = link?.severity
         )
     }

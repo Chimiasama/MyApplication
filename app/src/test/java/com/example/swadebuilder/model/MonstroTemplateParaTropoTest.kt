@@ -66,6 +66,26 @@ class MonstroTemplateParaTropoTest {
     }
 
     @Test
+    fun `complicacao Lento da Mumia ganha traitId PACE_CHANGE, alem do targetRef, pra reduzir Movimentacao de verdade`() {
+        val monstro = MonstroTemplate(
+            id = "mumia", nome = "Múmia", descricao = "",
+            complicacoes = listOf(
+                "Fraqueza (Fogo): Sofrem +4 de dano de fogo.",
+                "Lento: Movimentação reduzida em 1 e dado de corrida é d4."
+            )
+        )
+        val tropo = monstro.paraTropo()
+
+        val lento = tropo.habilidades.first { it.nome == "Lento" }
+        assertEquals("lento", lento.targetRef)
+        assertEquals("Menor", lento.severity)
+        assertEquals("PACE_CHANGE", lento.traitId)
+        assertEquals(-1, lento.value)
+        val efeito = RacialTraitPointCatalog.efeitoDe(lento.resolvedTraitId(), lento.targetRef, lento.value)
+        assertEquals(RacialTraitEffect.PassoBonus(-1), efeito)
+    }
+
+    @Test
     fun `complicacao sem Complicacao real citada fica narrativa, sem targetRef`() {
         val monstro = MonstroTemplate(
             id = "mumia", nome = "Múmia", descricao = "",

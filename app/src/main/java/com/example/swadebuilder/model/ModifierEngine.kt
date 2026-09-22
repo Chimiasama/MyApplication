@@ -296,6 +296,23 @@ object ModifierEngine {
                     }
                 }
 
+            // Sistema de Tropo genérico (rodada 43 do audit doc): mesmo tratamento das
+            // habilidades parametrizadas da raça acima, só que pra tropoSelecionado — sem o
+            // filtro de sourceKeys (que só existe pra raça poder REMOVER um traço da lista de
+            // exibição numa Variante sem perder o Modifier; Tropo não tem esse conceito, o que
+            // está em habilidades[] está sempre ativo enquanto esse Tropo for o selecionado).
+            // Cobre, por exemplo, o Protagonista (Arte da Guerra) "Velocidade Incomum" (+6
+            // Movimentação, traitId=PACE_CHANGE) — um bônus fixo que nenhuma raça concede hoje,
+            // mas que já tem mecanismo genérico pronto (RacialTraitEffect.PassoBonus), sem
+            // precisar de um alvo novo no ModifierEngine.
+            state.tropoSelecionado?.habilidades?.forEach { hab ->
+                val tid = hab.resolvedTraitId()
+                val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
+                if (efeito !is RacialTraitEffect.Nenhum) {
+                    aplicarEfeito(tid, efeito, hab.nome, hab.vezes)
+                }
+            }
+
             RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
                 val vezes = vezesPorId[id] ?: return@forEach
                 // Evita duplicar se a habilidade já foi aplicada via lista parametrizada acima
