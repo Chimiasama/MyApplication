@@ -4278,3 +4278,199 @@ regra de catálogo?" — e checar contra o livro de verdade (ex.: será que o
 Companion de Supers realmente descreve um PJ "Humano Normal" convivendo
 como opção padrão, ou é sempre assumido que todo PJ tem poderes?) antes de
 comprometer qualquer trabalho.
+
+## Quadragésima quarta rodada — motor genérico de Tropo implementado (Fases 1/3), bug de integração pego e corrigido, e reavaliação honesta do que falta
+
+Autorização do usuário no fim da rodada 43: "já passamos da fase de pensar
+junto, já dá pra implantar de vez... faz tudo que depois eu audito". Esta
+rodada é o relato do que foi de fato construído, testado e commitado, e —
+igualmente importante — do que foi conscientemente **deixado de fora**, e
+por quê.
+
+### O que foi construído (Fases 1 e 3, testado e em produção)
+
+**Vocabulário genérico novo em `RacialTraitPointCatalog`**: `AtributoStep`/
+`PericiaStep` ganharam a flag `relativo: Boolean`. `relativo=false` (traços
+`ATTRIBUTE_BOOST`/`SKILL_BOOST`, já existentes) continua sendo piso fixo
+(`maxOf(base, 4+2*passos)`) — é o que uma Ancestralidade normalmente faz.
+`relativo=true` (traços novos `ATTRIBUTE_STEP_UP`/`SKILL_STEP_UP`) soma
+passos ACIMA do piso que já existir (`applySuperStepsFrom(piso, passos)`) —
+é o padrão "sobe um tipo de dado" que description de Protagonista/Bu Xista/
+Youxia usam no livro. Mesma fórmula de custo dos boosts fixos.
+
+**`Tropo.habilidades: List<RacialAbility>` + `Tropo.escolhas: List<TropoEscolha>`**
+(campos novos, aditivos — os campos antigos `ganhaAoComprar`/
+`periciasGratuitas`/`tecnicasIniciais` continuam funcionando pros 9 Tropos
+que ainda usam só eles). `TropoEscolha` modela uma escolha do jogador que
+muda o ALVO de uma ou mais habilidades do próprio Tropo (ex.: Kensai
+escolhe se a Arma Predileta e o bônus de perícia miram Lutar, Atirar etc.)
+— uma habilidade marca isso com `targetRef = "$ESCOLHA:<id>"`, resolvido em
+`CriadorState.habilidadesDoTropoResolvidas` antes de qualquer cálculo.
+
+**`CriadorState.atributoBaseRacial()`/`periciaStartRawInternal()`** ganharam
+um laço genérico que lê `habilidadesDoTropoResolvidas` e aplica
+`AtributoStep`/`PericiaStep` (fixo ou relativo) exatamente como o laço
+equivalente de raça já fazia — colocado ANTES dos ~50 blocos hardcoded por
+id (`if (tropoSelecionado?.id == "tropo_X")`) que continuam intactos, pros
+9 Tropos que ainda não usam `habilidades[]`. Crucial: o design existente
+`pisoSemTropo`/`includeTropo=false` (já preexistente, não criado nesta
+rodada) já impedia estruturalmente um bônus de Tropo de esticar o teto da
+perícia — é isso que torna a preocupação original do usuário (d6→d8→d10
+fantasma ao trocar raça+tropo) estruturalmente impossível tanto pro
+caminho antigo quanto pro novo: cada recálculo é puro, do zero, nunca
+incremental.
+
+**`ModifierEngine`** ganhou o laço equivalente lendo
+`habilidadesDoTropoResolvidas`, sem o filtro `sourceKeys` que raça usa (não
+existe "remover Tropo por Variante").
+
+**`CriadorState.selecionarTropo()`** ganhou reconciliação de Vantagem-de-
+-Tropo baseada no `habilidades[]` novo (`tropoVantagensGratisIds()` +
+`reconciliarGrantsDeHabilidadesDoTropo()`), convivendo sem conflito com o
+mecanismo antigo (`ganhaAoComprar`). `escolherTropoOpcao()` foi reescrita
+pra diffar as Vantagens concedidas ANTES/DEPOIS de uma TropoEscolha mudar
+(caso real: Artista Marcial "Potencial Físico" — a escolha decide tanto o
+atributo quanto QUAL Vantagem vem junto).
+
+**`MonstroTemplate.paraTropo()`**: função de conversão Monstro Heroico →
+Tropo unificado, testada e correta — `atributosBonus` vira
+`ATTRIBUTE_BOOST`/`SKILL_BOOST` (Fé é perícia), `habilidades[]` passa
+direto, e cada `complicacoes[]` vira uma `RacialAbility` `racial_hindrance`,
+com `targetRef`/`severity` reais só nos 5+1 casos verificados contra o
+catálogo (auditoria pedida pelo usuário: Anjo/Monstro de Retalhos×2/
+Vampiro/Revivido são narrativos-mas-vinculados; só Múmia "Lento" tem efeito
+numérico de verdade, `PACE_CHANGE` — os outros ~12 "Fraqueza (Prata)/
+(Fogo)/..." não têm equivalente genérico no catálogo, confirmado, ficam
+narrativos como qualquer Complicação de raça sem reskin).
+
+**Gate de ativação genérico (Fase 3)**: `CriadorState.modoTroposAtivo =
+compendioArteDaGuerraAtivo || modoTroposHabilitadoManualmente`.
+`isSectionEnabled()` só bloqueia TODAS as abas até a 1ª escolha quando o
+livro OBRIGA Tropo (hoje só Arte da Guerra); pra qualquer outro livro com
+o sistema ligado manualmente, "nenhum Tropo" é um estado final válido, só
+a aba Ancestralidade trava quando um Tropo de verdade está selecionado.
+
+Este bloco todo está coberto por 282 testes no harness standalone (238 +
+44 novos desta sessão), todos verdes, mais o gate `phase6_reliability`.
+
+### Bug real pego antes de virar bug de verdade
+
+Construí uma primeira versão (`aplicarTropo()`/`reconciliarGrantsDoTropo()`)
+que (a) nunca era chamada de lugar nenhum e (b) escrevia na lista errada
+(`vantagensRaciais`, a de RAÇA, não `vantagensSelecionadas`/
+`vantagensAutomaticasDoTropo`). Achei investigando antes de começar a
+autorar conteúdo de verdade (grep em `ganhaAoComprar`), descobri que já
+existia `selecionarTropo()` — função real, madura, já usada pela UI. Apaguei
+o código errado, religuei a reconciliação DENTRO de `selecionarTropo()` (a
+função de verdade), reescrevi o teste (a versão anterior usava
+`listaVantagens = emptyList()`, o que mascarava exatamente esse tipo de
+erro — nenhuma assertiva testava a lista certa). Documentado com detalhe no
+commit `8aa9d34`.
+
+### Fase 4 — reavaliada, e conscientemente NÃO feita como "reescrever os 9 Tropos em JSON"
+
+Ao investigar os dois pontos que pareciam precisar de correção via
+TropoEscolha antes de autorar conteúdo, descobri que **nenhum dos dois é
+bug**:
+
+- **"Kensai sempre soma em Lutar"**: não é bug. Em Arte da Guerra, "Jutsu"
+  **é** a perícia Lutar reflavorada/especializada (confirmado em código:
+  `CriadorState.kt` — "Em Arte da Guerra, 'Jutsu' é Lutar com Especialização
+  de Perícia"). O campo de texto livre do Youxia é etiqueta narrativa da
+  arma, não escolha mecânica de perícia.
+- **"Potencial Físico do Artista Marcial pode dobrar contagem"**: também
+  não. O bônus é aplicado dentro de `recalcularPontosAtributo()`, que
+  recalcula o atributo DO ZERO (piso racial + stack de PA) antes de somar
+  o bônus por cima, toda vez que roda — idempotente por construção, não
+  incremental.
+
+Migrar as mecânicas bem específicas dos 9 Tropos (Kensai/jutsuExtras do
+Youxia, pular Estágio do Samurai, as 5 tabelas do Protagonista, Caminho do
+Bu Xista, Elemento do Elementalista, Talento/Tipo do Shinobi, Potencial
+Físico do Artista Marcial) pra `habilidades[]`/`escolhas[]` **não elimina
+nenhum bug real** — elas já são corretas e seguras hoje — e são exatamente
+o tipo de lógica que fica fininamente acoplada em `TroposSection.kt`/
+`UnifiedScreen.kt` (Compose). Este ambiente não consegue compilar o módulo
+Android real (`./gradlew :app:compileDebugKotlin` falha resolvendo o
+plugin AGP, tanto offline quanto online — limitação de ambiente, não do
+projeto), então qualquer mudança em Compose só pode ser verificada por
+revisão manual de código, nunca compilada. Reescrever mecânicas já
+corretas, sem poder compilar a camada que as expõe, é risco real sem
+ganho real — bateria de frente com "não refatora além do necessário".
+**Decisão**: as mecânicas dos 9 Tropos continuam como código bespoke
+(mesmo padrão já prometido pra Samurai/Protagonista desde o planejamento
+original), Fase 4 fica sem mais trabalho previsto por ora.
+
+### Fase 5 (parcial) — bugs reais achados e corrigidos nesta rodada
+
+Investigando a fusão de aba antes de decidir o escopo, achei três gaps
+reais (não hipotéticos) deixados pela Fase 3:
+
+1. `TroposSection.kt` ainda tinha `if (!state.compendioArteDaGuerraAtivo)
+   return` — ou seja, a aba "Tropos" aparecia na navegação pra qualquer
+   livro com `modoTroposAtivo` (Fase 3), mas renderizava **em branco** pra
+   qualquer livro que não fosse Arte da Guerra. Corrigido pra checar
+   `modoTroposAtivo`.
+2. Não existia NENHUMA checkbox de UI pra ligar
+   `modoTroposHabilitadoManualmente` — o campo existia no `CriadorState`
+   desde a Fase 3, mas nenhum jogador conseguia de fato ativá-lo pra um
+   livro que não fosse Arte da Guerra. Adicionada em `TelaInicial.kt`
+   ("Usar sistema de Tropos"), visível pra qualquer livro exceto Arte da
+   Guerra (sempre obrigatório) e Horror (tem o próprio "Monstros Heróis",
+   ainda não unificado com este toggle).
+3. Nem `modoTroposHabilitadoManualmente` nem `tropoEscolhasFeitas` (o novo
+   mapa de TropoEscolha) estavam sendo persistidos em save/load
+   (`PersonagemSnapshot`) — uma ficha salva com o toggle manual ligado, ou
+   com uma TropoEscolha feita (ex.: futura escolha do Kensai), perderia os
+   dois ao recarregar. Corrigido: `SnapshotFlags.modoTroposHabilitadoManualmente`
+   e `SnapshotSelecoes.tropoEscolhasFeitas` novos (ambos com default
+   backward-compatível pra saves antigos), save/restore ligados em
+   `CriadorState`, e os dois novos parâmetros propagados por
+   `CriadorViewModel.resetStateParaNovoPersonagem` (`resetToEmptyState`/
+   `limparFichaMantendoLivro`/carregamento de save) e pelo fluxo de criação
+   em `TelaInicial.kt`/`MainActivity.kt`.
+
+Commit `0039346`, 282 testes + gate ok.
+
+### O que fica pendente, e por que não foi além nesta rodada
+
+O que falta pras Fases 2/5/6 (Monstro Heroico virar de fato um Tropo
+selecionável, mesclado na mesma aba/mesma lista que os Tropos de Arte da
+Guerra, com o gate de visibilidade de Vantagem MONSTRUOSAS generalizado) é
+a fusão real de **seleção** — fazer `tipoMonstroSelecionado`/
+`aplicarTipoMonstro()`/`TipoMonstroSection.kt` deixarem de existir como
+sistema paralelo e a escolha de Monstro passar a ser, de fato,
+`tropoSelecionado`/`selecionarTropo()`. Isso é mais arriscado do que os
+três gaps corrigidos acima por dois motivos concretos, não hipotéticos:
+
+- **Compatibilidade de save**: uma ficha Horror já salva hoje guarda
+  `tipoMonstroSelecionado` (string) e várias Vantagens MONSTRUOSAS
+  selecionadas por causa dele. Trocar o mecanismo de seleção sem migração
+  cuidadosa quebraria fichas já salvas de jogadores reais — não dá pra
+  testar isso sem carregar uma ficha de verdade, e este ambiente não roda
+  o app.
+- **Efeitos que dependem de `tipoMonstroSelecionado`/`modoMonstroAtivo`
+  especificamente** (não de `tropoSelecionado`) espalhados pelo código —
+  ex.: a visibilidade de Vantagem MONSTRUOSAS em
+  `isSectionEnabled`/validação de seleção, `ResumoPdfReferenciador.kt`
+  (exportação de PDF). Cada um precisaria ser conferido e,
+  possivelmente, migrado — e o PDF não dá pra verificar sem gerar um PDF
+  de verdade.
+
+Como não consigo compilar `UnifiedScreen.kt`/`TroposSection.kt`/
+`TipoMonstroSection.kt` neste ambiente (sem Gradle Android funcional) nem
+rodar o app pra conferir PDF/fluxo de save real, decidi não forçar essa
+fusão de seleção nesta rodada — o risco de quebrar uma ficha de horror já
+salva de um jogador real, sem forma nenhuma de verificar antes de
+commitar, pesa mais que o ganho de "uma aba a menos". `paraTropo()` (a
+conversão em si) já está pronta e testada — quando a fusão de seleção for
+feita, é a peça que falta a menos.
+
+**Tarefas #17 (Fase 2)/#20 (Fase 5)/#21 (Fase 6) seguem `in_progress`/
+`pending`, mas agora com escopo explícito: a fusão de SELEÇÃO Monstro↔Tropo,
+não mais "conversão de dado" (isso já está pronto) nem os 3 gaps de UI já
+corrigidos nesta rodada.** Recomendação pro usuário: essa fusão de seleção
+é o tipo de mudança que se beneficia de um teste manual no app de verdade
+(ou um ambiente com Gradle/Android SDK funcional) antes/depois, já que
+toca save/load e PDF — dois caminhos que este ambiente não consegue
+verificar sozinho.
