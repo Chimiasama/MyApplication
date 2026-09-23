@@ -96,7 +96,7 @@ object CharacterStorage {
             val payload = json.encodeToString(semChecksum)
             val digest = MessageDigest.getInstance("SHA-256").digest(payload.toByteArray())
             digest.joinToString("") { "%02x".format(it) }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

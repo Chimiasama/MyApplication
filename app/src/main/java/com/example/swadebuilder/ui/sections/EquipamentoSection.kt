@@ -486,7 +486,6 @@ fun EquipamentoSection(
     // de peso/custo) pesa e custa menos pra ancestralidades Pequenas/Muito Pequenas/
     // Minúsculas. 0 = personagem não é Diminuto, sem desconto nenhum.
     val passosDiminuto = com.example.swadebuilder.model.ModifierEngine.racialDiminutoPassos(state)
-    val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
     val isSearching = searchQuery.isNotBlank()
 

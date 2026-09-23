@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -77,6 +78,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.text.input.KeyboardType
+import com.example.swadebuilder.model.RacialAbility
+import com.example.swadebuilder.model.Tropo
 
 // Livro Básico: "Super Poderes (2+X)... o custo é 2 — pelo Antecedente Arcano
 // (Super Poderes) — mais o custo do poder selecionado (X)." Muitos poderes do
@@ -778,6 +783,7 @@ fun CustomContentManageDialog(
                         var racaPericiasIniciais by remember { mutableStateOf(mapOf<String, Int>()) }
                         var racaMovimentacao by remember { mutableStateOf("0") } // bônus/penalidade, não valor absoluto
                         var showRacaAttrDialog by remember { mutableStateOf(false) }
+                        var customTecnicasIniciais by remember { mutableStateOf("0") }
                         var showRacaSkillDialog by remember { mutableStateOf(false) }
 
                         // Estado da Variante de Raça custom (ver ResolveVariantPointBudgetUseCase / CustomAncestryVariant).
@@ -900,7 +906,7 @@ fun CustomContentManageDialog(
                         // já é global (tela inicial, criação, fase de XP), então não há mais
                         // motivo pra esconder categorias por causa de "isHomeScreen".
                         val categories = remember {
-                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Modificador de Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça", "Atributo", "Perícia")
+                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Modificador de Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça", "Atributo", "Perícia", "Tropo")
                         }
                         if (selectedCategory !in categories) {
                             selectedCategory = categories.first()
@@ -909,7 +915,7 @@ fun CustomContentManageDialog(
                         // <categoria>" abaixo — as demais ("Vantagem", "Complicação", "Raça",
                         // "Variante de Raça") são femininas e usam "da" por padrão.
                         val categoriasMasculinas = remember {
-                            setOf("Equipamento", "Poder", "Super Poder", "Modificador de Poder", "Antecedente Arcano", "Traço Racial", "Atributo")
+                            setOf("Equipamento", "Poder", "Super Poder", "Modificador de Poder", "Antecedente Arcano", "Traço Racial", "Atributo", "Tropo")
                         }
                         val artigoCategoria = if (selectedCategory in categoriasMasculinas) "do" else "da"
                         // Todos os "livros" de armazenamento que existem (livros reais + Geral).
@@ -937,7 +943,8 @@ fun CustomContentManageDialog(
                                 categoriasCustomizadas = all.flatMap { it.categoriasCustomizadas }.distinctBy { it.id },
                                 atributosCustomizados = all.flatMap { it.atributosCustomizados }.distinctBy { it.nome.lowercase() },
                                 periciasCustomizadas = all.flatMap { it.periciasCustomizadas }.distinctBy { it.nome.lowercase() },
-                                modificadoresCustomizados = all.flatMap { it.modificadoresCustomizados }.distinctBy { it.id }
+                                modificadoresCustomizados = all.flatMap { it.modificadoresCustomizados }.distinctBy { it.id },
+                                tropos = all.flatMap { it.tropos }.distinctBy { it.id }
                             )
                         }
 
@@ -1005,6 +1012,16 @@ fun CustomContentManageDialog(
                                     item?.let { i ->
                                         todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteModificadorCustomizado(context, it, i.id) }
                                         state.removeCustomModificador(i)
+                                    }
+                                }
+                                "Tropo" -> {
+                                    val item = activeBookCustomData.tropos.firstOrNull { it.nome.equals(delName, ignoreCase = true) }
+                                    item?.let { i ->
+                                        if (state.tropoSelecionado?.id == i.id) {
+                                            state.selecionarTropo(null)
+                                        }
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteTropo(context, it, i.id) }
+                                        state.listaTropos = state.listaTropos.filterNot { t -> t.id == i.id }
                                     }
                                 }
                             }
@@ -1551,9 +1568,20 @@ fun CustomContentManageDialog(
                                                         }
                                                     }
                                                 }
-                                                "Raça" -> {
+                                                "Raça", "Tropo" -> {
+                                                    val isTropo = selectedCategory == "Tropo"
                                                     val netRacePoints = selectedRacialTraits.sumOf { it.custo }
                                                     val pointColor = if (netRacePoints == 2) MaterialTheme.colorScheme.primary else if (netRacePoints < 2) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
+
+                                                    if (isTropo) {
+                                                        OutlinedTextField(
+                                                            value = customTecnicasIniciais,
+                                                            onValueChange = { str: String -> customTecnicasIniciais = str.filter { c -> c.isDigit() } },
+                                                            label = { Text("Técnicas / Slots Arcanos Iniciais") },
+                                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                                            modifier = Modifier.fillMaxWidth()
+                                                        )
+                                                    }
 
                                                     OutlinedCard(
                                                         modifier = Modifier.fillMaxWidth(),
@@ -1572,12 +1600,12 @@ fun CustomContentManageDialog(
                                                             ) {
                                                                 Column {
                                                                     Text(
-                                                                        text = "Traços Raciais",
+                                                                        text = if (isTropo) "Habilidades do Tropo" else "Traços Raciais",
                                                                         style = MaterialTheme.typography.titleSmall,
                                                                         fontWeight = FontWeight.Bold
                                                                     )
                                                                     Text(
-                                                                        text = "Pontos: $netRacePoints / 2",
+                                                                        text = "Pontos: $netRacePoints",
                                                                         style = MaterialTheme.typography.labelSmall,
                                                                         fontWeight = FontWeight.SemiBold,
                                                                         color = pointColor
@@ -2283,6 +2311,8 @@ fun CustomContentManageDialog(
                                                     if (state.mapaAtributosDisplay.values.any { it.equals(customItemName, ignoreCase = true) } || activeBookCustomData.atributosCustomizados.any { it.nome.equals(customItemName, ignoreCase = true) }) "Atributo" else null
                                                 "Perícia" ->
                                                     if (state.listaPericias.any { it.nome.equals(customItemName, ignoreCase = true) } || activeBookCustomData.periciasCustomizadas.any { it.nome.equals(customItemName, ignoreCase = true) }) "Perícia" else null
+                                                "Tropo" ->
+                                                    if (state.listaTropos.any { it.nome.equals(customItemName, ignoreCase = true) } || activeBookCustomData.tropos.any { it.nome.equals(customItemName, ignoreCase = true) }) "Tropo" else null
                                                 else -> null
                                             }
                                             if (colisao != null) {
@@ -2572,6 +2602,31 @@ fun CustomContentManageDialog(
                                                     state.addCustomPericia(newPericia)
                                                     statusMessage = "Perícia '$customItemName' salva em: $tagsLabel"
                                                 }
+                                                "Tropo" -> {
+                                                    val tropoHabilidades = selectedRacialTraits.map { trait ->
+                                                        RacialAbility(
+                                                            nome = trait.nome,
+                                                            descricao = trait.descricao,
+                                                            id = trait.id ?: trait.nome.toIdSlug(),
+                                                            category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
+                                                            vezes = trait.vezes,
+                                                            traitId = trait.traitId,
+                                                            targetRef = trait.targetRef,
+                                                            value = trait.value
+                                                        )
+                                                    }
+                                                    val newTropo = Tropo(
+                                                        id = id,
+                                                        nome = customItemName,
+                                                        categoria = "TROPO",
+                                                        origem = tags.first(),
+                                                        tecnicasIniciais = customTecnicasIniciais.toIntOrNull() ?: 0,
+                                                        descricao = safeDesc,
+                                                        habilidades = tropoHabilidades
+                                                    )
+                                                    tags.forEach { tag -> customStorageManager.addTropo(context, tag, newTropo.copy(origem = tag)) }
+                                                    statusMessage = "Tropo '$customItemName' salvo em: $tagsLabel"
+                                                }
                                             }
                                                     refreshTrigger++
                                             onCustomContentChanged()
@@ -2593,6 +2648,7 @@ fun CustomContentManageDialog(
                                             customPericiaBasica = false
                                             customModificadorPoderAlvoNome = null
                                             customModificadorCusto = "+2"
+                                            customTecnicasIniciais = "0"
                                             }
                                         } else {
                                                     statusMessage = "Preencha o Nome do item."

@@ -3,7 +3,6 @@
 
 package com.example.swadebuilder.ui.sections
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -660,7 +659,6 @@ fun ComplicacoesSection(
                         allowLongTexts = allowLongTexts,
                         showOfficialNames = showOfficialNames,
                         groupedComplications = groupedComplications,
-                        detalhesExpandidos = detalhesExpandidos,
                         onUserFeedback = onUserFeedback,
                         onLogFeedback = onLogFeedback,
                         onError = { msg ->
@@ -739,7 +737,6 @@ private fun ComplicacaoItem(
     allowLongTexts: Boolean,
     showOfficialNames: Boolean,
     groupedComplications: Map<String, List<Complicacao>>,
-    detalhesExpandidos: MutableMap<String, Boolean>,
     onUserFeedback: () -> Unit,
     onLogFeedback: (String) -> Unit,
     onError: (String) -> Unit,
@@ -790,18 +787,6 @@ private fun ComplicacaoItem(
         val (pode, msg) = state.podeSelecionarComplicacao(comp)
         val cMsg = state.mensagemConflitoParaComplicacao(comp)
         Pair(pode && cMsg == null, msg ?: cMsg)
-    }
-
-    val statusText = when {
-        cur != null -> "Selecionada ($cur)"
-        requisitosOk -> ""
-        else -> "Requisitos pendentes"
-    }
-
-    val statusColor = when {
-        cur != null -> MaterialTheme.colorScheme.tertiary
-        requisitosOk -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.error
     }
 
     androidx.compose.material3.Card(
@@ -977,7 +962,7 @@ private fun ComplicacaoItem(
                 Text(titleText, style = MaterialTheme.typography.titleMedium, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
             },
             text = {
-                Column(modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     Text(
                         text = mergedDescription.ifBlank { "Nenhuma descrição disponível." },
                         style = MaterialTheme.typography.bodyMedium,

@@ -6,6 +6,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.intOrNull
 
 @Serializable
 data class EquipamentoItem(
@@ -98,6 +101,49 @@ data class EquipamentoItem(
         } else {
             GenericNameMapper.map(nome)
         }
+
+    val custoInt: Int
+        get() = (custo as? JsonPrimitive)?.intOrNull
+            ?: (custo as? JsonPrimitive)?.content?.toIntOrNull() ?: 0
+
+    val pesoDouble: Double
+        get() = (peso as? JsonPrimitive)?.doubleOrNull
+            ?: (peso as? JsonPrimitive)?.content?.toDoubleOrNull() ?: 0.0
+
+    val paInt: Int
+        get() {
+            val str = (pa as? JsonPrimitive)?.content?.trim().orEmpty()
+            if (str.isBlank()) return 0
+            val match = Regex("""(?:PA\s*)?([+-]?\d+)""", RegexOption.IGNORE_CASE).find(str)
+            return match?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        }
+
+    val forcaMinRaw: Int
+        get() {
+            val str = (forcaMin as? JsonPrimitive)?.content?.trim().orEmpty()
+            if (str.isBlank()) return 4
+            val match = Regex("""d(\d+)""", RegexOption.IGNORE_CASE).find(str)
+            return match?.groupValues?.get(1)?.toIntOrNull() ?: 4
+        }
+
+    val armaduraInt: Int
+        get() {
+            val str = (armadura as? JsonPrimitive)?.content?.trim().orEmpty()
+            if (str.isBlank()) return 0
+            val match = Regex("""\+?(\d+)""").find(str)
+            return match?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        }
+
+    val apararInt: Int
+        get() {
+            val str = (aparar as? JsonPrimitive)?.content?.trim().orEmpty()
+            if (str.isBlank()) return 0
+            val match = Regex("""([+-]?\d+)""").find(str)
+            return match?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        }
+
+    val danoLimpo: String
+        get() = (dano as? JsonPrimitive)?.content?.trim() ?: ""
 }
 
 @Serializable

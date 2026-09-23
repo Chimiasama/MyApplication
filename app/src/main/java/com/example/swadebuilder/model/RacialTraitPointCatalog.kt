@@ -258,6 +258,15 @@ object RacialTraitPointCatalog {
             "NATURAL_ARMOR" -> RacialTraitEffect.ArmaduraBonus(value)
             "PERICIA_POINTS_BONUS" -> RacialTraitEffect.PericiaPoolBonus(value)
             "ATRIBUTO_POINTS_BONUS" -> RacialTraitEffect.AtributoPoolBonus(value)
+            "FORTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Força", value)
+            "MUITO_FORTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Força", 2)
+            "AGIL" -> RacialTraitEffect.AtributoStep(targetRef ?: "Agilidade", value)
+            "ASTUCIA", "ASTUTO" -> RacialTraitEffect.AtributoStep(targetRef ?: "Astúcia", value)
+            "ESPIRITUOSO" -> RacialTraitEffect.AtributoStep(targetRef ?: "Espírito", value)
+            "VIGOROSO", "RESISTENTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Vigor", value)
+            "MUITO_RESISTENTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Vigor", 2)
+            "BRINCALHAO" -> RacialTraitEffect.PericiaStep("Provocar", passos = 0)
+            "SENTIDOS_AGUCADOS" -> RacialTraitEffect.PericiaStep("Perceber")
             else -> EFEITOS[key] ?: RacialTraitEffect.Nenhum
         }
     }

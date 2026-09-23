@@ -308,56 +308,85 @@ object ModifierEngine {
 
         // 3. Complications
         state.complicacoesSelecionadas.entries.forEach { (comp, nivel) ->
-            if (comp.id == Constants.ID_PEQUENO) {
-                modifiers.add(Modifier("comp_pequeno_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, -1))
-                modifiers.add(Modifier("comp_pequeno_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, -1))
+            comp.efeitos.forEach { efeito ->
+                when (efeito.traitId) {
+                    "PARRY_BOOST" -> modifiers.add(Modifier("comp_${comp.id}_parry", SourceType.COMPLICACAO, comp.name, ModifierTarget.PARRY, efeito.value))
+                    "TOUGHNESS_FLAT" -> modifiers.add(Modifier("comp_${comp.id}_res", SourceType.COMPLICACAO, comp.name, ModifierTarget.TOUGHNESS_FLAT, efeito.value))
+                    "PACE_CHANGE" -> {
+                        val valAjustado = if (efeito.value < 0 && nivel == "Maior" && comp.severity.contains("menor", true)) efeito.value * 2 else efeito.value
+                        modifiers.add(Modifier("comp_${comp.id}_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, valAjustado))
+                    }
+                    "SIZE_CHANGE" -> {
+                        modifiers.add(Modifier("comp_${comp.id}_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, efeito.value))
+                        modifiers.add(Modifier("comp_${comp.id}_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, efeito.value))
+                    }
+                }
             }
-            if (comp.id == Constants.ID_OBESO) {
-                modifiers.add(Modifier("comp_obeso_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, 1))
-                modifiers.add(Modifier("comp_obeso_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, 1))
-                modifiers.add(Modifier("comp_obeso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
-            }
-            if (comp.id == Constants.ID_IDOSO) {
-                modifiers.add(Modifier("comp_idoso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
-            }
-            if (comp.id == Constants.ID_LENTO || comp.id == Constants.ID_LENTO_CH) {
-                val penalty = if (nivel == "Maior") -2 else -1
-                modifiers.add(Modifier("comp_lento_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, penalty))
+            if (comp.efeitos.isEmpty()) {
+                if (comp.id == Constants.ID_PEQUENO) {
+                    modifiers.add(Modifier("comp_pequeno_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, -1))
+                    modifiers.add(Modifier("comp_pequeno_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, -1))
+                }
+                if (comp.id == Constants.ID_OBESO) {
+                    modifiers.add(Modifier("comp_obeso_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, 1))
+                    modifiers.add(Modifier("comp_obeso_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, 1))
+                    modifiers.add(Modifier("comp_obeso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
+                }
+                if (comp.id == Constants.ID_IDOSO) {
+                    modifiers.add(Modifier("comp_idoso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
+                }
+                if (comp.id == Constants.ID_LENTO || comp.id == Constants.ID_LENTO_CH) {
+                    val penalty = if (nivel == "Maior") -2 else -1
+                    modifiers.add(Modifier("comp_lento_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, penalty))
+                }
             }
         }
 
         // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
-            if (vant.id == Constants.ID_MUSCULOSO) {
-                modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
-                modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
+            vant.efeitos.forEach { efeito ->
+                when (efeito.traitId) {
+                    "PARRY_BOOST" -> modifiers.add(Modifier("edge_${vant.id}_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, efeito.value))
+                    "TOUGHNESS_FLAT" -> modifiers.add(Modifier("edge_${vant.id}_res", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, efeito.value))
+                    "PACE_CHANGE" -> modifiers.add(Modifier("edge_${vant.id}_pace", SourceType.VANTAGEM, vant.nome, ModifierTarget.PACE, efeito.value))
+                    "SIZE_CHANGE" -> {
+                        modifiers.add(Modifier("edge_${vant.id}_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, efeito.value))
+                        modifiers.add(Modifier("edge_${vant.id}_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, efeito.value))
+                    }
+                }
             }
-        if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA || vant.id.keyify() == "PUGILISTA") {
-                modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
-            if (vant.id == Constants.ID_LIGEIRO) {
-                modifiers.add(Modifier("edge_ligeiro_pace", SourceType.VANTAGEM, vant.nome, ModifierTarget.PACE, 2))
-            }
-            if (vant.id == Constants.ID_BLOQUEAR) {
-                modifiers.add(Modifier("edge_bloquear_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
-            }
-            if (vant.id == Constants.ID_BLOQUEAR_APRIMORADO) {
-                modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
-            }
-        if (vant.id == "mestre_de_arma" || vant.id.keyify() == "MESTRE_DE_ARMA") {
-            modifiers.add(Modifier("edge_mestre_de_arma_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
-        }
-        if (vant.id == "mestre_das_armas" || vant.id.keyify() == "MESTRE_DAS_ARMAS") {
-            modifiers.add(Modifier("edge_mestre_das_armas_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
-        }
-            if (vant.id == "resistencia_lobo") {
-                modifiers.add(Modifier("edge_resistencia_lobo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-            if (vant.id == "resistencia_anjo") {
-                modifiers.add(Modifier("edge_resistencia_anjo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-            if (vant.id == "resistencia_divina") {
-                modifiers.add(Modifier("edge_resistencia_divina", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            if (vant.efeitos.isEmpty()) {
+                if (vant.id == Constants.ID_MUSCULOSO) {
+                    modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
+                    modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
+                }
+                if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA || vant.id.keyify() == "PUGILISTA") {
+                    modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
+                }
+                if (vant.id == Constants.ID_LIGEIRO) {
+                    modifiers.add(Modifier("edge_ligeiro_pace", SourceType.VANTAGEM, vant.nome, ModifierTarget.PACE, 2))
+                }
+                if (vant.id == Constants.ID_BLOQUEAR) {
+                    modifiers.add(Modifier("edge_bloquear_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+                }
+                if (vant.id == Constants.ID_BLOQUEAR_APRIMORADO) {
+                    modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+                }
+                if (vant.id == "mestre_de_arma" || vant.id.keyify() == "MESTRE_DE_ARMA") {
+                    modifiers.add(Modifier("edge_mestre_de_arma_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+                }
+                if (vant.id == "mestre_das_armas" || vant.id.keyify() == "MESTRE_DAS_ARMAS") {
+                    modifiers.add(Modifier("edge_mestre_das_armas_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+                }
+                if (vant.id == "resistencia_lobo") {
+                    modifiers.add(Modifier("edge_resistencia_lobo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+                }
+                if (vant.id == "resistencia_anjo") {
+                    modifiers.add(Modifier("edge_resistencia_anjo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+                }
+                if (vant.id == "resistencia_divina") {
+                    modifiers.add(Modifier("edge_resistencia_divina", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+                }
             }
         }
 

@@ -748,18 +748,17 @@ class MainActivity : ComponentActivity() {
                         confirmButton = {
                             TextButton(
                                 onClick = {
-                                    val entry = targetEntry
                                     entryToConfirmLoad = null
                                     scope.launch {
                                         val result = criadorViewModel.carregarPersonagem(
                                             context,
-                                            entry.id
+                                            targetEntry.id
                                         )
                                         if (result.success) {
                                             creationSession++
                                             mostrouTelaInicial = false
                                             showLoadDialog = false
-                                            snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                            snackHost.showSnackbar("Carregado: ${targetEntry.nome}")
                                         } else {
                                             snackHost.showSnackbar(
                                                 result.message

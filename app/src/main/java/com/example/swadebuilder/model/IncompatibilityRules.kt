@@ -53,6 +53,8 @@ object IncompatibilityRules {
     fun complicacoesIncompativeisCom(vantagemId: String): Set<String> =
         vantagemConflitaComComplicacao[vantagemId].orEmpty()
 
-    fun vantagensIncompativeisCom(complicacaoId: String): Set<String> =
-        complicacaoConflitaComVantagem[complicacaoId].orEmpty()
+    fun vantagensIncompativeisCom(complicacaoId: String, complicacao: Complicacao? = null): Set<String> {
+        val doJson = complicacao?.incompatibilidades?.toSet().orEmpty()
+        return doJson + complicacaoConflitaComVantagem[complicacaoId].orEmpty()
+    }
 }

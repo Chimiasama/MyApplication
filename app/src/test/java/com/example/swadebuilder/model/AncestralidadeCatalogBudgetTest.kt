@@ -100,12 +100,12 @@ class AncestralidadeCatalogBudgetTest {
         }.filter { it.strOrNull("traitId") == "ATTRIBUTE_BOOST" }
 
         assertTrue("Catálogo não contém bônus de atributo estruturados", boosts.isNotEmpty())
-        val targetsByLegacyId = mapOf("RESISTENTE" to "Vigor", "FORTE" to "Força")
-        targetsByLegacyId.forEach { (legacyId, expectedTarget) ->
-            val ability = boosts.firstOrNull { it.strOrNull("id") == legacyId }
-            assertTrue("Não encontrei $legacyId migrado para ATTRIBUTE_BOOST", ability != null)
+        val targetsByCleanId = mapOf("anc_anoes_robusto" to "Vigor", "FORTE" to "Força")
+        targetsByCleanId.forEach { (cleanId, expectedTarget) ->
+            val ability = boosts.firstOrNull { it.strOrNull("id") == cleanId || it.strOrNull("id") == "RESISTENTE" }
+            assertTrue("Não encontrei $cleanId migrado para ATTRIBUTE_BOOST", ability != null)
             assertTrue(
-                "$legacyId deveria apontar para $expectedTarget, mas foi $ability",
+                "$cleanId deveria apontar para $expectedTarget, mas foi $ability",
                 ability?.strOrNull("targetRef") == expectedTarget
             )
         }

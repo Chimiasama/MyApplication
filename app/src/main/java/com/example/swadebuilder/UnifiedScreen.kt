@@ -55,7 +55,6 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -1199,7 +1198,6 @@ private fun EquipamentoSection(
                 onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
                 onUserFeedback()
             } else {
-                val missing = moneyNeeded
                 onLogFeedback("Faltam recursos para obter o equipamento ${equipamento.nome}.")
                 onUserFeedback()
             }

@@ -571,6 +571,7 @@ object DataLoader {
         val customAtributosJson = mutableListOf<AtributoJson>()
         val customPericiasJson = mutableListOf<PericiaJson>()
         val customModificadoresCustomizados = mutableListOf<ModificadorCustomizado>()
+        val customTropos = mutableListOf<Tropo>()
 
         // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
         // o conteúdo customizado que o jogador marcou como "Geral" na criação,
@@ -588,6 +589,7 @@ object DataLoader {
             customAtributosJson += customData.atributosCustomizados
             customPericiasJson += customData.periciasCustomizadas
             customModificadoresCustomizados += customData.modificadoresCustomizados
+            customTropos += customData.tropos
         }
         // Mesma categoria (mesmo id) pode existir em mais de um livro de armazenamento
         // se o Mestre marcou vários livros ao criá-la — distinctBy fica só com uma cópia.
@@ -716,7 +718,7 @@ object DataLoader {
             mapaAtributosDescricao = mergedMapaAtributosDescricao,
             listaVantagens = mergedVantagens,
             listaPoderes = mergedPoderes,
-            listaTropos = localListaTropos,
+            listaTropos = (localListaTropos + customTropos).distinctBy { it.id },
             listaEquipamentos = mergedEquipamentos,
             equipamentoCategorias = updatedEquipamentoCategorias,
             superequipCategorias = localSuperequipCategorias,

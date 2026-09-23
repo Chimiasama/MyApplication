@@ -6,6 +6,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class VantagemEfeito(
+    val traitId: String,
+    val targetRef: String? = null,
+    val value: Int = 1
+)
+
+@Serializable
 data class Vantagem(
     val id: String,
     val nome: String,
@@ -13,6 +20,8 @@ data class Vantagem(
     val originalDescription: String? = null,
 
     val categoria: Categoria,
+
+    val efeitos: List<VantagemEfeito> = emptyList(),
 
     // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt), só usado quando
     // categoria == Categoria.CUSTOMIZADA — a categoria "de verdade" desta vantagem

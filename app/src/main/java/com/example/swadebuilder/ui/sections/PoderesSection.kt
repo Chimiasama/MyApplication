@@ -1,6 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -125,7 +124,6 @@ fun PoderesSection(
     onCustomContentChanged: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
 
     val locked = state.criacaoBasicaCongeladaComXp
 

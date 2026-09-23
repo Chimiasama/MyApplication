@@ -52,3 +52,16 @@ data class Poder(
     // aplica a Poderes customizados criados pelo Mestre.
     val categoriaCustomizadaId: String? = null
 )
+
+object ModificadoresGlobaisDePoder {
+    val LISTA: List<Modificador> = listOf(
+        Modificador("Dano Adicional (+2)", "+1 PP", "Adiciona +2 de dano ao poder de ataque."),
+        Modificador("Dano Adicional (+4)", "+2 PP", "Adiciona +4 de dano ao poder de ataque."),
+        Modificador("Alcance Expandido", "+1 PP", "Dobra o Alcance/Distância do poder."),
+        Modificador("Duração Expandida", "+1 PP", "Dobra a Duração base do poder."),
+        Modificador("Área de Efeito (MPE)", "+1 PP", "Afeta todos no Modelo Pequeno de Explosão."),
+        Modificador("Área de Efeito (MME)", "+2 PP", "Afeta todos no Modelo Médio de Explosão."),
+        Modificador("Área de Efeito (MGE)", "+3 PP", "Afeta todos no Modelo Grande de Explosão."),
+        Modificador("Glow / Som", "+1 PP", "Gera efeito luminoso ou acústico chamativo ao usar o poder.")
+    )
+}

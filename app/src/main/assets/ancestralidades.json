@@ -50,14 +50,16 @@
       {
         "nome": "Movimentação Reduzida",
         "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
-        "id": "MOVIMENTACAO_REDUZIDA",
+        "id": "anc_anoes_movimentacao_reduzida",
         "category": "racial_trait_negative",
-        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
+        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal.",
+        "traitId": "PACE_CHANGE",
+        "value": -1
       },
       {
         "nome": "Resistente",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
-        "id": "RESISTENTE",
+        "id": "anc_anoes_robusto",
         "category": "racial_trait_positive",
         "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1.",
         "traitId": "ATTRIBUTE_BOOST",
@@ -67,9 +69,10 @@
       {
         "nome": "Visão no Escuro",
         "descricao": "Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão.",
-        "id": "VISAO_NO_ESCURO",
+        "id": "anc_anoes_visao_no_escuro",
         "category": "racial_trait_positive",
-        "descricaoLite": "Enxerga normalmente em ambientes de pouca luz ou escuridão total, sem sofrer os modificadores de percepção correspondentes."
+        "descricaoLite": "Enxerga normalmente em ambientes de pouca luz ou escuridão total, sem sofrer os modificadores de percepção correspondentes.",
+        "pontos": 1
       }
     ],
     "livros": [
@@ -452,14 +455,16 @@
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
         "descricao": "Anões têm pernas mais curtas em comparação com as outras ancestralidades. Reduza 1 de sua Movimentação andando e seu dado de corrida em um tipo.",
-        "id": "MOVIMENTACAO_REDUZIDA",
+        "id": "anc_anoes_movimentacao_reduzida",
         "category": "racial_trait_negative",
-        "descricaoLite": "Anda 1 quadro a menos por rodada e tem o dado de corrida um tipo abaixo do normal."
+        "descricaoLite": "Anda 1 quadro a menos por rodada e tem o dado de corrida um tipo abaixo do normal.",
+        "traitId": "PACE_CHANGE",
+        "value": -1
       },
       {
         "nome": "ROBUSTO",
         "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
-        "id": "RESISTENTE",
+        "id": "anc_anoes_robusto",
         "category": "racial_trait_positive",
         "descricaoLite": "Vigor começa em d6 em vez de d4, com máximo em d12+1.",
         "traitId": "ATTRIBUTE_BOOST",
@@ -469,9 +474,10 @@
       {
         "nome": "VISÃO NO ESCURO",
         "descricao": "Anões estão acostumados com a escuridão do subterrâneo. Ignoram penalidades por Penumbra e Escuridão.",
-        "id": "VISAO_NO_ESCURO",
+        "id": "anc_anoes_visao_no_escuro",
         "category": "racial_trait_positive",
-        "descricaoLite": "Não sofre penalidades de Penumbra nem de Escuridão para enxergar."
+        "descricaoLite": "Não sofre penalidades de Penumbra nem de Escuridão para enxergar.",
+        "pontos": 1
       }
     ],
     "livros": [
@@ -2619,14 +2625,16 @@
       {
         "nome": "Movimentação Reduzida",
         "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
-        "id": "MOVIMENTACAO_REDUZIDA",
+        "id": "anc_anoes_movimentacao_reduzida",
         "category": "racial_trait_negative",
-        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
+        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal.",
+        "traitId": "PACE_CHANGE",
+        "value": -1
       },
       {
         "nome": "Resistente",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
-        "id": "RESISTENTE",
+        "id": "anc_anoes_robusto",
         "category": "racial_trait_positive",
         "descricaoLite": "Começa com Vigor d6 em vez de d4, podendo evoluir até d12+1.",
         "traitId": "ATTRIBUTE_BOOST",
@@ -2636,9 +2644,10 @@
       {
         "nome": "Visão no Escuro",
         "descricao": "Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão.",
-        "id": "VISAO_NO_ESCURO",
+        "id": "anc_anoes_visao_no_escuro",
         "category": "racial_trait_positive",
-        "descricaoLite": "Enxerga normalmente em ambientes de pouca luz ou escuridão total, sem sofrer os modificadores de percepção correspondentes."
+        "descricaoLite": "Enxerga normalmente em ambientes de pouca luz ou escuridão total, sem sofrer os modificadores de percepção correspondentes.",
+        "pontos": 1
       }
     ],
     "tags": [],

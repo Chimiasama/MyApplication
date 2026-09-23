@@ -11,6 +11,7 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.Tropo
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -57,7 +58,8 @@ data class BookCustomContent(
     val categoriasCustomizadas: List<CategoriaCustomizada> = emptyList(),
     val atributosCustomizados: List<AtributoJson> = emptyList(),
     val periciasCustomizadas: List<PericiaJson> = emptyList(),
-    val modificadoresCustomizados: List<ModificadorCustomizado> = emptyList()
+    val modificadoresCustomizados: List<ModificadorCustomizado> = emptyList(),
+    val tropos: List<Tropo> = emptyList()
 )
 
 class CustomStorageManager(
@@ -396,6 +398,28 @@ class CustomStorageManager(
 
     fun deleteModificadorCustomizado(context: Context, bookKey: String, itemId: String) {
         deleteModificadorCustomizado(context.filesDir, bookKey, itemId)
+    }
+
+    fun addTropo(baseDir: File, bookKey: String, item: Tropo) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            tropos = (current.tropos.filterNot { it.id == item.id } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addTropo(context: Context, bookKey: String, item: Tropo) {
+        addTropo(context.filesDir, bookKey, item)
+    }
+
+    fun deleteTropo(baseDir: File, bookKey: String, itemId: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(tropos = current.tropos.filterNot { it.id == itemId })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteTropo(context: Context, bookKey: String, itemId: String) {
+        deleteTropo(context.filesDir, bookKey, itemId)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

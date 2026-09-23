@@ -1,6 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -249,7 +248,7 @@ fun VantagensContent(
     }
 
     val idParaNome = remember(allAdvantages) {
-        allAdvantages.associate { it.id to it.nomeExibicao.toFancyTitleCase() }
+        allAdvantages.associateBy({ it.id }, { it.nomeExibicao.toFancyTitleCase() })
     }
 
     // --- Search & Filter State ---
@@ -276,7 +275,6 @@ fun VantagensContent(
     var dialogMostrandoPoderFavorito by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
-    val scope = rememberCoroutineScope()
     val expandedMap = state.categoriasVantagensExpandidas
     val vantagemEmFoco = state.vantagemEmFoco
 
@@ -295,13 +293,10 @@ fun VantagensContent(
     }
 
     val locked = state.criacaoBasicaCongeladaComXp
-    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
-    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
-    val pvUsados = state.cpPvStack.size
 
     val isSearching = searchQuery.isNotBlank()
     val isFilteringCategories = selectedCategories.isNotEmpty()
@@ -858,10 +853,8 @@ fun VantagensContent(
                                              state = state,
                                              allEstagios = allEstagios,
                                              locked = locked,
-                                             allowLongTexts = allowLongTexts,
                                              showOfficialNames = showOfficialNames,
                                              idParaNome = idParaNome,
-                                             detalhesExpandidos = detalhesExpandidos,
                                              protagonistaSlotCategoria = protagonistaSlotCategoria,
                                              pcLivres = pcLivres,
                                              onSelect = {
@@ -919,10 +912,8 @@ fun VantagensContent(
                                      state = state,
                                      allEstagios = allEstagios,
                                      locked = locked,
-                                     allowLongTexts = allowLongTexts,
                                      showOfficialNames = showOfficialNames,
                                      idParaNome = idParaNome,
-                                     detalhesExpandidos = detalhesExpandidos,
                                      protagonistaSlotCategoria = protagonistaSlotCategoria,
                                      pcLivres = pcLivres,
                                      onSelect = {
@@ -1003,10 +994,8 @@ fun VantagensContent(
                              state = state,
                              allEstagios = allEstagios,
                              locked = locked,
-                             allowLongTexts = allowLongTexts,
                              showOfficialNames = showOfficialNames,
                              idParaNome = idParaNome,
-                             detalhesExpandidos = detalhesExpandidos,
                              protagonistaSlotCategoria = protagonistaSlotCategoria,
                              pcLivres = pcLivres,
                              onSelect = {
@@ -1840,10 +1829,8 @@ private fun VantagemItem(
     state: CriadorState,
     allEstagios: List<Estagio>,
     locked: Boolean,
-    allowLongTexts: Boolean,
     showOfficialNames: Boolean,
     idParaNome: Map<String, String>,
-    detalhesExpandidos: MutableMap<String, Boolean>,
     protagonistaSlotCategoria: String?,
     pcLivres: Int,
     onSelect: () -> Unit,

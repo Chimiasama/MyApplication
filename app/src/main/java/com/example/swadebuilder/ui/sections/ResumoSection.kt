@@ -1,6 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -835,8 +834,8 @@ private fun CombatAndEquipmentCard(
                 )
             } else {
                 ataquesSuperCorpoACorpo.forEach { ataque ->
-                    val stats = listOf(ataque.dano, ataque.pa.takeIf { it != "-" }?.let { "PA $it" })
-                        .filterNotNull().filter { it.isNotBlank() }.joinToString(", ")
+                    val paText = if (ataque.pa.isNotBlank() && ataque.pa != "-") "PA ${ataque.pa}" else null
+                    val stats = listOfNotNull(ataque.dano.takeIf { it.isNotBlank() }, paText).joinToString(", ")
                     CombatRow(name = ataque.nome, stats = stats.ifBlank { ataque.dano }, notes = ataque.notas)
                 }
                 armasCorpoACorpo.forEach { weapon ->
