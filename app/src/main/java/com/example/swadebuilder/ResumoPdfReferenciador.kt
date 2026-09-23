@@ -142,7 +142,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         tamanho = this.tamanhoExibido(),
         movimentacao = this.valorMovimentacao(),
         dadoCorrida = this.valorDadoCorrida(),
-        resistencia = this.resistenciaBase(),
+        resistencia = this.valorResistenciaTotal(),
+        aparar = this.valorApararTotal(),
         appTheme = this.appTheme.name,
         portraitFileName = this.portraitFileName,
         regraFamaAtiva = this.optRegraFama,
@@ -1585,8 +1586,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     // Riqueza/Requisição, Domínio) — antes esses extras ficavam de fora do PDF por
     // completo (só apareciam no resumo do app).
     val corePairs = listOf(
-        "Aparar" to calcAparar(p, especieId).toString(),
-        "Resistência" to calcResistencia(p),
+        "Aparar" to p.aparar.toString(),
+        "Resistência" to p.resistencia.toString(),
         "Tamanho" to p.tamanho.toString(),
         "Movimentação" to p.movimentacao.toString(),
         "Corrida" to p.dadoCorrida

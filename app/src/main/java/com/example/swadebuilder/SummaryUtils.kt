@@ -135,13 +135,12 @@ fun buildRacialTraitsList(
         habilidadesRaciaisBase
             .map { it.substringBefore("(").trim() }
             .filter {
-                val key = it.keyify()
-                when {
-                    key == "AQUATICO" -> elem == "AGUA"
-                    key == "AR INTERNO" -> elem == "AR"
-                    key == "RAPIDO" -> elem == "FOGO"
-                    key == "SOLIDO COMO ROCHA" -> elem == "TERRA"
-                    key == "RESISTENCIA AMBIENTAL" || key == "FORASTEIRO" -> true
+                when (val key = it.keyify()) {
+                    "AQUATICO" -> elem == "AGUA"
+                    "AR INTERNO" -> elem == "AR"
+                    "RAPIDO" -> elem == "FOGO"
+                    "SOLIDO COMO ROCHA" -> elem == "TERRA"
+                    "RESISTENCIA AMBIENTAL", "FORASTEIRO" -> true
                     else -> true
                 }
             }
@@ -476,9 +475,7 @@ fun buildSummaryLines(
             .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
             .sumOf { it.steps }
         val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
-        val jutsuComSupers = jutsuRawBase
-
-        val base = 2 + (max(lutarComSupers, jutsuComSupers) / 2)
+        val base = 2 + (max(lutarComSupers, jutsuRawBase) / 2)
 
         val bloquearBonus =
             if (personagem.vantagens.contains(Constants.ID_BLOQUEAR)) 1 else 0

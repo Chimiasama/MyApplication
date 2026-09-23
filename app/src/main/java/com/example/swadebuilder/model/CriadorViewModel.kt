@@ -3,6 +3,7 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
@@ -54,7 +55,7 @@ class CriadorViewModel(
     val state = CriadorState()
 
     private val _feedbackMessages = mutableStateListOf<String>()
-    val feedbackMessages: List<String> = _feedbackMessages
+    val feedbackMessages: SnapshotStateList<String> = _feedbackMessages
 
     val gameDataStore = GameDataStore()
     private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()

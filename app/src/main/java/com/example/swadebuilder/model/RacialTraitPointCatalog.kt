@@ -134,62 +134,10 @@ object RacialTraitPointCatalog {
      * Movimentação, genérico desde o início desta unificação).
      */
     val EFEITOS: Map<String, RacialTraitEffect> = mapOf(
-        "AGIL" to RacialTraitEffect.AtributoStep("Agilidade"),
-        "ASTUCIA" to RacialTraitEffect.AtributoStep("Astúcia"),
-        "ASTUTO" to RacialTraitEffect.AtributoStep("Astúcia"),
-        "BAIXA_GRAVIDADE_AGIL" to RacialTraitEffect.AtributoStep("Agilidade"), // sintético, injetado por Humanos Sci-Fi "Baixa Gravidade" (ver applyAncestryVariantAdjustments)
-        "DURAO" to RacialTraitEffect.AtributoStep("Vigor"),
-        "EM_FORMA" to RacialTraitEffect.AtributoStep("Vigor"),
-        "ESPIRITUAL" to RacialTraitEffect.AtributoStep("Espírito"),
-        "ESPIRITUOSO" to RacialTraitEffect.AtributoStep("Espírito"),
-        "FELIZES_POR_NATUREZA" to RacialTraitEffect.AtributoStep("Espírito"),
-        "FORCA_SOBRENATURAL" to RacialTraitEffect.AtributoStep("Força"),
-        "FORTE" to RacialTraitEffect.AtributoStep("Força"),
-        "INTELIGENCIA" to RacialTraitEffect.AtributoStep("Astúcia"),
-        "MUITO_AGIL" to RacialTraitEffect.AtributoStep("Agilidade", passos = 2), // sintético, usado pelo Template de Monstro Heroico Lobisomem (Horror)
-        "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
-        "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
-        // Anões (Fantasia) "ROBUSTO" (nome) é a MESMA habilidade "Resistente" do
-        // Anão Básico (Vigor d6, mesmo texto quase palavra por palavra) — usa
-        // id="RESISTENTE" compartilhado, skin "Robusto" via `nome`. Isso deixa o
-        // id "ROBUSTO" livre pro conceito oficial de verdade (Ogros, catálogo
-        // genérico "Robusto (1)": 2º Abalado não vira Ferimento — ver CUSTOS
-        // abaixo, sem entrada aqui porque não é aumento de atributo).
-        "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),
-        "SOLIDO_COMO_ROCHA" to RacialTraitEffect.AtributoStep("Vigor"),
-        "VIGOROSO" to RacialTraitEffect.AtributoStep("Vigor"),
-
-        "CAES_DE_GUARDA" to RacialTraitEffect.PericiaStep("Perceber"),
-        "FE" to RacialTraitEffect.PericiaStep("Fé"),
-        "INTEGRADO_A_NATUREZA" to RacialTraitEffect.PericiaStep("Sobrevivência"),
-        "PESFIRMES" to RacialTraitEffect.PericiaStep("Atletismo"),
-        "SENTIDOS_AGUCADOS" to RacialTraitEffect.PericiaStep("Perceber"),
-        "SENTIDOS_APRIMORADOS" to RacialTraitEffect.PericiaStep("Perceber"),
-        "SENTIDOS_APURADOS" to RacialTraitEffect.PericiaStep("Perceber"),
-        "SORRATEIRO" to RacialTraitEffect.PericiaStep("Furtividade"),
-        "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade"),
-        // Traços já existiam com texto de livro descrevendo o bônus numérico
-        // ("começa com d6 em X"), mas nunca tinham sido ligados a um efeito
-        // mecânico aqui — descoberto ao remover o mapa estático `pericias` de
-        // RacialModifier (ver auditoria da migração), que era quem cobria
-        // esse bônus até então pra Akaimimi/Nekomimi (Arte da Guerra).
-        "CONHECIMENTO_GERAL" to RacialTraitEffect.PericiaStep("Conhecimento Geral"), // Akaimimi: "começa com Conhecimento Geral d6"
-        "DICAS_CULTURAIS" to RacialTraitEffect.PericiaStep("Convenção"), // Akaimimi: "começando com um d6 em Convenção"
-        "BRINCANDO_COM_O_DESTINO" to RacialTraitEffect.PericiaStep("Jogar"), // Nekomimi: "Começam com d6 em Jogar"
-        // Araiguma (Arte da Guerra) "Brincalhão": "recebe Provocar d4 (1)" — mesmo
-        // achado dos três de cima (custoDe já cobrava o ponto certo via
-        // RacialTraitPointCatalog, mas o dado de perícia em si nunca era
-        // concedido por faltar aqui).
-        //
-        // Bug real achado na rodada de migração de Atributo/Perícia Aumentada
-        // (backlog): faltava `passos = 0` aqui — sem isso o loop genérico
-        // (4 + passos*2, passos default=1) calculava d6, não d4, apesar do
-        // texto do livro (embutido em ancestralidades.json: "O Araiguma
-        // recebe Provocar d4 (1)") e do custo já cadastrado (1pt = tier
-        // pericia_racial_d4, nunca bateu com d6 = pericia_racial_d6/2pt).
-        // Provocar não é Perícia Básica (pericias.json), então não é caso de
-        // "básica com desconto" — é d4 mesmo, sem ambiguidade.
-        "BRINCALHAO" to RacialTraitEffect.PericiaStep("Provocar", passos = 0),
+        // Aumentos de atributo e perícia são parametrizados nos próprios dados
+        // (`traitId=ATTRIBUTE_BOOST`/`SKILL_BOOST`, `targetRef`, `value`). Não
+        // mantenha aliases por nome aqui: uma raça nova deve ser interpretada
+        // pelo JSON sem exigir uma alteração neste catálogo.
 
         // Signos de Nascença (Humano Arte da Guerra, AncestryVariantRegistry.
         // humanoArteDaGuerraSignos()): ids próprios de cada Signo com efeito

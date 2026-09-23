@@ -1655,7 +1655,10 @@ class CriadorState {
                             nome = "Habitante de Gravidade Baixa",
                             descricao = "Habitantes de estações espaciais começam com d6 em Agilidade em vez de d4. Isso aumenta o máximo de Agilidade para d12+1.",
                             id = "BAIXA_GRAVIDADE_AGIL",
-                            category = "racial_trait_positive"
+                            category = "racial_trait_positive",
+                            traitId = "ATTRIBUTE_BOOST",
+                            targetRef = "Agilidade",
+                            value = 1
                         )
                     )
                 }
@@ -2472,6 +2475,18 @@ class CriadorState {
     // Engine Delegation
     fun tamanhoExibido(): Int = ModifierEngine.sizeDisplay(this)
     fun resistenciaBase(): Int = ModifierEngine.toughnessBase(this)
+
+    /** Valores finais compartilhados pela UI e pelo snapshot de impressão. */
+    fun valorResistenciaTotal(): Int = ModifierEngine.toughnessBase(this)
+
+    fun valorApararTotal(): Int {
+        val lutar = periciasComIdiomas().firstOrNull { it.nome.keyify() == "LUTAR" }
+            ?.let(::rawTotalComSupers) ?: 0
+        val jutsu = periciasComIdiomas().firstOrNull { it.nome.keyify() == "JUTSU" }
+            ?.let(::rawTotalComSupers) ?: 0
+        return (2 + maxOf(lutar, jutsu) / 2 + ModifierEngine.sum(this, ModifierTarget.PARRY))
+            .coerceAtLeast(0)
+    }
 
     fun calculaAtaqueDesarmado(): Pair<String, String> {
         val modifiers = mutableListOf<String>()
@@ -5753,24 +5768,6 @@ class CriadorState {
         // habilidades[] da raça (já com os ajustes de variante aplicados por
         // applyAncestryVariantAdjustments/getAncestralidadeDef) em vez de comparar
         // o nome da raça — assim o bônus segue o traço, não o rótulo da raça.
-        val habilidadeIds = currentAncestryDef?.habilidades
-            ?.mapNotNull { it.id?.keyify() }
-            ?.toSet()
-            ?: emptySet()
-
-        // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
-        // está presente): o traço só precisa estar na raça, quem diz QUAL
-        // atributo sobe e QUANTOS passos é o próprio RacialTraitEffect.AtributoStep
-        // do catálogo — não mais um "if" por traço/atributo (Ágil, Sólido como
-        // Rocha, Forte, Espirituoso, Habitante de Gravidade Baixa etc. e
-        // qualquer novo traço desse tipo já entram automaticamente).
-        habilidadeIds.forEach { id ->
-            val efeito = RacialTraitPointCatalog.efeitoDe(id)
-            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
-                modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
-            }
-        }
-
         currentAncestryDef?.habilidades?.forEach { hab ->
             val tid = hab.resolvedTraitId()
             val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)

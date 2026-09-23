@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +41,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -137,12 +138,8 @@ private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Colo
 fun SummaryContent(
     state: CriadorState,
     viewModel: CriadorViewModel = viewModel(),
-    imageUri: Uri? = null,
-    onSelectImage: () -> Unit = {}
+    onSelectImage: () -> Unit = {},
 ) {
-
-    val context = LocalContext.current
-
     val flagsTemplate = remember(state) {
         listOfNotNull(
             "Carta Selvagem".takeIf { state.cartaSelvagem },
@@ -197,9 +194,8 @@ fun SummaryContent(
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
 
-    val hasMusculoso = state.vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
     val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
-    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.currentAncestryDef?.especieId == "anao"
+    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && (state.currentAncestryDef?.especieId == "anao")
     val weightLimit = state.valorCargaMaxima()
     val totalWeight = state.totalPesoEquipamentos()
     val isPersonagemRobotico = state.isPersonagemRobotico()
@@ -270,9 +266,10 @@ fun SummaryContent(
     } ?: ""
 
     val ancestralidadeDisplay = buildString {
-        append("$ancestralidadeValue$monstroInfo")
-        if (heartValue != null) {
-            append("\nCoração: $heartValue")
+        append(ancestralidadeValue)
+        append(monstroInfo)
+        heartValue?.let {
+            append("\nCoração: $it")
         }
     }
 
@@ -426,7 +423,7 @@ private fun SkillNotesSummaryCard(
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = if (note.isNotBlank()) note else "(sem descrição)",
+                            text = note.ifBlank { "(sem descrição)" },
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1426,7 +1423,7 @@ private fun SkillChip(text: String) {
 
     val displayText = if (value.isNotBlank() && value != label) "$label $value" else label
 
-    androidx.compose.material3.AssistChip(
+    AssistChip(
         onClick = {},
         label = {
             Text(
@@ -1434,12 +1431,12 @@ private fun SkillChip(text: String) {
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
             )
         },
-        shape = androidx.compose.foundation.shape.CircleShape,
-        colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
+        shape = CircleShape,
+        colors = AssistChipDefaults.assistChipColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
             labelColor = MaterialTheme.colorScheme.onSurface
         ),
-        border = androidx.compose.material3.AssistChipDefaults.assistChipBorder(
+        border = AssistChipDefaults.assistChipBorder(
             enabled = true,
             borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)
         )

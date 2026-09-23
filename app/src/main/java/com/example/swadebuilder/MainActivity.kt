@@ -1027,16 +1027,12 @@ class MainActivity : ComponentActivity() {
                                             equipamentoCategorias = criadorViewModel.gameDataStore.getEquipamentoCategorias(),
                                             superequipCategorias  = criadorViewModel.gameDataStore.getSuperequipCategorias(),
                                             listaSuperPoderes     = criadorViewModel.gameDataStore.getSuperPoderes(),
-                                            modoOficialAtivo      = state.modoOficialAtivo,
                                             onShowMessage         = { message ->
                                                 scope.launch {
                                                     snackHost.showSnackbar(message)
                                                 }
                                             },
-                                            onUserFeedback        = triggerFeedback,
-                                            onRequestProgression  = {
-                                                requestNavigation(PendingNavigationAction.StartProgression)
-                                            }
+                                            onUserFeedback        = triggerFeedback
                                         )
                                     }
                                 }
