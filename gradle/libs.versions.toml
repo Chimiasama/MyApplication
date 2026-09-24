@@ -11,11 +11,11 @@ espressoCoreVersion = "3.7.0"
 lifecycleVersion = "2.11.0"
 lifecycle = "2.11.0"
 activityCompose = "1.13.0"
-navigationCommonAndroid = "2.10.0"
-navigationComposeAndroid = "2.10.0"
+navigationCommonAndroid = "2.10.2"
+navigationComposeAndroid = "2.10.2"
 
 # Compose (use ONLY the BOM to version Compose artifacts)
-composeBom = "2026.08.00"
+composeBom = "2026.09.00"
 
 # Material (Views) / Other
 material = "1.14.0"
@@ -27,8 +27,6 @@ kotlinxSerializationJson = "1.11.0"
 protoliteWellKnownTypes = "18.0.1"
 engageCore = "1.6.0"
 
-# Wear Compose (NOT covered by Compose BOM)
-composeMaterial = "1.5.6"
 securityCrypto = "1.1.0"
 
 [plugins]
@@ -39,7 +37,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 [libraries]
 # AndroidX Core + Lifecycle
 androidx-appcompat-v171 = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.19.0" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.19.1" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-espresso-core-v351 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }

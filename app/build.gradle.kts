@@ -98,7 +98,7 @@ android {
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -159,7 +159,7 @@ kotlin {
         // Agora Kotlin também compila para Java 21
         jvmTarget.set(JvmTarget.JVM_21)
         freeCompilerArgs.addAll(
-            "-opt-in=kotlin.RequiresOptIn"
+            "-opt-in=kotlin.RequiresOptIn",
         )
     }
 }
