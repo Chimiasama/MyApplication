@@ -1,8 +1,10 @@
 package com.example.swadebuilder.model
 
+import kotlinx.serialization.json.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 
 /**
  * "Modo Auditoria: ID de traço" (ver AppPreferences.loadModoAuditoriaIdPuro,
@@ -183,5 +185,57 @@ class RacialTraitAuditFormatterTest {
         val linhas = RacialTraitAuditFormatter.formatar(androides.habilidades, catalogoOficial, exclusivos)
         assertTrue(!linhas[0].contains("exclusivo-desta-raça"))
         assertTrue(!linhas[1].contains("exclusivo-desta-raça"))
+    }
+
+    @Test
+    fun `varrer todas as racas em ancestralidades json e confirmar que nenhuma habilidade cai em aviso de SEM CATALOGO`() {
+        fun findAssetFile(fileName: String): File {
+            val candidatos = listOf(File("src/main/assets/$fileName"), File("app/src/main/assets/$fileName"))
+            return candidatos.firstOrNull { it.isFile } ?: error("Arquivo $fileName não encontrado")
+        }
+        val jsonText = findAssetFile("ancestralidades.json").readText()
+        val racas: JsonArray = Json.parseToJsonElement(jsonText).jsonArray
+        val catalogoText = findAssetFile("basico_habilidades_raciais.json").readText()
+        val catalogoArr: JsonArray = Json.parseToJsonElement(catalogoText).jsonArray
+
+        val catalogoOficial = catalogoArr.map { elem ->
+            val obj = elem.jsonObject
+            HabilidadeCriacao(
+                nome = obj["nome"]?.jsonPrimitive?.content ?: "",
+                custo = obj["custo"]?.jsonPrimitive?.intOrNull ?: 0,
+                descricao = obj["descricao"]?.jsonPrimitive?.content ?: "",
+                id = obj["id"]?.jsonPrimitive?.content
+            )
+        }
+
+        val falhas = mutableListOf<String>()
+
+        racas.forEach { elem ->
+            val obj = elem.jsonObject
+            val racaNome = obj["nome"]?.jsonPrimitive?.content ?: ""
+            val habilidadesArr = (obj["habilidades"] as? JsonArray) ?: JsonArray(emptyList())
+
+            val habilidades = habilidadesArr.map { hElem ->
+                val h = hElem.jsonObject
+                RacialAbility(
+                    nome = h["nome"]?.jsonPrimitive?.content ?: "",
+                    descricao = h["descricao"]?.jsonPrimitive?.content ?: "",
+                    id = h["id"]?.jsonPrimitive?.content,
+                    category = h["category"]?.jsonPrimitive?.content,
+                    traitId = h["traitId"]?.jsonPrimitive?.content,
+                    targetRef = h["targetRef"]?.jsonPrimitive?.content,
+                    value = h["value"]?.jsonPrimitive?.intOrNull ?: 1
+                )
+            }
+
+            val formatadas = RacialTraitAuditFormatter.formatar(habilidades, catalogoOficial)
+            formatadas.forEach { linha ->
+                if (linha.contains("SEM CATÁLOGO")) {
+                    falhas += "$racaNome: $linha"
+                }
+            }
+        }
+
+        assertTrue("Habilidades de raças sem catálogo/efeito encontradas:\n" + falhas.joinToString("\n"), falhas.isEmpty())
     }
 }

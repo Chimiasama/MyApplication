@@ -3274,6 +3274,25 @@ class CriadorState {
         checkAndRefundResourcePb()
         adicionarVantagem(v)
 
+        if (v.id == "cajado_do_coracao_da_mata" || v.nome.keyify() == "CAJADO_DO_CORACAO_DA_MATA") {
+            if (equipamentosComprados.none { it.origemGrant == "cajado_do_coracao_da_mata" }) {
+                equipamentosComprados.add(
+                    EquipamentoItem(
+                        id = "cajado_do_coracao_da_mata_item",
+                        nome = "Cajado do Coração da Mata",
+                        dano = JsonPrimitive("For+d8"),
+                        aparar = JsonPrimitive("+1"),
+                        observacoes = JsonPrimitive("Alcance 1, Duas Mãos. Pode gastar 1 PP para causar +d6 de dano de fogo ou veneno."),
+                        custo = JsonPrimitive(0),
+                        peso = JsonPrimitive(4),
+                        origem = "FANTASIA",
+                        origemGrant = "cajado_do_coracao_da_mata",
+                        subtipo = "Armas de Combate Corpo a Corpo"
+                    )
+                )
+            }
+        }
+
         if (isFreeAdaptavel) {
             vantagemAdaptavelSelecionadaId = v.id
             debugLog("AdaptavelDebug", "[comprarVantagem:${v.id}] slot consumido por ${v.nome}")
@@ -3478,6 +3497,10 @@ class CriadorState {
 
         if (v.nome.keyify() == "CAVALEIRO") {
             equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
+        }
+
+        if (v.id == "cajado_do_coracao_da_mata" || v.nome.keyify() == "CAJADO_DO_CORACAO_DA_MATA") {
+            equipamentosComprados.removeAll { it.origemGrant == "cajado_do_coracao_da_mata" }
         }
 
         // Herança (Compêndio de Fantasia): cada compra é um Slot de 10.000 PO à parte —

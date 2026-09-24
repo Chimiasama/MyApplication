@@ -100,9 +100,9 @@ class AncestralidadeCatalogBudgetTest {
         }.filter { it.strOrNull("traitId") == "ATTRIBUTE_BOOST" }
 
         assertTrue("Catálogo não contém bônus de atributo estruturados", boosts.isNotEmpty())
-        val targetsByCleanId = mapOf("anc_anoes_robusto" to "Vigor", "FORTE" to "Força")
+        val targetsByCleanId = mapOf("RESISTENTE" to "Vigor", "FORTE" to "Força")
         targetsByCleanId.forEach { (cleanId, expectedTarget) ->
-            val ability = boosts.firstOrNull { it.strOrNull("id") == cleanId || it.strOrNull("id") == "RESISTENTE" }
+            val ability = boosts.firstOrNull { it.strOrNull("id") == cleanId || it.strOrNull("id") == "anc_anoes_robusto" }
             assertTrue("Não encontrei $cleanId migrado para ATTRIBUTE_BOOST", ability != null)
             assertTrue(
                 "$cleanId deveria apontar para $expectedTarget, mas foi $ability",

@@ -88,9 +88,9 @@ class AncestralidadeCatalogRegressionTest {
     }
 
     @Test
-    fun `Anoes Fantasia Robusto usa id=anc_anoes_robusto, nao colide com o conceito real de Robusto`() {
+    fun `Anoes Fantasia Robusto usa id=RESISTENTE, nao colide com o conceito real de Robusto`() {
         val anoesFantasia = racaDoLivro("ANÕES", "FANTASIA")
-        val robusto = habilidade(anoesFantasia, "anc_anoes_robusto")
+        val robusto = habilidade(anoesFantasia, "RESISTENTE")
         assertEquals("ROBUSTO", robusto["nome"]?.jsonPrimitive?.content)
     }
 
