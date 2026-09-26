@@ -136,7 +136,6 @@ class ScifiAncestryVariantSyncTest {
         }
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
-            ancestryName = "Qualquer",
             availableOptions = listOf("Ciber", "Básico")
         )
 
@@ -151,7 +150,6 @@ class ScifiAncestryVariantSyncTest {
         }
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
-            ancestryName = "Centaux",
             availableOptions = listOf("Básico", "Gazela")
         )
 
@@ -167,7 +165,6 @@ class ScifiAncestryVariantSyncTest {
         }
 
         val varianteResolvida = state.resolveSciFiVariantSelectionFor(
-            ancestryName = "AQUARIANOS",
             availableOptions = listOf("Básico", "Semi-aquáticos")
         )
 
@@ -420,7 +417,6 @@ class ScifiAncestryVariantSyncTest {
         }
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
-            ancestryName = "Umvee (Filhos da Lua)",
             availableOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso")
         )
 

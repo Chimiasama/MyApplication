@@ -158,19 +158,15 @@ fun TelaInicial(
     // jogador vê antes mesmo de escolher um livro; pode ser recolhida depois.
     var showBookHelpExpanded by rememberSaveable { mutableStateOf(false) }
 
-    // Reset all rule flags to clean slate. Só reseta o que CreationPreset
-    // realmente controla (tem um default*Xxx correspondente) — Múltiplos Ant.
-    // Arcanos, Especialização de Perícias, Múltiplos Idiomas, Sem Pontos de
-    // Poder e Variantes de Raça são regras independentes, sem contrapartida
-    // em preset nenhum: incluí-las aqui as zerava sempre que o jogador
-    // trocava de livro OU tocava em "CRIAR PERSONAGEM" (que chama
-    // resetAllBookRulesToDefaults -> applyRulesPreset -> este método), sem
-    // nunca devolver o valor marcado — applyRulesPreset só reaplica os
-    // campos que o preset de fato tem.
+    // Reset all rule flags to clean slate when switching presets/scenarios.
     fun resetAllRuleFlags() {
         optCartaSelvagem = true
         optMaisPontosPericias = true
+        optMultiAntecedenteArcano = false
+        optEspecializacaoPer = false
+        optMultiplosIdiomas = false
         optNasceUmHeroi = false
+        optSemPontosPoder = false
         optGrandesResponsabilidades = false
         optModoTropos = false
         optRegraFama = false
@@ -179,6 +175,7 @@ fun TelaInicial(
         optWiseguysHabilitaRacas = false
         optRegraMechas = false
         optRegraCiberneticos = false
+        optVariantesDeRaca = false
     }
 
     // Helper for applying rules presets
@@ -465,7 +462,6 @@ fun TelaInicial(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    resetAllBookRulesToDefaults()
                     if (viewModel.state.pularSelecaoRegras) {
                         startCreation()
                     } else {
@@ -640,37 +636,37 @@ fun TelaInicial(
                         }
                         SimpleCheckRow(
                             title = "Grandes Responsabilidades",
-                            description = "Débitos de Poder adicionais.",
+                            description = "Permite Complicação Maior adicional.",
                             checked = optGrandesResponsabilidades,
                             onCheckedChange = { optGrandesResponsabilidades = it }
                         )
-                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal.", optCartaSelvagem) { optCartaSelvagem = it }
+                        SimpleCheckRow("Mais Pontos de Perícia", "15 ao invés de 12.", optMaisPontosPericias) { optMaisPontosPericias = it }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                         SimpleCheckRow(
                             title = "Variantes de Raça",
-                            description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber).",
+                            description = "Mostra variantes de cenário definidas pelo mestre.",
                             checked = optVariantesDeRaca,
                             onCheckedChange = { optVariantesDeRaca = it }
                         )
                     } else if (optCompendioArteDaGuerra) {
-                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal.", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
                         SimpleCheckRow(
                             title = "Regra de Fama",
-                            description = "Adiciona o atributo Fama.",
+                            description = "Adiciona o atributo secundário Fama.",
                             checked = optRegraFama,
                             onCheckedChange = { optRegraFama = it }
                         )
                         SimpleCheckRow(
                             title = "Variantes de Raça",
-                            description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber).",
+                            description = "Mostra variantes de cenário definidas pelo mestre.",
                             checked = optVariantesDeRaca,
                             onCheckedChange = { optVariantesDeRaca = it }
                         )
                     } else {
-                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal.", optCartaSelvagem) { optCartaSelvagem = it }
+                        SimpleCheckRow("Mais Pontos de Perícia", "15 ao invés de 12.", optMaisPontosPericias) { optMaisPontosPericias = it }
                         if (optCompendioWiseguys) {
                             // Wiseguys é um cenário substituto (só "Humano" tem
                             // `livros: WISEGUYS` no catálogo) — sem isso ligado, a aba
@@ -678,14 +674,14 @@ fun TelaInicial(
                             // nada pra mostrar (fica desabilitado até aqui ser marcado).
                             SimpleCheckRow(
                                 title = "Habilitar Raças",
-                                description = "Reabre a aba de Ancestralidades com as raças do Livro Básico, pra fugir do padrão \"todo mundo é humano\" do cenário.",
+                                description = "Aba de Ancestralidades com as raças do Livro Básico.",
                                 checked = optWiseguysHabilitaRacas,
                                 onCheckedChange = { optWiseguysHabilitaRacas = it }
                             )
                         }
                         SimpleCheckRow(
                             title = "Variantes de Raça",
-                            description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber, Sáurios Cuspidor).",
+                            description = "Mostra variantes de cenário definidas pelo mestre.",
                             checked = optVariantesDeRaca,
                             enabled = !optCompendioWiseguys || optWiseguysHabilitaRacas,
                             onCheckedChange = { optVariantesDeRaca = it }
@@ -734,7 +730,7 @@ fun TelaInicial(
                         if (optCompendioWiseguys) {
                             SimpleCheckRow(
                                 title = "A Cosa Nostra",
-                                description = "Regra de ambientação (Wiseguys).",
+                                description = "Concede a vantagem Conexões e a complicação Obrigação.",
                                 checked = optRegraCosaNostra,
                                 onCheckedChange = { optRegraCosaNostra = it }
                             )

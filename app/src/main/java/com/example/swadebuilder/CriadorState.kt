@@ -63,11 +63,10 @@ import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
-import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.desvantagensEfetivas
+import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.escolhaTropoReferenciada
 import com.example.swadebuilder.model.getActiveOrigins
-import com.example.swadebuilder.model.vantagensGratisEfetivas
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.listaDeEstagios
@@ -87,6 +86,7 @@ import com.example.swadebuilder.model.usecase.ResolveAncestryVariantUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.model.usecase.ValidatePrerequisiteUseCase
+import com.example.swadebuilder.model.vantagensGratisEfetivas
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -98,6 +98,7 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toIdSlug
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonPrimitive
 import java.util.UUID
 
 enum class TabStyle { ICONES, TEXTO }
@@ -351,7 +352,7 @@ class CriadorState {
     fun refundAndRemoveCustomEquipamento(nome: String) {
         val emUso = equipamentosComprados.filter { it.nome.equals(nome, ignoreCase = true) }.toList()
         emUso.forEach { eq ->
-            val custoBase = com.example.swadebuilder.util.MoneyUtils.parseCostInBaseUnit(eq.custo, compendioPathfinderAtivo)
+            val custoBase = MoneyUtils.parseCostInBaseUnit(eq.custo, compendioPathfinderAtivo)
             dinheiro += custoBase
             equipamentosComprados.remove(eq)
         }
@@ -359,7 +360,7 @@ class CriadorState {
 
     fun isCustomPoderInUse(id: String): Boolean {
         val emSlots = poderSlotsPorArcano.values.any { slots -> slots.any { it?.equals(id, ignoreCase = true) == true } }
-        return poderesSelecionados.any { it?.equals(id, ignoreCase = true) == true } || emSlots
+        return poderesSelecionados.any { it.equals(id, ignoreCase = true) } || emSlots
     }
 
     fun refundAndRemoveCustomPoder(id: String) {
@@ -513,9 +514,7 @@ class CriadorState {
         // 3) "Isto OU aquilo" — basta uma alternativa bater por completo (ex.: Antecedente
         // Arcano (qualquer um) OU Poderes Místicos (qualquer um)).
         val alternativas = v.requisitos.gruposAlternativos
-        if (alternativas.isNotEmpty() && alternativas.none { satisfazAlternativa(it) }) return false
-
-        return true
+        return !(alternativas.isNotEmpty() && alternativas.none { satisfazAlternativa(it) })
     }
 
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
@@ -954,17 +953,18 @@ class CriadorState {
     private fun currentSelectionOptionId(base: RacialModifier): String? {
         val key = base.nome.keyify()
         val origemKey = canonicalOriginKey(base.origem)
-        return when {
-            key == "MEIO-ELFOS" -> if (meioElfoAgil) "agil" else "adaptavel"
-            key == "HUMANOS" && origemKey == "ARTE_DA_GUERRA" ->
+        return when (key) {
+            "MEIO-ELFOS" -> if (meioElfoAgil) "agil" else "adaptavel"
+            "HUMANOS" if origemKey == "ARTE_DA_GUERRA" ->
                 signoIdFromNome(signoAdgSelecionado)?.lowercase() ?: "nenhum"
-            key == "MEIO-DEMONIO" -> if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
+
+            "MEIO-DEMONIO" -> if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
             else -> {
                 val config = AncestryVariantRegistry.get(key, origemKey) ?: return null
                 val fixedPackageDef = config.selecoes
                     .firstOrNull { it.tipo == com.example.swadebuilder.model.SelectionType.FIXED_PACKAGE }
                     ?: return null
-                val opcaoTexto = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return null
+                val opcaoTexto = resolveSciFiVariantSelectionFor(base.opcoes) ?: return null
                 fixedPackageDef.pacotesFixos?.firstOrNull { it.nome.equals(opcaoTexto, ignoreCase = true) }?.id
             }
         }
@@ -989,7 +989,7 @@ class CriadorState {
 
         variant.tracosAdicionados.forEach { trait ->
             newHabilidades.add(
-                com.example.swadebuilder.model.RacialAbility(
+                RacialAbility(
                     nome = trait.nome,
                     descricao = trait.descricao,
                     // Id real do catálogo (basico_habilidades_raciais.json),
@@ -1022,7 +1022,7 @@ class CriadorState {
             if (newHabilidades.none { it.traitId == "GRANTED_EDGE" && it.targetRef == vantagemId }) {
                 val vantagem = listaVantagens.firstOrNull { it.id == vantagemId }
                 newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
+                    RacialAbility(
                         nome = vantagem?.nome ?: vantagemId,
                         descricao = "Vantagem concedida de graça por esta Variante.",
                         id = "variante_vantagem_${vantagemId}".toIdSlug(),
@@ -1040,7 +1040,7 @@ class CriadorState {
             if (newHabilidades.none { it.traitId == "RACIAL_HINDRANCE" && it.targetRef == escolha.complicacaoId }) {
                 val severidade = if (escolha.comoMaior) "Maior" else "Menor"
                 newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
+                    RacialAbility(
                         nome = complicacao.name,
                         descricao = "Complicação imposta por esta Variante.",
                         id = "variante_complicacao_${escolha.complicacaoId}".toIdSlug(),
@@ -1096,7 +1096,7 @@ class CriadorState {
         marcador: String,
         ancestralidadeId: String,
         livro: String,
-        answer: com.example.swadebuilder.model.SelectionAnswer,
+        answer: SelectionAnswer,
         manterMarcadorVisivel: Boolean = false
     ): RacialModifier {
         val resolved = resolveAncestryVariantPackageUseCase.resolve(
@@ -1117,7 +1117,7 @@ class CriadorState {
                     else -> "racial_trait_positive"
                 }
                 newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
+                    RacialAbility(
                         nome = traco.nome,
                         descricao = "",
                         id = traco.id,
@@ -1145,7 +1145,7 @@ class CriadorState {
             // ResolvedTraitPackage() vazio, então cai no `return base` abaixo.
             val opcoes = AncestryVariantRegistry.get("HUMANOS", "FANTASIA")?.grupoVariante?.opcoes
             if (opcoes != null) {
-                val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes)
+                val variant = resolveSciFiVariantSelectionFor(base.opcoes)
                 val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
                     ?: opcoes.firstOrNull { it.nome.keyify() == "PADRAO" }?.id
                 val isPadrao = variantOptionId == null || opcoes.firstOrNull { it.id == variantOptionId }?.nome?.keyify() == "PADRAO"
@@ -1156,7 +1156,7 @@ class CriadorState {
                     val matchId = def.pacotesFixos?.firstOrNull {
                         it.nome.equals(humanoFantasiaSelecaoAninhada, ignoreCase = true)
                     }?.id
-                    com.example.swadebuilder.model.SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
+                    SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
                 }
                 val pack = resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = "HUMANOS",
@@ -1182,7 +1182,7 @@ class CriadorState {
                 fun addIfAbsent(traco: com.example.swadebuilder.model.TraitAddition, category: String) {
                     if (newHabilidades.none { it.id == traco.id || it.nome.keyify() == traco.nome.keyify() }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = traco.nome,
                                 descricao = "",
                                 id = traco.id,
@@ -1214,7 +1214,7 @@ class CriadorState {
                 marcador = "HERANCA",
                 ancestralidadeId = "MEIO-ELFOS",
                 livro = canonicalOriginKey(base.origem),
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "meio_elfo_heranca",
                     fixedPackageChoiceId = if (meioElfoAgil) "agil" else "adaptavel"
                 )
@@ -1243,7 +1243,7 @@ class CriadorState {
                 marcador = "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO",
                 ancestralidadeId = "MEIO-DEMONIO",
                 livro = "CIDADE_SOL_VAPOR",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "meio_demonio_traco",
                     fixedPackageChoiceId = if (meioDemonioAA) "antecedente_arcano" else "adaptavel"
                 )
@@ -1267,7 +1267,7 @@ class CriadorState {
                 marcador = "SIGNOS_DE_NASCENCA",
                 ancestralidadeId = "HUMANOS",
                 livro = "ARTE_DA_GUERRA",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "signo_de_nascenca",
                     fixedPackageChoiceId = signoIdFromNome(signoAdgSelecionado)?.lowercase()
                 ),
@@ -1293,7 +1293,7 @@ class CriadorState {
                 marcador = "ENDURECIDO",
                 ancestralidadeId = "MEIO-ORCS",
                 livro = "FANTASIA",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "meio_orc_atributo",
                     targetChoice = humanoMineradorAtributo
                 )
@@ -1324,7 +1324,7 @@ class CriadorState {
                 marcador = "PRIMITIVO",
                 ancestralidadeId = "FERAL",
                 livro = "ARTE_DA_GUERRA",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "feral_atributo",
                     targetChoice = humanoMineradorAtributo
                 )
@@ -1344,7 +1344,7 @@ class CriadorState {
                 marcador = "PREPARADO",
                 ancestralidadeId = "KITSUNEMIMI (RAPOSA)",
                 livro = "ARTE_DA_GUERRA",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "kitsunemimi_preparado",
                     targetChoice = kitsunemimiPericiaEscolhida
                 )
@@ -1361,7 +1361,7 @@ class CriadorState {
                 marcador = "OBSESSIVOS",
                 ancestralidadeId = "GNOMO",
                 livro = "PATHFINDER",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "gnomo_obsessivos",
                     targetChoice = gnomoPericiaEscolhida
                 )
@@ -1384,7 +1384,7 @@ class CriadorState {
                 marcador = "DEFINIDO_PELO_OFICIO",
                 ancestralidadeId = "USAGIMIMI (COELHO)",
                 livro = "ARTE_DA_GUERRA",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "usagimimi_definido_pelo_oficio",
                     targetChoice = usagimimiPericiaEscolhida
                 )
@@ -1417,14 +1417,14 @@ class CriadorState {
                 marcador = "ELEMENTO_ANCESTRAL",
                 ancestralidadeId = "DESCENDENTE ELEMENTAL",
                 livro = "FANTASIA",
-                answer = com.example.swadebuilder.model.SelectionAnswer(
+                answer = SelectionAnswer(
                     selectionId = "descendente_elemental_elemento",
                     fixedPackageChoiceId = elementoId
                 )
             )
         }
 
-        val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
+        val variant = resolveSciFiVariantSelectionFor(base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
         fun removeByIdOrName(id: String, nameKey: String) {
@@ -1447,7 +1447,7 @@ class CriadorState {
         // construído aqui à mão.
         if (key == "ELEMENTAIS") {
             val elementoAnswer = if (variant != "Padrão") {
-                com.example.swadebuilder.model.SelectionAnswer(
+                SelectionAnswer(
                     selectionId = "elementais_scifi_elemento",
                     fixedPackageChoiceId = "ar_fogo_ou_agua"
                 )
@@ -1462,7 +1462,7 @@ class CriadorState {
             elementaisPack.tracosParaAdicionar.forEach { traco ->
                 if (newHabilidades.none { it.id == traco.id }) {
                     newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = traco.nome,
                             descricao = "",
                             id = traco.id,
@@ -1498,20 +1498,20 @@ class CriadorState {
                 // GARRAS puro custa 3 e inclui PA, que o livro não dá aqui).
                 "Ápice" -> if (newHabilidades.none { it.id == "GARRAS_SEM_PA" || it.nome.keyify() == "APICE" }) {
                     newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "Ápice",
                             descricao = "Ápice concede um ataque de garras naturais que causam For+d4 de dano, sem Penetração de Armadura.",
                             id = "GARRAS_SEM_PA",
                             category = "racial_trait_positive",
                             armasNaturais = listOf(
-                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, id = "GARRAS_SEM_PA")
+                                ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, id = "GARRAS_SEM_PA")
                             )
                         )
                     )
                 }
                 "Vínculo Bestial" -> if (newHabilidades.none { it.id == "SENHOR_DAS_FERAS" || it.nome.keyify() == "SENHOR DAS FERAS" }) {
                     newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "Senhor das Feras",
                             descricao = "Vínculo Bestial concede a vantagem Senhor das Feras.",
                             id = "SENHOR_DAS_FERAS",
@@ -1527,7 +1527,7 @@ class CriadorState {
                 "Pele Iluminada pela Lua" -> {
                     if (newHabilidades.none { it.id == "APARAR" }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = "Pele Iluminada pela Lua (Aparar)",
                                 descricao = "Pele iluminada pela lua concede +1 de Aparar.",
                                 id = "APARAR",
@@ -1537,7 +1537,7 @@ class CriadorState {
                     }
                     if (newHabilidades.none { it.id == "PELE_LUMINOSA" }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = "Pele Iluminada pela Lua (Emanar Luz)",
                                 descricao = "A pele do Umvee brilha suavemente como a luz da lua, iluminando uma pequena área ao seu redor.",
                                 id = "PELE_LUMINOSA",
@@ -1553,7 +1553,7 @@ class CriadorState {
                 "Gatoruja" -> {
                     if (newHabilidades.none { it.id == "VISAO_NO_ESCURO" || it.nome.keyify() == "VISAO NO ESCURO" }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = "Visão no Escuro",
                                 descricao = "Gatoruja concede visão no escuro.",
                                 id = "VISAO_NO_ESCURO",
@@ -1563,7 +1563,7 @@ class CriadorState {
                     }
                     if (newHabilidades.none { it.id == "PERCEBER_D6" }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = "Perceber d6",
                                 descricao = "Gatoruja aumenta o valor inicial de Perceber para d6 e seu máximo para d12+1.",
                                 id = "PERCEBER_D6",
@@ -1574,7 +1574,7 @@ class CriadorState {
                 }
                 "Correnteza" -> if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +2" }) {
                     newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "MOVIMENTAÇÃO +2",
                             descricao = "Correnteza concede +2 em Movimentação.",
                             id = "MOVIMENTACAO",
@@ -1585,7 +1585,7 @@ class CriadorState {
                 "Pedregoso" -> {
                     if (newHabilidades.none { it.id == "RESISTENCIA" }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = "Pedregoso (Resistência)",
                                 descricao = "Pedregoso concede +1 de Resistência.",
                                 id = "RESISTENCIA",
@@ -1595,7 +1595,7 @@ class CriadorState {
                     }
                     if (newHabilidades.none { it.id == "ARMADURA" }) {
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = "Pedregoso (Armadura)",
                                 descricao = "Pedregoso concede +2 de Armadura.",
                                 id = "ARMADURA",
@@ -1642,7 +1642,7 @@ class CriadorState {
                     if (newHabilidades.none { it.id == traco.id || it.nome.keyify() == texto.keyify() }) {
                         val severidade = Regex("""\((Maior|Menor)\)$""").find(texto)?.groupValues?.get(1)
                         newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
+                            RacialAbility(
                                 nome = texto,
                                 descricao = "",
                                 id = traco.id,
@@ -1668,7 +1668,7 @@ class CriadorState {
             if (variant.equals("Baixa Gravidade", ignoreCase = true)) {
                 if (newHabilidades.none { it.id == "BAIXA_GRAVIDADE_AGIL" }) {
                     newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "Habitante de Gravidade Baixa",
                             descricao = "Habitantes de estações espaciais começam com d6 em Agilidade em vez de d4. Isso aumenta o máximo de Agilidade para d12+1.",
                             id = "BAIXA_GRAVIDADE_AGIL",
@@ -1696,7 +1696,7 @@ class CriadorState {
                     ?.firstOrNull { it.id == "minerador" }
                     ?.selecoes?.firstOrNull()
                 val answer = nestedDef?.let {
-                    com.example.swadebuilder.model.SelectionAnswer(
+                    SelectionAnswer(
                         selectionId = it.id,
                         targetChoice = humanoMineradorAtributo
                     )
@@ -1719,7 +1719,7 @@ class CriadorState {
                 resolved.tracosParaAdicionar.forEach { traco ->
                     newHabilidades.removeAll { it.id == traco.id }
                     newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = traco.nome,
                             descricao = "",
                             id = traco.id,
@@ -1739,7 +1739,6 @@ class CriadorState {
 
 
     fun resolveSciFiVariantSelectionFor(
-        ancestryName: String,
         availableOptions: List<String>,
         overrideSelection: String? = null
     ): String? {
@@ -1766,7 +1765,6 @@ class CriadorState {
         val ancDef = if (ancestryName == ancestralidade) currentAncestryDef else getAncestralidadeDef(ancestryName)
         if (ancDef == null) return scifiVariant
         return resolveSciFiVariantSelectionFor(
-            ancestryName = ancestryName,
             availableOptions = ancDef.opcoes
         )
     }
@@ -2127,8 +2125,8 @@ class CriadorState {
     // (slots.filterNotNull()), que é o formato que MeuPersonagem.poderes usa pro PDF/resumo.
     val manifestacoesPoderes = mutableStateMapOf<String, String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
-    private val _maxedTraits = mutableStateListOf<String>()
-    val maxedTraits: List<String> get() = _maxedTraits
+    val maxedTraits: List<String>
+        field = mutableStateListOf<String>()
     var idAtual by mutableStateOf<String?>(null)
 
     // UI State Persistence
@@ -2204,7 +2202,7 @@ class CriadorState {
             ?.uppercase()
 
     val usaRiqueza: Boolean
-        get() = optRegraRiqueza || origemPersonagem == "WISEGUYS" || optRegraCosaNostra
+        get() = optRegraRiqueza
 
     val usaRequisicao: Boolean
         get() = compendioCrystalHeartAtivo || origemPersonagem == "CRYSTAL_HEART"
@@ -2213,12 +2211,11 @@ class CriadorState {
 
     val dadoRiqueza: Int
         get() {
-            var die = 6
             val hasPodreDeRico = vantagensSelecionadas.any { it.nome.keyify() == "PODRE DE RICO" }
             val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" }
             val hasPobreza = complicacoesSelecionadas.keys.any { it.id.keyify() == "POBREZA" }
 
-            die = when {
+            var die = when {
                 hasPodreDeRico -> 10
                 hasRico -> 8
                 else -> 6
@@ -2489,7 +2486,6 @@ class CriadorState {
 
     // Engine Delegation
     fun tamanhoExibido(): Int = ModifierEngine.sizeDisplay(this)
-    fun resistenciaBase(): Int = ModifierEngine.toughnessBase(this)
 
     /** Valores finais compartilhados pela UI e pelo snapshot de impressão. */
     fun valorResistenciaTotal(): Int = ModifierEngine.toughnessBase(this)
@@ -2680,16 +2676,25 @@ class CriadorState {
 
         fun adicionarArmaNatural(arma: ArmaNatural) {
             val (dmg, pa) = aplicarUpgradesDeVantagem(arma)
-            weapons.add(
-                EquipamentoItem(
-                    nome = arma.nome,
-                    dano = JsonPrimitive(dmg),
-                    pa = if (pa > 0) JsonPrimitive(pa) else null,
-                    distancia = JsonPrimitive("Toque"),
-                    peso = JsonPrimitive(0),
-                    custo = JsonPrimitive(0)
-                )
+            val existingIdx = weapons.indexOfFirst { it.nome.equals(arma.nome, ignoreCase = true) }
+            val newItem = EquipamentoItem(
+                nome = arma.nome,
+                dano = JsonPrimitive(dmg),
+                pa = if (pa > 0) JsonPrimitive(pa) else null,
+                distancia = JsonPrimitive("Toque"),
+                peso = JsonPrimitive(0),
+                custo = JsonPrimitive(0)
             )
+            if (existingIdx >= 0) {
+                val existing = weapons[existingIdx]
+                val existingPa = existing.pa?.jsonPrimitive?.intOrNull ?: 0
+                val existingDmg = existing.dano?.jsonPrimitive?.content.orEmpty()
+                if (pa > existingPa || (pa == existingPa && dmg > existingDmg)) {
+                    weapons[existingIdx] = newItem
+                }
+            } else {
+                weapons.add(newItem)
+            }
         }
 
         // Race Natural Weapons: lido direto do dado estruturado
@@ -2841,17 +2846,6 @@ class CriadorState {
                 if (key.equals("Toque Venenoso", ignoreCase = true)) {
                     // Usually just an effect, but if treated as weapon
                     dmgMatch = "-" // Or specific damage if described
-                    // Vespa text says "trate como Mordida (For+d4)" for Ferrão. Toque Venenoso separate.
-                    // If Toque Venenoso is just effect, maybe dist "Toque" is enough.
-                    // If matchedSource has description "Cuspidor", it might be Ranged?
-                    // "Cuspidor (Toque Venenoso...)" - Name implies Spitter but effect is Poison Touch?
-                    // Actually prompt says "Cuspidor (Cuspidor)". Maybe trait is called "Cuspidor"?
-                    // If source is "TOQUE VENENOSO (Cuspidor)", description might say "Alcance Cone" or something.
-                    // But here we just default.
-                    if (matchedSource.contains("Cuspidor", ignoreCase = true)) {
-                        // Might be ranged
-                        // We leave dmgMatch as regex found (likely none)
-                    }
                 }
 
                 if (hasLobisomemAprimorado && (key.equals("Garras", true) || key.equals("Mordida", true))) {
@@ -3009,22 +3003,6 @@ class CriadorState {
     /** Soma do peso de todos os itens comprados, já com o desconto de Diminuto aplicado. */
     fun totalPesoEquipamentos(): Float =
         equipamentosComprados.sumOf { (pesoEquipamentoEfetivo(it) ?: 0f).toDouble() }.toFloat()
-
-    fun forcaEfetivaParaArmaduras(): Int {
-        val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
-        val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
-        val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
-        val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
-        val hasDwarfLoadBonus = temForcaParaCargaEArmadura()
-
-        var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
-        if (hasSoldado && soldadoCargaAtivo) stepIndex += 1
-        if (hasMusculoso) stepIndex += 1
-        if (hasDwarfLoadBonus) stepIndex += 1
-        if (hasObeso) stepIndex = (stepIndex - 1).coerceAtLeast(2)
-
-        return if (stepIndex <= 6) stepIndex * 2 else 12 + (stepIndex - 6)
-    }
 
     fun gastarPcParaRecursos(): Boolean {
         if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
@@ -3470,7 +3448,7 @@ class CriadorState {
 
             // Transmorfos (Changeling) Logic: Fixed 'Disfarce' power in the first slot
             if (ancestralidade.keyify() == "TRANSMORFOS" && arcKey.normAAKey() == "DOM") {
-                if (slots.size > 0) {
+                if (slots.isNotEmpty()) {
                     slots[0] = "disfarce"
                 }
             }
@@ -3559,7 +3537,7 @@ class CriadorState {
     // sempre a contagem de "heranca" em vantagensSelecionadas, e o gasto de cada Slot é
     // sempre a soma dos itens de equipamentosComprados marcados com aquele índice
     // (herancaSlotIndex) — sem estado extra pra manter sincronizado.
-    private val HERANCA_VALOR_POR_SLOT = 10000
+    private val herancaValorPorSlot = 10000
 
     fun numSlotsHeranca(): Int = vantagensSelecionadas.count { it.id == "heranca" }
 
@@ -3570,7 +3548,7 @@ class CriadorState {
         itensDoSlotHeranca(slot).sumOf { MoneyUtils.parseCostInBaseUnit(it.custo, false) }
 
     fun saldoDoSlotHeranca(slot: Int): Int =
-        (HERANCA_VALOR_POR_SLOT - gastoDoSlotHeranca(slot)).coerceAtLeast(0)
+        (herancaValorPorSlot - gastoDoSlotHeranca(slot)).coerceAtLeast(0)
 
     // Só itens de "Itens Especiais" do próprio Fantasia com preço numérico de verdade —
     // Itens Maravilhosos, Poções Mágicas e Joias Mágicas. Pergaminhos e Tomos (custo
@@ -3786,16 +3764,13 @@ class CriadorState {
                     // If we have an AdG version (origem="ARTE_DA_GUERRA"), use that.
                     // If it's the standard Foco (no origem or BASICO), exclude it IF we have an AdG replacement.
                     // Actually, simpler: if per.nome is FOCO, only keep if it is the AdG version.
-                    if (key == "FOCO") {
-                        per.origem == "ARTE_DA_GUERRA"
-                    } else if (key == "TRANSICAO") {
-                        // Transição is exclusive to Elementalista trope
-                        tropoSelecionado?.id == "tropo_elementalista"
-                    } else {
-                        // Keep other AdG skills
-                        if (per.origem == "ARTE_DA_GUERRA") return@filter true
-                        // Keep standard skills (unless forbidden above or handled by replacement)
-                        true
+                    when (key) {
+                        "FOCO" -> per.origem == "ARTE_DA_GUERRA"
+                        "TRANSICAO" -> tropoSelecionado?.id == "tropo_elementalista"
+                        else -> {
+                            if (per.origem == "ARTE_DA_GUERRA") return@filter true
+                            true
+                        }
                     }
                 }
             } else if (compendioWiseguysAtivo) {
@@ -4081,9 +4056,7 @@ class CriadorState {
         val perKey = per.nome.keyify()
         val absVantages = vantagensSelecionadas.filter { includeVantage(it) && it.toArcanoKey() != null }
 
-        val absToConsider = absVantages
-
-        val grantsArcaneSkill = absToConsider.any { vant ->
+        val grantsArcaneSkill = absVantages.any { vant ->
             val abKey = vant.toArcanoKey()?.normAAKey()
             val info = abKey?.let { arcanoInfo[it] }
             info?.third?.keyify() == perKey
@@ -4374,7 +4347,7 @@ class CriadorState {
         return if (idx <= count) 6 else 0
     }
 
-    private fun stepsToReach(per: Pericia, targetRaw: Int): Int {
+    private fun stepsToReach(per: Pericia, targetRaw: Int = 6): Int {
         var curr = periciaStartRaw(ancestralidade, per)
         var steps = 0
         while (curr < targetRaw) {
@@ -4407,7 +4380,7 @@ class CriadorState {
         val slots = idiomaSlotsOrdenados()
         slots.forEachIndexed { index, per ->
             if (index < linguistaCount) {
-                val totalSteps = stepsToReach(per, 6)
+                val totalSteps = stepsToReach(per)
                 val baseSteps = baseIncsPorPericia.getValue(per)
                 val freeSteps = (totalSteps - baseSteps).coerceAtLeast(0)
                 compIncsPorPericia[per] = freeSteps
@@ -4588,13 +4561,13 @@ class CriadorState {
     }
 
     fun identifyMaxedTraits() {
-        _maxedTraits.clear()
+        maxedTraits.clear()
 
         listaAtributos.forEach { attrKey ->
             val current    = valoresAtributos[attrKey]?.intValue ?: return@forEach
             val maxAllowed = atributoMaxRaw(attrKey)
             if (current == maxAllowed) {
-                _maxedTraits.add(attrKey)
+                maxedTraits.add(attrKey)
             }
         }
 
@@ -4602,7 +4575,7 @@ class CriadorState {
             val current    = rawTotal(per)
             val maxAllowed = periciaCapRaw(per)
             if (current == maxAllowed) {
-                _maxedTraits.add(per.nome.keyify())
+                maxedTraits.add(per.nome.keyify())
             }
         }
     }
@@ -5073,8 +5046,7 @@ class CriadorState {
         if (id == "aa_demonio_meio_demonio") return false
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
-        if (id == "aa_demonio" && isCidadeSolVaporDemonAncestry) return false
-        return true
+        return !(id == "aa_demonio" && isCidadeSolVaporDemonAncestry)
     }
 
     fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
@@ -5090,7 +5062,7 @@ class CriadorState {
     fun estagioAtinge(estagioNome: String): Boolean {
         val atualIdx = listaDeEstagios.indexOf(estagioAtual())
         val requeridoIdx = listaDeEstagios.indexOfFirst { it.nome.equals(estagioNome, ignoreCase = true) }
-        return requeridoIdx >= 0 && atualIdx >= requeridoIdx
+        return requeridoIdx in 0..atualIdx
     }
 
     // Livro: todo poder tem um Estágio mínimo pra ser aprendido (Novato/Experiente/
@@ -5300,7 +5272,7 @@ class CriadorState {
             val temSegundaCamada = ordenadas.size > 1
             val valorFinal = principal.first + if (temSegundaCamada) ordenadas[1].first / 2 else 0
             val forcaMinFinal = if (temSegundaCamada) {
-                com.example.swadebuilder.util.ForcaMinimaCalculator.minimoComCamadaExtra(principal.second)
+                ForcaMinimaCalculator.minimoComCamadaExtra(principal.second)
                     ?: principal.second
             } else {
                 principal.second
@@ -5394,14 +5366,7 @@ class CriadorState {
     }
 
     fun temAdaptavel(): Boolean {
-        // Pacote Cultural de Humanos (Fantasia) diferente de Padrão: Adaptável
-        // já sai de habilidades[] em applyAncestryVariantAdjustments, então o
-        // check genérico logo abaixo (ADAPTAVEL em ancDef.habilidades) já
-        // reflete isso sem precisar de um caso especial aqui.
-        val ancDef = currentAncestryDef
-        if (ancDef == null) {
-            return false
-        }
+        val ancDef = currentAncestryDef ?: return false
 
         // Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
         if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
@@ -5414,9 +5379,7 @@ class CriadorState {
         // não deveria cair aqui (antes caía, por engano, via checagem de nome).
         val temHeranca = ancDef.habilidades.any { it.id?.keyify() == "HERANCA" }
 
-        if (temHeranca && !meioElfoAgil) {
-            return true
-        }
+        return temHeranca && !meioElfoAgil
 
         // Arte da Guerra Human: Signo "Nenhum" concede Adaptável — não é mais
         // um caso especial aqui, o traço "ADAPTAVEL" já sai de habilidades[]
@@ -5425,8 +5388,6 @@ class CriadorState {
         // então o check genérico lá em cima já reflete isso, mesmo padrão do
         // Pacote Cultural de Humanos (Fantasia) citado no comentário do topo
         // desta função.
-
-        return false
     }
 
     val adaptavelSlotAvailable: Boolean by derivedStateOf {
@@ -5771,7 +5732,7 @@ class CriadorState {
         // já sai de `currentAncestryDef.habilidades` na origem (ver
         // applyCustomAncestryVariantIfSelected), então o loop abaixo já nunca o
         // encontra — nada para "desfazer" num mapa que não existe mais.
-        var base = 4
+        val base = 4
         val attrKey = a.keyify()
 
         var modifiedBase = base
@@ -6110,7 +6071,6 @@ class CriadorState {
         val passosDiminutoDepois = ModifierEngine.racialDiminutoPassosDe(ancDef?.habilidades)
 
         val effectiveScifiVariant = resolveSciFiVariantSelectionFor(
-            ancestryName = anc,
             availableOptions = ancDef?.opcoes ?: emptyList()
         )
         if (compendioSciFiAtivo && !ancDef?.opcoes.isNullOrEmpty() && scifiVariant != effectiveScifiVariant) {
@@ -6313,7 +6273,6 @@ class CriadorState {
                 val defaultOption = ancDef?.opcoes?.firstOrNull()
                 if (!defaultOption.isNullOrBlank()) {
                     val normalizedDefault = resolveSciFiVariantSelectionFor(
-                        ancestryName = anc,
                         availableOptions = ancDef.opcoes,
                         overrideSelection = defaultOption
                     )
@@ -6741,7 +6700,6 @@ class CriadorState {
     fun selecionarScifiVariant(opcao: String?) {
         val ancDef = currentAncestryDef
         val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
-            ancestryName = ancestralidade,
             availableOptions = ancDef?.opcoes ?: emptyList(),
             overrideSelection = opcao
         )

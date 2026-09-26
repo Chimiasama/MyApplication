@@ -52,5 +52,17 @@ class CreationPresetTest {
         val basico = CreationPreset.getById("basico")
         assertTrue(basico.defaultMaisPontosPericias)
         assertFalse(basico.defaultCompendioWiseguys)
+        assertFalse(basico.defaultRegraMechas)
+        assertFalse(basico.defaultRegraCiberneticos)
+        assertFalse(basico.defaultRegraCosaNostra)
+
+        val scifi = CreationPreset.getById("scifi")
+        assertTrue(scifi.defaultRegraMechas)
+        assertTrue(scifi.defaultRegraCiberneticos)
+
+        // Pathfinder não deve habilitar regras de Sci-Fi nem de Wiseguys por padrão
+        assertFalse(pathfinder.defaultRegraMechas)
+        assertFalse(pathfinder.defaultRegraCiberneticos)
+        assertFalse(pathfinder.defaultRegraCosaNostra)
     }
 }

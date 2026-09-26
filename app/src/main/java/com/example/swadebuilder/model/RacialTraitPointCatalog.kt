@@ -72,7 +72,7 @@ sealed class RacialTraitEffect {
         val atributo: String,
         val passos: Int = 1,
         val relativo: Boolean = false,
-        val elevaMaximo: Boolean = true
+        val elevaMaximo: Boolean = true,
     ) : RacialTraitEffect()
     data class PericiaStep(val pericia: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
     // Bônus fixo (não "passo de dado") de Resistência/Passo/Aparar — mesma
@@ -380,7 +380,7 @@ object RacialTraitPointCatalog {
         val base = key?.let { LABEL[it] } ?: id ?: ""
         if (vezes <= 1 || key == null) return base
         val efeito = EFEITOS[key] ?: return base
-        fun sinal(v: Int) = if (v >= 0) "+$v" else "$v"
+        fun sinal(v: Int) = if (v >= 0) "+$v" else v.toString()
         return when (efeito) {
             is RacialTraitEffect.ResistenciaBonus -> "Resistência ${sinal(efeito.valor * vezes)}"
             is RacialTraitEffect.PassoBonus -> "Movimentação ${sinal(efeito.valor * vezes)}"
@@ -587,7 +587,7 @@ object RacialTraitPointCatalog {
         // Anão (Pathfinder): "Força conta um dado maior para Sobrecarga e
         // Força Mínima de armaduras" — separado de RESISTENTE (que só cobre o
         // Vigor d6) pra virar um id próprio em vez de comparar nome de raça
-        // em valorCargaMaxima()/forcaEfetivaParaArmaduras(). Custo 0: já
+        // em valorCargaMaxima(). Custo 0: já
         // embutido no custo de RESISTENTE (2) pra esta raça — as duas juntas
         // ainda fecham em pontosRaciaisEsperados=4, igual antes da divisão.
         "FORCA_CARGA_ARMADURA" to 0,
@@ -1065,7 +1065,8 @@ object RacialTraitPointCatalog {
     fun ehDoCatalogo(id: String?, targetRef: String? = null, idsCatalogoOficial: Set<String> = emptySet()): Boolean {
         if (id.isNullOrBlank()) return false
         val key = id.keyify()
-        if (key in PARAMETRIZADOS_OFICIAIS) return true
+        val targetKey = targetRef?.keyify().orEmpty()
+        if (key in PARAMETRIZADOS_OFICIAIS || targetKey in PARAMETRIZADOS_OFICIAIS) return true
         if (idsCatalogoOficial.isNotEmpty() && key in idsCatalogoOficial) return true
         return key in IDS_CATALOGO_LIVRO_BASICO
     }

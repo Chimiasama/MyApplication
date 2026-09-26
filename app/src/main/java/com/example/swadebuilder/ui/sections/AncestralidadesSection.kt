@@ -763,7 +763,6 @@ fun AncestralidadesSection(
                                     var expanded by remember { mutableStateOf(false) }
 
                                     val currentSelection = state.resolveSciFiVariantSelectionFor(
-                                        ancestryName = item.nome,
                                         availableOptions = opcoesValidas
                                     ) ?: opcoesValidas.firstOrNull().orEmpty()
 
@@ -1139,7 +1138,6 @@ fun AncestralidadesSection(
                                 val isHumanoFantasia = item.nome.keyify() == "HUMANOS" && item.origens.contains("FANTASIA")
                                 val humanoFantasiaSelection = if (isHumanoFantasia) {
                                     state.resolveSciFiVariantSelectionFor(
-                                        ancestryName = item.nome,
                                         availableOptions = opcoesValidas
                                     ) ?: opcoesValidas.firstOrNull().orEmpty()
                                 } else {
@@ -1267,7 +1265,7 @@ fun AncestralidadesSection(
                                                 isSelected &&
                                                 compendioSciFiAtivo &&
                                                 item.nome.keyify() == "AVIANOS" &&
-                                                state.resolveSciFiVariantSelectionFor(item.nome, item.opcoes).equals("Ave de rapina", ignoreCase = true)
+                                                state.resolveSciFiVariantSelectionFor(item.opcoes).equals("Ave de rapina", ignoreCase = true)
                                             ) {
                                                 if (none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
                                                     add(RacialAbilityLite(nome = "Forma Alienígena", descricao = ""))

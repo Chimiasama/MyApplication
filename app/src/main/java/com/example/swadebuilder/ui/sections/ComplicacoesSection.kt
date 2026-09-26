@@ -97,9 +97,6 @@ fun ComplicacoesSection(
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
-    val scope = rememberCoroutineScope()
-    var tempErrorMsg by remember { mutableStateOf("") }
-    var showTempError by remember { mutableStateOf(false) }
 
     val origensAtivas = state.getActiveOrigins()
 
@@ -233,15 +230,6 @@ fun ComplicacoesSection(
                     }
                 }
 
-                if (showTempError) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        tempErrorMsg,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-
                 // --- STICKY SELECTED COMPLICATIONS ---
                 if (state.complicacoesSelecionadas.isNotEmpty() || state.transtornos.isNotEmpty()) {
                     FlowRow(
@@ -273,12 +261,7 @@ fun ComplicacoesSection(
                                                 complicationToRemove = comp
                                                 showPcInUseDialog = true
                                             } else {
-                                                tempErrorMsg = msg ?: "Ação bloqueada."
-                                                showTempError = true
-                                                scope.launch {
-                                                    delay(3000L)
-                                                    showTempError = false
-                                                }
+                                                onLogFeedback(msg ?: "Ação bloqueada.")
                                             }
                                             return@AssistChip
                                         }
@@ -666,12 +649,7 @@ fun ComplicacoesSection(
                                 complicationToRemove = comp
                                 showPcInUseDialog = true
                             } else {
-                                tempErrorMsg = msg
-                                showTempError = true
-                                scope.launch {
-                                    delay(2000L)
-                                    showTempError = false
-                                }
+                                onLogFeedback(msg)
                             }
                         },
                         peqComp = pequComp

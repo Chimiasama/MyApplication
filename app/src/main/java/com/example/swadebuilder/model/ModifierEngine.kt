@@ -145,7 +145,6 @@ object ModifierEngine {
                 val isCentauxGazela = state.compendioSciFiAtivo &&
                     ancestryKey == "CENTAUX" &&
                     state.resolveSciFiVariantSelectionFor(
-                        ancestryName = anc.nome,
                         availableOptions = anc.opcoes
                     ).equals("Gazela", ignoreCase = true)
 
@@ -158,12 +157,6 @@ object ModifierEngine {
                     }
                 }
             }.distinctBy { it.keyify() }
-
-            // Movimentação Racial (Pace)
-            // 1. Explicit Field
-            if (anc.movimentacao != 0) {
-                modifiers.add(Modifier("racial_pace_explicit", SourceType.ANCESTRALIDADE, anc.nome, ModifierTarget.PACE, anc.movimentacao))
-            }
 
             // Tamanho, Movimentação Reduzida/aumentada, Resistência,
             // Aparar e Armadura Natural concedidos por id de traço: um loop
