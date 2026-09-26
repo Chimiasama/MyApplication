@@ -982,74 +982,155 @@ fun EquipamentoSection(
                                 modifier = Modifier.padding(start = 8.dp).fillMaxWidth(),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                val availableGroups = groupData.keys.sorted()
+                                val isSingleGroup = groupData.size == 1 && groupData.keys.first().equals(superType.label, ignoreCase = true)
                                 val activeFilters = state.equipSectionFilters[superType] ?: emptySet()
 
-                                LazyRow(
-                                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    item {
-                                        FilterChip(
-                                            selected = activeFilters.isEmpty(),
-                                            onClick = {
-                                                state.equipSectionFilters[superType] = emptySet()
-                                            },
-                                            label = { Text("Todos") }
-                                        )
-                                    }
-                                    items(availableGroups) { gName ->
-                                        val isSelected = gName in activeFilters
-                                        FilterChip(
-                                            selected = isSelected,
-                                            onClick = {
-                                                val newSet = activeFilters.toMutableSet()
-                                                if (isSelected) newSet.remove(gName) else newSet.add(gName)
-                                                state.equipSectionFilters[superType] = newSet
-                                            },
-                                            label = { Text(gName) }
-                                        )
-                                    }
-                                }
+                                if (isSingleGroup) {
+                                    val singleGroupMap = groupData.values.first()
+                                    val availableSubGroups = singleGroupMap.keys.sorted()
+                                    val filteredSubGroups = if (activeFilters.isEmpty()) availableSubGroups else availableSubGroups.filter { it in activeFilters }
 
-                                val filteredGroupKeys = if (activeFilters.isEmpty()) availableGroups else availableGroups.filter { it in activeFilters }
-
-                                // Itera sobre os dados pré-calculados
-                                filteredGroupKeys.forEach { groupName ->
-                                    val subGroups = groupData[groupName]!!
-                                    val groupKey = "${superType.label}/$groupName"
-                                    val isGroupExpanded = state.equipExpandedGroups[groupKey] ?: false
-
-                                    CollapsibleSection(
-                                        title = groupName,
-                                        expanded = isGroupExpanded,
-                                        onToggle = { state.equipExpandedGroups[groupKey] = !isGroupExpanded },
-                                        onToggleFeedback = onUserFeedback
+                                    // Chips de Filtro pelas subdivisões reais
+                                    LazyRow(
+                                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        subGroups.keys.sorted().forEach { subGroupName ->
-                                            if (subGroupName != groupName && subGroupName.isNotBlank()) {
-                                                Text(
-                                                    text = subGroupName,
-                                                    style = MaterialTheme.typography.labelLarge,
-                                                    fontWeight = FontWeight.SemiBold,
-                                                    color = MaterialTheme.colorScheme.secondary,
-                                                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp, start = 4.dp)
-                                                )
-                                            }
-
-                                            val itemsInSub = subGroups[subGroupName]!!
-                                            itemsInSub.forEach { entry ->
-                                                StandardEquipamentoItem(
-                                                    equipamento = entry.item,
-                                                    onClick = { onEquipamentoDoubleClick(entry.item) },
-                                                    allowLongTexts = allowLongTexts,
-                                                    showOriginalName = showOfficialNames,
-                                                    showTensao = compendioSciFiAtivo,
-                                                    passosDiminuto = passosDiminuto
-                                                )
-                                            }
-                                            Spacer(Modifier.height(4.dp))
+                                        item {
+                                            FilterChip(
+                                                selected = activeFilters.isEmpty(),
+                                                onClick = { state.equipSectionFilters[superType] = emptySet() },
+                                                label = { Text("Todos") }
+                                            )
                                         }
+                                        items(availableSubGroups) { subName ->
+                                            val isSelected = subName in activeFilters
+                                            FilterChip(
+                                                selected = isSelected,
+                                                onClick = {
+                                                    val newSet = activeFilters.toMutableSet()
+                                                    if (isSelected) newSet.remove(subName) else newSet.add(subName)
+                                                    state.equipSectionFilters[superType] = newSet
+                                                },
+                                                label = { Text(subName) }
+                                            )
+                                        }
+                                    }
+
+                                    // Exibe diretamente as subdivisões como Accordions expansíveis/retráteis
+                                    filteredSubGroups.forEach { subGroupName ->
+                                        val itemsInSub = singleGroupMap[subGroupName]!!
+                                        val subKey = "${superType.label}/$subGroupName"
+                                        val isSubExpanded = if (activeFilters.contains(subGroupName)) true else (state.equipExpandedSubGroups[subKey] ?: false)
+
+                                        CollapsibleSection(
+                                            title = subGroupName,
+                                            expanded = isSubExpanded,
+                                            onToggle = { state.equipExpandedSubGroups[subKey] = !isSubExpanded },
+                                            onToggleFeedback = onUserFeedback
+                                        ) {
+                                            Column(
+                                                modifier = Modifier.padding(start = 4.dp).fillMaxWidth(),
+                                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                            ) {
+                                                itemsInSub.forEach { entry ->
+                                                    StandardEquipamentoItem(
+                                                        equipamento = entry.item,
+                                                        onClick = { onEquipamentoDoubleClick(entry.item) },
+                                                        allowLongTexts = allowLongTexts,
+                                                        showOriginalName = showOfficialNames,
+                                                        showTensao = compendioSciFiAtivo,
+                                                        passosDiminuto = passosDiminuto
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        Spacer(Modifier.height(4.dp))
+                                    }
+                                } else {
+                                    val availableGroups = groupData.keys.sorted()
+                                    val filteredGroupKeys = if (activeFilters.isEmpty()) availableGroups else availableGroups.filter { it in activeFilters }
+
+                                    LazyRow(
+                                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        item {
+                                            FilterChip(
+                                                selected = activeFilters.isEmpty(),
+                                                onClick = { state.equipSectionFilters[superType] = emptySet() },
+                                                label = { Text("Todos") }
+                                            )
+                                        }
+                                        items(availableGroups) { gName ->
+                                            val isSelected = gName in activeFilters
+                                            FilterChip(
+                                                selected = isSelected,
+                                                onClick = {
+                                                    val newSet = activeFilters.toMutableSet()
+                                                    if (isSelected) newSet.remove(gName) else newSet.add(gName)
+                                                    state.equipSectionFilters[superType] = newSet
+                                                },
+                                                label = { Text(gName) }
+                                            )
+                                        }
+                                    }
+
+                                    // Itera sobre os grupos
+                                    filteredGroupKeys.forEach { groupName ->
+                                        val subGroups = groupData[groupName]!!
+                                        val groupKey = "${superType.label}/$groupName"
+                                        val isGroupExpanded = if (activeFilters.contains(groupName)) true else (state.equipExpandedGroups[groupKey] ?: false)
+
+                                        CollapsibleSection(
+                                            title = groupName,
+                                            expanded = isGroupExpanded,
+                                            onToggle = { state.equipExpandedGroups[groupKey] = !isGroupExpanded },
+                                            onToggleFeedback = onUserFeedback
+                                        ) {
+                                            Column(
+                                                modifier = Modifier.padding(start = 4.dp).fillMaxWidth(),
+                                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                            ) {
+                                                subGroups.keys.sorted().forEach { subGroupName ->
+                                                    val itemsInSub = subGroups[subGroupName]!!
+                                                    if (subGroupName.equals(groupName, ignoreCase = true) || subGroupName.isBlank()) {
+                                                        itemsInSub.forEach { entry ->
+                                                            StandardEquipamentoItem(
+                                                                equipamento = entry.item,
+                                                                onClick = { onEquipamentoDoubleClick(entry.item) },
+                                                                allowLongTexts = allowLongTexts,
+                                                                showOriginalName = showOfficialNames,
+                                                                showTensao = compendioSciFiAtivo,
+                                                                passosDiminuto = passosDiminuto
+                                                            )
+                                                        }
+                                                    } else {
+                                                        val subKey = "$groupKey/$subGroupName"
+                                                        val isSubExpanded = state.equipExpandedSubGroups[subKey] ?: false
+
+                                                        CollapsibleSection(
+                                                            title = subGroupName,
+                                                            expanded = isSubExpanded,
+                                                            onToggle = { state.equipExpandedSubGroups[subKey] = !isSubExpanded },
+                                                            onToggleFeedback = onUserFeedback
+                                                        ) {
+                                                            itemsInSub.forEach { entry ->
+                                                                StandardEquipamentoItem(
+                                                                    equipamento = entry.item,
+                                                                    onClick = { onEquipamentoDoubleClick(entry.item) },
+                                                                    allowLongTexts = allowLongTexts,
+                                                                    showOriginalName = showOfficialNames,
+                                                                    showTensao = compendioSciFiAtivo,
+                                                                    passosDiminuto = passosDiminuto
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                    Spacer(Modifier.height(4.dp))
+                                                }
+                                            }
+                                        }
+                                        Spacer(Modifier.height(4.dp))
                                     }
                                 }
                             }

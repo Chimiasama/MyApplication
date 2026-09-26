@@ -31,6 +31,14 @@ data class RacialAbility(
     /** Retorna o ID mecânico principal — priorizando o novo `traitId` parametrizado, ou o `id` legado. */
     fun resolvedTraitId(): String = traitId ?: id ?: ""
 
+    /** Retorna a categoria normalizada para o traço. */
+    fun resolvedCategory(): String? {
+        val tid = resolvedTraitId()
+        if (tid == "GRANTED_EDGE" || category == "racial_edge") return "racial_edge"
+        if (tid == "RACIAL_HINDRANCE" || category == "racial_hindrance") return "racial_hindrance"
+        return category?.takeIf { it != "racial_trait_positive" && it != "racial_trait_negative" }
+    }
+
     /**
      * Retorna o valor real de pontos no orçamento racial para este traço — já multiplicado
      * por `vezes` (traços empilháveis, ex.: Movimentação (2) comprado 2x = +4 pontos, não

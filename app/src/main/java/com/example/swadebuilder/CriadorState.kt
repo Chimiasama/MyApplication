@@ -48,6 +48,7 @@ import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitEffect
 import com.example.swadebuilder.model.RacialTraitPointCatalog
+import com.example.swadebuilder.model.SelectionAnswer
 import com.example.swadebuilder.model.SnapshotAtributos
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.SnapshotPericias
@@ -842,7 +843,7 @@ class CriadorState {
         fun temEscolhaDeAtributoOuPericia(candidato: RacialModifier): Boolean =
             candidato.habilidades.any {
                 it.id?.keyify() in setOf(
-                    "ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO"
+                    "ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO", "FLEXIBILIDADE"
                 )
             }
 
@@ -1294,6 +1295,22 @@ class CriadorState {
                 livro = "FANTASIA",
                 answer = com.example.swadebuilder.model.SelectionAnswer(
                     selectionId = "meio_orc_atributo",
+                    targetChoice = humanoMineradorAtributo
+                )
+            )
+        }
+
+        if (base.habilidades.any { it.id?.keyify() == "FLEXIBILIDADE" }) {
+            val ancKey = base.nome.keyify()
+            val ancId = if (ancKey.contains("ELFO")) "MEIO-ELFO" else "HUMANO"
+            val idSlug = if (ancKey.contains("ELFO")) "meio_elfo_pathfinder" else "humano_pathfinder"
+            return resolveMarkedSelection(
+                base = base,
+                marcador = "FLEXIBILIDADE",
+                ancestralidadeId = ancId,
+                livro = "PATHFINDER",
+                answer = SelectionAnswer(
+                    selectionId = "${idSlug}_flexibilidade",
                     targetChoice = humanoMineradorAtributo
                 )
             )
@@ -2123,10 +2140,8 @@ class CriadorState {
     val equipSelectedSuperTypes = mutableStateListOf<EquipSuperType>()
     var equipFilter by mutableStateOf(EquipFilter())
     val equipExpandedTypes = mutableStateMapOf<String, Boolean>()
-    // Chave "SuperType/Grupo" (ex.: "Armaduras/Corpo") — um grupo dentro de um SuperType
-    // já expandido também pode ser recolhido, pra não despejar a lista inteira de uma vez
-    // quando o SuperType tem muitos grupos (ex.: "Armas" com dezenas de itens).
     val equipExpandedGroups = mutableStateMapOf<String, Boolean>()
+    val equipExpandedSubGroups = mutableStateMapOf<String, Boolean>()
     var equipSectionFilters = mutableStateMapOf<EquipSuperType, Set<String>>()
 
     var anotacoes by mutableStateOf("")
@@ -4947,39 +4962,13 @@ class CriadorState {
 
     val totalSpPool: Int
         get() {
-            // Traço genérico de raça (oficial ou criado no editor de conteúdo
-            // customizado, ver RacialTraitEffect.PericiaPoolBonus) que dá/tira
-            // Pontos de Perícia — soma de todas as habilidades[] com esse
-            // efeito. Qualquer raça nova pode usar isso.
-            val bonusPontosPericia = currentAncestryDef?.habilidades
-                ?.sumOf { hab ->
-                    val tid = hab.resolvedTraitId()
-                    when (val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)) {
-                        is RacialTraitEffect.PericiaPoolBonus -> efeito.valor
-                        else -> 0
-                    }
-                } ?: 0
 
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
-                // If AdG active:
-                // Base: 12 points
-                // Humans with "Nenhum" sign: +3 points (15 total)
-                // Ignore "maisPontosPericias" checkbox
-                //
-                // O traço "Pontos de Perícia" (id PONTOS_DE_PERICIA) só entra
-                // em habilidades[] quando o Signo "Nenhum" está ativo — ver
-                // AncestryVariantRegistry.humanoArteDaGuerraSignos() e
-                // CriadorState.applyAncestryVariantAdjustments() — e não
-                // mais como traço permanente da raça, independente da
-                // escolha (bug real corrigido nesta rodada). Por isso o +3
-                // já vem sozinho de bonusPontosPericia, sem precisar de
-                // nenhum "if" aqui: nas outras 13 opções o traço nem existe.
-                val base = 12 + bonusPontosPericia
+                val base = 12
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
-                // Standard Logic
-                val base = (if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)) + bonusPontosPericia
+                val base = if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
@@ -5948,15 +5937,30 @@ class CriadorState {
     fun atributoMinRaw(a: String): Int =
         atributoBaseRacial(a)
 
+    private fun atributoMaxExtraPassos(a: String): Int {
+        var extra = 0
+        val attrKey = a.keyify()
+        currentAncestryDef?.habilidades?.forEach { hab ->
+            val tid = hab.resolvedTraitId()
+            val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey && efeito.elevaMaximo) {
+                extra = maxOf(extra, efeito.passos)
+            }
+        }
+        if (tropoSelecionado?.categoria == "MONSTRO") {
+            habilidadesDoTropoResolvidas.forEach { hab ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey && efeito.elevaMaximo) {
+                    extra = maxOf(extra, efeito.passos)
+                }
+            }
+        }
+        return extra
+    }
+
     fun atributoMaxRaw(a: String, forceStandard: Boolean = false): Int {
         if (modoLivre && !forceStandard) return 100
-        // Teto vem só do piso "sem Tropo" (raça/Monstro/Signo/Pacote Cultural)
-        // — um bônus de Tropo nunca deve esticar o teto do atributo (ver
-        // atributoBaseRacial). atributoMinRaw() continua incluindo o Tropo,
-        // pois é o valor mínimo de verdade que o jogador pode ver/usar.
-        val minRaw = atributoBaseRacial(a, includeTropo = false)
-
-        var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
+        val extras = atributoMaxExtraPassos(a)
         val baseCap = 12 + extras
 
         val chave = a.keyify()
@@ -6631,36 +6635,7 @@ class CriadorState {
             }
         }
 
-        // Humano (Pathfinder) "Adaptável" e Meio-Elfo (Pathfinder) "Flexibilidade"
-        // concedem "um d6 em vez de um d4 em um Atributo à escolha. Isso não
-        // aumenta seu atributo máximo" — mesmo texto, mesmo id (FLEXIBILIDADE)
-        // nas duas raças. Em vez de elevar o piso do atributo escolhido (o que
-        // exigiria desfazer a elevação automática do teto em
-        // atributoMaxRawNaCriacao(), já que atributoMaxRaw() SEMPRE soma +1 de
-        // tipo de dado pra qualquer piso acima de d4), representamos como +1
-        // Ponto de Atributo: o jogador decide livremente onde gastá-lo, e como
-        // é gasto pelo mecanismo normal de compra (não um piso "de graça"), o
-        // teto de d12 na criação nunca é ultrapassado — sem precisar de
-        // nenhuma exceção especial. Antes checava por nome de raça
-        // (ancestralidade.equals("Humano"/"Humano (Pathfinder)") e
-        // ancestralidade.contains("MEIO-ELFO")); agora lê o id do traço já
-        // presente na raça resolvida.
-        val temAtributoFlexivel = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "FLEXIBILIDADE" } == true
-
-        // Traço genérico de raça (oficial ou criado no editor de conteúdo
-        // customizado, ver RacialTraitEffect.AtributoPoolBonus) que dá/tira
-        // Pontos de Atributo — soma de todas as habilidades[] com esse
-        // efeito, não um "if" fixo por id como FLEXIBILIDADE acima.
-        val bonusPontosAtributo = currentAncestryDef?.habilidades
-            ?.sumOf { hab ->
-                val tid = hab.resolvedTraitId()
-                when (val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)) {
-                    is RacialTraitEffect.AtributoPoolBonus -> efeito.valor
-                    else -> 0
-                }
-            } ?: 0
-
-        val basePoints = (if (temAtributoFlexivel) 6 else 5) + bonusPontosAtributo
+        val basePoints = 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }

@@ -83,12 +83,13 @@ class ResolveAncestryVariantPackageUseCase {
     // TraitAddition.traitId.
     private fun resolveTargetAttributeOrSkill(def: SelectionDef, answer: SelectionAnswer?): ResolvedTraitPackage {
         val opcoes = def.targetOptions.orEmpty()
-        val alvo = answer?.targetChoice?.takeIf { escolhido -> opcoes.any { it.equals(escolhido, ignoreCase = true) } }
-            ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.any { it.equals(padrao, ignoreCase = true) } }
+        val alvo = answer?.targetChoice?.takeIf { escolhido -> opcoes.isEmpty() || opcoes.any { it.equals(escolhido, ignoreCase = true) } }
+            ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.isEmpty() || opcoes.any { it.equals(padrao, ignoreCase = true) } }
+            ?: answer?.targetChoice
             ?: opcoes.firstOrNull()
-            ?: return ResolvedTraitPackage()
+            ?: "Agilidade"
         val nomeExibicao = def.injectionTemplate?.replace("{alvo}", alvo) ?: alvo
-        val traitIdMecanico = if (def.targetKind == TraitTargetKind.SKILL) "SKILL_BOOST" else "ATTRIBUTE_BOOST"
+        val traitIdMecanico = def.marcadorTraitId ?: if (def.targetKind == TraitTargetKind.SKILL) "SKILL_BOOST" else "ATTRIBUTE_BOOST"
         val pontos = com.example.swadebuilder.model.RacialTraitPointCatalog.custoDe(traitIdMecanico, value = def.passos)
         return ResolvedTraitPackage(
             tracosParaAdicionar = listOf(

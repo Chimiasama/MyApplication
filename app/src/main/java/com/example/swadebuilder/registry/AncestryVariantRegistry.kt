@@ -66,7 +66,9 @@ object AncestryVariantRegistry {
         feralArteDaGuerra(),
         kitsunemimiArteDaGuerra(),
         gnomoPathfinder(),
-        usagimimiArteDaGuerra()
+        usagimimiArteDaGuerra(),
+        flexibilidade("HUMANO", "humano_pathfinder", "PATHFINDER"),
+        flexibilidade("MEIO-ELFO", "meio_elfo_pathfinder", "PATHFINDER")
     ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
     private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
@@ -1586,6 +1588,25 @@ object AncestryVariantRegistry {
                 defaultTargetChoice = "Conhecimento Acadêmico",
                 injectionTemplate = "{alvo} d6 (Definido pelo Ofício)",
                 marcadorTraitId = "DEFINIDO_PELO_OFICIO"
+            )
+        )
+    )
+
+    // --- Humano (Pathfinder) e Meio-Elfo (Pathfinder): "Flexibilidade" —
+    // escolhe 1 atributo dentre os disponíveis no jogo pra começar em d6.
+    private fun flexibilidade(ancestralidadeId: String, idSlug: String, livro: String): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = ancestralidadeId,
+        livro = livro,
+        selecoes = listOf(
+            SelectionDef(
+                id = "${idSlug}_flexibilidade",
+                rotulo = "Flexibilidade",
+                tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                targetKind = TraitTargetKind.ATTRIBUTE,
+                targetOptions = listOf("Agilidade", "Astúcia", "Espírito", "Força", "Vigor"),
+                defaultTargetChoice = "Agilidade",
+                injectionTemplate = "{alvo} d6 (Flexibilidade)",
+                marcadorTraitId = "FLEXIBILIDADE"
             )
         )
     )

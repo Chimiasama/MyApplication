@@ -39,12 +39,11 @@ class RacialTraitAuditFormatterTest {
     }
 
     @Test
-    fun `id so com LABEL, sem catalogo oficial, mostra o rotulo e avisa que nao tem entrada`() {
+    fun `id oficial de catalogo mostra o rotulo e marca Catalogo Oficial`() {
         val hab = RacialAbility(nome = "qualquer skin", descricao = "", id = "ARMADURA")
         val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
         assertTrue(linhas[0].contains("[id=ARMADURA]"))
-        assertTrue(linhas[0].contains("Armadura +2"))
-        assertTrue(linhas[0].contains("sem entrada em basico_habilidades_raciais.json"))
+        assertTrue(linhas[0].contains("[Catálogo Oficial] Armadura +2"))
     }
 
     @Test
@@ -61,21 +60,18 @@ class RacialTraitAuditFormatterTest {
     }
 
     @Test
-    fun `id totalmente sem catalogo, CUSTOS nem efeito vira aviso de hardcode`() {
+    fun `id totalmente sem catalogo nem efeito vira aviso de regra unica fora do catalogo`() {
         val hab = RacialAbility(nome = "Nome Qualquer", descricao = "", id = "ID_INEXISTENTE_QUALQUER")
         val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
+        assertTrue(linhas[0].contains("Regra Única da Raça / Fora do Catálogo"))
         assertTrue(linhas[0].contains("SEM CATÁLOGO"))
-        assertTrue(linhas[0].contains("Nome Qualquer"))
     }
 
     @Test
-    fun `id sem catalogo oficial e sem LABEL, mas com custo calibrado em CUSTOS, NAO vira aviso de hardcode`() {
-        // "CARISMATICO" (Transmorfos) é um caso real: sem entrada genérica em
-        // basico_habilidades_raciais.json nem LABEL, mas com custo calibrado em
-        // RacialTraitPointCatalog.CUSTOS — é um traço bem específico da raça, não sujeira.
+    fun `id sem catalogo oficial e sem LABEL, mas com custo calibrado em CUSTOS, e marcado como Regra Unica da Raca`() {
         val hab = RacialAbility(nome = "Carismático (racial)", descricao = "", id = "CARISMATICO")
         val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
-        assertTrue(!linhas[0].contains("SEM CATÁLOGO"))
+        assertTrue(linhas[0].contains("Regra Única da Raça / Fora do Catálogo"))
         assertTrue(linhas[0].contains("Traço específico desta raça"))
         assertTrue(linhas[0].contains("+2 pts"))
     }
@@ -102,12 +98,6 @@ class RacialTraitAuditFormatterTest {
 
     @Test
     fun `traco migrado pro par generico ATTRIBUTE_BOOST ainda acha o LABEL do id original`() {
-        // Achado real (auditoria pedida pelo usuário): a migração de Atributo/Perícia
-        // Aumentada pra traitId="ATTRIBUTE_BOOST"/"SKILL_BOOST" (id mantido só pra
-        // identidade/auditoria) fazia a formatação buscar LABEL/catálogo oficial pela chave
-        // RESOLVIDA ("ATTRIBUTE_BOOST", sem entrada própria), perdendo o match do id
-        // ORIGINAL ("ARMADURA", que tem LABEL "Armadura +2") e caindo no ramo de "sem LABEL
-        // nem catálogo" mesmo com um label real cadastrado.
         val hab = RacialAbility(
             nome = "skin qualquer",
             descricao = "",
@@ -117,7 +107,6 @@ class RacialTraitAuditFormatterTest {
         )
         val linhas = RacialTraitAuditFormatter.formatar(listOf(hab), catalogoOficial)
         assertTrue(linhas[0].contains("[id=ATTRIBUTE_BOOST"))
-        assertTrue(!linhas[0].contains("sem LABEL nem catálogo"))
         assertTrue(linhas[0].contains("Armadura +2"))
     }
 
@@ -159,12 +148,6 @@ class RacialTraitAuditFormatterTest {
 
     @Test
     fun `racial_hindrance e racial_edge nunca contam pra exclusividade, mesmo sendo a unica raca com aquele id`() {
-        // Bug real relatado pelo usuário: Androides "Pacifista" aparecia com a etiqueta
-        // "exclusivo-desta-raça" no Modo Auditoria — Pacifista é uma Complicação universal
-        // (todo livro tem ela em complicacoes.json, qualquer raça pode escolhê-la), só que
-        // Androides é a única raça que a CONCEDE de graça. "Exclusivo desta raça" nunca
-        // deveria se aplicar a uma Vantagem/Complicação concedida (racial_edge/
-        // racial_hindrance) — só a um traço mecânico sem equivalente genérico de verdade.
         val androides = RacialModifier(
             nome = "Androides",
             habilidades = listOf(

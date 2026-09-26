@@ -80,6 +80,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.swadebuilder.model.HabilidadeCriacao
 import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.Tropo
 
@@ -2499,21 +2500,11 @@ fun CustomContentManageDialog(
                                                 }
                                                 "Traço Racial" -> {
                                                     val costInt = customTraitCost.toIntOrNull() ?: 1
-                                                    val efeitoMagnitude = customTraitEfeitoValor.toIntOrNull()?.let { kotlin.math.abs(it) } ?: 0
-                                                    val (efeitoTraitId, efeitoValue) = when (customTraitEfeitoTipo) {
-                                                        "Bônus de Pontos de Perícia" -> "PERICIA_POINTS_BONUS" to efeitoMagnitude
-                                                        "Penalidade de Pontos de Perícia" -> "PERICIA_POINTS_BONUS" to -efeitoMagnitude
-                                                        "Bônus de Pontos de Atributo" -> "ATRIBUTO_POINTS_BONUS" to efeitoMagnitude
-                                                        "Penalidade de Pontos de Atributo" -> "ATRIBUTO_POINTS_BONUS" to -efeitoMagnitude
-                                                        else -> null to 0
-                                                    }
-                                                    val newTrait = com.example.swadebuilder.model.HabilidadeCriacao(
+                                                    val newTrait = HabilidadeCriacao(
                                                         nome = customItemName,
                                                         custo = costInt,
                                                         descricao = safeDesc,
-                                                        id = id,
-                                                        traitId = efeitoTraitId,
-                                                        value = efeitoValue
+                                                        id = id
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addHabilidadeRacial(context, tag, newTrait) }
                                                     statusMessage = "Traço racial '$customItemName' salvo em: $tagsLabel"

@@ -12,45 +12,27 @@ import com.example.swadebuilder.util.keyify
  *
  * Uso: alternar entre esta leitura "id puro" (sem skin) e a leitura normal (com skin, o
  * comportamento de sempre) na tela "Ver detalhes" de Ancestralidades — ver
- * `AppPreferences.loadModoAuditoriaIdPuro`/`AncestralidadesSection.kt`. Serve só pra auditoria
- * de quem mantém o app; não é (e não deve virar) algo visível pro jogador/criador de raça.
- *
- * "Exclusivo desta raça": id que só aparece nas habilidades de UMA raça em todo
- * `ancestralidades.json` (ver [calcularIdsExclusivos]) — normalmente um traço bem específico,
- * sem equivalente genérico no livro de criação (ex.: "Magia Gnômica" do Gnomo, "Carismático"
- * dos Transmorfos). Isso é DIFERENTE do campo `RacialAbility.invisivel`, que no código hoje
- * marca algo mais estreito — uma entrada sintética escondida da UI porque já aparece em outro
- * lugar (ex.: um `ATTRIBUTE_BOOST` espelhando um bônus já mostrado na aba de Atributos) ou um
- * ajuste de orçamento sem narrativa própria — não "traço de balanceamento exclusivo da raça".
- * As duas etiquetas aparecem juntas quando se aplicam, mas não são a mesma coisa.
+ * `AppPreferences.loadModoAuditoriaIdPuro`/`AncestralidadesSection.kt`.
  */
 object RacialTraitAuditFormatter {
 
-    /**
-     * Ids usados por exatamente UMA raça em todo o catálogo, mapeados pro nome dessa raça.
-     * Puramente estrutural (conta ocorrências em `habilidades[].id` por raça) — não tenta
-     * adivinhar se existe lógica hardcoded em outro arquivo Kotlin amarrada a esse id (isso
-     * exigiria buscar o id no resto do código-fonte, o que este objeto não faz).
-     *
-     * Ignora de propósito toda habilidade `category="racial_hindrance"`/`"racial_edge"`
-     * (Vantagem/Complicação CONCEDIDA, não um traço em si — ver a doc da classe): esse tipo
-     * de entrada sempre aponta pra um item JÁ existente no catálogo geral de Vantagens/
-     * Complicações, então nunca é "traço sem equivalente genérico", mesmo quando só uma raça
-     * hoje a concede automaticamente. Bug real relatado pelo usuário: Androides "Pacifista"
-     * aparecia marcado "exclusivo-desta-raça" só porque nenhuma OUTRA raça concede Pacifista
-     * de graça — mas a Complicação Pacifista em si é universal, qualquer personagem de
-     * qualquer raça pode escolhê-la na aba Complicações. O `id` de uma entrada
-     * racial_hindrance/racial_edge é só o marcador interno do mecanismo de concessão (ver
-     * `RacialTraitAuditFormatter.formatarUm`), nunca uma alegação sobre quantas raças
-     * compartilham o CONTEÚDO concedido.
-     */
     fun calcularIdsExclusivos(todasAsRacas: List<RacialModifier>): Map<String, String> {
         val porId = mutableMapOf<String, MutableSet<String>>()
         todasAsRacas.forEach { raca ->
             raca.habilidades.forEach { hab ->
-                if (hab.category == "racial_hindrance" || hab.category == "racial_edge") return@forEach
-                val chave = hab.id?.keyify() ?: return@forEach
-                porId.getOrPut(chave) { mutableSetOf() }.add(raca.nome)
+                val cat = hab.resolvedCategory()
+                if (cat == "racial_hindrance" || cat == "racial_edge") return@forEach
+                val idBruto = hab.resolvedTraitId()
+                val chave = idBruto.keyify()
+                if (chave.isBlank()) return@forEach
+
+                // Traços que pertencem ao catálogo oficial das tabelas dos livros (ex.: AQUATICO, CONSTRUTO, ARMADURA)
+                // são genéricos da tabela de regras e nunca "exclusivos de uma raça".
+                val chaveLabel = (hab.id?.takeIf { it.isNotBlank() } ?: idBruto).keyify()
+                if (RacialTraitPointCatalog.ehDoCatalogo(chaveLabel, hab.targetRef)) return@forEach
+
+                val especieChave = raca.especieId ?: raca.id ?: raca.nome
+                porId.getOrPut(chave) { mutableSetOf() }.add(especieChave)
             }
         }
         return porId.filterValues { it.size == 1 }.mapValues { it.value.first() }
@@ -76,17 +58,8 @@ object RacialTraitAuditFormatter {
     ): String {
         val idBruto = hab.resolvedTraitId()
         val chave = idBruto.keyify()
-        // Id CRU (hab.id, não resolvedTraitId()) pra achar LABEL/catálogo oficial: um traço
-        // migrado pro par genérico ATTRIBUTE_BOOST/SKILL_BOOST (traitId parametrizado +
-        // targetRef, id mantido só pra identidade/auditoria — ver migração de
-        // Atributo/Perícia Aumentada) tem LABEL/entrada cadastrados sob o id ORIGINAL
-        // ("SENTIDOS_AGUCADOS", "CAES_DE_GUARDA" etc.), não sob "ATTRIBUTE_BOOST"/
-        // "SKILL_BOOST" — buscar por `chave` (resolvida) aqui perdia esse match e a linha de
-        // auditoria caía no ramo "sem LABEL nem catálogo" mesmo com um label real cadastrado.
-        // `chave` continua sendo o que decide o EFEITO mecânico (efeitoDe já sabe interpretar
-        // o par genérico via targetRef/value) e o que aparece no cabeçalho (idBruto).
         val chaveLabel = (hab.id?.takeIf { it.isNotBlank() } ?: idBruto).keyify()
-        val categoria = hab.category
+        val categoria = hab.resolvedCategory()
         val pontos = hab.resolvedPontos(allVantagens)
         val pontosStr = if (pontos != 0) " · ${if (pontos > 0) "+" else ""}$pontos pts" else ""
         val exclusivoDe = idsExclusivos[chave]
@@ -102,46 +75,57 @@ object RacialTraitAuditFormatter {
             append("]")
         }
 
-        // Vantagem/Complicação concedida por GRANTED_EDGE/RACIAL_HINDRANCE (ou category
-        // racial_edge/racial_hindrance): o conteúdo de verdade está em targetRef/nome, o id
-        // em si é só um marcador de mecanismo — mostrar isso explícito em vez de tentar achar
-        // "GRANTED_EDGE" no catálogo de traços (não é um traço, é um ponteiro pra Vantagem).
+        val normNome = hab.nome.keyify().replace("_", " ")
+        val normChave = chaveLabel.keyify().replace("_", " ")
+        val normAlvo = hab.targetRef?.keyify()?.replace("_", " ").orEmpty()
+
         if (categoria == "racial_edge" || chave == "GRANTED_EDGE") {
             val alvo = hab.targetRef ?: hab.id ?: hab.nome
-            return "$cabecalho Vantagem Grátis concedida ao personagem: $alvo$pontosStr"
+            val skinStr = if (normNome.isNotBlank() && normNome != normAlvo && normNome != "GRANTED EDGE") " Skin: \"${hab.nome}\"" else ""
+            return "$cabecalho Vantagem Grátis concedida ao personagem: $alvo$skinStr$pontosStr"
         }
         if (categoria == "racial_hindrance" || chave == "RACIAL_HINDRANCE") {
             val alvo = hab.targetRef ?: hab.nome
             val sev = hab.severity?.let { " ($it)" }.orEmpty()
-            return "$cabecalho Complicação concedida ao personagem: $alvo$sev$pontosStr"
+            val skinStr = if (normNome.isNotBlank() && normNome != normAlvo && normNome != "RACIAL HINDRANCE") " Skin: \"${hab.nome}\"" else ""
+            return "$cabecalho Complicação concedida ao personagem: $alvo$sev$skinStr$pontosStr"
         }
 
         val entradaCatalogo = catalogoPorId[chaveLabel]
         val label = RacialTraitPointCatalog.LABEL[chaveLabel]
         val efeito = RacialTraitPointCatalog.efeitoDe(chave, hab.targetRef, hab.value)
-        // Custo calibrado no catálogo interno (RacialTraitPointCatalog.CUSTOS) sem LABEL/
-        // catálogo oficial: o padrão de um traço bem específico de uma raça, sem equivalente
-        // genérico no livro de criação — não confundir com "sem definição nenhuma". Ver
-        // RacialTraitPointCatalog.kt: "sem equivalente oficial... o custo é julgamento próprio
-        // calibrado na mesma escala do catálogo oficial".
         val custoCatalogado = RacialTraitPointCatalog.CUSTOS[chaveLabel]
+        val ehCatalogo = RacialTraitPointCatalog.ehDoCatalogo(chaveLabel, hab.targetRef) || entradaCatalogo != null
+
+        val catalogTag = if (ehCatalogo) "[Catálogo Oficial]" else "[Regra Única da Raça / Fora do Catálogo]"
+
+        val normLabel = label?.keyify()?.replace("_", " ").orEmpty()
+        val normCatalogoNome = entradaCatalogo?.nome?.keyify()?.replace("_", " ").orEmpty()
+
+        val skinStr = if (
+            normNome.isNotBlank() &&
+            normNome != normChave &&
+            normNome != normAlvo &&
+            normNome != normLabel &&
+            normNome != normCatalogoNome
+        ) " Skin: \"${hab.nome}\"" else ""
 
         val definicao = when {
             entradaCatalogo != null ->
                 "${entradaCatalogo.nome}: ${entradaCatalogo.descricao}"
             !label.isNullOrBlank() && efeito != RacialTraitEffect.Nenhum ->
-                "$label — ${formatEfeito(efeito)} (sem entrada em basico_habilidades_raciais.json, só em RacialTraitPointCatalog)"
+                "$label — ${formatEfeito(efeito)}"
             !label.isNullOrBlank() ->
-                "$label (sem entrada em basico_habilidades_raciais.json, só em RacialTraitPointCatalog)"
+                label
             efeito != RacialTraitEffect.Nenhum ->
-                "${formatEfeito(efeito)} (sem LABEL nem catálogo — só o efeito mecânico bruto)"
+                formatEfeito(efeito)
             custoCatalogado != null ->
-                "Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (${sinal(custoCatalogado)} pts), sem equivalente direto no livro de criação. Nome de exibição normal: \"${hab.nome}\""
+                "Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (${sinal(custoCatalogado)} pts)."
             else ->
-                "⚠ SEM CATÁLOGO, CUSTOS nem efeito mecânico — possível sujeira de hardcode fora de RacialTraitPointCatalog (nome de exibição normal seria \"${hab.nome}\")"
+                "⚠ SEM CATÁLOGO, CUSTOS nem efeito mecânico — possível sujeira fora de RacialTraitPointCatalog"
         }
 
-        return "$cabecalho $definicao$pontosStr"
+        return "$cabecalho $catalogTag $definicao$skinStr$pontosStr"
     }
 
     private fun formatEfeito(efeito: RacialTraitEffect): String = when (efeito) {
@@ -153,8 +137,6 @@ object RacialTraitAuditFormatter {
         is RacialTraitEffect.TamanhoBonus -> "Tamanho ${sinal(efeito.valor)}${if (efeito.minusculo) " (Diminuto)" else ""}"
         is RacialTraitEffect.ArmaduraBonus -> "Armadura +${efeito.valor}"
         is RacialTraitEffect.Composite -> efeito.efeitos.joinToString(" + ") { formatEfeito(it) }
-        is RacialTraitEffect.PericiaPoolBonus -> "Pontos de Perícia ${sinal(efeito.valor)}"
-        is RacialTraitEffect.AtributoPoolBonus -> "Pontos de Atributo ${sinal(efeito.valor)}"
         is RacialTraitEffect.ChiReserveBonus -> "Reserva de Chi ${sinal(efeito.valor)}"
         RacialTraitEffect.Nenhum -> "sem efeito numérico cadastrado"
     }

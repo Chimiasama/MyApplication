@@ -4964,16 +4964,15 @@
       {
         "nome": "Adaptável",
         "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos).",
-        "category": "racial_trait_positive",
         "id": "ADAPTAVEL",
         "descricaoLite": "Ganha de graça uma Vantagem extra de nível Novato, respeitados os requisitos."
       },
       {
-        "nome": "Atributo Aumentado (sem elevar o máximo)",
-        "descricao": "Também recebem um d6 em vez de um d4 em um Atributo a sua escolha. Isso não aumenta seu atributo máximo.",
+        "nome": "Atributo Aumentado",
+        "descricao": "Também recebem um d6 em vez de um d4 em um Atributo a sua escolha.",
         "id": "FLEXIBILIDADE",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Um atributo à escolha começa em d6 em vez de d4, sem aumentar seu valor máximo (única exceção a essa regra)."
+        "traitId": "FLEXIBILIDADE",
+        "descricaoLite": "Um atributo à escolha começa em d6 em vez de d4."
       }
     ],
     "originalName": "Humano",
@@ -4991,22 +4990,20 @@
     "habilidades": [
       {
         "nome": "Flexibilidade",
-        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4. Isso não aumenta seu atributo máximo.",
-        "category": "racial_trait_positive",
+        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4.",
         "id": "FLEXIBILIDADE",
-        "descricaoLite": "Um atributo à escolha começa em d6 no lugar do d4 padrão, sem aumentar seu valor máximo."
+        "traitId": "FLEXIBILIDADE",
+        "descricaoLite": "Um atributo à escolha começa em d6 no lugar do d4 padrão."
       },
       {
         "nome": "Magia Élfica",
         "descricao": "Rerrolagem para resistir a poderes oponentes.",
-        "category": "racial_trait_positive",
         "id": "MAGIA_ELFICA",
         "descricaoLite": "Permite rerrolar ao resistir a poderes lançados contra o personagem."
       },
       {
         "nome": "Visão na Penumbra",
         "descricao": "Ignora penalidades por Penumbra e Escuridão.",
-        "category": "racial_trait_positive",
         "id": "VISAO_NA_PENUMBRA",
         "descricaoLite": "Penalidades de Penumbra e Escuridão não afetam a visão do personagem."
       }

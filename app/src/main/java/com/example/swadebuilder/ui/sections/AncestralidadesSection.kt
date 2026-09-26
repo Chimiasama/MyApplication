@@ -172,19 +172,42 @@ private fun atributoEscolhidoSelectionDefFor(
 private fun AtributoEscolhidoPicker(
     def: SelectionDef,
     valorAtual: String?,
-    onSelecionar: (String) -> Unit
+    onSelecionar: (String) -> Unit,
+    atributosDisponiveis: List<String> = emptyList(),
+    mapaAtributosDisplay: Map<String, String> = emptyMap()
 ) {
     Spacer(Modifier.height(8.dp))
-    val opcoes = def.targetOptions.orEmpty()
+    val defaultAtributos = listOf("Agilidade", "Astúcia", "Espírito", "Força", "Vigor")
+    val initialOptions = def.targetOptions.takeIf { !it.isNullOrEmpty() } ?: defaultAtributos
+
+    // Deduplica por keyify(): preserva o nome formatado/acentuado sem duplicar por caixa alta ou falta de acento.
+    val opcoesMap = LinkedHashMap<String, String>()
+    initialOptions.forEach { opt ->
+        val key = opt.keyify()
+        if (key !in opcoesMap) {
+            opcoesMap[key] = opt
+        }
+    }
+    atributosDisponiveis.forEach { attr ->
+        val key = attr.keyify()
+        if (key !in opcoesMap) {
+            val displayName = mapaAtributosDisplay[attr] ?: attr.toFancyTitleCase()
+            opcoesMap[key] = displayName
+        }
+    }
+    val opcoes = opcoesMap.values.toList()
+
     val atual = valorAtual
-        ?.takeIf { escolha -> opcoes.any { it.equals(escolha, ignoreCase = true) } }
-        ?: def.defaultTargetChoice?.takeIf { padrao -> opcoes.any { it.equals(padrao, ignoreCase = true) } }
+        ?.takeIf { escolha -> opcoesMap.containsKey(escolha.keyify()) }
+        ?.let { escolha -> opcoesMap[escolha.keyify()] }
+        ?: def.defaultTargetChoice?.let { padrao -> opcoesMap[padrao.keyify()] }
         ?: opcoes.firstOrNull().orEmpty()
+
     Text("${def.rotulo}:", style = MaterialTheme.typography.labelMedium)
     var expanded by remember { mutableStateOf(false) }
     Box {
         OutlinedButton(onClick = { expanded = true }) {
-            Text(atual.toFancyTitleCase())
+            Text(atual.ifBlank { "Selecionar" }.toFancyTitleCase())
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             opcoes.forEach { option ->
@@ -769,7 +792,9 @@ fun AncestralidadesSection(
                                             AtributoEscolhidoPicker(
                                                 def = def,
                                                 valorAtual = state.humanoMineradorAtributo,
-                                                onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                                onSelecionar = { state.selecionarHumanoMineradorAtributo(it) },
+                                                atributosDisponiveis = state.listaAtributos,
+                                                mapaAtributosDisplay = state.mapaAtributosDisplay
                                             )
                                         }
 
@@ -1090,16 +1115,17 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                // Meio-Orc (Endurecido): mesmo seletor genérico do Feral/Minerador
-                                // acima — gateado pelo id do traço-marcador "ENDURECIDO", não pelo
-                                // nome da raça.
+                                // Meio-Orc (Endurecido), Humano/Meio-Elfo Pathfinder (Flexibilidade): mesmo seletor genérico
+                                // gateado pelo id do traço-marcador.
                                 atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
-                                    ?.takeIf { it.marcadorTraitId == "ENDURECIDO" }
+                                    ?.takeIf { it.marcadorTraitId == "ENDURECIDO" || it.marcadorTraitId == "FLEXIBILIDADE" }
                                     ?.let { def ->
                                         AtributoEscolhidoPicker(
                                             def = def,
                                             valorAtual = state.humanoMineradorAtributo,
-                                            onSelecionar = { state.selecionarHumanoMineradorAtributo(it) }
+                                            onSelecionar = { state.selecionarHumanoMineradorAtributo(it) },
+                                            atributosDisponiveis = state.listaAtributos,
+                                            mapaAtributosDisplay = state.mapaAtributosDisplay
                                         )
                                     }
 

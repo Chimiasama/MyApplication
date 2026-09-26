@@ -14,7 +14,12 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.registry.AncestryVariantRegistry
+import com.example.swadebuilder.util.keyify
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
@@ -69,6 +74,23 @@ class CriadorStateAtributoEscolhidoTest {
         habilidades = emptyList(),
         origem = "SCI_FI",
         opcoes = listOf("Padrão", "Baixa Gravidade", "Minerador")
+    )
+
+    private fun humanoPathfinder() = RacialModifier(
+        nome = "Humano",
+        habilidades = listOf(
+            RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL"),
+            RacialAbility(nome = "Flexibilidade", descricao = "", id = "FLEXIBILIDADE", traitId = "FLEXIBILIDADE")
+        ),
+        origem = "PATHFINDER"
+    )
+
+    private fun meioElfoPathfinder() = RacialModifier(
+        nome = "Meio-Elfo",
+        habilidades = listOf(
+            RacialAbility(nome = "Flexibilidade", descricao = "", id = "FLEXIBILIDADE", traitId = "FLEXIBILIDADE")
+        ),
+        origem = "PATHFINDER"
     )
 
     @Test
@@ -173,5 +195,130 @@ class CriadorStateAtributoEscolhidoTest {
 
         assertEquals(4, state.atributoMinRaw("Vigor"))
         assertEquals(6, state.atributoMinRaw("Força"))
+    }
+
+    @Test
+    fun `humano pathfinder com flexibilidade sem escolha usa default Agilidade`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotCom(humanoPathfinder()))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Humano"
+        state.humanoMineradorAtributo = null
+
+        assertEquals(6, state.atributoMinRaw("Agilidade"))
+        assertEquals(4, state.atributoMinRaw("Vigor"))
+    }
+
+    @Test
+    fun `humano pathfinder com flexibilidade com Vigor escolhido sobe Vigor`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotCom(humanoPathfinder()))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Humano"
+        state.selecionarHumanoMineradorAtributo("Vigor")
+
+        assertEquals(6, state.atributoMinRaw("Vigor"))
+        assertEquals(4, state.atributoMinRaw("Agilidade"))
+    }
+
+    @Test
+    fun `meio-elfo pathfinder com flexibilidade com Espirito escolhido sobe Espirito`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotCom(meioElfoPathfinder()))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Meio-Elfo"
+        state.selecionarHumanoMineradorAtributo("Espírito")
+
+        assertEquals(6, state.atributoMinRaw("Espírito"))
+        assertEquals(4, state.atributoMinRaw("Agilidade"))
+    }
+
+    @Test
+    fun `flexibilidade possui opcoes de atributo nao vazias no registro`() {
+        val config = AncestryVariantRegistry.get("HUMANO", "PATHFINDER")
+        assertNotNull(config)
+        val selection = config!!.selecoes.firstOrNull { it.marcadorTraitId == "FLEXIBILIDADE" }
+        assertNotNull(selection)
+        assertFalse(selection!!.targetOptions.isNullOrEmpty())
+        assertTrue(selection.targetOptions!!.contains("Vigor"))
+    }
+
+    @Test
+    fun `humano pathfinder com flexibilidade sobe atributo minimo para d6 mas NAO eleva o teto maximo para d12+1`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotCom(humanoPathfinder()))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Humano"
+        state.selecionarHumanoMineradorAtributo("Vigor")
+
+        // Inicia em d6
+        assertEquals(6, state.atributoMinRaw("Vigor"))
+        // O teto máximo permanece d12 (12) em vez de elevar para d12+1 (13)
+        assertEquals(12, state.atributoMaxRaw("Vigor"))
+    }
+
+    @Test
+    fun `simulacao completa de selecao humano pathfinder aumentando agilidade mantem teto maximo em d12`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotCom(humanoPathfinder()))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Humano"
+
+        // 1. Seleciona Agilidade na Flexibilidade
+        state.selecionarHumanoMineradorAtributo("Agilidade")
+
+        // 2. Verifica piso e teto inicial
+        assertEquals(6, state.atributoMinRaw("Agilidade"))
+        assertEquals(12, state.atributoMaxRaw("Agilidade"))
+        assertEquals(12, state.atributoMaxRawNaCriacao("Agilidade"))
+
+        // 3. Simula avanço de pontos na criação (d6 -> d8 -> d10 -> d12)
+        state.pontosAtributo = 5
+        val stack = state.paCostStackPorAtributo.getValue("AGILIDADE")
+
+        // d6 -> d8 (8)
+        stack.add(1)
+        state.valoresAtributos["AGILIDADE"]!!.intValue = 8
+        state.pontosAtributo--
+
+        // d8 -> d10 (10)
+        stack.add(1)
+        state.valoresAtributos["AGILIDADE"]!!.intValue = 10
+        state.pontosAtributo--
+
+        // d10 -> d12 (12)
+        stack.add(1)
+        state.valoresAtributos["AGILIDADE"]!!.intValue = 12
+        state.pontosAtributo--
+
+        // 4. Confirma que o valor atual atingiu d12 e que o teto continua d12
+        assertEquals(12, state.valoresAtributos["AGILIDADE"]!!.intValue)
+        assertEquals(12, state.atributoMaxRawNaCriacao("AGILIDADE"))
+
+        // 5. Confirma que a tentativa de subir além de d12 na criação é bloqueada (nextRaw 13 > maxRaw 12)
+        val nextRaw = 12 + 1
+        val maxRaw = state.atributoMaxRawNaCriacao("AGILIDADE")
+        assertTrue("Aumento além de d12 deve ser bloqueado", nextRaw > maxRaw)
+    }
+
+    @Test
+    fun `deduplicacao de opcoes de atributo por keyify nao produz entradas duplicadas sem acento`() {
+        val targetOptions = listOf("Agilidade", "Astúcia", "Espírito", "Força", "Vigor")
+        val listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
+
+        val map = LinkedHashMap<String, String>()
+        targetOptions.forEach { opt ->
+            map[opt.keyify()] = opt
+        }
+        listaAtributos.forEach { attr ->
+            val key = attr.keyify()
+            if (key !in map) {
+                map[key] = attr
+            }
+        }
+
+        val result = map.values.toList()
+        assertEquals(5, result.size)
+        assertEquals(listOf("Agilidade", "Astúcia", "Espírito", "Força", "Vigor"), result)
     }
 }

@@ -68,7 +68,12 @@ sealed class RacialTraitEffect {
     // em d6. Só usado por Tropo hoje (raça sempre concede piso fixo) — ver
     // CriadorState.atributoBaseRacial()/periciaStartRawInternal(), que aplicam isso via
     // applySuperStepsFrom(pisoSemTropo, passos) em vez de maxOf(base, 4 + passos*2).
-    data class AtributoStep(val atributo: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
+    data class AtributoStep(
+        val atributo: String,
+        val passos: Int = 1,
+        val relativo: Boolean = false,
+        val elevaMaximo: Boolean = true
+    ) : RacialTraitEffect()
     data class PericiaStep(val pericia: String, val passos: Int = 1, val relativo: Boolean = false) : RacialTraitEffect()
     // Bônus fixo (não "passo de dado") de Resistência/Passo/Aparar — mesma
     // ideia de AtributoStep/PericiaStep, só que pra alvos que o ModifierEngine
@@ -104,22 +109,10 @@ sealed class RacialTraitEffect {
     // consumidor de RacialTraitEffect resolve os sub-efeitos com a mesma
     // lógica que já usa pro efeito único.
     data class Composite(val efeitos: List<RacialTraitEffect>) : RacialTraitEffect()
-    // Bônus/penalidade no total de Pontos de Perícia (a reserva gasta na
-    // criação, não um passo de dado numa perícia específica) ou de Pontos de
-    // Atributo — pra traços de raça (oficiais ou criados no editor de
-    // conteúdo customizado) que dão/tiram pontos pro jogador gastar onde
-    // quiser, não um alvo fixo. Ex.: Humano (Império San) "Pontos de
-    // Perícia" (+3, sem signo de nascença). Quem cria o traço decide o
-    // `valor` (positivo = bônus, negativo = penalidade) — ver
-    // HabilidadeCriacao.value/traitId e o seletor de "Tipo de Efeito" no
-    // editor de Traço Racial (SettingsDialog.kt).
-    data class PericiaPoolBonus(val valor: Int) : RacialTraitEffect()
-    data class AtributoPoolBonus(val valor: Int) : RacialTraitEffect()
     // Bônus fixo na Reserva de Chi inicial (Arte da Guerra) — mesma ideia de
     // ResistenciaBonus/PassoBonus, só que pro alvo "reservaChi" em
     // CriadorState, que já lê os outros bônus fixos (Terracota "Chi
-    // Reduzido") genericamente por id. Existe pra Kirin (Signo de Nascença,
-    // Humano Arte da Guerra) parar de ser um "if" hardcoded.
+    // Reduzido") genericamente por id.
     data class ChiReserveBonus(val valor: Int) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
@@ -151,90 +144,32 @@ object RacialTraitPointCatalog {
         // PericiaStep, só que o piso já É o d4 em si, não um aumento acima
         // dele).
         "GARCA_ACROBACIA" to RacialTraitEffect.PericiaStep("Acrobacia", passos = 0),
-        // Garça: "aumentam Atletismo em um tipo de dado" (d4 base -> d6).
         "GARCA_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"),
-        // Kirin: "+1 em sua Reserva de Chi inicial".
         "KIRIN_CHI" to RacialTraitEffect.ChiReserveBonus(1),
-        // "Nenhum" (sem Signo): "começam com 15 pontos de perícia, em vez dos
-        // 12 padrão". Só entra em habilidades[] pela opção "Nenhum" do
-        // Signo (ver AncestryVariantRegistry.humanoArteDaGuerraSignos()) —
-        // antes ficava sempre presente na raça, independente do Signo
-        // escolhido, e o +3 era um "if" hardcoded à parte em
-        // CriadorState.totalSpPool (bug real, corrigido nesta rodada); agora
-        // que o traço só existe quando "Nenhum" está ativo, religar ao
-        // mecanismo genérico de bonusPontosPericia não soma mais errado pras
-        // outras 13 opções.
-        "PONTOS_DE_PERICIA" to RacialTraitEffect.PericiaPoolBonus(3),
 
-        // Humanos (Fantasia) - Pacotes Culturais: cada opção de Variante
-        // concede um piso de atributo/perícia igual a qualquer outra raça —
-        // ver AncestryVariantRegistry.humanoFantasia().
-        "NOMADES_DESERTO_SOBREVIVENCIA" to RacialTraitEffect.PericiaStep("Sobrevivência"), // livro: "começam com um d6 em Sobrevivência"
-        "POVO_MONTANHA_VIGOR" to RacialTraitEffect.AtributoStep("Vigor"), // livro: "Começam com Vigor d6"
-        "POVO_MAR_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"), // livro: "começando com um d6 em Atletismo e Navegar"
+        // Humanos (Fantasia) - Pacotes Culturais
+        "NOMADES_DESERTO_SOBREVIVENCIA" to RacialTraitEffect.PericiaStep("Sobrevivência"),
+        "POVO_MONTANHA_VIGOR" to RacialTraitEffect.AtributoStep("Vigor"),
+        "POVO_MAR_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"),
         "POVO_MAR_NAVEGAR" to RacialTraitEffect.PericiaStep("Navegar"),
-        "SENHORES_CAVALOS_CAVALGAR" to RacialTraitEffect.PericiaStep("Cavalgar"), // livro: "devem começar com um d6 em Cavalgar"
+        "SENHORES_CAVALOS_CAVALGAR" to RacialTraitEffect.PericiaStep("Cavalgar"),
 
-        // Resistência/Passo/Aparar de valor fixo. Cada id abaixo tem um valor
-        // único e consistente conferido contra a própria descrição da
-        // habilidade em ancestralidades.json (ex.: Terracota "recebem +3 em
-        // Resistência", Meio-Orc "Recebem Resistência +1") — não são um
-        // "chute" de código.
         "LENTO" to RacialTraitEffect.PassoBonus(-1),
         "MOVIMENTACAO_REDUZIDA" to RacialTraitEffect.PassoBonus(-1),
-        // Inumimi (Arte da Guerra) "Vigorosos": +1 Resistência. Sem efeito
-        // aqui antes, o bônus só existia via o "RESISTÊNCIA" solto em
-        // vantagensGratis — que também duplicava o ponto de VIGOROSOS no
-        // orçamento (os dois somando juntos). Agora o efeito mora aqui e
-        // vantagensGratis não precisa mais do texto solto.
         "VIGOROSOS" to RacialTraitEffect.ResistenciaBonus(1),
         "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
         "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
-        "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2), // sintético: Template de Monstro Heroico Lobisomem (Horror)
+        "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2),
 
-        // --- Traços EMPILHÁVEIS (ver VEZES_MAX abaixo) ---
-        // Os 3 livros (Básico/Fantasia/Sci-Fi) marcam cada traço do catálogo
-        // de criação de ancestralidade com "(N)" ou "(S)" — quantas vezes
-        // pode ser comprado — e o efeito escala linearmente por compra (ex.:
-        // "Armadura (3): ... Armadura +2 cada vez que é comprada", até +6).
-        // O valor abaixo é sempre o de UMA compra — RacialAbility.vezes (ou
-        // TraitAddition.vezes) multiplica na hora de aplicar o efeito (ver
-        // ModifierEngine.aplicarEfeito) — nunca um id novo por total
-        // (ex.: não existe mais "RESISTENCIA_2"; é RESISTENCIA com vezes=2).
-        // Isso substitui os ids sintéticos por valor final que essa mesma
-        // rodada de auditoria tinha criado (RESISTENCIA_1/_2, ARMADURA_2,
-        // TAMANHO_MAIS_1/_2/TAMANHO_3, MOVIMENTACAO_2/_4, APARAR_1/
-        // APARAR_MENOS_1, FRAGIL_MAIOR) — cada duplicata colapsa numa só
-        // entrada aqui, com a raça/traço que tinha o valor maior passando a
-        // carregar `vezes` > 1 em vez de um id próprio.
-        "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1), // livro: "Resistência (3)", +1/compra
-        "APARAR" to RacialTraitEffect.ApararBonus(1), // livro: "Aparar (3)", +1/compra
-        "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-1), // livro: "Aparar Baixo (3)", -1/compra
-        "TAMANHO_MAIS_1" to RacialTraitEffect.TamanhoBonus(1), // livro: "Tamanho +1 (3)", +1/compra
-        "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1), // livro: "Frágil (2)", -1/compra
-        "MOVIMENTACAO" to RacialTraitEffect.PassoBonus(2), // livro: "Movimentação (2)", +2/compra
-        "ARMADURA" to RacialTraitEffect.ArmaduraBonus(2), // livro: "Armadura (3)", +2/compra
+        "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1),
+        "APARAR" to RacialTraitEffect.ApararBonus(1),
+        "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-1),
+        "TAMANHO_MAIS_1" to RacialTraitEffect.TamanhoBonus(1),
+        "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1),
+        "MOVIMENTACAO" to RacialTraitEffect.PassoBonus(2),
+        "ARMADURA" to RacialTraitEffect.ArmaduraBonus(2),
 
-        // Tamanho por id — substitui os regex `TAMANHO\s*([+-]\s*\d+)` sobre
-        // nome/descrição do traço que existiam antes em ModifierEngine.
-        // Valores conferidos contra a própria descrição de cada raça em
-        // ancestralidades.json.
-        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder), Goblins ("Pequenos", skin do livro) — livro: "Tamanho -1 (1)", não empilha
-        // Diminuto/Minúsculo: traço de TIER único (não empilhável — o livro
-        // marca "(1)" mas com 3 custos internos conforme o tier escolhido:
-        // Pequeno/Muito Pequeno/Minúsculo), diferente do empilhável acima.
-        // Sempre Tamanho -4 nas raças oficiais que usam o tier Minúsculo
-        // (Fadas, Povo Rato) — id único DIMINUTO_TAMANHO_4 (existia também um
-        // id "DIMINUTO" separado, duplicado com o mesmo custo/efeito, hoje
-        // removido). "DIMINUTO_TAMANHO_3"/"_4" são os ids escritos à mão em
-        // AncestryVariantRegistry (ver TraitAddition) pros textos "DIMINUTO
-        // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
-        // (Padrão/Menor) injeta.
-        // "_2" (Pequeno) só tinha entrada em CUSTOS/LABEL, sem efeito nenhum aqui — nenhuma
-        // raça oficial usa esse tier ainda, mas sem isso uma Variante/raça customizada que
-        // usasse o tier Pequeno não ganharia Tamanho -2 nem contaria como Diminuto pra fins
-        // de redução de Força Mínima/dano/custo-peso de equipamento (ModifierEngine
-        // .racialDiminutoPassos() só olha o flag `minusculo`).
+        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1),
         "DIMINUTO_TAMANHO_2" to RacialTraitEffect.TamanhoBonus(-2, minusculo = true),
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
         "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true)
@@ -245,10 +180,6 @@ object RacialTraitPointCatalog {
         return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
             "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
-            // Versão "relativa" de ATTRIBUTE_BOOST/SKILL_BOOST — soma `value` passos ACIMA do
-            // que já existe (ver RacialTraitEffect.AtributoStep/PericiaStep.relativo) em vez de
-            // definir um piso fixo. Só Tropo usa isso hoje (ex.: Protagonista "aumenta em um
-            // tipo de dado").
             "ATTRIBUTE_STEP_UP" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value, relativo = true) else RacialTraitEffect.Nenhum
             "SKILL_STEP_UP" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value, relativo = true) else RacialTraitEffect.Nenhum
             "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
@@ -256,8 +187,8 @@ object RacialTraitPointCatalog {
             "PARRY_BOOST" -> RacialTraitEffect.ApararBonus(value)
             "SIZE_CHANGE" -> RacialTraitEffect.TamanhoBonus(value, minusculo = (value <= -3))
             "NATURAL_ARMOR" -> RacialTraitEffect.ArmaduraBonus(value)
-            "PERICIA_POINTS_BONUS" -> RacialTraitEffect.PericiaPoolBonus(value)
-            "ATRIBUTO_POINTS_BONUS" -> RacialTraitEffect.AtributoPoolBonus(value)
+            "ENDURECIDO", "PRIMITIVO" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, 1, elevaMaximo = true) else RacialTraitEffect.Nenhum
+            "FLEXIBILIDADE" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, 1, elevaMaximo = false) else RacialTraitEffect.Nenhum
             "FORTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Força", value)
             "MUITO_FORTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Força", 2)
             "AGIL" -> RacialTraitEffect.AtributoStep(targetRef ?: "Agilidade", value)
@@ -1088,6 +1019,55 @@ object RacialTraitPointCatalog {
             "ARMOR_MIN_STR_REDUCTION" -> 0
             else -> CUSTOS[key] ?: 0
         }
+    }
+
+    val PARAMETRIZADOS_OFICIAIS: Set<String> = setOf(
+        "ATTRIBUTE_BOOST", "SKILL_BOOST", "GRANTED_EDGE", "RACIAL_HINDRANCE",
+        "PACE_CHANGE", "TOUGHNESS_FLAT", "SIZE_CHANGE", "NATURAL_ARMOR", "ARMADURA",
+        "RESISTENCIA", "APARAR", "TAMANHO_MAIS_1", "TAMANHO_MENOS_1", "MOVIMENTACAO"
+    )
+
+    val IDS_CATALOGO_LIVRO_BASICO: Set<String> = setOf(
+        "ACOES_ADICIONAIS", "ACAO_ADICIONAL", "ACOES_ADICIONAIS_MAIOR", "ADAPTAVEL", "ALCANCE",
+        "ANDAR_PAREDES", "ANDAR_NAS_PAREDES", "APARAR", "ARMA_DE_SOPRO", "SEMI_AQUATICO", "AQUATICO",
+        "ARMADURA", "ATORDOAR", "AUMENTO_ATRIBUTO", "BIOLOGIA_ACIDA", "BONUS_PERICIA_1", "BONUS_PERICIA_2",
+        "CAMUFLAGEM_1", "CAMUFLAGEM_2", "CASCA", "CAVAR", "CHIFRES", "CHIFRES_MAIOR", "CHIFRES_MAIORES",
+        "COMUNITARIO", "CONSTRUTO", "DIMINUTO_PEQUENO", "DIMINUTO_MUITO_PEQUENO", "DIMINUTO_MINUSCULO",
+        "DIMINUTO_TAMANHO_2", "DIMINUTO_TAMANHO_3", "DIMINUTO_TAMANHO_4", "ECOLOCALIZACAO", "ESPACIAL",
+        "ESTAVEL", "FORMA_ENERGIA", "FOSFORESCENCIA_1", "FOSFORESCENCIA_2", "GARRAS_D4", "GARRAS_D6",
+        "GARRAS_PA", "GARRAS", "GELATINOSO_2", "GELATINOSO_3", "GELATINOSO_MAIOR", "IMUNE_DOENCAS_VENENOS",
+        "IMUNE_A_DOENCAS_E_VENENOS", "INFRAVISAO", "INTERFACE", "INVISIBILIDADE_TRANSLUCIDO",
+        "INVISIBILIDADE_TOTAL", "MEMBROS_EXTRAS", "MODS_ROBOTICOS", "MORDIDA", "MORDIDA_D6", "MORDIDA_PA",
+        "MORTO_VIVO", "MOVIMENTACAO", "MUDANCA_FORMA", "NAO_RESPIRA", "PERICIA_RACIAL_D4", "PERICIA_RACIAL_D6",
+        "PODER_RACIAL", "SUPER_PODERES_RACIAL", "REDUCAO_SONO", "REDUCAO_DE_SONO", "REGENERACAO",
+        "REGENERACAO_MAIOR", "RESISTENCIA", "RESISTENCIA_AMBIENTAL", "ROBO", "ROBUSTO", "SALTADOR",
+        "SEM_ORGAOS_VITAIS", "SEM_SANGUE", "SENTIDOS_AGUCADOS_VISAO", "SENTIDOS_AGUCADOS_AUDICAO",
+        "SENTIDOS_AGUCADOS_OLFATO", "TAMANHO_MAIS_1", "TELEPATIA", "TENTACULOS_2", "TENTACULOS_4",
+        "TOQUE_VENENOSO", "TOQUE_VENENOSO_PARALISANTE", "TOQUE_VENENOSO_PROJETADO", "TOQUE_VENENOSO_LETAL",
+        "VANTAGEM_RACIAL", "VANTAGEM_RACIAL_EXPERIENTE", "VANTAGEM_RACIAL_VETERANO", "VANTAGEM_RACIAL_HEROICO",
+        "VISAO_360", "VISAO_DE_360", "VISAO_ESCURO", "VISAO_NO_ESCURO", "VISAO_TOTAL_ESCURO", "VISAO_TOTAL_NO_ESCURO",
+        "VOO_6", "VOO_12", "VOO_24", "VOO_MOV_6", "VOO_MOV_12", "VOO_MOV_24", "APARAR_BAIXO",
+        "COMPLICACAO_RACIAL_MENOR", "COMPLICACAO_RACIAL_MAIOR", "DEPENDENCIA", "DEPENDENCIA_ATMOSFERICA_1",
+        "DEPENDENCIA_ATMOSFERICA_2", "DEPENDENCIA_ATMOSFERICA_4", "DOENTE_1", "DOENTE_2", "FORMA_ALIENIGENA",
+        "FRAGIL", "FRAQUEZA_AMBIENTAL", "INIMIGO_RACIAL", "MOVIMENTACAO_REDUZIDA_1", "MOVIMENTACAO_REDUZIDA_2",
+        "MOVIMENTACAO_REDUZIDA", "NAO_FALA", "NAO_PODE_CURAR", "PENALIDADE_ATRIBUTO_1", "PENALIDADE_ATRIBUTO_2",
+        "PENALIDADE_PERICIA_1", "PENALIDADE_PERICIA_2", "PERICIAS_BASICAS_REDUZIDAS", "REPUGNANTE",
+        "SANGUE_FRIO", "SEM_MANIPULADORES", "TAMANHO_MENOS_1", "TRANSTORNO_SEPARACAO", "TRANSTORNO_DE_SEPARACAO",
+        "VOLUMOSO"
+    )
+
+    /**
+     * Retorna se um traço pertence ao catálogo oficial de criação de raças dos livros SWADE.
+     * Traços exóticos/específicos de raças únicas (como bônus de Bene extra do Arte da Guerra,
+     * Signos de Nascença ou reservas de Chi) retornam `false` para que não sejam exibidos na seleção
+     * do Criador de Raças Customizadas e sejam identificados como regra única da raça.
+     */
+    fun ehDoCatalogo(id: String?, targetRef: String? = null, idsCatalogoOficial: Set<String> = emptySet()): Boolean {
+        if (id.isNullOrBlank()) return false
+        val key = id.keyify()
+        if (key in PARAMETRIZADOS_OFICIAIS) return true
+        if (idsCatalogoOficial.isNotEmpty() && key in idsCatalogoOficial) return true
+        return key in IDS_CATALOGO_LIVRO_BASICO
     }
 
     // Ids de traço racial que representam Voo de verdade (qualquer tier: Fadas
