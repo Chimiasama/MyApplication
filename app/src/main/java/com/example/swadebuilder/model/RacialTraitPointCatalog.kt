@@ -365,7 +365,29 @@ object RacialTraitPointCatalog {
         "FOSFORESCENCIA_ESTROBOSCOPICA" to "Fosforescência (Estroboscópica)",
         "REGENERACAO_MAIOR" to "Regeneração (Lesão Permanente)",
         "SENTIDOS_AGUCADOS_AUDICAO" to "Sentidos Aguçados (Audição)",
-        "SENTIDOS_AGUCADOS_OLFATO" to "Sentidos Aguçados (Olfato)"
+        "SENTIDOS_AGUCADOS_OLFATO" to "Sentidos Aguçados (Olfato)",
+        "GARRAS_SEM_PA" to "Garras (For+d4)",
+        "GARRAS" to "Garras (For+d4, PA 2)",
+        "GARRAS_MAIORES_SEM_PA" to "Garras (For+d6)",
+        "GARRAS_MAIORES" to "Garras Aprimoradas (For+d6, PA 2)",
+        "GARRAS_D4" to "Garras (For+d4)",
+        "GARRAS_D6" to "Garras (For+d6)",
+        "GARRAS_PA" to "Garras Aprimoradas (For+d6, PA 2)",
+        "CHIFRES" to "Chifres (For+d4)",
+        "CHIFRES_MAIOR" to "Chifres Aprimorados (For+d6)",
+        "CHIFRES_MAIORES" to "Chifres Aprimorados (For+d6)",
+        "MORDIDA" to "Mordida (For+d4)",
+        "MORDIDA_D6" to "Mordida (For+d6)",
+        "MORDIDA_PA" to "Mordida Aprimorada (For+d6, PA 2)",
+        "INIMIGO_RACIAL" to "Inimigo Racial",
+        "INIMIGO_ANCESTRAL" to "Inimigo Ancestral",
+        "VISAO_TOTAL_NO_ESCURO" to "Visão Total no Escuro",
+        "VISAO_DE_360" to "Visão em 360°",
+        "ANDAR_NAS_PAREDES" to "Andar nas Paredes",
+        "IMUNE_A_DOENCAS_E_VENENOS" to "Imunidade a Doenças e Venenos",
+        "REDUCAO_DE_SONO" to "Redução de Sono",
+        "GELATINOSO_MAIOR" to "Gelatinoso (Maior)",
+        "TRANSTORNO_DE_SEPARACAO" to "Transtorno de Separação"
     )
 
     /**

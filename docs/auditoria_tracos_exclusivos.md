@@ -176,7 +176,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### RAKASHANOS [id=anc_rakashanos_basico] (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Garras (For+d4) Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
@@ -214,7 +214,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VOTO categoria=racial_hindrance] Complicação concedida ao personagem: VOTO (Maior) Skin: "VOTO" · -2 pts
 
 ### CENTAUROS (BASICO)
-- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "CASCOS" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Garras (For+d4) Skin: "CASCOS" · +2 pts
 - [id=DEPENDENCIA] [Catálogo Oficial] Dependência: Precisa ter contato com uma substância por 1h a cada 24h ou sofre Fadiga. · -2 pts
 - [id=FORMA_ALIENIGENA] [Catálogo Oficial] Forma Alienígena: Tamanho/forma incompatível: requer equipamentos personalizados (+100% custo) ou sofre -1 em rolagens de Característica. Skin: "FORMA INCOMUM" · -1 pts
 - [id=MOVIMENTACAO x2] [Catálogo Oficial] Movimentação Aumentada (+2): +2 na Movimentação e aumenta o dado de corrida em um tipo. Skin: "MOVIMENTAÇÃO +4" · +4 pts
@@ -230,7 +230,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ARMADURA] [Catálogo Oficial] Armadura (+2): Pele grossa, placas ou carapaça garantem Armadura +2. · +1 pts
 - [id=FRAQUEZA_AMBIENTAL] [Catálogo Oficial] Fraqueza Ambiental: -4 para resistir a um efeito ambiental e sofre +4 de dano dele. Skin: "FRAQUEZA AMBIENTAL (Frio)" · -1 pts
 - [id=RACIAL_HINDRANCE alvo=Arrogante categoria=racial_hindrance] Complicação concedida ao personagem: Arrogante (Maior) Skin: "MAL-HUMORADO" · -2 pts
-- [id=GARRAS] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts
+- [id=GARRAS] [Catálogo Oficial] Garras (For+d4, PA 2) · +3 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=RESISTENCIA_AMBIENTAL] [Catálogo Oficial] Resistência Ambiental: +4 em rolagens de resistência e -4 de dano contra um efeito ambiental. Skin: "RESISTÊNCIA AMBIENTAL (Calor)" · +1 pts
 - [id=SANGUE_FRIO] [Catálogo Oficial] Sangue Frio: Subtrai 1 das rolagens de Agilidade, Força e Vigor após passar mais de 10 minutos em temperaturas abaixo de 18°C. · -3 pts
@@ -283,10 +283,10 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=FRAQUEZA_AMBIENTAL] [Catálogo Oficial] Fraqueza Ambiental: -4 para resistir a um efeito ambiental e sofre +4 de dano dele. Skin: "FRAQUEZA AMBIENTAL (Frio)" · -1 pts
 - [id=BONUS_PERICIA_1] [Catálogo Oficial] Bônus de Perícia (+1): Concede bônus de +1 em testes de uma Perícia específica. Skin: "NATUREZA DIABÓLICA" · +1 pts
 - [id=RESISTENCIA_AMBIENTAL] [Catálogo Oficial] Resistência Ambiental: +4 em rolagens de resistência e -4 de dano contra um efeito ambiental. Skin: "RESISTÊNCIA AMBIENTAL (Calor)" · +1 pts
-- [id=VISAO_TOTAL_NO_ESCURO] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=VISAO_TOTAL_NO_ESCURO] [Catálogo Oficial] Visão Total no Escuro · +1 pts
 
 ### INSETOIDES [id=anc_insetoides_fantasia] (BASICO)
-- [id=ANDAR_NAS_PAREDES] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=ANDAR_NAS_PAREDES] [Catálogo Oficial] Andar nas Paredes · +1 pts
 - [id=ARMADURA] [Catálogo Oficial] Armadura (+2): Pele grossa, placas ou carapaça garantem Armadura +2. · +1 pts
 - [id=ACAO_ADICIONAL_FISICA] [Regra Única da Raça / Fora do Catálogo] Ação Adicional (Física/Mental) Skin: "AÇÕES ADICIONAIS" · +4 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Menor) Skin: "FORASTEIRO" · -1 pts
@@ -316,7 +316,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=INFRAVISAO] [Catálogo Oficial] Infravisão: Reduz pela metade penalidades de Iluminação contra alvos quentes. · +1 pts
 
 ### MINOTAUROS (BASICO)
-- [id=CHIFRES_MAIORES] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "CHIFRES" · +2 pts
+- [id=CHIFRES_MAIORES] [Catálogo Oficial] Chifres Aprimorados (For+d6) Skin: "CHIFRES" · +2 pts
 - [id=DESAGRADAVEL categoria=racial_hindrance] Complicação concedida ao personagem: DESAGRADÁVEL (Menor) Skin: "DESAGRADÁVEL" · -1 pts
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
@@ -355,10 +355,10 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=COVARDE categoria=racial_hindrance] Complicação concedida ao personagem: COVARDE (Maior) Skin: "COVARDE" · -2 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Maior) Skin: "FORASTEIRO" · -2 pts
 - [id=GANANCIOSO categoria=racial_hindrance] Complicação concedida ao personagem: GANANCIOSO (Menor) Skin: "GANANCIOSO" · -1 pts
-- [id=GARRAS] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts
+- [id=GARRAS] [Catálogo Oficial] Garras (For+d4, PA 2) · +3 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
-- [id=IMUNE_A_DOENCAS_E_VENENOS] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). Skin: "RESISTÊNCIA A DOENÇAS" · +1 pts
-- [id=IMUNE_A_DOENCAS_E_VENENOS] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). Skin: "RESISTÊNCIA A VENENOS" · +1 pts
+- [id=IMUNE_A_DOENCAS_E_VENENOS] [Catálogo Oficial] Imunidade a Doenças e Venenos Skin: "RESISTÊNCIA A DOENÇAS" · +1 pts
+- [id=IMUNE_A_DOENCAS_E_VENENOS] [Catálogo Oficial] Imunidade a Doenças e Venenos Skin: "RESISTÊNCIA A VENENOS" · +1 pts
 - [id=SUCATEIRO categoria=racial_edge] Vantagem Grátis concedida ao personagem: SUCATEIRO Skin: "SUCATEIRO" · +2 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
@@ -381,7 +381,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=SANGUE_FRIO] [Catálogo Oficial] Sangue Frio: Subtrai 1 das rolagens de Agilidade, Força e Vigor após passar mais de 10 minutos em temperaturas abaixo de 18°C. · -3 pts
 
 ### RAKASHANOS [id=anc_rakashanos_fantasia] (BASICO)
-- [id=GARRAS] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts
+- [id=GARRAS] [Catálogo Oficial] Garras (For+d4, PA 2) · +3 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. Skin: "INIMIGO ANCESTRAL" · -1 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: NÃO SABE NADAR (Menor) Skin: "NÃO SABE NADAR" · -1 pts
@@ -457,7 +457,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### RAKASHANOS [id=anc_rakashanos_horror] (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Garras (For+d4) Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
@@ -499,7 +499,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### RAKASHANOS [id=anc_rakashanos_scifi] (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Garras (For+d4) Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
@@ -536,21 +536,21 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### FLORANS (BASICO)
 - [id=DEPENDENCIA] [Catálogo Oficial] Dependência: Precisa ter contato com uma substância por 1h a cada 24h ou sofre Fadiga. · -2 pts
 - [id=FRAQUEZA_AMBIENTAL] [Catálogo Oficial] Fraqueza Ambiental: -4 para resistir a um efeito ambiental e sofre +4 de dano dele. Skin: "FRAQUEZA AMBIENTAL (Calor/Fogo)" · -1 pts
-- [id=REDUCAO_DE_SONO] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=REDUCAO_DE_SONO] [Catálogo Oficial] Redução de Sono · +1 pts
 - [id=SEM_SANGUE] [Catálogo Oficial] Sem Sangue: Estabiliza automaticamente ao ficar Sangrando e ignora dano extra de armas dilacerantes. · +1 pts
 - [id=SEM_ORGAOS_VITAIS] [Catálogo Oficial] Sem Órgãos Vitais: Ataques Localizados não provocam dano extra. · +1 pts
 
 ### GELATINOIDES (BASICO)
 - [id=CIBER_RESISTENCIA categoria=racial_hindrance] Complicação concedida ao personagem: CIBER-RESISTÊNCIA (Menor) Skin: "CIBER-RESISTÊNCIA" · -1 pts
 - [id=FRACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
-- [id=GELATINOSO_MAIOR] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). Skin: "GELATINOSO (Maior)" · +3 pts
+- [id=GELATINOSO_MAIOR] [Catálogo Oficial] Gelatinoso (Maior) · +3 pts
 
 ### INSETOIDES [id=anc_insetoides_scifi] (BASICO)
 - [id=COMUNITARIO] [Catálogo Oficial] Comunitário: +2 em rolagens de Espírito quando outros da mesma espécie estiverem presentes a até 12 quadros (24m). · +1 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Menor) Skin: "FORASTEIRO" · -1 pts
 - [id=NAO_FALA categoria=racial_hindrance] Complicação concedida ao personagem: INCAPAZ DE FALAR Skin: "INCAPAZ DE FALAR" · -1 pts
-- [id=TRANSTORNO_DE_SEPARACAO] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
-- [id=VISAO_DE_360] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). Skin: "VISÃO DE 360°" · +1 pts
+- [id=TRANSTORNO_DE_SEPARACAO] [Catálogo Oficial] Transtorno de Separação · -2 pts
+- [id=VISAO_DE_360] [Catálogo Oficial] Visão em 360° Skin: "VISÃO DE 360°" · +1 pts
 
 ### MÍMICOS (BASICO)
 - [id=CIBER_RESISTENCIA categoria=racial_hindrance] Complicação concedida ao personagem: CIBER-RESISTÊNCIA (Menor) Skin: "CIBER-RESISTÊNCIA" · -1 pts
@@ -586,7 +586,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### SERES SINTÉTICOS (BASICO)
 - [id=ESPACIAL] [Catálogo Oficial] Espacial: Sobrevive no espaço sem meios artificiais: possui Não Respira, ignora descompressão e radiação de fundo. · +3 pts
-- [id=IMUNE_A_DOENCAS_E_VENENOS x2] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +2 pts
+- [id=IMUNE_A_DOENCAS_E_VENENOS x2] [Catálogo Oficial] Imunidade a Doenças e Venenos · +2 pts
 - [id=NAO_PODE_CURAR] [Catálogo Oficial] Não Pode Curar: Sem capacidade de cura natural ou autorreparo (exige cura ativa ou conserto). · -1 pts
 - [id=PROGRAMADO categoria=racial_hindrance] Complicação concedida ao personagem: PROGRAMADO (Maior) Skin: "PROGRAMADO" · -2 pts
 
@@ -604,7 +604,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=FORMA_DE_ENERGIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+4 pts). · +4 pts
 - [id=NAO_FALA categoria=racial_hindrance] Complicação concedida ao personagem: INCAPAZ DE FALAR Skin: "INCAPAZ DE FALAR" · -1 pts
 - [id=SEM_SANGUE] [Catálogo Oficial] Sem Sangue: Estabiliza automaticamente ao ficar Sangrando e ignora dano extra de armas dilacerantes. · +1 pts
-- [id=TRANSTORNO_DE_SEPARACAO] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
+- [id=TRANSTORNO_DE_SEPARACAO] [Catálogo Oficial] Transtorno de Separação · -2 pts
 
 ### YETIS (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
@@ -701,7 +701,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### Feral [id=anc_feral] (BASICO)
 - [id=SKILL_BOOST alvo=Sobrevivência] [Catálogo Oficial] Perícia Sobrevivência +1 passo(s) · +2 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Insanidade (Sanguinário) (Maior) Skin: "Insanidade (Sanguinário)" · -2 pts
-- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Garras (For+d4) Skin: "Garras" · +2 pts
 - [id=PRIMITIVO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
 - [id=MENTE_PRIMITIVA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
 - [id=LIMITACOES_TECNICAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
@@ -826,7 +826,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### RAKASHANOS [id=anc_rakashanos_super] (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Garras (For+d4) Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts

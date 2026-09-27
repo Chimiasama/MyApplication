@@ -119,6 +119,8 @@ object RacialTraitAuditFormatter {
                 label
             efeito != RacialTraitEffect.Nenhum ->
                 formatEfeito(efeito)
+            ehCatalogo ->
+                hab.nome.ifBlank { RacialTraitPointCatalog.labelComVezes(chaveLabel, hab.value ?: 1) }
             custoCatalogado != null ->
                 "Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (${sinal(custoCatalogado)} pts)."
             else ->
