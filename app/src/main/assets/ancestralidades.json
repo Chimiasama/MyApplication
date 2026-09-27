@@ -1059,11 +1059,18 @@
         "vezes": 3
       },
       {
-        "nome": "SEM NOÇÃO",
-        "descricao": "Sem experiência de vida, golens subtraem 1 das rolagens de Conhecimento Geral e Perceber.",
-        "id": "SEM_NOCAO",
+        "nome": "Sem Noção - Con. Geral",
+        "descricao": "Sem experiência de vida, golens subtraem 1 das rolagens de Conhecimento Geral.",
+        "id": "PENALIDADE_PERICIA_1",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Conhecimento Geral e Perceber, por falta de vivência."
+        "descricaoLite": "-1 em Conhecimento Geral por falta de vivência."
+      },
+      {
+        "nome": "Sem Noção - Percepção",
+        "descricao": "Sem experiência de vida, golens subtraem 1 das rolagens de Perceber.",
+        "id": "PENALIDADE_PERICIA_1",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em Perceber por falta de vivência."
       },
       {
         "nome": "SEM ÓRGÃOS VITAIS",
