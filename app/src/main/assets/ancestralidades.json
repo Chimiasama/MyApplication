@@ -1312,11 +1312,14 @@
         "descricaoLite": "Não sabe ler nem escrever; essa Complicação pode ser removida gastando um Progresso."
       },
       {
-        "nome": "CABEÇAS-DURAS",
+        "nome": "Cabeças-duras",
         "descricao": "O crânio grosso dos meio-gigantes significa que tendem a ser pensadores relativamente simples. Rolagens de Astúcia são feitas com -1.",
         "id": "CABECAS_DURAS",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Astúcia."
+        "descricaoLite": "-1 em testes de Astúcia.",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1
       },
       {
         "nome": "FORASTEIRO",
@@ -1354,11 +1357,24 @@
         "value": 2
       },
       {
-        "nome": "SEM NOÇÃO",
-        "descricao": "Meio-gigantes possuem Conhecimento Geral e Perceber -1.",
-        "id": "SEM_NOCAO",
+        "nome": "Sem Noção - Persuasão",
+        "descricao": "Meio-gigantes sofrem -1 em testes de Persuasão.",
+        "id": "SEM_NOCAO_PERSUASAO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Conhecimento Geral e Perceber."
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - Con. Geral",
+        "descricao": "Meio-gigantes sofrem -1 em testes de Conhecimento Geral.",
+        "id": "SEM_NOCAO_CON_GERAL",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Conhecimento Geral.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Conhecimento Geral",
+        "value": 1
       },
       {
         "nome": "TAMANHO +3",

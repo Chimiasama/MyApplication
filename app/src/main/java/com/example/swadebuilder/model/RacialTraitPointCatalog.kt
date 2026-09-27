@@ -357,6 +357,7 @@ object RacialTraitPointCatalog {
         "ELEMENTO_ANCESTRAL" to "Elemento Ancestral",
         "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)",
         "PENALIDADE_PERICIA_2" to "Penalidade em Perícia (-2)",
+        "PENALIDADE_ATRIBUTO_1" to "Penalidade em Atributo (-1)",
         "PENALIDADE_ATRIBUTO_2" to "Penalidade em Atributo (-2)",
         "DOENTE" to "Doente",
         "DOENTE_MAIOR" to "Doente (Maior)",
@@ -928,6 +929,7 @@ object RacialTraitPointCatalog {
         // oficial: mesmo trecho, tier maior — -2 numa perícia comum (ou -4 numa
         // incomum). Nenhuma raça cadastrada usa isso hoje.
         "PENALIDADE_PERICIA_2" to -2,
+        "PENALIDADE_ATRIBUTO_1" to -2,
         // oficial: "Penalidade em Atributo", tier maior (-2 no atributo, vs a tier
         // -1 já coberta por SEM_INSTRUCAO — reaproveitada por nome de raça em vez
         // de um id genérico, já que só Minotauros/Orcs usam essa tier hoje).

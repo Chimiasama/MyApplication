@@ -5,8 +5,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ## 1. Traços Identificados como Exclusivos de Uma Raça (`exclusivo-desta-raça`)
 
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=None` | Audit: `[id=ELEMENTO_ANCESTRAL categoria=racial_trait_positive exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral`
-- **MEIO-GIGANTES** (BASICO) — Traço: **CABEÇAS-DURAS** | `id=CABECAS_DURAS` | `traitId=None` | Audit: `[id=CABECAS_DURAS categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
 - **MEIO-ORCS** (BASICO) — Traço: **ENDURECIDO** | `id=ENDURECIDO` | `traitId=None` | Audit: `[id=ENDURECIDO categoria=racial_trait_positive exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts).`
+- **OGROS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=None` | Audit: `[id=SEM_NOCAO categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=None` | Audit: `[id=AVERSAO_ANIMAL categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts).`
 - **RENASCIDOS** (BASICO) — Traço: **RESISTÊNCIA AO FRIO** | `id=RESISTENCIA_AO_FRIO` | `traitId=None` | Audit: `[id=RESISTENCIA_AO_FRIO categoria=racial_trait_positive exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts).`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=None` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
@@ -59,11 +59,9 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **MEIO-ELFOS** [anc_meio_elfos_basico] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=None` | Audit: `[id=HERANCA categoria=racial_trait_positive] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts).`
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=None` | Audit: `[id=ELEMENTO_ANCESTRAL categoria=racial_trait_positive exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral`
 - **MEIO-ELFOS** [anc_meio_elfos_fantasia] (BASICO) — Traço: **HERANÇA** | `id=HERANCA` | `traitId=None` | Audit: `[id=HERANCA categoria=racial_trait_positive] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts).`
-- **MEIO-GIGANTES** (BASICO) — Traço: **CABEÇAS-DURAS** | `id=CABECAS_DURAS` | `traitId=None` | Audit: `[id=CABECAS_DURAS categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
-- **MEIO-GIGANTES** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=None` | Audit: `[id=SEM_NOCAO categoria=racial_trait_negative] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
 - **MEIO-ORCS** (BASICO) — Traço: **ENDURECIDO** | `id=ENDURECIDO` | `traitId=None` | Audit: `[id=ENDURECIDO categoria=racial_trait_positive exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts).`
 - **MINOTAUROS** (BASICO) — Traço: **SEM INSTRUÇÃO** | `id=SEM_INSTRUCAO` | `traitId=None` | Audit: `[id=SEM_INSTRUCAO categoria=racial_trait_negative] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
-- **OGROS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=None` | Audit: `[id=SEM_NOCAO categoria=racial_trait_negative] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
+- **OGROS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=None` | Audit: `[id=SEM_NOCAO categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).`
 - **ORCS** (BASICO) — Traço: **BRUTAL** | `id=SEM_INSTRUCAO` | `traitId=None` | Audit: `[id=SEM_INSTRUCAO categoria=racial_trait_negative] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "BRUTAL"`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=None` | Audit: `[id=AVERSAO_ANIMAL categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts).`
 - **RENASCIDOS** (BASICO) — Traço: **RESISTÊNCIA AO FRIO** | `id=RESISTENCIA_AO_FRIO` | `traitId=None` | Audit: `[id=RESISTENCIA_AO_FRIO categoria=racial_trait_positive exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts).`
@@ -296,12 +294,13 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### MEIO-GIGANTES (BASICO)
 - [id=ANALFABETO categoria=racial_hindrance] Complicação concedida ao personagem: ANALFABETO (Menor) Skin: "ANALFABETO"
-- [id=CABECAS_DURAS categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).
+- [id=PENALIDADE_ATRIBUTO_1 alvo=Astúcia categoria=racial_trait_negative] [Catálogo Oficial] Cabeças-duras
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Maior) Skin: "FORASTEIRO"
 - [id=VOLUMOSO categoria=racial_trait_negative] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE"
 - [id=ATTRIBUTE_BOOST alvo=Força categoria=racial_trait_positive] [Catálogo Oficial] MUITO FORTE
 - [id=ATTRIBUTE_BOOST alvo=Vigor categoria=racial_trait_positive] [Catálogo Oficial] MUITO RESISTENTE
-- [id=SEM_NOCAO categoria=racial_trait_negative] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).
+- [id=PENALIDADE_PERICIA_1 alvo=Persuasão categoria=racial_trait_negative] [Catálogo Oficial] Sem Noção - Persuasão
+- [id=PENALIDADE_PERICIA_1 alvo=Conhecimento Geral categoria=racial_trait_negative] [Catálogo Oficial] Sem Noção - Con. Geral
 - [id=TAMANHO_MAIS_1 x3 categoria=racial_trait_positive] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. Skin: "TAMANHO +3"
 
 ### MEIO-ORCS (BASICO)
@@ -328,7 +327,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ATTRIBUTE_BOOST alvo=Força categoria=racial_trait_positive] [Catálogo Oficial] MUITO FORTE
 - [id=ATTRIBUTE_BOOST alvo=Vigor categoria=racial_trait_positive] [Catálogo Oficial] MUITO RESISTENTE
 - [id=ROBUSTO categoria=racial_trait_positive] [Catálogo Oficial] Robusto: Um segundo resultado Abalado não causa Ferimento.
-- [id=SEM_NOCAO categoria=racial_trait_negative] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).
+- [id=SEM_NOCAO categoria=racial_trait_negative exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts).
 - [id=TAMANHO_MAIS_1 categoria=racial_trait_positive] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força.
 
 ### ORCS (BASICO)
