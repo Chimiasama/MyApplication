@@ -1480,11 +1480,14 @@
         "value": 2
       },
       {
-        "nome": "SEM INSTRUÇÃO",
+        "nome": "Sem Instrução",
         "descricao": "A sociedade dos minotauros favorece a habilidade física em detrimento da capacidade intelectual. Rolagens de Astúcia são feitas com -1.",
         "id": "SEM_INSTRUCAO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Astúcia."
+        "descricaoLite": "-1 em testes de Astúcia.",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1
       },
       {
         "nome": "SENSÍVEL",
@@ -1604,11 +1607,14 @@
     "variantes": "Ideias Variantes: Alguns orcs são ainda maiores e mais brutais que seus primos mais comuns. Aumente sua Força e Vigor iniciais e dê-lhes desvantagens apropriadas, como penalidades mais altas em Astúcia ou Complicações como Analfabeto, Desagradável e Sem Escrúpulos.",
     "habilidades": [
       {
-        "nome": "BRUTAL",
+        "nome": "Brutal",
         "descricao": "Orcs pensam com os punhos e machados, negligenciando o intelecto. Rolagens de Astúcia são feitas com -1.",
         "id": "SEM_INSTRUCAO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Astúcia (não Persuadir — correção de uma tradução errada do livro)."
+        "descricaoLite": "-1 em Astúcia (não Persuadir — correção de uma tradução errada do livro).",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1
       },
       {
         "nome": "FORASTEIRO",
