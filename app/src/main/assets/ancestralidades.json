@@ -1244,15 +1244,16 @@
         "nome": "MENTE DE COLMEIA (maior)",
         "descricao": "Insetoides têm a Complicação Guiado (Maior) quando se trata de servir sua \"colônia\" (sua comunidade, grupo de aventureiros etc.). Uma vez definido um caminho, permanecem nele até que a tarefa seja concluída.",
         "id": "GUIADO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Carrega a Complicação Guiado (Maior) voltada à sua colônia: uma vez traçado um objetivo, mantém-se nele até concluí-lo.",
-        "severity": "Maior"
+        "category": "racial_hindrance",
+        "severity": "Maior",
+        "descricaoLite": "Carrega a Complicação Guiado (Maior) voltada à sua colônia: uma vez traçado um objetivo, mantém-se nele até concluí-lo."
       },
       {
         "nome": "MENTE DE COLMEIA (menor)",
         "descricao": "Insetoides têm a Complicação Leal quando se trata de servir sua \"colônia\" (sua comunidade, grupo de aventureiros etc.). Isso lhes causa grande estresse quando um objetivo contradiz sua lealdade inerente.",
         "id": "LEAL",
-        "category": "racial_trait_negative",
+        "category": "racial_hindrance",
+        "severity": "Menor",
         "descricaoLite": "Carrega a Complicação Leal voltada à sua colônia, gerando conflito interno quando um objetivo esbarra nessa lealdade."
       }
     ],
