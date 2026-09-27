@@ -29,7 +29,7 @@ object RacialTraitAuditFormatter {
                 // Traços que pertencem ao catálogo oficial das tabelas dos livros (ex.: AQUATICO, CONSTRUTO, ARMADURA)
                 // são genéricos da tabela de regras e nunca "exclusivos de uma raça".
                 val chaveLabel = (hab.id?.takeIf { it.isNotBlank() } ?: idBruto).keyify()
-                if (RacialTraitPointCatalog.ehDoCatalogo(chaveLabel, hab.targetRef)) return@forEach
+                if (RacialTraitPointCatalog.ehDoCatalogo(chaveLabel, hab.targetRef, traitId = hab.resolvedTraitId())) return@forEach
 
                 val especieChave = raca.especieId ?: raca.id ?: raca.nome
                 porId.getOrPut(chave) { mutableSetOf() }.add(especieChave)
@@ -95,7 +95,7 @@ object RacialTraitAuditFormatter {
         val label = RacialTraitPointCatalog.LABEL[chaveLabel]
         val efeito = RacialTraitPointCatalog.efeitoDe(chave, hab.targetRef, hab.value)
         val custoCatalogado = RacialTraitPointCatalog.CUSTOS[chaveLabel]
-        val ehCatalogo = RacialTraitPointCatalog.ehDoCatalogo(chaveLabel, hab.targetRef) || entradaCatalogo != null
+        val ehCatalogo = RacialTraitPointCatalog.ehDoCatalogo(chaveLabel, hab.targetRef, traitId = hab.resolvedTraitId()) || entradaCatalogo != null
 
         val catalogTag = if (ehCatalogo) "[Catálogo Oficial]" else "[Regra Única da Raça / Fora do Catálogo]"
 

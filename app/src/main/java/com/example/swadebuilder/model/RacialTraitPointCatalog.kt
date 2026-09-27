@@ -1062,13 +1062,14 @@ object RacialTraitPointCatalog {
      * Signos de Nascença ou reservas de Chi) retornam `false` para que não sejam exibidos na seleção
      * do Criador de Raças Customizadas e sejam identificados como regra única da raça.
      */
-    fun ehDoCatalogo(id: String?, targetRef: String? = null, idsCatalogoOficial: Set<String> = emptySet()): Boolean {
-        if (id.isNullOrBlank()) return false
-        val key = id.keyify()
+    fun ehDoCatalogo(id: String?, targetRef: String? = null, traitId: String? = null, idsCatalogoOficial: Set<String> = emptySet()): Boolean {
+        if (id.isNullOrBlank() && traitId.isNullOrBlank()) return false
+        val key = id?.keyify().orEmpty()
+        val traitKey = traitId?.keyify().orEmpty()
         val targetKey = targetRef?.keyify().orEmpty()
-        if (key in PARAMETRIZADOS_OFICIAIS || targetKey in PARAMETRIZADOS_OFICIAIS) return true
-        if (idsCatalogoOficial.isNotEmpty() && key in idsCatalogoOficial) return true
-        return key in IDS_CATALOGO_LIVRO_BASICO
+        if (key in PARAMETRIZADOS_OFICIAIS || traitKey in PARAMETRIZADOS_OFICIAIS || targetKey in PARAMETRIZADOS_OFICIAIS) return true
+        if (idsCatalogoOficial.isNotEmpty() && (key in idsCatalogoOficial || traitKey in idsCatalogoOficial)) return true
+        return key in IDS_CATALOGO_LIVRO_BASICO || traitKey in IDS_CATALOGO_LIVRO_BASICO
     }
 
     // Ids de traço racial que representam Voo de verdade (qualquer tier: Fadas
