@@ -1205,7 +1205,7 @@
         "descricaoLite": "Exoesqueleto resistente: concede +2 de Armadura."
       },
       {
-        "nome": "Ação Adicional (Menor)",
+        "nome": "Ação Adicional - Física",
         "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas).",
         "id": "ACAO_ADICIONAL_MENOR",
         "category": "racial_trait_positive",
@@ -1322,6 +1322,26 @@
         "value": 1
       },
       {
+        "nome": "Sem Noção - persuadir",
+        "descricao": "Minotauros sofrem -1 em testes de Persuasão.",
+        "id": "SEM_NOCAO_PERSUADIR",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - Con. Geral",
+        "descricao": "Minotauros sofrem -1 em testes de Conhecimento Geral.",
+        "id": "SEM_NOCAO_CON_GERAL",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Conhecimento Geral.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Conhecimento Geral",
+        "value": 1
+      },
+      {
         "nome": "FORASTEIRO",
         "descricao": "Meio-gigantes são aterrorizantes para a maioria das raças humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seus próprios clãs.",
         "id": "FORASTEIRO",
@@ -1355,26 +1375,6 @@
         "traitId": "ATTRIBUTE_BOOST",
         "targetRef": "Vigor",
         "value": 2
-      },
-      {
-        "nome": "Sem Noção - Persuasão",
-        "descricao": "Meio-gigantes sofrem -1 em testes de Persuasão.",
-        "id": "SEM_NOCAO_PERSUASAO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Persuasão.",
-        "traitId": "PENALIDADE_PERICIA_1",
-        "targetRef": "Persuasão",
-        "value": 1
-      },
-      {
-        "nome": "Sem Noção - Con. Geral",
-        "descricao": "Meio-gigantes sofrem -1 em testes de Conhecimento Geral.",
-        "id": "SEM_NOCAO_CON_GERAL",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Conhecimento Geral.",
-        "traitId": "PENALIDADE_PERICIA_1",
-        "targetRef": "Conhecimento Geral",
-        "value": 1
       },
       {
         "nome": "TAMANHO +3",
@@ -1487,6 +1487,26 @@
         "descricaoLite": "-1 em testes de Astúcia.",
         "traitId": "PENALIDADE_ATRIBUTO_1",
         "targetRef": "Astúcia",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - persuadir",
+        "descricao": "Minotauros sofrem -1 em testes de Persuasão.",
+        "id": "SEM_NOCAO_PERSUADIR",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - Con. Geral",
+        "descricao": "Minotauros sofrem -1 em testes de Conhecimento Geral.",
+        "id": "SEM_NOCAO_CON_GERAL",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Conhecimento Geral.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Conhecimento Geral",
         "value": 1
       },
       {
@@ -1608,12 +1628,12 @@
     "habilidades": [
       {
         "nome": "Brutal",
-        "descricao": "Orcs pensam com os punhos e machados, negligenciando o intelecto. Rolagens de Astúcia são feitas com -1.",
-        "id": "SEM_INSTRUCAO",
+        "descricao": "Orcs pensam com os punhos e machados, sofrendo -1 em testes de Persuasão.",
+        "id": "BRUTAL",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Astúcia (não Persuadir — correção de uma tradução errada do livro).",
-        "traitId": "PENALIDADE_ATRIBUTO_1",
-        "targetRef": "Astúcia",
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
         "value": 1
       },
       {
