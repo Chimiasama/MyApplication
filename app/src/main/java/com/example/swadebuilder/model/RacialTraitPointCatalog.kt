@@ -329,8 +329,9 @@ object RacialTraitPointCatalog {
         "MUDAR_DE_FORMA_AJUSTE_MIMICOS" to "Mudança de Forma (Sem variação de Tamanho)",
         "ARMA_DE_SOPRO_FOGO" to "Arma de Sopro (Fogo)",
         "ARMA_DE_SOPRO_FRIO" to "Arma de Sopro (Frio)",
-        "ACAO_ADICIONAL_FISICA" to "Ação Adicional (Física/Mental)",
-        "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS" to "Ação Adicional",
+        "ACAO_ADICIONAL_MENOR" to "Ação Adicional (Menor)",
+        "ACAO_ADICIONAL" to "Ação Adicional",
+        "ACAO_ADICIONAL_MAIOR" to "Ação Adicional (Maior)",
         "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to "Sentidos Aguçados (Olhos de Águia)",
         "DESASTRADO_MENOR" to "Desastrado (Menor)",
         "SANGUINARIO_MAIOR" to "Sanguinário (Maior)",
@@ -356,6 +357,7 @@ object RacialTraitPointCatalog {
         "ELEMENTO_ANCESTRAL" to "Elemento Ancestral",
         "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)",
         "PENALIDADE_PERICIA_2" to "Penalidade em Perícia (-2)",
+        "PENALIDADE_ATRIBUTO_1" to "Penalidade em Atributo (-1)",
         "PENALIDADE_ATRIBUTO_2" to "Penalidade em Atributo (-2)",
         "DOENTE" to "Doente",
         "DOENTE_MAIOR" to "Doente (Maior)",
@@ -419,16 +421,9 @@ object RacialTraitPointCatalog {
         // Fantasia "Maior" 10 — ver docs/swade_basico|fantasia|scifi e
         // basico_habilidades_raciais.json "grupoEscolha": "acao_adicional").
         // Cada versão é um id próprio (não empilhável entre si).
-        "ACAO_ADICIONAL" to 5, // oficial: acao_adicional
-        // "ACOES_ADICIONAIS" (4, variante condicional físico/mental) foi removido
-        // daqui — duplicava ACAO_ADICIONAL_FISICA (mesmo valor, mesmo efeito).
-        // Insetoides (Fantasia) usava esse id mesmo esse tier condicional só
-        // estar formalizado na tabela do Sci-Fi, não na do Fantasia — o texto
-        // de Insetoides ("desde que pelo menos uma das ações use seus membros")
-        // bate exatamente com esse tier condicional, então o livro do Fantasia
-        // parece ter esquecido de formalizar o próprio tier de 4 pontos que já
-        // usa. Migrado pra ACAO_ADICIONAL_FISICA, ver comentário lá embaixo.
-        "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
+        "ACAO_ADICIONAL_MENOR" to 4, // oficial: acao_adicional_menor (4 pts)
+        "ACAO_ADICIONAL" to 5, // oficial: acao_adicional (5 pts)
+        "ACAO_ADICIONAL_MAIOR" to 10, // oficial: acao_adicional_maior (10 pts)
         "ADAPTAVEL" to 2, // oficial: adaptavel
         "ADAPTAVEL_OU_ANTECEDENTE_ARCANO_DEMONIO" to 2, // Meio-Demônio (Cidade do Sol a Vapor) — mesmo efeito de Adaptável
         "AGIL" to 2, // oficial: aumento_atributo
@@ -934,6 +929,7 @@ object RacialTraitPointCatalog {
         // oficial: mesmo trecho, tier maior — -2 numa perícia comum (ou -4 numa
         // incomum). Nenhuma raça cadastrada usa isso hoje.
         "PENALIDADE_PERICIA_2" to -2,
+        "PENALIDADE_ATRIBUTO_1" to -2,
         // oficial: "Penalidade em Atributo", tier maior (-2 no atributo, vs a tier
         // -1 já coberta por SEM_INSTRUCAO — reaproveitada por nome de raça em vez
         // de um id genérico, já que só Minotauros/Orcs usam essa tier hoje).
@@ -1050,7 +1046,7 @@ object RacialTraitPointCatalog {
     )
 
     val IDS_CATALOGO_LIVRO_BASICO: Set<String> = setOf(
-        "ACOES_ADICIONAIS", "ACAO_ADICIONAL", "ACOES_ADICIONAIS_MAIOR", "ADAPTAVEL", "ALCANCE",
+        "ACAO_ADICIONAL_MENOR", "ACAO_ADICIONAL", "ACAO_ADICIONAL_MAIOR", "ADAPTAVEL", "ALCANCE",
         "ANDAR_PAREDES", "ANDAR_NAS_PAREDES", "APARAR", "ARMA_DE_SOPRO", "SEMI_AQUATICO", "AQUATICO",
         "ARMADURA", "ATORDOAR", "AUMENTO_ATRIBUTO", "BIOLOGIA_ACIDA", "BONUS_PERICIA_1", "BONUS_PERICIA_2",
         "CAMUFLAGEM_1", "CAMUFLAGEM_2", "CASCA", "CAVAR", "CHIFRES", "CHIFRES_MAIOR", "CHIFRES_MAIORES",

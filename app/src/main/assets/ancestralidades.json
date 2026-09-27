@@ -1205,9 +1205,9 @@
         "descricaoLite": "Exoesqueleto resistente: concede +2 de Armadura."
       },
       {
-        "nome": "AÇÕES ADICIONAIS",
+        "nome": "Ação Adicional - Física",
         "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas).",
-        "id": "ACAO_ADICIONAL_FISICA",
+        "id": "ACAO_ADICIONAL_MENOR",
         "category": "racial_trait_positive",
         "descricaoLite": "Quatro braços funcionais reduzem em 2 a penalidade total por realizar múltiplas ações, desde que ao menos uma delas envolva os membros (em geral testes de Agilidade, Força ou perícias ligadas a eles)."
       },
@@ -1244,15 +1244,16 @@
         "nome": "MENTE DE COLMEIA (maior)",
         "descricao": "Insetoides têm a Complicação Guiado (Maior) quando se trata de servir sua \"colônia\" (sua comunidade, grupo de aventureiros etc.). Uma vez definido um caminho, permanecem nele até que a tarefa seja concluída.",
         "id": "GUIADO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Carrega a Complicação Guiado (Maior) voltada à sua colônia: uma vez traçado um objetivo, mantém-se nele até concluí-lo.",
-        "severity": "Maior"
+        "category": "racial_hindrance",
+        "severity": "Maior",
+        "descricaoLite": "Carrega a Complicação Guiado (Maior) voltada à sua colônia: uma vez traçado um objetivo, mantém-se nele até concluí-lo."
       },
       {
         "nome": "MENTE DE COLMEIA (menor)",
         "descricao": "Insetoides têm a Complicação Leal quando se trata de servir sua \"colônia\" (sua comunidade, grupo de aventureiros etc.). Isso lhes causa grande estresse quando um objetivo contradiz sua lealdade inerente.",
         "id": "LEAL",
-        "category": "racial_trait_negative",
+        "category": "racial_hindrance",
+        "severity": "Menor",
         "descricaoLite": "Carrega a Complicação Leal voltada à sua colônia, gerando conflito interno quando um objetivo esbarra nessa lealdade."
       }
     ],
@@ -1311,11 +1312,34 @@
         "descricaoLite": "Não sabe ler nem escrever; essa Complicação pode ser removida gastando um Progresso."
       },
       {
-        "nome": "CABEÇAS-DURAS",
+        "nome": "Cabeças-duras",
         "descricao": "O crânio grosso dos meio-gigantes significa que tendem a ser pensadores relativamente simples. Rolagens de Astúcia são feitas com -1.",
         "id": "CABECAS_DURAS",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Astúcia."
+        "descricaoLite": "-1 em testes de Astúcia.",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - persuadir",
+        "descricao": "Minotauros sofrem -1 em testes de Persuasão.",
+        "id": "SEM_NOCAO_PERSUADIR",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - Con. Geral",
+        "descricao": "Minotauros sofrem -1 em testes de Conhecimento Geral.",
+        "id": "SEM_NOCAO_CON_GERAL",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Conhecimento Geral.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Conhecimento Geral",
+        "value": 1
       },
       {
         "nome": "FORASTEIRO",
@@ -1351,13 +1375,6 @@
         "traitId": "ATTRIBUTE_BOOST",
         "targetRef": "Vigor",
         "value": 2
-      },
-      {
-        "nome": "SEM NOÇÃO",
-        "descricao": "Meio-gigantes possuem Conhecimento Geral e Perceber -1.",
-        "id": "SEM_NOCAO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Conhecimento Geral e Perceber."
       },
       {
         "nome": "TAMANHO +3",
@@ -1463,11 +1480,34 @@
         "value": 2
       },
       {
-        "nome": "SEM INSTRUÇÃO",
+        "nome": "Sem Instrução",
         "descricao": "A sociedade dos minotauros favorece a habilidade física em detrimento da capacidade intelectual. Rolagens de Astúcia são feitas com -1.",
         "id": "SEM_INSTRUCAO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Astúcia."
+        "descricaoLite": "-1 em testes de Astúcia.",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - persuadir",
+        "descricao": "Minotauros sofrem -1 em testes de Persuasão.",
+        "id": "SEM_NOCAO_PERSUADIR",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
+        "value": 1
+      },
+      {
+        "nome": "Sem Noção - Con. Geral",
+        "descricao": "Minotauros sofrem -1 em testes de Conhecimento Geral.",
+        "id": "SEM_NOCAO_CON_GERAL",
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 em testes de Conhecimento Geral.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Conhecimento Geral",
+        "value": 1
       },
       {
         "nome": "SENSÍVEL",
@@ -1587,11 +1627,14 @@
     "variantes": "Ideias Variantes: Alguns orcs são ainda maiores e mais brutais que seus primos mais comuns. Aumente sua Força e Vigor iniciais e dê-lhes desvantagens apropriadas, como penalidades mais altas em Astúcia ou Complicações como Analfabeto, Desagradável e Sem Escrúpulos.",
     "habilidades": [
       {
-        "nome": "BRUTAL",
-        "descricao": "Orcs pensam com os punhos e machados, negligenciando o intelecto. Rolagens de Astúcia são feitas com -1.",
-        "id": "SEM_INSTRUCAO",
+        "nome": "Brutal",
+        "descricao": "Orcs pensam com os punhos e machados, sofrendo -1 em testes de Persuasão.",
+        "id": "BRUTAL",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Astúcia (não Persuadir — correção de uma tradução errada do livro)."
+        "descricaoLite": "-1 em testes de Persuasão.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Persuasão",
+        "value": 1
       },
       {
         "nome": "FORASTEIRO",
@@ -3470,9 +3513,9 @@
     ],
     "habilidades": [
       {
-        "nome": "AÇÃO ADICIONAL (Física)",
+        "nome": "Ação Adicional (Menor)",
         "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada.",
-        "id": "ACAO_ADICIONAL_FISICA",
+        "id": "ACAO_ADICIONAL_MENOR",
         "category": "racial_trait_positive",
         "descricaoLite": "Com quatro braços, reduzem em 2 os pontos de penalidade sofridos ao tentar Ações Múltiplas numa mesma rodada."
       },

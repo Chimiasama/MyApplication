@@ -427,13 +427,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(
             listOf(
                 TraitAddition(
-                    "AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)",
-                    "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS"
+                    "Ação Adicional",
+                    "ACAO_ADICIONAL"
                 )
             ),
             result.ensureAutomaticAdvantages
         )
-        assertTrue(result.automaticAdvantagesToRemove.contains("AÇÃO ADICIONAL (Física)"))
+        assertTrue(result.automaticAdvantagesToRemove.contains("Ação Adicional (Menor)"))
         // Sem escolha do jogador (quadroidesTracoNegativoSelecionado = null),
         // usa o primeiro traço de -1 ponto do catálogo QUADROIDES (Frágil é
         // excluído dessa lista — a raça já tem Frágil na base, ver
