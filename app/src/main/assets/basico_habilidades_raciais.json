@@ -1,20 +1,11 @@
 [
   {
-    "id": "acao_adicional_fisica",
-    "nome": "Ação Adicional - Física",
+    "id": "acao_adicional_menor",
+    "nome": "Ação Adicional (Menor)",
     "custo": 4,
-    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas.",
+    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem de um mesmo tipo (físicas ou mentais).",
     "origem": "SCI_FI",
-    "descricaoLite": "Quando todas as ações do turno forem físicas, reduz em 2 pontos a penalidade de Ações Múltiplas.",
-    "grupoEscolha": "acao_adicional"
-  },
-  {
-    "id": "acao_adicional_mental",
-    "nome": "Ação Adicional - Mental",
-    "custo": 4,
-    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem mentais.",
-    "origem": "SCI_FI",
-    "descricaoLite": "Quando todas as ações do turno forem mentais, reduz em 2 pontos a penalidade de Ações Múltiplas.",
+    "descricaoLite": "Quando todas as ações do turno forem de um mesmo tipo (físicas ou mentais), reduz em 2 pontos a penalidade de Ações Múltiplas.",
     "grupoEscolha": "acao_adicional"
   },
   {
@@ -28,7 +19,7 @@
   },
   {
     "id": "acao_adicional_maior",
-    "nome": "Ação Adicional - Maior",
+    "nome": "Ação Adicional (Maior)",
     "custo": 10,
     "descricao": "Reduz as penalidades de Ações Múltiplas em 4 para qualquer tipo de ação.",
     "origem": "FANTASIA",

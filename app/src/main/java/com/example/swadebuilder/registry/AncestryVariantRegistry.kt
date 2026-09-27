@@ -596,11 +596,11 @@ object AncestryVariantRegistry {
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
                             TraitAddition(
-                                "AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)",
-                                "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS"
+                                "Ação Adicional",
+                                "ACAO_ADICIONAL"
                             )
                         ),
-                        tracosParaRemoverPorNome = listOf("AÇÃO ADICIONAL (Física)")
+                        tracosParaRemoverPorNome = listOf("Ação Adicional (Menor)")
                     ),
                     // Âncora só de documentação/lookup (ver
                     // ResolveAncestrySpecificAdjustmentsUseCase, mesmo padrão

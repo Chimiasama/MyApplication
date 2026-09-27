@@ -1205,9 +1205,9 @@
         "descricaoLite": "Exoesqueleto resistente: concede +2 de Armadura."
       },
       {
-        "nome": "Ação Adicional - Física",
+        "nome": "Ação Adicional (Menor)",
         "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas).",
-        "id": "ACAO_ADICIONAL_FISICA",
+        "id": "ACAO_ADICIONAL_MENOR",
         "category": "racial_trait_positive",
         "descricaoLite": "Quatro braços funcionais reduzem em 2 a penalidade total por realizar múltiplas ações, desde que ao menos uma delas envolva os membros (em geral testes de Agilidade, Força ou perícias ligadas a eles)."
       },
@@ -3470,9 +3470,9 @@
     ],
     "habilidades": [
       {
-        "nome": "AÇÃO ADICIONAL (Física)",
+        "nome": "Ação Adicional (Menor)",
         "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada.",
-        "id": "ACAO_ADICIONAL_FISICA",
+        "id": "ACAO_ADICIONAL_MENOR",
         "category": "racial_trait_positive",
         "descricaoLite": "Com quatro braços, reduzem em 2 os pontos de penalidade sofridos ao tentar Ações Múltiplas numa mesma rodada."
       },
