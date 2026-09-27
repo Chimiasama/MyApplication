@@ -1929,7 +1929,7 @@
       {
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "A sociedade rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista.",
-        "id": "INIMIGO_ANCESTRAL",
+        "id": "INIMIGO_RACIAL",
         "category": "racial_trait_negative",
         "descricaoLite": "Escolhida uma ancestralidade rival comum no cenário, os dois povos aplicam -2 em Persuasão um com o outro e tendem a partir para o confronto assim que se avistam."
       },
@@ -3118,7 +3118,7 @@
       {
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
-        "id": "INIMIGO_ANCESTRAL",
+        "id": "INIMIGO_RACIAL",
         "category": "racial_trait_negative",
         "descricaoLite": "Guardam ódio histórico de insetoides: -2 em Persuasão ao interagir com eles e tendência a partir para hostilidade com pouco motivo."
       },
@@ -3479,7 +3479,7 @@
       {
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
-        "id": "INIMIGO_ANCESTRAL",
+        "id": "INIMIGO_RACIAL",
         "category": "racial_trait_negative",
         "descricaoLite": "Vivem em atrito permanente com certas espécies ou culturas comuns no ambiente onde surgem."
       },

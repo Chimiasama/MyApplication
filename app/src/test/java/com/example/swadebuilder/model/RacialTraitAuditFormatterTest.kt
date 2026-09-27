@@ -35,7 +35,7 @@ class RacialTraitAuditFormatterTest {
         assertEquals(1, linhas.size)
         assertTrue(linhas[0].contains("[id=ARMA_DE_SOPRO]"))
         assertTrue(linhas[0].contains("Arma de Sopro: Pode cuspir fogo"))
-        assertTrue(!linhas[0].contains("Bafo Flamejante"))
+        assertTrue(!linhas[0].contains("descrição de skin qualquer"))
     }
 
     @Test

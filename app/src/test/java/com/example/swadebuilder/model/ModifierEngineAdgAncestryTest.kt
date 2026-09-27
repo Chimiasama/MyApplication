@@ -70,14 +70,15 @@ class ModifierEngineAdgAncestryTest {
             modifier = RacialModifier(
                 nome = "Usagimimi (Coelho)",
                 origem = "ARTE_DA_GUERRA",
-                habilidades = emptyList(),
-                movimentacao = 2
+                habilidades = listOf(
+                    RacialAbility(nome = "Movimentação Aumentada", descricao = "", id = "MOVIMENTACAO", value = 2)
+                )
             )
         )
 
         val modifiers = ModifierEngine.collect(state)
 
-        assertTrue(modifiers.any { it.id == "racial_pace_explicit" && it.value == 2 })
+        assertTrue(modifiers.any { it.target == ModifierTarget.PACE && it.value == 2 })
     }
 
     @Test

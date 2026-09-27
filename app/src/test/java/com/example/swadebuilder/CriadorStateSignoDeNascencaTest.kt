@@ -67,8 +67,9 @@ class CriadorStateSignoDeNascencaTest {
         val state = CriadorState()
         state.updateGameData(snapshotComHumanoAdg())
         state.compendioArteDaGuerraAtivo = true
-        state.ancestralidade = "HUMANOS"
-        state.signoAdgSelecionado = signo
+        state.signoAdgSelecionado = null
+        state.selecionarSigno(signo)
+        state.aplicarAncestralidade("HUMANOS", mutableListOf())
         return state
     }
 

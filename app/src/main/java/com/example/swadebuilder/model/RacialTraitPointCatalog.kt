@@ -365,7 +365,29 @@ object RacialTraitPointCatalog {
         "FOSFORESCENCIA_ESTROBOSCOPICA" to "Fosforescência (Estroboscópica)",
         "REGENERACAO_MAIOR" to "Regeneração (Lesão Permanente)",
         "SENTIDOS_AGUCADOS_AUDICAO" to "Sentidos Aguçados (Audição)",
-        "SENTIDOS_AGUCADOS_OLFATO" to "Sentidos Aguçados (Olfato)"
+        "SENTIDOS_AGUCADOS_OLFATO" to "Sentidos Aguçados (Olfato)",
+        "GARRAS_SEM_PA" to "Garras (For+d4)",
+        "GARRAS" to "Garras (For+d4, PA 2)",
+        "GARRAS_MAIORES_SEM_PA" to "Garras (For+d6)",
+        "GARRAS_MAIORES" to "Garras Aprimoradas (For+d6, PA 2)",
+        "GARRAS_D4" to "Garras (For+d4)",
+        "GARRAS_D6" to "Garras (For+d6)",
+        "GARRAS_PA" to "Garras Aprimoradas (For+d6, PA 2)",
+        "CHIFRES" to "Chifres (For+d4)",
+        "CHIFRES_MAIOR" to "Chifres Aprimorados (For+d6)",
+        "CHIFRES_MAIORES" to "Chifres Aprimorados (For+d6)",
+        "MORDIDA" to "Mordida (For+d4)",
+        "MORDIDA_D6" to "Mordida (For+d6)",
+        "MORDIDA_PA" to "Mordida Aprimorada (For+d6, PA 2)",
+        "INIMIGO_RACIAL" to "Inimigo Racial",
+        "INIMIGO_ANCESTRAL" to "Inimigo Ancestral",
+        "VISAO_TOTAL_NO_ESCURO" to "Visão Total no Escuro",
+        "VISAO_DE_360" to "Visão em 360°",
+        "ANDAR_NAS_PAREDES" to "Andar nas Paredes",
+        "IMUNE_A_DOENCAS_E_VENENOS" to "Imunidade a Doenças e Venenos",
+        "REDUCAO_DE_SONO" to "Redução de Sono",
+        "GELATINOSO_MAIOR" to "Gelatinoso (Maior)",
+        "TRANSTORNO_DE_SEPARACAO" to "Transtorno de Separação"
     )
 
     /**
@@ -1035,7 +1057,7 @@ object RacialTraitPointCatalog {
         "COMUNITARIO", "CONSTRUTO", "DIMINUTO_PEQUENO", "DIMINUTO_MUITO_PEQUENO", "DIMINUTO_MINUSCULO",
         "DIMINUTO_TAMANHO_2", "DIMINUTO_TAMANHO_3", "DIMINUTO_TAMANHO_4", "ECOLOCALIZACAO", "ESPACIAL",
         "ESTAVEL", "FORMA_ENERGIA", "FOSFORESCENCIA_1", "FOSFORESCENCIA_2", "GARRAS_D4", "GARRAS_D6",
-        "GARRAS_PA", "GARRAS", "GELATINOSO_2", "GELATINOSO_3", "GELATINOSO_MAIOR", "IMUNE_DOENCAS_VENENOS",
+        "GARRAS_PA", "GARRAS", "GARRAS_SEM_PA", "GELATINOSO_2", "GELATINOSO_3", "GELATINOSO_MAIOR", "IMUNE_DOENCAS_VENENOS",
         "IMUNE_A_DOENCAS_E_VENENOS", "INFRAVISAO", "INTERFACE", "INVISIBILIDADE_TRANSLUCIDO",
         "INVISIBILIDADE_TOTAL", "MEMBROS_EXTRAS", "MODS_ROBOTICOS", "MORDIDA", "MORDIDA_D6", "MORDIDA_PA",
         "MORTO_VIVO", "MOVIMENTACAO", "MUDANCA_FORMA", "NAO_RESPIRA", "PERICIA_RACIAL_D4", "PERICIA_RACIAL_D6",
@@ -1062,13 +1084,14 @@ object RacialTraitPointCatalog {
      * Signos de Nascença ou reservas de Chi) retornam `false` para que não sejam exibidos na seleção
      * do Criador de Raças Customizadas e sejam identificados como regra única da raça.
      */
-    fun ehDoCatalogo(id: String?, targetRef: String? = null, idsCatalogoOficial: Set<String> = emptySet()): Boolean {
-        if (id.isNullOrBlank()) return false
-        val key = id.keyify()
+    fun ehDoCatalogo(id: String?, targetRef: String? = null, traitId: String? = null, idsCatalogoOficial: Set<String> = emptySet()): Boolean {
+        if (id.isNullOrBlank() && traitId.isNullOrBlank()) return false
+        val key = id?.keyify().orEmpty()
+        val traitKey = traitId?.keyify().orEmpty()
         val targetKey = targetRef?.keyify().orEmpty()
-        if (key in PARAMETRIZADOS_OFICIAIS || targetKey in PARAMETRIZADOS_OFICIAIS) return true
-        if (idsCatalogoOficial.isNotEmpty() && key in idsCatalogoOficial) return true
-        return key in IDS_CATALOGO_LIVRO_BASICO
+        if (key in PARAMETRIZADOS_OFICIAIS || traitKey in PARAMETRIZADOS_OFICIAIS || targetKey in PARAMETRIZADOS_OFICIAIS) return true
+        if (idsCatalogoOficial.isNotEmpty() && (key in idsCatalogoOficial || traitKey in idsCatalogoOficial)) return true
+        return key in IDS_CATALOGO_LIVRO_BASICO || traitKey in IDS_CATALOGO_LIVRO_BASICO
     }
 
     // Ids de traço racial que representam Voo de verdade (qualquer tier: Fadas

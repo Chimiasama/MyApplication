@@ -56,7 +56,9 @@ data class CreationPreset(
                 moduloKey = "SCI_FI",
                 defaultCartaSelvagem = true,
                 defaultMaisPontosPericias = true,
-                defaultCompendioSciFi = true
+                defaultCompendioSciFi = true,
+                defaultRegraMechas = true,
+                defaultRegraCiberneticos = true
             ),
             CreationPreset(
                 id = "horror",
