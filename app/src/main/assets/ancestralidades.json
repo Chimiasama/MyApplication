@@ -1205,7 +1205,7 @@
         "descricaoLite": "Exoesqueleto resistente: concede +2 de Armadura."
       },
       {
-        "nome": "AÇÕES ADICIONAIS",
+        "nome": "Ação Adicional - Física",
         "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas).",
         "id": "ACAO_ADICIONAL_FISICA",
         "category": "racial_trait_positive",
