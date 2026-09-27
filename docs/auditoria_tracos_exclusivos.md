@@ -59,8 +59,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ## 2. Traços Identificados como Fora do Catálogo (`[Regra Única da Raça / Fora do Catálogo]`)
 
 - **MEIO-ELFOS** [anc_meio_elfos_basico] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **RAKASHANOS** [anc_rakashanos_basico] (BASICO) — Traço: **Garras** | `id=GARRAS_SEM_PA` | `traitId=null` | Audit: `[id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts`
-- **CENTAUROS** (BASICO) — Traço: **CASCOS** | `id=GARRAS_SEM_PA` | `traitId=null` | Audit: `[id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "CASCOS" · +2 pts`
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=null` | Audit: `[id=ELEMENTO_ANCESTRAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral · +2 pts`
 - **GOLENS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=null` | Audit: `[id=SEM_NOCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **INSETOIDES** [anc_insetoides_fantasia] (BASICO) — Traço: **AÇÕES ADICIONAIS** | `id=ACAO_ADICIONAL_FISICA` | `traitId=null` | Audit: `[id=ACAO_ADICIONAL_FISICA] [Regra Única da Raça / Fora do Catálogo] Ação Adicional (Física/Mental) Skin: "AÇÕES ADICIONAIS" · +4 pts`
@@ -73,24 +71,19 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **MINOTAUROS** (BASICO) — Traço: **SEM INSTRUÇÃO** | `id=SEM_INSTRUCAO` | `traitId=null` | Audit: `[id=SEM_INSTRUCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **OGROS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=null` | Audit: `[id=SEM_NOCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **ORCS** (BASICO) — Traço: **BRUTAL** | `id=SEM_INSTRUCAO` | `traitId=null` | Audit: `[id=SEM_INSTRUCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "BRUTAL" · -2 pts`
-- **RAKASHANOS** [anc_rakashanos_fantasia] (BASICO) — Traço: **INIMIGO ANCESTRAL** | `id=INIMIGO_ANCESTRAL` | `traitId=null` | Audit: `[id=INIMIGO_ANCESTRAL] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=null` | Audit: `[id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **RESISTÊNCIA AO FRIO** | `id=RESISTENCIA_AO_FRIO` | `traitId=null` | Audit: `[id=RESISTENCIA_AO_FRIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **TRANSMORFOS** (BASICO) — Traço: **CARISMÁTICO** | `id=CARISMATICO` | `traitId=null` | Audit: `[id=CARISMATICO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **TRANSMORFOS** (BASICO) — Traço: **MUDAR DE FORMA** | `id=ANTECEDENTE_ARCANO_PODER` | `traitId=null` | Audit: `[id=ANTECEDENTE_ARCANO_PODER exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "MUDAR DE FORMA" · +2 pts`
 - **MEIO-ELFOS** [anc_meio_elfos_horror] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **RAKASHANOS** [anc_rakashanos_horror] (BASICO) — Traço: **Garras** | `id=GARRAS_SEM_PA` | `traitId=null` | Audit: `[id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts`
-- **RAKASHANOS** [anc_rakashanos_scifi] (BASICO) — Traço: **Garras** | `id=GARRAS_SEM_PA` | `traitId=null` | Audit: `[id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts`
 - **CENTAUX** (BASICO) — Traço: **ÓBVIO** | `id=OBVIO` | `traitId=null` | Audit: `[id=OBVIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **DRAKENS** (BASICO) — Traço: **LENTO** | `id=LENTO` | `traitId=null` | Audit: `[id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts`
 - **DRAKENS** (BASICO) — Traço: **RUDE** | `id=RUDE` | `traitId=null` | Audit: `[id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **ELEMENTAIS** (BASICO) — Traço: **CABEÇA-DURA** | `id=CABECA_DURA` | `traitId=null` | Audit: `[id=CABECA_DURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "CABEÇA-DURA" · -2 pts`
-- **FERAIS** (BASICO) — Traço: **INIMIGO ANCESTRAL (Insetoide)** | `id=INIMIGO_ANCESTRAL` | `traitId=null` | Audit: `[id=INIMIGO_ANCESTRAL] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). Skin: "INIMIGO ANCESTRAL (Insetoide)" · -1 pts`
 - **GELATINOIDES** (BASICO) — Traço: **FRACO** | `id=FRACO` | `traitId=null` | Audit: `[id=FRACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **MINERADORES GENÉTICOS** (BASICO) — Traço: **DEPENDÊNCIA ATMOSFÉRICA (Maior)** | `id=DEPENDENCIA_ATMOSFERICA_MAIOR` | `traitId=null` | Audit: `[id=DEPENDENCIA_ATMOSFERICA_MAIOR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Dependência Atmosférica (Maior) · -2 pts`
 - **QUADROIDES** (BASICO) — Traço: **AÇÃO ADICIONAL (Física)** | `id=ACAO_ADICIONAL_FISICA` | `traitId=null` | Audit: `[id=ACAO_ADICIONAL_FISICA] [Regra Única da Raça / Fora do Catálogo] Ação Adicional (Física/Mental) Skin: "AÇÃO ADICIONAL (Física)" · +4 pts`
-- **QUADROIDES** (BASICO) — Traço: **INIMIGO ANCESTRAL** | `id=INIMIGO_ANCESTRAL` | `traitId=null` | Audit: `[id=INIMIGO_ANCESTRAL] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **SOLDADOS GENÉTICOS** (BASICO) — Traço: **NERVOS DE AÇO** | `id=NERVOS_DE_ACO` | `traitId=null` | Audit: `[id=NERVOS_DE_ACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **SOLDADOS GENÉTICOS** (BASICO) — Traço: **REFLEXOS DE COMBATE** | `id=REFLEXOS_DE_COMBATE` | `traitId=null` | Audit: `[id=REFLEXOS_DE_COMBATE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts`
 - **SOLDADOS GENÉTICOS** (BASICO) — Traço: **TREINADOS PARA A GUERRA** | `id=TREINADOS_PARA_A_GUERRA` | `traitId=null` | Audit: `[id=TREINADOS_PARA_A_GUERRA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
@@ -111,7 +104,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **Umvee (Filhos da Lua)** [anc_umvee] (BASICO) — Traço: **Dons da Natureza** | `id=DONS_DA_NATUREZA` | `traitId=null` | Audit: `[id=DONS_DA_NATUREZA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
 - **Umvee (Filhos da Lua)** [anc_umvee] (BASICO) — Traço: **Naturalmente Sobrenatural** | `id=NATURALMENTE_SOBRENATURAL` | `traitId=null` | Audit: `[id=NATURALMENTE_SOBRENATURAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Umvee (Filhos da Lua)** [anc_umvee] (BASICO) — Traço: **Instinto de Sobrevivência** | `id=INSTINTO_DE_SOBREVIVENCIA` | `traitId=null` | Audit: `[id=INSTINTO_DE_SOBREVIVENCIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
-- **Feral** [anc_feral] (BASICO) — Traço: **Garras** | `id=GARRAS_SEM_PA` | `traitId=null` | Audit: `[id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts`
 - **Feral** [anc_feral] (BASICO) — Traço: **Primitivo** | `id=PRIMITIVO` | `traitId=null` | Audit: `[id=PRIMITIVO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **Feral** [anc_feral] (BASICO) — Traço: **Mente Primitiva** | `id=MENTE_PRIMITIVA` | `traitId=null` | Audit: `[id=MENTE_PRIMITIVA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **Feral** [anc_feral] (BASICO) — Traço: **Limitações Técnicas** | `id=LIMITACOES_TECNICAS` | `traitId=null` | Audit: `[id=LIMITACOES_TECNICAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
@@ -135,7 +127,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **Meio-Orc** [anc_meio_orcpathfinder] (BASICO) — Traço: **Ferocidade Orc** | `id=FEROCIDADE_ORC` | `traitId=null` | Audit: `[id=FEROCIDADE_ORC exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Ferocidade Orc · +1 pts`
 - **Meio-Orc** [anc_meio_orcpathfinder] (BASICO) — Traço: **Intimidante** | `id=INTIMIDANTE` | `traitId=null` | Audit: `[id=INTIMIDANTE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **MEIO-ELFOS** [anc_meio_elfos_super] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **RAKASHANOS** [anc_rakashanos_super] (BASICO) — Traço: **Garras** | `id=GARRAS_SEM_PA` | `traitId=null` | Audit: `[id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts`
 
 ## 3. Auditoria Detalhada por Ancestralidade
 
@@ -147,14 +138,14 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### ANÕES [id=anc_anoes_basico] (BASICO)
 - [id=PACE_CHANGE] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Resistente" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### AVIANOS [id=anc_avianos_basico] (BASICO)
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Aguçados" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VOO_MOV_12] [Catálogo Oficial] Voo (Movimentação 12) Skin: "Voo" · +4 pts
 
 ### AQUARIANOS [id=anc_aquarianos_basico] (BASICO)
@@ -164,7 +155,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### ELFOS [id=anc_elfos_basico] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=DESASTRADO categoria=racial_hindrance] Complicação concedida ao personagem: Desastrado (Menor) Skin: "Desastrado" · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -177,15 +168,15 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### PEQUENINOS [id=anc_pequeninos_basico] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Espirituoso" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=SORTE categoria=racial_edge] Vantagem Grátis concedida ao personagem: SORTE Skin: "Sorte" · +2 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 
 ### RAKASHANOS [id=anc_rakashanos_basico] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
@@ -200,7 +191,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### ANÕES [id=anc_anoes_fantasia] (BASICO)
 - [id=PACE_CHANGE] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "ROBUSTO" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) Skin: "ROBUSTO" · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### AQUARIANOS [id=anc_aquarianos_fantasia] (BASICO)
@@ -213,7 +204,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: NÃO SABE NADAR (Menor) Skin: "NÃO SABE NADAR" · -1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "SENTIDOS AGUÇADOS" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VOO_MOV_12] [Catálogo Oficial] Voo (Movimentação 12) Skin: "VOO" · +4 pts
 
 ### CELESTIAIS (BASICO)
@@ -223,7 +214,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VOTO categoria=racial_hindrance] Complicação concedida ao personagem: VOTO (Maior) Skin: "VOTO" · -2 pts
 
 ### CENTAUROS (BASICO)
-- [id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "CASCOS" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "CASCOS" · +2 pts
 - [id=DEPENDENCIA] [Catálogo Oficial] Dependência: Precisa ter contato com uma substância por 1h a cada 24h ou sofre Fadiga. · -2 pts
 - [id=FORMA_ALIENIGENA] [Catálogo Oficial] Forma Alienígena: Tamanho/forma incompatível: requer equipamentos personalizados (+100% custo) ou sofre -1 em rolagens de Característica. Skin: "FORMA INCOMUM" · -1 pts
 - [id=MOVIMENTACAO x2] [Catálogo Oficial] Movimentação Aumentada (+2): +2 na Movimentação e aumenta o dado de corrida em um tipo. Skin: "MOVIMENTAÇÃO +4" · +4 pts
@@ -247,7 +238,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### ELFOS [id=anc_elfos_fantasia] (BASICO)
 - [id=DESASTRADO categoria=racial_hindrance] Complicação concedida ao personagem: DESASTRADO (Menor) Skin: "DESASTRADO" · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "ÁGIL" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 
 ### FADAS (BASICO)
 - [id=BOCA_GRANDE categoria=racial_hindrance] Complicação concedida ao personagem: BOCA GRANDE (Menor) Skin: "BOCA GRANDE" · -1 pts
@@ -258,9 +249,9 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VOO_MOV_6] [Catálogo Oficial] Voo (Movimentação 6) Skin: "VOO" · +2 pts
 
 ### GNOMOS (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Atributo Astúcia +1 passo(s) · +2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "SENTIDOS APRIMORADOS" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -269,7 +260,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=INFRAVISAO] [Catálogo Oficial] Infravisão: Reduz pela metade penalidades de Iluminação contra alvos quentes. · +1 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. Skin: "PEQUENOS" · -1 pts
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). Skin: "SOBREVIVENTE" · +2 pts
-- [id=SKILL_BOOST alvo=Furtividade] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "SORRATEIRO" · +1 pts
+- [id=SKILL_BOOST alvo=Furtividade] [Catálogo Oficial] Perícia Furtividade +1 passo(s) · +1 pts
 
 ### GOLENS (BASICO)
 - [id=ARMADURA] [Catálogo Oficial] Armadura (+2): Pele grossa, placas ou carapaça garantem Armadura +2. · +1 pts
@@ -314,8 +305,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=CABECAS_DURAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "CABEÇAS-DURAS" · -2 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Maior) Skin: "FORASTEIRO" · -2 pts
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "MUITO FORTE" · +4 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "MUITO RESISTENTE" · +4 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +2 passo(s) · +4 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +2 passo(s) · +4 pts
 - [id=SEM_NOCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
 - [id=TAMANHO_MAIS_1 x3] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. Skin: "TAMANHO +3" · +3 pts
 
@@ -327,9 +318,9 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### MINOTAUROS (BASICO)
 - [id=CHIFRES_MAIORES] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "CHIFRES" · +2 pts
 - [id=DESAGRADAVEL categoria=racial_hindrance] Complicação concedida ao personagem: DESAGRADÁVEL (Menor) Skin: "DESAGRADÁVEL" · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "DURÃO" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "MUITO FORTE" · +4 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +2 passo(s) · +4 pts
 - [id=SEM_INSTRUCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
 - [id=SENSIVEL categoria=racial_hindrance] Complicação concedida ao personagem: SENSÍVEL (Maior) Skin: "SENSÍVEL" · -2 pts
 - [id=TAMANHO_MAIS_1] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. · +1 pts
@@ -340,8 +331,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=PENALIDADE_PERICIA_1] [Catálogo Oficial] Penalidade em Perícia (-1): Sofre -1 em uma perícia comum (ou -2 se incomum). Skin: "DESAJEITADO (Furtividade)" · -1 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Menor) Skin: "FORASTEIRO" · -1 pts
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "MUITO FORTE" · +4 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "MUITO RESISTENTE" · +4 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +2 passo(s) · +4 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +2 passo(s) · +4 pts
 - [id=ROBUSTO] [Catálogo Oficial] Robusto: Um segundo resultado Abalado não causa Ferimento. · +2 pts
 - [id=SEM_NOCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
 - [id=TAMANHO_MAIS_1] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. · +1 pts
@@ -349,13 +340,13 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### ORCS (BASICO)
 - [id=SEM_INSTRUCAO] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "BRUTAL" · -2 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Maior) Skin: "FORASTEIRO" · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "FORTE" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=INFRAVISAO] [Catálogo Oficial] Infravisão: Reduz pela metade penalidades de Iluminação contra alvos quentes. · +1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "RESISTENTE" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=TAMANHO_MAIS_1] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. · +1 pts
 
 ### PEQUENINOS [id=anc_pequeninos_fantasia] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "ESPIRITUOSO" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=SORTE categoria=racial_edge] Vantagem Grátis concedida ao personagem: SORTE Skin: "SORTE" · +2 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
@@ -391,18 +382,18 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### RAKASHANOS [id=anc_rakashanos_fantasia] (BASICO)
 - [id=GARRAS] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts
-- [id=INIMIGO_ANCESTRAL] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
+- [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. Skin: "INIMIGO ANCESTRAL" · -1 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: NÃO SABE NADAR (Menor) Skin: "NÃO SABE NADAR" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: SANGUINÁRIO (Maior) Skin: "SANGUINÁRIO" · -2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "ÁGIL" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 
 ### RENASCIDOS (BASICO)
 - [id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
 - [id=REGENERACAO] [Catálogo Oficial] Regeneração: Rolagem de Cura natural uma vez por dia. Skin: "BEBEDOR DE SANGUE" · +2 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Maior) Skin: "FORASTEIRO" · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "FORÇA SOBRENATURAL" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=RESISTENCIA_AO_FRIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
@@ -428,14 +419,14 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### ANÕES [id=anc_anoes_horror] (BASICO)
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Resistente" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### AVIANOS [id=anc_avianos_horror] (BASICO)
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Aguçados" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VOO_MOV_12] [Catálogo Oficial] Voo (Movimentação 12) Skin: "Voo" · +4 pts
 
 ### AQUARIANOS [id=anc_aquarianos_horror] (BASICO)
@@ -445,7 +436,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### ELFOS [id=anc_elfos_horror] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=DESASTRADO categoria=racial_hindrance] Complicação concedida ao personagem: Desastrado (Menor) Skin: "Desastrado" · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -458,15 +449,15 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### PEQUENINOS [id=anc_pequeninos_horror] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Espirituoso" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=SORTE categoria=racial_edge] Vantagem Grátis concedida ao personagem: SORTE Skin: "Sorte" · +2 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 
 ### RAKASHANOS [id=anc_rakashanos_horror] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
@@ -481,7 +472,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### ANÕES [id=anc_anoes_scifi] (BASICO)
 - [id=PACE_CHANGE] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Resistente" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### AQUARIANOS [id=anc_aquarianos_scifi] (BASICO)
@@ -494,11 +485,11 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Aguçados" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VOO_MOV_12] [Catálogo Oficial] Voo (Movimentação 12) Skin: "Voo" · +4 pts
 
 ### ELFOS [id=anc_elfos_scifi] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=DESASTRADO categoria=racial_hindrance] Complicação concedida ao personagem: Desastrado (Menor) Skin: "Desastrado" · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -506,9 +497,9 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### RAKASHANOS [id=anc_rakashanos_scifi] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
@@ -523,7 +514,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### DRAKENS (BASICO)
 - [id=CHIFRES] [Catálogo Oficial] Chifres (For+d4): Arma natural de chifres causando For+d4 de dano. Skin: "CABEÇA DURA" · +1 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "FORTE" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts
 - [id=RESISTENCIA x2] [Catálogo Oficial] Resistência (+1): Pele endurecida ou músculos densos aumentam a Resistência em +1. Skin: "RESISTÊNCIA +2" · +2 pts
 - [id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
@@ -533,13 +524,13 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=TAMANHO_MAIS_1] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. · +1 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "MUITO FORTE" · +4 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +2 passo(s) · +4 pts
 - [id=RESISTENCIA x2] [Catálogo Oficial] Resistência (+1): Pele endurecida ou músculos densos aumentam a Resistência em +1. Skin: "RESISTÊNCIA +2" · +2 pts
 
 ### FERAIS (BASICO)
 - [id=ALTA_TECNOLOGIA categoria=racial_hindrance] Complicação concedida ao personagem: ALTA/BAIXA TECNOLOGIA (Maior) Skin: "ALTA/BAIXA TECNOLOGIA" · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "ESPIRITUOSO" · +2 pts
-- [id=INIMIGO_ANCESTRAL] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). Skin: "INIMIGO ANCESTRAL (Insetoide)" · -1 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
+- [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. Skin: "INIMIGO ANCESTRAL (Insetoide)" · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 
 ### FLORANS (BASICO)
@@ -567,9 +558,9 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=SEM_ORGAOS_VITAIS] [Catálogo Oficial] Sem Órgãos Vitais: Ataques Localizados não provocam dano extra. · +1 pts
 
 ### MINERADORES GENÉTICOS (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "EM FORMA" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=DEPENDENCIA_ATMOSFERICA_MAIOR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Dependência Atmosférica (Maior) · -2 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "FORTE" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 
 ### ORÁCULOS (BASICO)
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
@@ -584,7 +575,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### QUADROIDES (BASICO)
 - [id=ACAO_ADICIONAL_FISICA] [Regra Única da Raça / Fora do Catálogo] Ação Adicional (Física/Mental) Skin: "AÇÃO ADICIONAL (Física)" · +4 pts
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
-- [id=INIMIGO_ANCESTRAL] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
+- [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. Skin: "INIMIGO ANCESTRAL" · -1 pts
 - [id=MEMBROS_EXTRAS] [Catálogo Oficial] Membros Extras: Conjunto adicional de braços: +1 em Agrupar, +1 em Atletismo (escalar/agarrar) e permite segurar objetos/armas adicionais. · +2 pts
 - [id=SENSIVEL categoria=racial_hindrance] Complicação concedida ao personagem: SENSÍVEL (Maior) Skin: "SENSÍVEL" · -2 pts
 
@@ -616,7 +607,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=TRANSTORNO_DE_SEPARACAO] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
 
 ### YETIS (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "FORTE" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=FRAQUEZA_AMBIENTAL] [Catálogo Oficial] Fraqueza Ambiental: -4 para resistir a um efeito ambiental e sofre +4 de dano dele. Skin: "FRAQUEZA AMBIENTAL (Calor)" · -1 pts
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
 - [id=RESISTENCIA_AMBIENTAL] [Catálogo Oficial] Resistência Ambiental: +4 em rolagens de resistência e -4 de dano contra um efeito ambiental. Skin: "RESISTÊNCIA AMBIENTAL (Frio)" · +1 pts
@@ -626,23 +617,23 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### Bogovia [id=anc_bogovia] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Forte" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### Fjordstad [id=anc_fjordstad] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Astuto" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Atributo Astúcia +1 passo(s) · +2 pts
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### As Ilhas [id=anc_as_ilhas] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Vigoroso" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### Maseia [id=anc_maseia] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### Zingama [id=anc_zingama] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Espiritual" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### Humano (Império San) [id=anc_humano_adg] (BASICO)
@@ -650,22 +641,22 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### Akaimimi (Panda Vermelho) [id=anc_akaimimi] (BASICO)
 - [id=BOM_CONSELHEIRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
-- [id=SKILL_BOOST alvo=Convenção] [Catálogo Oficial] Perícia Racial (d6): Começa com d6 em uma perícia inerente e aumenta máximo para d12+1. Skin: "Dicas Culturais" · +2 pts
-- [id=SKILL_BOOST alvo=Conhecimento Geral] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. · +1 pts
+- [id=SKILL_BOOST alvo=Convenção] [Catálogo Oficial] Perícia Convenção +1 passo(s) · +2 pts
+- [id=SKILL_BOOST alvo=Conhecimento Geral] [Catálogo Oficial] Perícia Conhecimento Geral +1 passo(s) · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### Araiguma (Guaxinim) [id=anc_araiguma] (BASICO)
-- [id=SKILL_BOOST alvo=Provocar] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Brincalhão" · +1 pts
+- [id=SKILL_BOOST alvo=Provocar] [Catálogo Oficial] Perícia Provocar +0 passo(s) · +1 pts
 - [id=DIGESTAO_GLORIOSA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
-- [id=SKILL_BOOST alvo=Furtividade] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Trapalhões Travessos" · +1 pts
+- [id=SKILL_BOOST alvo=Furtividade] [Catálogo Oficial] Perícia Furtividade +1 passo(s) · +1 pts
 - [id=HABITO categoria=racial_hindrance] Complicação concedida ao personagem: Esquisitices (Hábito) (Menor) Skin: "Esquisitices (Hábito)" · -1 pts
 - [id=PECULIARIDADE categoria=racial_hindrance] Complicação concedida ao personagem: Esquisitices (Peculiaridade) (Menor) Skin: "Esquisitices (Peculiaridade)" · -1 pts
 
 ### Inumimi (Cão) [id=anc_inumimi] (BASICO)
 - [id=VIGOROSOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Resistência +1 · +1 pts
 - [id=CANINOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Cães de Guarda" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 - [id=MATILHA categoria=racial_hindrance] Complicação concedida ao personagem: Matilha Skin: "Matilha" · -1 pts
 
@@ -677,12 +668,12 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### Nekomimi (Gato) [id=anc_nekomimi] (BASICO)
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
-- [id=SKILL_BOOST alvo=Jogar] [Catálogo Oficial] Perícia Racial (d6): Começa com d6 em uma perícia inerente e aumenta máximo para d12+1. Skin: "Brincando com o Destino" · +2 pts
+- [id=SKILL_BOOST alvo=Jogar] [Catálogo Oficial] Perícia Jogar +1 passo(s) · +2 pts
 - [id=FORTUNA_DA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
 - [id=AZARADO categoria=racial_hindrance] Complicação concedida ao personagem: Azarado (Menor) Skin: "Azarado" · -2 pts
 
 ### Tanukimimi (Tanuki) [id=anc_tanukimimi] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Felizes por Natureza" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
 - [id=APARAR_BAIXO] [Catálogo Oficial] Aparar Baixo: Aparar -1. Skin: "Despretensiosos e Barrigudos (Aparar Baixo)" · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 Skin: "Despretensiosos e Barrigudos (Movimentação Reduzida)" · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
@@ -708,9 +699,9 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: Forasteiro (Menor) Skin: "Forasteiro" · -1 pts
 
 ### Feral [id=anc_feral] (BASICO)
-- [id=SKILL_BOOST alvo=Sobrevivência] [Catálogo Oficial] Perícia Racial (d6): Começa com d6 em uma perícia inerente e aumenta máximo para d12+1. Skin: "Integrado à Natureza" · +2 pts
+- [id=SKILL_BOOST alvo=Sobrevivência] [Catálogo Oficial] Perícia Sobrevivência +1 passo(s) · +2 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Insanidade (Sanguinário) (Maior) Skin: "Insanidade (Sanguinário)" · -2 pts
-- [id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
 - [id=PRIMITIVO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
 - [id=MENTE_PRIMITIVA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
 - [id=LIMITACOES_TECNICAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
@@ -720,7 +711,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### Onigem (Sangue Oni) [id=anc_onigem_adg] (BASICO)
 - [id=TRIPAS_RESISTENTE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: Ancestralidade Infame (Menor) Skin: "Ancestralidade Infame" · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Forte" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=SUSPEITOSO categoria=racial_hindrance] Complicação concedida ao personagem: Suspeitoso (Menor) Skin: "Suspeitoso" · -1 pts
 
 ### Humano [id=anc_humano_csv] (BASICO)
@@ -744,32 +735,32 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=APTIDAO_COM_PEDRAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=CONSTITUICAO_DE_FERRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Resistente" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Robustez (Força +1 para Carga/Armadura) Skin: "Robustez"
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### Elfo [id=anc_elfopathfinder] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=ESGUIOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Esguios · -3 pts
-- [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Inteligência" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Atributo Astúcia +1 passo(s) · +2 pts
 - [id=MAGIA_ELFICA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Apurados" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 
 ### Gnomo [id=anc_gnomopathfinder] (BASICO)
 - [id=MAGIA_GNOMICA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=OBSESSIVOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Resistente" · +2 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Apurados" · +1 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 - [id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 
 ### Halfling [id=anc_halflingpathfinder] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=SKILL_BOOST alvo=Atletismo] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Pés-Firmes" · +1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Aguçados" · +1 pts
+- [id=SKILL_BOOST alvo=Atletismo] [Catálogo Oficial] Perícia Atletismo +1 passo(s) Skin: "Pés-Firmes" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=SORTE categoria=racial_edge] Vantagem Grátis concedida ao personagem: SORTE Skin: "Sorte" · +2 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 
@@ -785,7 +776,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### Meio-Orc [id=anc_meio_orcpathfinder] (BASICO)
 - [id=FEROCIDADE_ORC exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Ferocidade Orc · +1 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: Forasteiro (Menor) Skin: "Forasteiro" · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Forte" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=INTIMIDANTE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -797,14 +788,14 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### ANÕES [id=anc_anoes_super] (BASICO)
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Resistente" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### AVIANOS [id=anc_avianos_super] (BASICO)
 - [id=FRAGIL] [Catálogo Oficial] Frágil: Reduz a Resistência em 1. · -1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
-- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Sentidos Aguçados" · +1 pts
+- [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VOO_MOV_12] [Catálogo Oficial] Voo (Movimentação 12) Skin: "Voo" · +4 pts
 
 ### AQUARIANOS [id=anc_aquarianos_super] (BASICO)
@@ -814,7 +805,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### ELFOS [id=anc_elfos_super] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=DESASTRADO categoria=racial_hindrance] Complicação concedida ao personagem: Desastrado (Menor) Skin: "Desastrado" · -1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -827,15 +818,15 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ADAPTAVEL] [Catálogo Oficial] Adaptável: Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos). · +2 pts
 
 ### PEQUENINOS [id=anc_pequeninos_super] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Espirituoso" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Espírito] [Catálogo Oficial] Atributo Espírito +1 passo(s) · +2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=SORTE categoria=racial_edge] Vantagem Grátis concedida ao personagem: SORTE Skin: "Sorte" · +2 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
 
 ### RAKASHANOS [id=anc_rakashanos_super] (BASICO)
-- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Aumento de Atributo: Aumenta um atributo específico em um tipo de dado e seu máximo em um. Skin: "Ágil" · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
 - [id=INIMIGO_RACIAL] [Catálogo Oficial] Inimigo Racial: -2 em Persuadir ao lidar com a espécie rival. · -1 pts
-- [id=GARRAS_SEM_PA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
+- [id=GARRAS_SEM_PA] [Catálogo Oficial] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Garras" · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
 - [id=NAO_SABE_NADAR categoria=racial_hindrance] Complicação concedida ao personagem: Não Sabe Nadar (Menor) Skin: "Não Sabe Nadar" · -1 pts
 - [id=SANGUINARIO categoria=racial_hindrance] Complicação concedida ao personagem: Sanguinário (Maior) Skin: "Sanguinário" · -2 pts
