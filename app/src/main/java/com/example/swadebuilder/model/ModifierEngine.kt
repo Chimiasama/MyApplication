@@ -193,7 +193,7 @@ object ModifierEngine {
             // ler direto de `anc.habilidades` sem esse filtro
             // reintroduziria o traço removido por baixo do pano.
             anc.habilidades
-                .filter { it.nome.keyify() in sourceKeys }
+                .filter { it.nome.isBlank() || it.nome.keyify() in sourceKeys }
                 .forEach { hab ->
                     registrarCompra(hab.resolvedTraitId(), hab.vezes)
                 }

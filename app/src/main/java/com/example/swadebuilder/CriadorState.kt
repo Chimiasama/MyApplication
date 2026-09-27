@@ -3906,14 +3906,22 @@ class CriadorState {
             ?: emptySet()
 
         // Gnomo (Obsessivos), Kitsunemimi (Preparado) e Usagimimi (Definido
-        // pelo Ofício): escolha de perícia à escolha do jogador — não é mais
-        // um "if" hardcoded aqui. applyAncestryVariantAdjustments
-        // (resolveMarkedSelection, Seleção TARGET_ATTRIBUTE_OR_SKILL) já
-        // injeta o traço real (traitId=SKILL_BOOST + targetRef=a perícia
-        // escolhida) em habilidades[] conforme gnomoPericiaEscolhida/
-        // kitsunemimiPericiaEscolhida/usagimimiPericiaEscolhida, e o laço
-        // genérico de PericiaStep logo acima já o lê como qualquer outro
-        // traço racial — mesmo padrão de Endurecido/Primitivo.
+        // pelo Ofício): escolha de perícia à escolha do jogador.
+        if (habilidadeIdsPericia.contains("OBSESSIVOS") || ancKey.contains("GNOMO")) {
+            if (perKey == gnomoPericiaEscolhida?.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+        if (habilidadeIdsPericia.contains("PREPARADO") || ancKey.contains("KITSUNEMIMI")) {
+            if (perKey == kitsunemimiPericiaEscolhida?.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO") || ancKey.contains("USAGIMIMI")) {
+            if (perKey == usagimimiPericiaEscolhida?.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
@@ -4935,14 +4943,20 @@ class CriadorState {
 
     val totalSpPool: Int
         get() {
+            val extraRacialSp = (currentAncestryDef?.habilidades
+                ?.filter { it.resolvedTraitId().keyify() == "PONTOS_DE_PERICIA" }
+                ?.sumOf { it.vezes * 3 } ?: 0) +
+                racialTraitIdsFromVariants
+                    .filter { it.id.keyify() == "PONTOS_DE_PERICIA" }
+                    .sumOf { it.vezes * 3 }
 
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
                 val base = 12
-                return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
+                return (base + extraRacialSp + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 val base = if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)
-                return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
+                return (base + extraRacialSp + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
         }
