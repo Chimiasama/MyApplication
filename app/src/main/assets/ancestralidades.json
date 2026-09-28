@@ -2998,7 +2998,10 @@
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
         "category": "racial_trait_negative",
-        "descricaoLite": "O tamanho e o barulho que fazem chamam atenção, resultando em -1 nos testes de Furtividade."
+        "descricaoLite": "O tamanho e o barulho que fazem chamam atenção, resultando em -1 nos testes de Furtividade.",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Furtividade",
+        "value": 1
       }
     ],
     "tags": [
