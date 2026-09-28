@@ -946,7 +946,7 @@ object AncestryVariantRegistry {
                     ),
                     FixedPackageOption(
                         "ar", "Ar",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("AR INTERNO", "AR_INTERNO")))
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("NÃO RESPIRA", "NAO_RESPIRA")))
                     ),
                     FixedPackageOption(
                         "fogo", "Fogo",

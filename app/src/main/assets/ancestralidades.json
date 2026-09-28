@@ -700,7 +700,7 @@
       },
       {
         "nome": "ELEMENTO ANCESTRAL",
-        "descricao": "Escolha 1 elemento ancestral (Água, Ar, Fogo ou Terra) — cada um concede um traço diferente: Água = Aquático; Ar = Ar Interno (Não Respira); Fogo = Vantagem Rápido; Terra = Vigor inicial d6 (Sólido como Rocha). Vale 2 pontos, qualquer que seja a escolha.",
+        "descricao": "Escolha 1 elemento ancestral (Água, Ar, Fogo ou Terra) — cada um concede um traço diferente: Água = Aquático; Ar = Não Respira; Fogo = Vantagem Rápido; Terra = Vigor inicial d6 (Sólido como Rocha). Vale 2 pontos, qualquer que seja a escolha.",
         "id": "ELEMENTO_ANCESTRAL",
         "category": "racial_trait_positive",
         "descricaoLite": "Escolhe 1 de 4 elementos ancestrais (Água/Ar/Fogo/Terra), cada um concedendo um traço próprio equivalente a 2 pontos."
@@ -1528,6 +1528,7 @@
     "livros": [
       "FANTASIA"
     ],
+    "pontosRaciaisEsperados": 0,
     "descricaoLite": "Corpo humanoide com cabeça e força de touro; sejam criação divina ou espécie de cultura própria, destacam-se pelo temperamento difícil e pela força bruta em combates diretos.",
     "tags": []
   },
@@ -1682,6 +1683,7 @@
     "livros": [
       "FANTASIA"
     ],
+    "pontosRaciaisEsperados": 3,
     "descricaoLite": "Vistos de fora como violentos e implacáveis, mas entendem sua conduta como simples lei do mais forte; o poder nas tribos é conquistado no combate direto, não por manipulação política.",
     "tags": []
   },

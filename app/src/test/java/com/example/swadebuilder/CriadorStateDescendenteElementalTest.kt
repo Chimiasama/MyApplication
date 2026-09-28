@@ -108,7 +108,7 @@ class CriadorStateDescendenteElementalTest {
         state.selecionarDescendenteElemental("Ar")
 
         assertEquals(4, state.atributoMinRaw("Vigor"))
-        assertTrue(state.currentAncestryDef?.habilidades.orEmpty().any { it.id == "AR_INTERNO" })
+        assertTrue(state.currentAncestryDef?.habilidades.orEmpty().any { it.id == "NAO_RESPIRA" })
         assertTrue(state.currentAncestryDef?.habilidades.orEmpty().none { it.id == "SOLIDO_COMO_ROCHA" })
     }
 }

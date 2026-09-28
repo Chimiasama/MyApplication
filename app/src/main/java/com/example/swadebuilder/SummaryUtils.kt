@@ -137,7 +137,7 @@ fun buildRacialTraitsList(
             .filter {
                 when (val key = it.keyify()) {
                     "AQUATICO" -> elem == "AGUA"
-                    "AR INTERNO" -> elem == "AR"
+                    "NAO RESPIRA", "NAO_RESPIRA", "AR INTERNO" -> elem == "AR"
                     "RAPIDO" -> elem == "FOGO"
                     "SOLIDO COMO ROCHA" -> elem == "TERRA"
                     "RESISTENCIA AMBIENTAL", "FORASTEIRO" -> true

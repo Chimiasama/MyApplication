@@ -907,7 +907,7 @@ object RacialTraitPointCatalog {
 
         // Placeholder de Seleção: Descendente Elemental (Fantasia) escolhe 1 de
         // 4 elementos (Água/Ar/Fogo/Terra), cada um injetando o traço resolvido
-        // de verdade (AQUATICO/AR_INTERNO/RAPIDO/SOLIDO_COMO_ROCHA, todos já
+        // de verdade (AQUATICO/NAO_RESPIRA/RAPIDO/SOLIDO_COMO_ROCHA, todos já
         // valendo 2) — ver AncestryVariantRegistry.descendenteElemental().
         // Custo 2 aqui (não 0): qualquer que seja a escolha, o resultado
         // SEMPRE vale 2 pontos — não existe opção "não escolher" que valha 0.
