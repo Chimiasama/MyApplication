@@ -3419,10 +3419,11 @@
         "value": 1
       },
       {
-        "nome": "DEPENDÊNCIA ATMOSFÉRICA (Maior)",
+        "nome": "Dependência Atmosférica",
         "descricao": "Tornaram-se dependentes da atmosfera artificial de colônias estelares ou minas.",
         "id": "DEPENDENCIA_ATMOSFERICA_MAIOR",
-        "category": "racial_trait_negative",
+        "category": "racial_hindrance",
+        "severity": "Maior",
         "descricaoLite": "Acostumaram-se tanto ao ar artificial de colônias e minas que dependem dele para viver bem, o que pode gerar complicações fora desses ambientes."
       },
       {
