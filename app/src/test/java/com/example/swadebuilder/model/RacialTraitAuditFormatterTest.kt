@@ -240,8 +240,8 @@ class RacialTraitAuditFormatterTest {
         val nomes = habilidadesArr.map { it.jsonObject["nome"]?.jsonPrimitive?.content }
 
         assertFalse("SEM_NOCAO não deve mais existir no Ogro", ids.contains("SEM_NOCAO"))
-        assertTrue("Deve possuir Sem Noção - Con. Geral", nomes.contains("Sem Noção - Con. Geral"))
-        assertTrue("Deve possuir Sem Noção - Perceber", nomes.contains("Sem Noção - Perceber"))
+        assertTrue("Deve possuir Sem Noção (Conhecimento Geral)", nomes.contains("Sem Noção (Conhecimento Geral)"))
+        assertTrue("Deve possuir Sem Noção (Perceber)", nomes.contains("Sem Noção (Perceber)"))
 
         val penalidadesPericia = habilidadesArr.filter { it.jsonObject["id"]?.jsonPrimitive?.content == "PENALIDADE_PERICIA_1" }
         assertTrue("Deve ter ao menos 4 penalidades de perícia no Ogro", penalidadesPericia.size >= 4)

@@ -6,12 +6,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=null` | Audit: `[id=ELEMENTO_ANCESTRAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral · +2 pts`
 - **MEIO-ORCS** (BASICO) — Traço: **ENDURECIDO** | `id=ENDURECIDO` | `traitId=null` | Audit: `[id=ENDURECIDO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **OGROS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=null` | Audit: `[id=SEM_NOCAO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=null` | Audit: `[id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
-- **RENASCIDOS** (BASICO) — Traço: **RESISTÊNCIA AO FRIO** | `id=RESISTENCIA_AO_FRIO` | `traitId=null` | Audit: `[id=RESISTENCIA_AO_FRIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **TRANSMORFOS** (BASICO) — Traço: **CARISMÁTICO** | `id=CARISMATICO` | `traitId=null` | Audit: `[id=CARISMATICO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **TRANSMORFOS** (BASICO) — Traço: **MUDAR DE FORMA** | `id=ANTECEDENTE_ARCANO_PODER` | `traitId=null` | Audit: `[id=ANTECEDENTE_ARCANO_PODER exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "MUDAR DE FORMA" · +2 pts`
 - **DRAKENS** (BASICO) — Traço: **LENTO** | `id=LENTO` | `traitId=null` | Audit: `[id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts`
 - **DRAKENS** (BASICO) — Traço: **RUDE** | `id=RUDE` | `traitId=null` | Audit: `[id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **ELEMENTAIS** (BASICO) — Traço: **CABEÇA-DURA** | `id=CABECA_DURA` | `traitId=null` | Audit: `[id=CABECA_DURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "CABEÇA-DURA" · -2 pts`
@@ -22,10 +18,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **SOLDADOS GENÉTICOS** (BASICO) — Traço: **TREINADOS PARA A GUERRA** | `id=TREINADOS_PARA_A_GUERRA` | `traitId=null` | Audit: `[id=TREINADOS_PARA_A_GUERRA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **VAZIOS** (BASICO) — Traço: **FORMA DE ENERGIA** | `id=FORMA_DE_ENERGIA` | `traitId=null` | Audit: `[id=FORMA_DE_ENERGIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+4 pts). · +4 pts`
 - **Humano (Império San)** [anc_humano_adg] (BASICO) — Traço: **Signos de Nascença** | `id=SIGNOS_DE_NASCENCA` | `traitId=null` | Audit: `[id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
-- **Akaimimi (Panda Vermelho)** [anc_akaimimi] (BASICO) — Traço: **Bom Conselheiro** | `id=BOM_CONSELHEIRO` | `traitId=null` | Audit: `[id=BOM_CONSELHEIRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
-- **Araiguma (Guaxinim)** [anc_araiguma] (BASICO) — Traço: **Digestão Gloriosa** | `id=DIGESTAO_GLORIOSA` | `traitId=null` | Audit: `[id=DIGESTAO_GLORIOSA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **Inumimi (Cão)** [anc_inumimi] (BASICO) — Traço: **Vigorosos** | `id=VIGOROSOS` | `traitId=null` | Audit: `[id=VIGOROSOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Resistência +1 · +1 pts`
-- **Inumimi (Cão)** [anc_inumimi] (BASICO) — Traço: **Caninos** | `id=CANINOS` | `traitId=null` | Audit: `[id=CANINOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Kitsunemimi (Raposa)** [anc_kitsunemimi] (BASICO) — Traço: **Preparado** | `id=PREPARADO` | `traitId=null` | Audit: `[id=PREPARADO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Nekomimi (Gato)** [anc_nekomimi] (BASICO) — Traço: **Fortuna Dá** | `id=FORTUNA_DA` | `traitId=null` | Audit: `[id=FORTUNA_DA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **Usagimimi (Coelho)** [anc_usagimimi] (BASICO) — Traço: **Definido pelo Ofício** | `id=DEFINIDO_PELO_OFICIO` | `traitId=null` | Audit: `[id=DEFINIDO_PELO_OFICIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
@@ -46,12 +38,11 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **Anjo** [anc_anjo_csv] (BASICO) — Traço: **Recluso** | `id=RECLUSO` | `traitId=null` | Audit: `[id=RECLUSO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Recluso (-2 Conhecimento Geral) · -2 pts`
 - **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Aptidão com Pedras** | `id=APTIDAO_COM_PEDRAS` | `traitId=null` | Audit: `[id=APTIDAO_COM_PEDRAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Constituição de Ferro** | `id=CONSTITUICAO_DE_FERRO` | `traitId=null` | Audit: `[id=CONSTITUICAO_DE_FERRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
-- **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Robustez** | `id=FORCA_CARGA_ARMADURA` | `traitId=null` | Audit: `[id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Robustez (Força +1 para Carga/Armadura) Skin: "Robustez"`
+- **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Aumento de Força Para Carga** | `id=FORCA_CARGA_ARMADURA` | `traitId=null` | Audit: `[id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Aumento de Força Para Carga`
 - **Elfo** [anc_elfopathfinder] (BASICO) — Traço: **Esguios** | `id=ESGUIOS` | `traitId=null` | Audit: `[id=ESGUIOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Esguios · -3 pts`
 - **Gnomo** [anc_gnomopathfinder] (BASICO) — Traço: **Magia Gnômica** | `id=MAGIA_GNOMICA` | `traitId=null` | Audit: `[id=MAGIA_GNOMICA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Gnomo** [anc_gnomopathfinder] (BASICO) — Traço: **Obsessivos** | `id=OBSESSIVOS` | `traitId=null` | Audit: `[id=OBSESSIVOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Meio-Orc** [anc_meio_orcpathfinder] (BASICO) — Traço: **Ferocidade Orc** | `id=FEROCIDADE_ORC` | `traitId=null` | Audit: `[id=FEROCIDADE_ORC exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Ferocidade Orc · +1 pts`
-- **Meio-Orc** [anc_meio_orcpathfinder] (BASICO) — Traço: **Intimidante** | `id=INTIMIDANTE` | `traitId=null` | Audit: `[id=INTIMIDANTE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 
 ## 2. Traços Identificados como Fora do Catálogo (`[Regra Única da Raça / Fora do Catálogo]`)
 
@@ -59,12 +50,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=null` | Audit: `[id=ELEMENTO_ANCESTRAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral · +2 pts`
 - **MEIO-ELFOS** [anc_meio_elfos_fantasia] (BASICO) — Traço: **HERANÇA** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **MEIO-ORCS** (BASICO) — Traço: **ENDURECIDO** | `id=ENDURECIDO` | `traitId=null` | Audit: `[id=ENDURECIDO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **OGROS** (BASICO) — Traço: **SEM NOÇÃO** | `id=SEM_NOCAO` | `traitId=null` | Audit: `[id=SEM_NOCAO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=null` | Audit: `[id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
-- **RENASCIDOS** (BASICO) — Traço: **RESISTÊNCIA AO FRIO** | `id=RESISTENCIA_AO_FRIO` | `traitId=null` | Audit: `[id=RESISTENCIA_AO_FRIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **TRANSMORFOS** (BASICO) — Traço: **CARISMÁTICO** | `id=CARISMATICO` | `traitId=null` | Audit: `[id=CARISMATICO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **TRANSMORFOS** (BASICO) — Traço: **MUDAR DE FORMA** | `id=ANTECEDENTE_ARCANO_PODER` | `traitId=null` | Audit: `[id=ANTECEDENTE_ARCANO_PODER exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "MUDAR DE FORMA" · +2 pts`
 - **MEIO-ELFOS** [anc_meio_elfos_horror] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **DRAKENS** (BASICO) — Traço: **LENTO** | `id=LENTO` | `traitId=null` | Audit: `[id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts`
 - **DRAKENS** (BASICO) — Traço: **RUDE** | `id=RUDE` | `traitId=null` | Audit: `[id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
@@ -76,10 +63,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **SOLDADOS GENÉTICOS** (BASICO) — Traço: **TREINADOS PARA A GUERRA** | `id=TREINADOS_PARA_A_GUERRA` | `traitId=null` | Audit: `[id=TREINADOS_PARA_A_GUERRA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **VAZIOS** (BASICO) — Traço: **FORMA DE ENERGIA** | `id=FORMA_DE_ENERGIA` | `traitId=null` | Audit: `[id=FORMA_DE_ENERGIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+4 pts). · +4 pts`
 - **Humano (Império San)** [anc_humano_adg] (BASICO) — Traço: **Signos de Nascença** | `id=SIGNOS_DE_NASCENCA` | `traitId=null` | Audit: `[id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
-- **Akaimimi (Panda Vermelho)** [anc_akaimimi] (BASICO) — Traço: **Bom Conselheiro** | `id=BOM_CONSELHEIRO` | `traitId=null` | Audit: `[id=BOM_CONSELHEIRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
-- **Araiguma (Guaxinim)** [anc_araiguma] (BASICO) — Traço: **Digestão Gloriosa** | `id=DIGESTAO_GLORIOSA` | `traitId=null` | Audit: `[id=DIGESTAO_GLORIOSA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **Inumimi (Cão)** [anc_inumimi] (BASICO) — Traço: **Vigorosos** | `id=VIGOROSOS` | `traitId=null` | Audit: `[id=VIGOROSOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Resistência +1 · +1 pts`
-- **Inumimi (Cão)** [anc_inumimi] (BASICO) — Traço: **Caninos** | `id=CANINOS` | `traitId=null` | Audit: `[id=CANINOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Kitsunemimi (Raposa)** [anc_kitsunemimi] (BASICO) — Traço: **Preparado** | `id=PREPARADO` | `traitId=null` | Audit: `[id=PREPARADO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Nekomimi (Gato)** [anc_nekomimi] (BASICO) — Traço: **Fortuna Dá** | `id=FORTUNA_DA` | `traitId=null` | Audit: `[id=FORTUNA_DA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **Usagimimi (Coelho)** [anc_usagimimi] (BASICO) — Traço: **Definido pelo Ofício** | `id=DEFINIDO_PELO_OFICIO` | `traitId=null` | Audit: `[id=DEFINIDO_PELO_OFICIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
@@ -100,19 +83,15 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **Anjo** [anc_anjo_csv] (BASICO) — Traço: **Recluso** | `id=RECLUSO` | `traitId=null` | Audit: `[id=RECLUSO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Recluso (-2 Conhecimento Geral) · -2 pts`
 - **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Aptidão com Pedras** | `id=APTIDAO_COM_PEDRAS` | `traitId=null` | Audit: `[id=APTIDAO_COM_PEDRAS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Constituição de Ferro** | `id=CONSTITUICAO_DE_FERRO` | `traitId=null` | Audit: `[id=CONSTITUICAO_DE_FERRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
-- **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Robustez** | `id=FORCA_CARGA_ARMADURA` | `traitId=null` | Audit: `[id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Robustez (Força +1 para Carga/Armadura) Skin: "Robustez"`
+- **Anão** [anc_anaopathfinder] (BASICO) — Traço: **Aumento de Força Para Carga** | `id=FORCA_CARGA_ARMADURA` | `traitId=null` | Audit: `[id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Aumento de Força Para Carga`
 - **Elfo** [anc_elfopathfinder] (BASICO) — Traço: **Esguios** | `id=ESGUIOS` | `traitId=null` | Audit: `[id=ESGUIOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Esguios · -3 pts`
 - **Elfo** [anc_elfopathfinder] (BASICO) — Traço: **Magia Élfica** | `id=MAGIA_ELFICA` | `traitId=null` | Audit: `[id=MAGIA_ELFICA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
-- **Elfo** [anc_elfopathfinder] (BASICO) — Traço: **Visão na Penumbra** | `id=VISAO_NA_PENUMBRA` | `traitId=null` | Audit: `[id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Gnomo** [anc_gnomopathfinder] (BASICO) — Traço: **Magia Gnômica** | `id=MAGIA_GNOMICA` | `traitId=null` | Audit: `[id=MAGIA_GNOMICA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Gnomo** [anc_gnomopathfinder] (BASICO) — Traço: **Obsessivos** | `id=OBSESSIVOS` | `traitId=null` | Audit: `[id=OBSESSIVOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
-- **Gnomo** [anc_gnomopathfinder] (BASICO) — Traço: **Visão na Penumbra** | `id=VISAO_NA_PENUMBRA` | `traitId=null` | Audit: `[id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Humano** [anc_humanopathfinder] (BASICO) — Traço: **Atributo Aumentado** | `id=FLEXIBILIDADE` | `traitId=FLEXIBILIDADE` | Audit: `[id=FLEXIBILIDADE] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "Atributo Aumentado" · +2 pts`
 - **Meio-Elfo** [anc_meio_elfopathfinder] (BASICO) — Traço: **Flexibilidade** | `id=FLEXIBILIDADE` | `traitId=FLEXIBILIDADE` | Audit: `[id=FLEXIBILIDADE] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **Meio-Elfo** [anc_meio_elfopathfinder] (BASICO) — Traço: **Magia Élfica** | `id=MAGIA_ELFICA` | `traitId=null` | Audit: `[id=MAGIA_ELFICA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
-- **Meio-Elfo** [anc_meio_elfopathfinder] (BASICO) — Traço: **Visão na Penumbra** | `id=VISAO_NA_PENUMBRA` | `traitId=null` | Audit: `[id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Meio-Orc** [anc_meio_orcpathfinder] (BASICO) — Traço: **Ferocidade Orc** | `id=FEROCIDADE_ORC` | `traitId=null` | Audit: `[id=FEROCIDADE_ORC exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Ferocidade Orc · +1 pts`
-- **Meio-Orc** [anc_meio_orcpathfinder] (BASICO) — Traço: **Intimidante** | `id=INTIMIDANTE` | `traitId=null` | Audit: `[id=INTIMIDANTE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **MEIO-ELFOS** [anc_meio_elfos_super] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 
 ## 3. Auditoria Detalhada por Ancestralidade
@@ -124,7 +103,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=VOTO categoria=racial_hindrance] Complicação concedida ao personagem: Voto (Maior) Skin: "Voto" · -2 pts
 
 ### ANÕES [id=anc_anoes_basico] (BASICO)
-- [id=PACE_CHANGE] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
+- [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -177,8 +156,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=PRONTIDAO categoria=racial_edge] Vantagem Grátis concedida ao personagem: PRONTIDAO Skin: "Sentidos Aguçados" · +2 pts
 
 ### ANÕES [id=anc_anoes_fantasia] (BASICO)
-- [id=PACE_CHANGE] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
-- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) Skin: "ROBUSTO" · +2 pts
+- [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### AQUARIANOS [id=anc_aquarianos_fantasia] (BASICO)
@@ -325,7 +304,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +2 passo(s) · +4 pts
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +2 passo(s) · +4 pts
 - [id=ROBUSTO] [Catálogo Oficial] Robusto: Um segundo resultado Abalado não causa Ferimento. · +2 pts
-- [id=SEM_NOCAO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
+- [id=PENALIDADE_PERICIA_1 alvo=Conhecimento Geral] [Catálogo Oficial] Penalidade em Perícia (-1): Sofre -1 em uma perícia comum (ou -2 se incomum). Skin: "Sem Noção (Conhecimento Geral)" · -1 pts
+- [id=PENALIDADE_PERICIA_1 alvo=Perceber] [Catálogo Oficial] Penalidade em Perícia (-1): Sofre -1 em uma perícia comum (ou -2 se incomum). Skin: "Sem Noção (Perceber)" · -1 pts
 - [id=TAMANHO_MAIS_1] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. · +1 pts
 
 ### ORCS (BASICO)
@@ -386,7 +366,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Maior) Skin: "FORASTEIRO" · -2 pts
 - [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. · +1 pts
-- [id=RESISTENCIA_AO_FRIO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=RESISTENCIA_AMBIENTAL alvo=Frio] [Catálogo Oficial] Resistência Ambiental: +4 em rolagens de resistência e -4 de dano contra um efeito ambiental. Skin: "RESISTÊNCIA AO FRIO" · +1 pts
 - [id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -398,8 +378,8 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=PRONTIDAO categoria=racial_edge] Vantagem Grátis concedida ao personagem: PRONTIDAO Skin: "SENTIDOS APRIMORADOS" · +2 pts
 
 ### TRANSMORFOS (BASICO)
-- [id=CARISMATICO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
-- [id=ANTECEDENTE_ARCANO_PODER exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). Skin: "MUDAR DE FORMA" · +2 pts
+- [id=CARISMATICO categoria=racial_edge] Vantagem Grátis concedida ao personagem: CARISMATICO Skin: "CARISMÁTICO" · +2 pts
+- [id=PODER_RACIAL] [Catálogo Oficial] Poder Inato: Concede Antecedente Arcano (Dom) e um poder inato. Skin: "MUDAR DE FORMA" · +2 pts
 - [id=SEGREDO categoria=racial_hindrance] Complicação concedida ao personagem: SEGREDO (Maior) Skin: "SEGREDO" · -2 pts
 
 ### ANDROIDES [id=anc_androides_horror] (BASICO)
@@ -462,7 +442,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=PRONTIDAO categoria=racial_edge] Vantagem Grátis concedida ao personagem: PRONTIDAO Skin: "Sentidos Aguçados" · +2 pts
 
 ### ANÕES [id=anc_anoes_scifi] (BASICO)
-- [id=PACE_CHANGE] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
+- [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
@@ -631,22 +611,23 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).
 
 ### Akaimimi (Panda Vermelho) [id=anc_akaimimi] (BASICO)
-- [id=BOM_CONSELHEIRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts
+- [id=RACIAL_HINDRANCE alvo=Peculiaridade categoria=racial_hindrance] Complicação concedida ao personagem: Peculiaridade (Menor) Skin: "Bom Conselheiro" · -1 pts
 - [id=SKILL_BOOST alvo=Convenção] [Catálogo Oficial] Perícia Convenção +1 passo(s) · +2 pts
 - [id=SKILL_BOOST alvo=Conhecimento Geral] [Catálogo Oficial] Perícia Conhecimento Geral +1 passo(s) · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### Araiguma (Guaxinim) [id=anc_araiguma] (BASICO)
 - [id=SKILL_BOOST alvo=Provocar] [Catálogo Oficial] Perícia Provocar +0 passo(s) · +1 pts
-- [id=DIGESTAO_GLORIOSA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
+- [id=IMUNE_A_DOENCAS_E_VENENOS alvo=Doenças] [Catálogo Oficial] Imunidade a Doenças e Venenos Skin: "Digestão Gloriosa (doenças)" · +1 pts
+- [id=IMUNE_A_DOENCAS_E_VENENOS alvo=Venenos] [Catálogo Oficial] Imunidade a Doenças e Venenos Skin: "Digestão Gloriosa (venenos)" · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 - [id=SKILL_BOOST alvo=Furtividade] [Catálogo Oficial] Perícia Furtividade +1 passo(s) · +1 pts
 - [id=HABITO categoria=racial_hindrance] Complicação concedida ao personagem: Esquisitices (Hábito) (Menor) Skin: "Esquisitices (Hábito)" · -1 pts
 - [id=PECULIARIDADE categoria=racial_hindrance] Complicação concedida ao personagem: Esquisitices (Peculiaridade) (Menor) Skin: "Esquisitices (Peculiaridade)" · -1 pts
 
 ### Inumimi (Cão) [id=anc_inumimi] (BASICO)
-- [id=VIGOROSOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Resistência +1 · +1 pts
-- [id=CANINOS exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=RESISTENCIA] [Catálogo Oficial] Resistência (+1): Pele endurecida ou músculos densos aumentam a Resistência em +1. Skin: "Vigorosos" · +1 pts
+- [id=MORDIDA] [Catálogo Oficial] Mordida (For+d4): Presas naturais causando For+d4 de dano. Skin: "Caninos" · +1 pts
 - [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 - [id=MATILHA categoria=racial_hindrance] Complicação concedida ao personagem: Matilha Skin: "Matilha" · -1 pts
@@ -727,7 +708,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=CONSTITUICAO_DE_FERRO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
-- [id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Robustez (Força +1 para Carga/Armadura) Skin: "Robustez"
+- [id=FORCA_CARGA_ARMADURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Aumento de Força Para Carga
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### Elfo [id=anc_elfopathfinder] (BASICO)
@@ -736,7 +717,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ATTRIBUTE_BOOST alvo=Astúcia] [Catálogo Oficial] Atributo Astúcia +1 passo(s) · +2 pts
 - [id=MAGIA_ELFICA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
 - [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
-- [id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro Skin: "Visão na Penumbra" · +1 pts
 
 ### Gnomo [id=anc_gnomopathfinder] (BASICO)
 - [id=MAGIA_GNOMICA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
@@ -745,7 +726,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
 - [id=SKILL_BOOST alvo=Perceber] [Catálogo Oficial] Perícia Perceber +1 passo(s) · +1 pts
 - [id=TAMANHO_MENOS_1] [Catálogo Oficial] Tamanho -1: Reduz o Tamanho e a Resistência em 1. · -1 pts
-- [id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro Skin: "Visão na Penumbra" · +1 pts
 
 ### Halfling [id=anc_halflingpathfinder] (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Agilidade] [Catálogo Oficial] Atributo Agilidade +1 passo(s) · +2 pts
@@ -762,13 +743,13 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ### Meio-Elfo [id=anc_meio_elfopathfinder] (BASICO)
 - [id=FLEXIBILIDADE] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
 - [id=MAGIA_ELFICA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
-- [id=VISAO_NA_PENUMBRA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro Skin: "Visão na Penumbra" · +1 pts
 
 ### Meio-Orc [id=anc_meio_orcpathfinder] (BASICO)
 - [id=FEROCIDADE_ORC exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Ferocidade Orc · +1 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: Forasteiro (Menor) Skin: "Forasteiro" · -1 pts
 - [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
-- [id=INTIMIDANTE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts
+- [id=SKILL_BOOST alvo=Intimidar] [Catálogo Oficial] Perícia Racial (d4): Começa com d4 em uma perícia inerente. Skin: "Intimidante" · +1 pts
 - [id=VISAO_NO_ESCURO] [Catálogo Oficial] Visão no Escuro · +1 pts
 
 ### ANDROIDES [id=anc_androides_super] (BASICO)

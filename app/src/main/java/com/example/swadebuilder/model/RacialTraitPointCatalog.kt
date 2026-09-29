@@ -742,6 +742,7 @@ object RacialTraitPointCatalog {
         "REDUCAO_DE_SONO" to 1, // oficial: reducao_sono
         "REFLEXOS_DE_COMBATE" to 3, // oficial vantagem_racial (2) + bônus extra de +2 Espírito recuperar Abalado
         "RESISTENCIA" to 1, // oficial: resistencia_racial (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
+        "RESISTENTE" to 2, // aumento_atributo (Vigor d6)
         "RESISTENCIA_AMBIENTAL" to 1, // oficial: resistencia_ambiental
         "ROBO" to 6, // oficial: robo
         "ROBUSTO" to 2, // oficial: "Robusto (1)" — 2º Abalado não vira Ferimento (Ogros); sem entrada em EFEITOS, não é cálculo automático
