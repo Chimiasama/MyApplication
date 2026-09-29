@@ -3686,8 +3686,6 @@
         "nome": "Nervos de Aço",
         "descricao": "Bloqueadores de nervos permitem que o soldado registre dor, mas diminuem seus efeitos, conferindo-lhes a Vantagem Nervos de Aço; isso ignora 1 ponto de penalidades por Ferimentos.",
         "id": "NERVOS_DE_ACO",
-        "traitId": "GRANTED_EDGE",
-        "targetRef": "Nervos de Aço",
         "category": "racial_edge",
         "descricaoLite": "Implantes que atenuam a dor concedem a Vantagem Nervos de Aço, reduzindo em 1 ponto a penalidade imposta por Ferimentos."
       },
@@ -3695,8 +3693,6 @@
         "nome": "Reflexos de Combate",
         "descricao": "O reflexo de lutar ou fugir destes soldados foi programado em seus sistemas nervosos, dando a eles a Vantagem Reflexos de Combate. Adicionam +2 em Espírito para se recuperar do Estado Abalado.",
         "id": "REFLEXOS_DE_COMBATE",
-        "traitId": "GRANTED_EDGE",
-        "targetRef": "Reflexos de Combate",
         "category": "racial_edge",
         "descricaoLite": "Reações de luta ou fuga vêm programadas em seus sistemas, concedendo a Vantagem Reflexos de Combate e +2 em Espírito ao tentar sair do Estado Abalado."
       },
@@ -3765,9 +3761,9 @@
         "descricaoLite": "Seres de carne tendem a desconfiar dessa forma de vida alienígena, o que lhes rende a Complicação Forasteiro (Menor)."
       },
       {
-        "nome": "FORMA DE ENERGIA",
+        "nome": "Forma de Energia",
         "descricao": "Vazios são feitos de energia escura. Não possuem órgãos vitais, ignoram Ataques Localizados e não sofrem dano de quedas, colisões ou armas físicas e projéteis (sofrem dano total de armas de energia, explosões, ataques arcanos etc.). Não têm massa significativa, mas podem passar por todas as aberturas, exceto as filtradas (a critério do Mestre), como se fossem Terreno Difícil. Vazios não podem usar armaduras, armas ou manipular matéria, a menos que usem um traje de contenção (veja a p. 49).",
-        "id": "FORMA_DE_ENERGIA",
+        "id": "FORMA_ENERGIA",
         "category": "racial_trait_positive",
         "descricaoLite": "Formado por energia escura, não tem órgãos vitais nem sofre com Ataques Localizados, e ignora dano de quedas, colisões e armas físicas comuns — mas energia, explosões e magia o atingem em cheio. Sem massa relevante, atravessa qualquer abertura não vedada como Terreno Difícil, e só usa armas, veste armadura ou manuseia objetos com um traje de contenção."
       },

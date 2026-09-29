@@ -9,14 +9,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=null` | Audit: `[id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **DRAKENS** (BASICO) — Traço: **LENTO** | `id=LENTO` | `traitId=null` | Audit: `[id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts`
-- **DRAKENS** (BASICO) — Traço: **RUDE** | `id=RUDE` | `traitId=null` | Audit: `[id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **ELEMENTAIS** (BASICO) — Traço: **CABEÇA-DURA** | `id=CABECA_DURA` | `traitId=null` | Audit: `[id=CABECA_DURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "CABEÇA-DURA" · -2 pts`
-- **GELATINOIDES** (BASICO) — Traço: **FRACO** | `id=FRACO` | `traitId=null` | Audit: `[id=FRACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **MINERADORES GENÉTICOS** (BASICO) — Traço: **DEPENDÊNCIA ATMOSFÉRICA (Maior)** | `id=DEPENDENCIA_ATMOSFERICA_MAIOR` | `traitId=null` | Audit: `[id=DEPENDENCIA_ATMOSFERICA_MAIOR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Dependência Atmosférica (Maior) · -2 pts`
-- **SOLDADOS GENÉTICOS** (BASICO) — Traço: **NERVOS DE AÇO** | `id=NERVOS_DE_ACO` | `traitId=null` | Audit: `[id=NERVOS_DE_ACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **SOLDADOS GENÉTICOS** (BASICO) — Traço: **REFLEXOS DE COMBATE** | `id=REFLEXOS_DE_COMBATE` | `traitId=null` | Audit: `[id=REFLEXOS_DE_COMBATE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts`
-- **SOLDADOS GENÉTICOS** (BASICO) — Traço: **TREINADOS PARA A GUERRA** | `id=TREINADOS_PARA_A_GUERRA` | `traitId=null` | Audit: `[id=TREINADOS_PARA_A_GUERRA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **VAZIOS** (BASICO) — Traço: **FORMA DE ENERGIA** | `id=FORMA_DE_ENERGIA` | `traitId=null` | Audit: `[id=FORMA_DE_ENERGIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+4 pts). · +4 pts`
 - **Humano (Império San)** [anc_humano_adg] (BASICO) — Traço: **Signos de Nascença** | `id=SIGNOS_DE_NASCENCA` | `traitId=null` | Audit: `[id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
 - **Kitsunemimi (Raposa)** [anc_kitsunemimi] (BASICO) — Traço: **Preparado** | `id=PREPARADO` | `traitId=null` | Audit: `[id=PREPARADO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Nekomimi (Gato)** [anc_nekomimi] (BASICO) — Traço: **Fortuna Dá** | `id=FORTUNA_DA` | `traitId=null` | Audit: `[id=FORTUNA_DA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
@@ -54,14 +46,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **MEIO-ELFOS** [anc_meio_elfos_horror] (BASICO) — Traço: **Herança** | `id=HERANCA` | `traitId=null` | Audit: `[id=HERANCA] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **DRAKENS** (BASICO) — Traço: **LENTO** | `id=LENTO` | `traitId=null` | Audit: `[id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts`
-- **DRAKENS** (BASICO) — Traço: **RUDE** | `id=RUDE` | `traitId=null` | Audit: `[id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **ELEMENTAIS** (BASICO) — Traço: **CABEÇA-DURA** | `id=CABECA_DURA` | `traitId=null` | Audit: `[id=CABECA_DURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "CABEÇA-DURA" · -2 pts`
-- **GELATINOIDES** (BASICO) — Traço: **FRACO** | `id=FRACO` | `traitId=null` | Audit: `[id=FRACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **MINERADORES GENÉTICOS** (BASICO) — Traço: **DEPENDÊNCIA ATMOSFÉRICA (Maior)** | `id=DEPENDENCIA_ATMOSFERICA_MAIOR` | `traitId=null` | Audit: `[id=DEPENDENCIA_ATMOSFERICA_MAIOR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Dependência Atmosférica (Maior) · -2 pts`
-- **SOLDADOS GENÉTICOS** (BASICO) — Traço: **NERVOS DE AÇO** | `id=NERVOS_DE_ACO` | `traitId=null` | Audit: `[id=NERVOS_DE_ACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
-- **SOLDADOS GENÉTICOS** (BASICO) — Traço: **REFLEXOS DE COMBATE** | `id=REFLEXOS_DE_COMBATE` | `traitId=null` | Audit: `[id=REFLEXOS_DE_COMBATE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts`
-- **SOLDADOS GENÉTICOS** (BASICO) — Traço: **TREINADOS PARA A GUERRA** | `id=TREINADOS_PARA_A_GUERRA` | `traitId=null` | Audit: `[id=TREINADOS_PARA_A_GUERRA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
-- **VAZIOS** (BASICO) — Traço: **FORMA DE ENERGIA** | `id=FORMA_DE_ENERGIA` | `traitId=null` | Audit: `[id=FORMA_DE_ENERGIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+4 pts). · +4 pts`
 - **Humano (Império San)** [anc_humano_adg] (BASICO) — Traço: **Signos de Nascença** | `id=SIGNOS_DE_NASCENCA` | `traitId=null` | Audit: `[id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
 - **Kitsunemimi (Raposa)** [anc_kitsunemimi] (BASICO) — Traço: **Preparado** | `id=PREPARADO` | `traitId=null` | Audit: `[id=PREPARADO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+1 pts). · +1 pts`
 - **Nekomimi (Gato)** [anc_nekomimi] (BASICO) — Traço: **Fortuna Dá** | `id=FORTUNA_DA` | `traitId=null` | Audit: `[id=FORTUNA_DA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
@@ -488,10 +472,10 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 - [id=LENTO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Lento — Movimentação -1 · -1 pts
 - [id=RESISTENCIA x2] [Catálogo Oficial] Resistência (+1): Pele endurecida ou músculos densos aumentam a Resistência em +1. Skin: "RESISTÊNCIA +2" · +2 pts
-- [id=RUDE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
+- [id=PENALIDADE_PERICIA_2 alvo=Persuasão] [Catálogo Oficial] Penalidade em Perícia (-2): Sofre -2 em uma perícia comum (ou -4 se incomum). Skin: "Rude" · -2 pts
 
 ### ELEMENTAIS (BASICO)
-- [id=CABECA_DURA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). Skin: "CABEÇA-DURA" · -2 pts
+- [id=PENALIDADE_ATRIBUTO_1 alvo=Astúcia] [Catálogo Oficial] Penalidade em Atributo (-1): Um Atributo sofre penalidade de -1 em seus testes. Skin: "Cabeça-dura" · -2 pts
 - [id=VOLUMOSO] [Catálogo Oficial] Volumoso: -2 em Características ao usar equipamento comum; custos de itens dobrados. Skin: "GRANDE" · -2 pts
 - [id=MOVIMENTACAO_REDUZIDA] [Catálogo Oficial] Movimentação Reduzida — Movimentação -1 · -1 pts
 - [id=TAMANHO_MAIS_1] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. · +1 pts
@@ -513,7 +497,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### GELATINOIDES (BASICO)
 - [id=CIBER_RESISTENCIA categoria=racial_hindrance] Complicação concedida ao personagem: CIBER-RESISTÊNCIA (Menor) Skin: "CIBER-RESISTÊNCIA" · -1 pts
-- [id=FRACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
+- [id=PENALIDADE_ATRIBUTO_1 alvo=Força] [Catálogo Oficial] Penalidade em Atributo (-1): Um Atributo sofre penalidade de -1 em seus testes. Skin: "Fraco" · -2 pts
 - [id=GELATINOSO_MAIOR] [Catálogo Oficial] Gelatinoso (Maior) · +3 pts
 
 ### INSETOIDES [id=anc_insetoides_scifi] (BASICO)
@@ -530,7 +514,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 
 ### MINERADORES GENÉTICOS (BASICO)
 - [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) · +2 pts
-- [id=DEPENDENCIA_ATMOSFERICA_MAIOR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Dependência Atmosférica (Maior) · -2 pts
+- [id=DEPENDENCIA_ATMOSFERICA_MAIOR categoria=racial_hindrance] Complicação concedida ao personagem: Dependência Atmosférica (Maior) Skin: "Dependência Atmosférica" · -2 pts
 - [id=ATTRIBUTE_BOOST alvo=Força] [Catálogo Oficial] Atributo Força +1 passo(s) · +2 pts
 
 ### ORÁCULOS (BASICO)
@@ -562,17 +546,17 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=PROGRAMADO categoria=racial_hindrance] Complicação concedida ao personagem: PROGRAMADO (Maior) Skin: "PROGRAMADO" · -2 pts
 
 ### SOLDADOS GENÉTICOS (BASICO)
-- [id=NERVOS_DE_ACO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
-- [id=REFLEXOS_DE_COMBATE exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+3 pts). · +3 pts
+- [id=NERVOS_DE_ACO categoria=racial_edge] Vantagem Grátis concedida ao personagem: NERVOS_DE_ACO Skin: "Nervos de Aço" · +2 pts
+- [id=REFLEXOS_DE_COMBATE categoria=racial_edge] Vantagem Grátis concedida ao personagem: REFLEXOS_DE_COMBATE Skin: "Reflexos de Combate" · +3 pts
 - [id=RESISTENCIA] [Catálogo Oficial] Resistência (+1): Pele endurecida ou músculos densos aumentam a Resistência em +1. Skin: "RESISTÊNCIA +1" · +1 pts
 - [id=SEM_ESCRUPULOS categoria=racial_hindrance] Complicação concedida ao personagem: SEM ESCRÚPULOS (Maior) Skin: "SEM ESCRÚPULOS" · -2 pts
-- [id=TREINADOS_PARA_A_GUERRA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts
+- [id=PENALIDADE_PERICIA_2 alvo=Conhecimento Geral] [Catálogo Oficial] Penalidade em Perícia (-2): Sofre -2 em uma perícia comum (ou -4 se incomum). Skin: "Treinados para a Guerra" · -2 pts
 
 ### VAZIOS (BASICO)
 - [id=CURIOSO categoria=racial_hindrance] Complicação concedida ao personagem: CURIOSO (Maior) Skin: "CURIOSO" · -2 pts
 - [id=ESPACIAL] [Catálogo Oficial] Espacial: Sobrevive no espaço sem meios artificiais: possui Não Respira, ignora descompressão e radiação de fundo. · +3 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Menor) Skin: "FORASTEIRO" · -1 pts
-- [id=FORMA_DE_ENERGIA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+4 pts). · +4 pts
+- [id=FORMA_ENERGIA] [Catálogo Oficial] Forma de Energia: Corpo de energia: imune a armas físicas, projéteis, quedas e ataques localizados; passa por frestas. · +4 pts
 - [id=NAO_FALA categoria=racial_hindrance] Complicação concedida ao personagem: INCAPAZ DE FALAR Skin: "INCAPAZ DE FALAR" · -1 pts
 - [id=SEM_SANGUE] [Catálogo Oficial] Sem Sangue: Estabiliza automaticamente ao ficar Sangrando e ignora dano extra de armas dilacerantes. · +1 pts
 - [id=TRANSTORNO_DE_SEPARACAO] [Catálogo Oficial] Transtorno de Separação · -2 pts

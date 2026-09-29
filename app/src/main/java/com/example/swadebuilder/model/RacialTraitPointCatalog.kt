@@ -618,7 +618,8 @@ object RacialTraitPointCatalog {
         // livro Sci-Fi, onde o traço é catalogado com custo -1). Ids antigos removidos
         // (FORMATO_CORPORAL_INCOMUM/FORMA_INCOMUM) — Avianos "Ave de Rapina" já usava este id
         // via AncestryVariantRegistry mas não tinha entrada aqui (custava 0 por engano).
-        "FORMA_DE_ENERGIA" to 4, // oficial: forma_energia
+        "FORMA_ENERGIA" to 4, // oficial: forma_energia
+        "FORMA_DE_ENERGIA" to 4, // alias para forma_energia
         "FORTE" to 2, // oficial: aumento_atributo
         "FORTUNA_DA" to 2, // sem equivalente oficial exato, Bene extra por sessão (tier de vantagem_racial)
         "FRACO" to -2, // oficial penalidade_atributo_1 (-1 num ATRIBUTO, Força)
@@ -1054,7 +1055,7 @@ object RacialTraitPointCatalog {
         "CAMUFLAGEM_1", "CAMUFLAGEM_2", "CASCA", "CAVAR", "CHIFRES", "CHIFRES_MAIOR", "CHIFRES_MAIORES",
         "COMUNITARIO", "CONSTRUTO", "DIMINUTO_PEQUENO", "DIMINUTO_MUITO_PEQUENO", "DIMINUTO_MINUSCULO",
         "DIMINUTO_TAMANHO_2", "DIMINUTO_TAMANHO_3", "DIMINUTO_TAMANHO_4", "ECOLOCALIZACAO", "ESPACIAL",
-        "ESTAVEL", "FORMA_ENERGIA", "FOSFORESCENCIA_1", "FOSFORESCENCIA_2", "GARRAS_D4", "GARRAS_D6",
+        "ESTAVEL", "FORMA_ENERGIA", "FORMA_DE_ENERGIA", "FOSFORESCENCIA_1", "FOSFORESCENCIA_2", "GARRAS_D4", "GARRAS_D6",
         "GARRAS_PA", "GARRAS", "GARRAS_SEM_PA", "GELATINOSO_2", "GELATINOSO_3", "GELATINOSO_MAIOR", "IMUNE_DOENCAS_VENENOS",
         "IMUNE_A_DOENCAS_E_VENENOS", "INFRAVISAO", "INTERFACE", "INVISIBILIDADE_TRANSLUCIDO",
         "INVISIBILIDADE_TOTAL", "MEMBROS_EXTRAS", "MODS_ROBOTICOS", "MORDIDA", "MORDIDA_D6", "MORDIDA_PA",
