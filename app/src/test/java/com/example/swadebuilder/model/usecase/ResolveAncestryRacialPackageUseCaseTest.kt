@@ -93,10 +93,9 @@ class ResolveAncestryRacialPackageUseCaseTest {
             )
         )
 
-        assertTrue(result.vantagensRaciais.any { it.equals("Semiaquático", ignoreCase = true) })
-        assertTrue(result.vantagensRaciais.any { it.equals("Toque Venenoso", ignoreCase = true) })
+        assertTrue(result.vantagensRaciais.any { it.equals("Semi-Aquático", ignoreCase = true) || it.equals("Semiaquático", ignoreCase = true) })
         assertFalse(result.vantagensRaciais.any { it.equals("Aquático", ignoreCase = true) })
-        assertFalse(result.vantagensRaciais.any { it.equals("Resistência", ignoreCase = true) })
+        assertTrue(result.vantagensRaciais.any { it.equals("Resistência", ignoreCase = true) })
     }
 
     @Test

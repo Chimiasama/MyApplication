@@ -149,10 +149,9 @@ object AncestryVariantRegistry {
                     nome = "Semi-aquáticos",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("SEMIAQUÁTICO", "SEMIAQUATICO"),
-                            TraitAddition("TOQUE VENENOSO", "TOQUE_VENENOSO")
+                            TraitAddition("Semi-Aquático", "SEMI_AQUATICO")
                         ),
-                        tracosParaRemoverPorNome = listOf("AQUÁTICO", "RESISTÊNCIA")
+                        tracosParaRemoverPorNome = listOf("AQUÁTICO")
                     )
                 )
             )

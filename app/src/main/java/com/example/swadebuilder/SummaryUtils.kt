@@ -80,7 +80,7 @@ fun buildRacialTraitsList(
         if (especieIdAtual == "aquarianos" &&
             racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
         ) {
-            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+            removeAll { it.keyify() == "AQUATICO" }
         }
 
         // Pacote Cultural de Humanos (Fantasia): Adaptável removido/Fraqueza
@@ -158,12 +158,9 @@ fun buildRacialTraitsList(
         }
 
         if (isAquarianosSemiaquaticos) {
-            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
-            if (none { it.keyify() == "SEMIAQUATICO" }) {
-                add("Semiaquático")
-            }
-            if (none { it.keyify() == "TOQUE VENENOSO" }) {
-                add("Toque Venenoso")
+            removeAll { it.keyify() == "AQUATICO" }
+            if (none { it.keyify() == "SEMIAQUATICO" || it.keyify() == "SEMI_AQUATICO" }) {
+                add("Semi-Aquático")
             }
         }
 

@@ -307,6 +307,7 @@ object RacialTraitPointCatalog {
         "SALTADOR" to "Saltador",
         "SEM_MANIPULADORES" to "Sem Manipuladores",
         "SEMIAQUATICO" to "Semiaquático",
+        "SEMI_AQUATICO" to "Semi-Aquático",
         "TENTACULOS" to "Tentáculos",
         // Tier base (1pt): Sci-Fi descreve como veneno "Moderado", Fantasia como
         // "Leve ou Incapacitante" — mesmo custo nos dois livros, só muda o nome do
@@ -618,7 +619,8 @@ object RacialTraitPointCatalog {
         // livro Sci-Fi, onde o traço é catalogado com custo -1). Ids antigos removidos
         // (FORMATO_CORPORAL_INCOMUM/FORMA_INCOMUM) — Avianos "Ave de Rapina" já usava este id
         // via AncestryVariantRegistry mas não tinha entrada aqui (custava 0 por engano).
-        "FORMA_DE_ENERGIA" to 4, // oficial: forma_energia
+        "FORMA_ENERGIA" to 4, // oficial: forma_energia
+        "FORMA_DE_ENERGIA" to 4, // alias para forma_energia
         "FORTE" to 2, // oficial: aumento_atributo
         "FORTUNA_DA" to 2, // sem equivalente oficial exato, Bene extra por sessão (tier de vantagem_racial)
         "FRACO" to -2, // oficial penalidade_atributo_1 (-1 num ATRIBUTO, Força)
@@ -742,6 +744,7 @@ object RacialTraitPointCatalog {
         "REDUCAO_DE_SONO" to 1, // oficial: reducao_sono
         "REFLEXOS_DE_COMBATE" to 3, // oficial vantagem_racial (2) + bônus extra de +2 Espírito recuperar Abalado
         "RESISTENCIA" to 1, // oficial: resistencia_racial (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
+        "RESISTENTE" to 2, // aumento_atributo (Vigor d6)
         "RESISTENCIA_AMBIENTAL" to 1, // oficial: resistencia_ambiental
         "ROBO" to 6, // oficial: robo
         "ROBUSTO" to 2, // oficial: "Robusto (1)" — 2º Abalado não vira Ferimento (Ogros); sem entrada em EFEITOS, não é cálculo automático
@@ -824,6 +827,7 @@ object RacialTraitPointCatalog {
         "SALTADOR" to 2, // Básico "Saltador (1)"
         "SEM_MANIPULADORES" to -4, // Sci-Fi "Sem Manipuladores (1)"
         "SEMIAQUATICO" to 1, // Básico "Aquático/Semi-Aquático (1)": tier semi-aquático (1pt); tier Aquático completo é AQUATICO (2pts)
+        "SEMI_AQUATICO" to 1,
         "TENTACULOS" to 2, // Sci-Fi "Tentáculos (2)": tier base (+2 Agarrar); 2ª ação de tentáculo custa 4
         "REGENERACAO" to 2, // Básico "Regeneração (1)": tier base (cura 1x/dia)
         "REGENERACAO_MAIOR" to 3, // mesmo trecho: também recupera lesão permanente
@@ -1048,12 +1052,12 @@ object RacialTraitPointCatalog {
 
     val IDS_CATALOGO_LIVRO_BASICO: Set<String> = setOf(
         "ACAO_ADICIONAL_MENOR", "ACAO_ADICIONAL", "ACAO_ADICIONAL_MAIOR", "ADAPTAVEL", "ALCANCE",
-        "ANDAR_PAREDES", "ANDAR_NAS_PAREDES", "APARAR", "ARMA_DE_SOPRO", "SEMI_AQUATICO", "AQUATICO",
+        "ANDAR_PAREDES", "ANDAR_NAS_PAREDES", "APARAR", "ARMA_DE_SOPRO", "SEMI_AQUATICO", "SEMIAQUATICO", "AQUATICO",
         "ARMADURA", "ATORDOAR", "AUMENTO_ATRIBUTO", "BIOLOGIA_ACIDA", "BONUS_PERICIA_1", "BONUS_PERICIA_2",
         "CAMUFLAGEM_1", "CAMUFLAGEM_2", "CASCA", "CAVAR", "CHIFRES", "CHIFRES_MAIOR", "CHIFRES_MAIORES",
         "COMUNITARIO", "CONSTRUTO", "DIMINUTO_PEQUENO", "DIMINUTO_MUITO_PEQUENO", "DIMINUTO_MINUSCULO",
         "DIMINUTO_TAMANHO_2", "DIMINUTO_TAMANHO_3", "DIMINUTO_TAMANHO_4", "ECOLOCALIZACAO", "ESPACIAL",
-        "ESTAVEL", "FORMA_ENERGIA", "FOSFORESCENCIA_1", "FOSFORESCENCIA_2", "GARRAS_D4", "GARRAS_D6",
+        "ESTAVEL", "FORMA_ENERGIA", "FORMA_DE_ENERGIA", "FOSFORESCENCIA_1", "FOSFORESCENCIA_2", "GARRAS_D4", "GARRAS_D6",
         "GARRAS_PA", "GARRAS", "GARRAS_SEM_PA", "GELATINOSO_2", "GELATINOSO_3", "GELATINOSO_MAIOR", "IMUNE_DOENCAS_VENENOS",
         "IMUNE_A_DOENCAS_E_VENENOS", "INFRAVISAO", "INTERFACE", "INVISIBILIDADE_TRANSLUCIDO",
         "INVISIBILIDADE_TOTAL", "MEMBROS_EXTRAS", "MODS_ROBOTICOS", "MORDIDA", "MORDIDA_D6", "MORDIDA_PA",

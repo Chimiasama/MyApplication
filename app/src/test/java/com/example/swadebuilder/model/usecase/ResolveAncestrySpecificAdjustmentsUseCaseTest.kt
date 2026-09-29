@@ -318,7 +318,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("AQUÁTICO", "RESISTÊNCIA"), result.automaticAdvantagesToRemove)
+        assertEquals(listOf("AQUÁTICO"), result.automaticAdvantagesToRemove)
     }
 
     @Test

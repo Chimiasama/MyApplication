@@ -3071,9 +3071,12 @@
         "vezes": 2
       },
       {
-        "nome": "RUDE",
+        "nome": "Rude",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
-        "id": "RUDE",
+        "id": "PENALIDADE_PERICIA_2",
+        "traitId": "PENALIDADE_PERICIA_2",
+        "targetRef": "Persuasão",
+        "value": 2,
         "category": "racial_trait_negative",
         "descricaoLite": "Preferem intimidar a negociar, sofrendo -2 em Persuasão."
       }
@@ -3096,9 +3099,12 @@
     ],
     "habilidades": [
       {
-        "nome": "CABEÇA-DURA",
+        "nome": "Cabeça-dura",
         "descricao": "Elementais de pedra não processam pensamentos tão rapidamente quanto outros seres. Rolagens de Astúcia são feitas com -1.",
-        "id": "CABECA_DURA",
+        "id": "PENALIDADE_ATRIBUTO_1",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1,
         "category": "racial_trait_negative",
         "descricaoLite": "Pensam mais devagar que a maioria: -1 nas rolagens de Astúcia."
       },
@@ -3272,9 +3278,12 @@
         "descricaoLite": "Sua composição gelatinosa dificulta implantes cibernéticos, o que lhes dá a Complicação Ciber-Resistência."
       },
       {
-        "nome": "FRACO",
+        "nome": "Fraco",
         "descricao": "Devido à falta de ossos e músculos, gelatinoides têm dificuldade em exercer força física. Eles subtraem 1 de rolagens de Força e dano corpo a corpo.",
-        "id": "FRACO",
+        "id": "PENALIDADE_ATRIBUTO_1",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Força",
+        "value": 1,
         "category": "racial_trait_negative",
         "descricaoLite": "A falta de estrutura óssea e muscular custa -1 em Força e no dano corpo a corpo."
       },
@@ -3410,10 +3419,11 @@
         "value": 1
       },
       {
-        "nome": "DEPENDÊNCIA ATMOSFÉRICA (Maior)",
+        "nome": "Dependência Atmosférica",
         "descricao": "Tornaram-se dependentes da atmosfera artificial de colônias estelares ou minas.",
         "id": "DEPENDENCIA_ATMOSFERICA_MAIOR",
-        "category": "racial_trait_negative",
+        "category": "racial_hindrance",
+        "severity": "Maior",
         "descricaoLite": "Acostumaram-se tanto ao ar artificial de colônias e minas que dependem dele para viver bem, o que pode gerar complicações fora desses ambientes."
       },
       {
@@ -3673,17 +3683,17 @@
     ],
     "habilidades": [
       {
-        "nome": "NERVOS DE AÇO",
+        "nome": "Nervos de Aço",
         "descricao": "Bloqueadores de nervos permitem que o soldado registre dor, mas diminuem seus efeitos, conferindo-lhes a Vantagem Nervos de Aço; isso ignora 1 ponto de penalidades por Ferimentos.",
         "id": "NERVOS_DE_ACO",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "descricaoLite": "Implantes que atenuam a dor concedem a Vantagem Nervos de Aço, reduzindo em 1 ponto a penalidade imposta por Ferimentos."
       },
       {
-        "nome": "REFLEXOS DE COMBATE",
+        "nome": "Reflexos de Combate",
         "descricao": "O reflexo de lutar ou fugir destes soldados foi programado em seus sistemas nervosos, dando a eles a Vantagem Reflexos de Combate. Adicionam +2 em Espírito para se recuperar do Estado Abalado.",
         "id": "REFLEXOS_DE_COMBATE",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "descricaoLite": "Reações de luta ou fuga vêm programadas em seus sistemas, concedendo a Vantagem Reflexos de Combate e +2 em Espírito ao tentar sair do Estado Abalado."
       },
       {
@@ -3702,11 +3712,14 @@
         "descricaoLite": "Caso se liberte desse condicionamento, a Complicação passa a ser Procurado — se o antigo contratante buscar revanche — ou Inimigo — se alguém que sofreu no passado quiser vê-lo morto."
       },
       {
-        "nome": "TREINADOS PARA A GUERRA",
-        "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral.",
-        "id": "TREINADOS_PARA_A_GUERRA",
+        "nome": "Treinados para a Guerra",
+        "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 2 das rolagens de Conhecimento Geral.",
+        "id": "PENALIDADE_PERICIA_2",
+        "traitId": "PENALIDADE_PERICIA_2",
+        "targetRef": "Conhecimento Geral",
+        "value": 2,
         "category": "racial_trait_negative",
-        "descricaoLite": "Pouco familiarizados com a vida civil, sofrem -4 em Conhecimento Geral."
+        "descricaoLite": "Pouco familiarizados com a vida civil, sofrem -2 em Conhecimento Geral."
       }
     ],
     "tags": [
@@ -3748,9 +3761,9 @@
         "descricaoLite": "Seres de carne tendem a desconfiar dessa forma de vida alienígena, o que lhes rende a Complicação Forasteiro (Menor)."
       },
       {
-        "nome": "FORMA DE ENERGIA",
+        "nome": "Forma de Energia",
         "descricao": "Vazios são feitos de energia escura. Não possuem órgãos vitais, ignoram Ataques Localizados e não sofrem dano de quedas, colisões ou armas físicas e projéteis (sofrem dano total de armas de energia, explosões, ataques arcanos etc.). Não têm massa significativa, mas podem passar por todas as aberturas, exceto as filtradas (a critério do Mestre), como se fossem Terreno Difícil. Vazios não podem usar armaduras, armas ou manipular matéria, a menos que usem um traje de contenção (veja a p. 49).",
-        "id": "FORMA_DE_ENERGIA",
+        "id": "FORMA_ENERGIA",
         "category": "racial_trait_positive",
         "descricaoLite": "Formado por energia escura, não tem órgãos vitais nem sofre com Ataques Localizados, e ignora dano de quedas, colisões e armas físicas comuns — mas energia, explosões e magia o atingem em cheio. Sem massa relevante, atravessa qualquer abertura não vedada como Terreno Difícil, e só usa armas, veste armadura ou manuseia objetos com um traje de contenção."
       },

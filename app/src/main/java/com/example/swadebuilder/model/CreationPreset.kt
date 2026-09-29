@@ -57,8 +57,8 @@ data class CreationPreset(
                 defaultCartaSelvagem = true,
                 defaultMaisPontosPericias = true,
                 defaultCompendioSciFi = true,
-                defaultRegraMechas = true,
-                defaultRegraCiberneticos = true
+                defaultRegraMechas = false,
+                defaultRegraCiberneticos = false
             ),
             CreationPreset(
                 id = "horror",
