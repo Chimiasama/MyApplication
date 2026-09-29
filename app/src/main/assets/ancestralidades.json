@@ -3071,9 +3071,12 @@
         "vezes": 2
       },
       {
-        "nome": "RUDE",
+        "nome": "Rude",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
-        "id": "RUDE",
+        "id": "PENALIDADE_PERICIA_2",
+        "traitId": "PENALIDADE_PERICIA_2",
+        "targetRef": "Persuasão",
+        "value": 2,
         "category": "racial_trait_negative",
         "descricaoLite": "Preferem intimidar a negociar, sofrendo -2 em Persuasão."
       }
