@@ -288,17 +288,34 @@ object RacialCaracteristicasResolver {
             if (efeito is RacialTraitEffect.AtributoStep) {
                 val delta = efeito.passos * 2
                 val dado = (4 + delta).toDiceString()
-                val verbo = if (delta >= 0) "aumentado" else "reduzido"
-                linhas += "Atributo $verbo: ${efeito.atributo.toFancyTitleCase()} ($dado)${formatPts(delta)}"
+                val normNome = hab.nome.keyify().replace("_", " ")
+                val normAttr = efeito.atributo.keyify().replace("_", " ")
+                val isCustomSkin = normNome.isNotBlank() &&
+                    normNome != "ATTRIBUTE BOOST" &&
+                    normNome != "AUMENTO DE ATRIBUTO" &&
+                    normNome != "ATRIBUTO AUMENTADO" &&
+                    normNome != normAttr &&
+                    !normNome.contains("ATRIBUTO AUMENTADO")
+
+                val titulo = if (isCustomSkin) "${hab.nome.toFancyTitleCase()}: ${efeito.atributo.toFancyTitleCase()}" else "Atributo aumentado: ${efeito.atributo.toFancyTitleCase()}"
+                linhas += "$titulo ($dado)${formatPts(delta)}"
             }
         }
         habilidades.forEach { hab ->
             val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.PericiaStep) {
                 val dado = (4 + efeito.passos * 2).toDiceString()
-                // Custo real (não um formato fixo por passo): perícias básicas têm
-                // desconto — ver RacialTraitPointCatalog.custoDe/CUSTOS.
-                linhas += "Perícia inicial: ${efeito.pericia.toFancyTitleCase()} ($dado)${formatPts(hab.resolvedPontos(allVantagens))}"
+                val normNome = hab.nome.keyify().replace("_", " ")
+                val normPer = efeito.pericia.keyify().replace("_", " ")
+                val isCustomSkin = normNome.isNotBlank() &&
+                    normNome != "SKILL BOOST" &&
+                    normNome != "BONUS PERICIA" &&
+                    normNome != "PERICIA RACIAL" &&
+                    normNome != normPer &&
+                    !normNome.contains("PERICIA INICIAL")
+
+                val titulo = if (isCustomSkin) "${hab.nome.toFancyTitleCase()}: ${efeito.pericia.toFancyTitleCase()}" else "Perícia inicial: ${efeito.pericia.toFancyTitleCase()}"
+                linhas += "$titulo ($dado)${formatPts(hab.resolvedPontos(allVantagens))}"
             }
         }
 
@@ -336,12 +353,19 @@ object RacialCaracteristicasResolver {
             val id = hab.id?.keyify()
             val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
-            // labelComVezes escala o rótulo (ex.: "Tamanho +1" -> "Tamanho +3" pra
-            // Meio-Gigantes, vezes=3) quando o id tem LABEL cadastrado; sem LABEL,
-            // cai no nome cru da habilidade, igual antes (nunca no id em si).
-            val rotulo = id?.takeIf { RacialTraitPointCatalog.LABEL.containsKey(it) }
+
+            val catalogLabel = id?.takeIf { RacialTraitPointCatalog.LABEL.containsKey(it) }
                 ?.let { RacialTraitPointCatalog.labelComVezes(it, hab.vezes) }
-                ?: hab.nome.toFancyTitleCase()
+            val normNome = hab.nome.keyify().replace("_", " ")
+            val normId = id?.keyify()?.replace("_", " ").orEmpty()
+            val normCatalogLabel = catalogLabel?.keyify()?.replace("_", " ").orEmpty()
+
+            val isCustomSkin = normNome.isNotBlank() &&
+                normNome != normId &&
+                !normNome.startsWith("TAMANHO ") &&
+                normNome != normCatalogLabel
+
+            val rotulo = if (isCustomSkin) hab.nome.toFancyTitleCase() else (catalogLabel ?: hab.nome.toFancyTitleCase())
             val pts = hab.resolvedPontos(allVantagens)
             linhas += "$rotulo${formatPts(pts)}"
         }

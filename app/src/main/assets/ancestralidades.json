@@ -52,9 +52,7 @@
         "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
         "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative",
-        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal.",
-        "traitId": "PACE_CHANGE",
-        "value": -1
+        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
       },
       {
         "nome": "Resistente",
@@ -456,12 +454,10 @@
         "descricao": "Anões têm pernas mais curtas em comparação com as outras ancestralidades. Reduza 1 de sua Movimentação andando e seu dado de corrida em um tipo.",
         "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative",
-        "descricaoLite": "Anda 1 quadro a menos por rodada e tem o dado de corrida um tipo abaixo do normal.",
-        "traitId": "PACE_CHANGE",
-        "value": -1
+        "descricaoLite": "Anda 1 quadro a menos por rodada e tem o dado de corrida um tipo abaixo do normal."
       },
       {
-        "nome": "ROBUSTO",
+        "nome": "Resistente",
         "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
@@ -1602,11 +1598,24 @@
         "descricaoLite": "Um segundo resultado Abalado seguido não se converte em Ferimento."
       },
       {
-        "nome": "SEM NOÇÃO",
-        "descricao": "Ogros subtraem 1 das rolagens de Conhecimento Geral e Perceber.",
-        "id": "SEM_NOCAO",
+        "nome": "Sem Noção (Conhecimento Geral)",
+        "descricao": "Ogros subtraem 1 das rolagens de Conhecimento Geral.",
+        "id": "PENALIDADE_PERICIA_1",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Conhecimento Geral",
+        "value": 1,
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em Conhecimento Geral e Perceber."
+        "descricaoLite": "-1 nas rolagens de Conhecimento Geral."
+      },
+      {
+        "nome": "Sem Noção (Perceber)",
+        "descricao": "Ogros subtraem 1 das rolagens de Perceber.",
+        "id": "PENALIDADE_PERICIA_1",
+        "traitId": "PENALIDADE_PERICIA_1",
+        "targetRef": "Perceber",
+        "value": 1,
+        "category": "racial_trait_negative",
+        "descricaoLite": "-1 nas rolagens de Perceber."
       },
       {
         "nome": "TAMANHO +1",
@@ -2094,7 +2103,8 @@
       {
         "nome": "RESISTÊNCIA AO FRIO",
         "descricao": "Renascidos são frios ao toque e dificilmente percebem temperaturas frias. Possuem bônus de +4 para resistir aos efeitos negativos do frio e reduzem dano baseado em frio em 4.",
-        "id": "RESISTENCIA_AO_FRIO",
+        "id": "RESISTENCIA_AMBIENTAL",
+        "targetRef": "Frio",
         "category": "racial_trait_positive",
         "descricaoLite": "Praticamente imunes ao frio comum, ganham +4 quando precisam resistir a seus efeitos extremos, além de sofrer 4 pontos a menos de dano em ataques gelados."
       },
@@ -2185,13 +2195,13 @@
         "nome": "CARISMÁTICO",
         "descricao": "Transmorfos aprendem rapidamente a navegar em conversas complicadas para se adaptarem a diferentes grupos sociais. Começam gratuitamente com a Vantagem Carismático.",
         "id": "CARISMATICO",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "descricaoLite": "Já nascem com a Vantagem Carismático, facilitando o trânsito entre diferentes círculos sociais."
       },
       {
         "nome": "MUDAR DE FORMA",
         "descricao": "Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal.",
-        "id": "ANTECEDENTE_ARCANO_PODER",
+        "id": "PODER_RACIAL",
         "category": "racial_trait_positive",
         "descricaoLite": "Têm o Antecedente Arcano do tipo Dom e, como ação livre limitada, alteram a própria aparência de modo equivalente ao poder Disfarce restrito a si mesmos."
       },
@@ -2669,9 +2679,7 @@
         "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
         "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative",
-        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal.",
-        "traitId": "PACE_CHANGE",
-        "value": -1
+        "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
       },
       {
         "nome": "Resistente",
@@ -4039,10 +4047,12 @@
     "habilidades": [
       {
         "nome": "Bom Conselheiro",
-        "descricao": "Os Akaimimi são os mais sábios dos espíritos e sempre têm algo a compartilhar (mesmo que ninguém tenha pedido). Isso se manifesta como a Complicação Peculiaridade (Pedância).",
-        "category": "racial_trait_negative",
-        "id": "BOM_CONSELHEIRO",
-        "descricaoLite": "Traz a Complicação Peculiaridade em sua variante Pedante, pela mania de opinar sobre tudo mesmo sem ser solicitado."
+        "descricao": "Os Akaimimi são os mais sábios dos espíritos e sempre têm algo a compartilhar (mesmo que ninguém tenha pedido). Concede a Complicação Peculiaridade (Menor).",
+        "id": "RACIAL_HINDRANCE",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "targetRef": "Peculiaridade",
+        "descricaoLite": "Carrega a Complicação Peculiaridade (Menor)."
       },
       {
         "nome": "Dicas Culturais",
@@ -4097,11 +4107,22 @@
         "value": 0
       },
       {
-        "nome": "Digestão Gloriosa",
-        "descricao": "O amor de um Araiguma por comida é incomum, mesmo aquelas não tão saborosas. Os Araiguma não sofrem de náuseas ou outras condições por ingerir coisas duvidosas, enquanto são imunes a venenos e doenças.",
+        "nome": "Digestão Gloriosa (doenças)",
+        "descricao": "Os Araiguma são imunes a todas as doenças não mágicas.",
+        "id": "IMUNE_A_DOENCAS_E_VENENOS",
         "category": "racial_trait_positive",
-        "id": "DIGESTAO_GLORIOSA",
-        "descricaoLite": "Imune a venenos e doenças, sem sofrer náuseas ou mal-estar mesmo ao ingerir algo estragado."
+        "targetRef": "Doenças",
+        "value": 1,
+        "descricaoLite": "Imunidade a doenças não mágicas."
+      },
+      {
+        "nome": "Digestão Gloriosa (venenos)",
+        "descricao": "Os Araiguma são imunes a todos os venenos não mágicos.",
+        "id": "IMUNE_A_DOENCAS_E_VENENOS",
+        "category": "racial_trait_positive",
+        "targetRef": "Venenos",
+        "value": 1,
+        "descricaoLite": "Imunidade a venenos não mágicos."
       },
       {
         "nome": "Visão no Escuro",
@@ -4155,14 +4176,14 @@
         "nome": "Vigorosos",
         "descricao": "Os Inumimi não são apenas maiores do que outros Kemonomimi, eles têm músculos mais robustos, adicionando +1 à sua Resistência base.",
         "category": "racial_trait_positive",
-        "id": "VIGOROSOS",
+        "id": "RESISTENCIA",
         "descricaoLite": "+1 na Resistência base, por ter músculos mais robustos que os demais da espécie."
       },
       {
         "nome": "Caninos",
         "descricao": "Um cão que ladra e morde: A mordida do Inumimi causa For+d4 de dano e pode ser usada para Prender e Enredar um inimigo.",
         "category": "racial_trait_positive",
-        "id": "CANINOS",
+        "id": "MORDIDA",
         "descricaoLite": "Possui um ataque de mordida com dano For+d4, também aproveitável em manobras de Prender ou Enredar.",
         "armasNaturais": [
           {
@@ -4778,7 +4799,7 @@
         "value": 1
       },
       {
-        "nome": "Robustez",
+        "nome": "Aumento de Força Para Carga",
         "descricao": "Força conta um dado maior para Sobrecarga e Força Mínima de armaduras.",
         "category": "racial_trait_positive",
         "id": "FORCA_CARGA_ARMADURA",
@@ -4854,7 +4875,7 @@
         "nome": "Visão na Penumbra",
         "descricao": "Ignora penalidades por Penumbra e Escuridão.",
         "category": "racial_trait_positive",
-        "id": "VISAO_NA_PENUMBRA",
+        "id": "VISAO_NO_ESCURO",
         "descricaoLite": "Penalidades de Penumbra e Escuridão não afetam a visão do personagem."
       }
     ],
@@ -4923,7 +4944,7 @@
         "nome": "Visão na Penumbra",
         "descricao": "Ignora penalidades por Penumbra e Escuridão.",
         "category": "racial_trait_positive",
-        "id": "VISAO_NA_PENUMBRA",
+        "id": "VISAO_NO_ESCURO",
         "descricaoLite": "Penalidades de Penumbra e Escuridão não afetam a visão do personagem."
       }
     ],
@@ -5049,7 +5070,7 @@
       {
         "nome": "Visão na Penumbra",
         "descricao": "Ignora penalidades por Penumbra e Escuridão.",
-        "id": "VISAO_NA_PENUMBRA",
+        "id": "VISAO_NO_ESCURO",
         "descricaoLite": "Penalidades de Penumbra e Escuridão não afetam a visão do personagem."
       }
     ],
@@ -5093,8 +5114,11 @@
       {
         "nome": "Intimidante",
         "descricao": "Começam com Intimidar d4. Máximo d12+1.",
+        "id": "PERICIA_RACIAL_D4",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Intimidar",
+        "value": 0,
         "category": "racial_trait_positive",
-        "id": "INTIMIDANTE",
         "descricaoLite": "Intimidar inicial d4, com máximo em d12+1."
       },
       {

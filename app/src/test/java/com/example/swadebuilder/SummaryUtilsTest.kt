@@ -3,6 +3,8 @@ package com.example.swadebuilder
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.RacialAbility
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertEquals
@@ -20,7 +22,7 @@ class SummaryUtilsTest {
             Pericia("Atletismo", "AGILIDADE", true), // Duplicate
             Pericia("Lutar", "AGILIDADE", true)
         )
-        val listaAncestralidades = emptyList<com.example.swadebuilder.model.RacialModifier>()
+        val listaAncestralidades = emptyList<RacialModifier>()
         val listaTropos = emptyList<com.example.swadebuilder.model.Tropo>()
         val listaComplicacoes = emptyList<com.example.swadebuilder.model.Complicacao>()
         val listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
@@ -68,14 +70,14 @@ class SummaryUtilsTest {
     fun `buildSummaryLines uses avianos ave de rapina traits in racial characteristics`() {
         val listaPericias = listOf(Pericia("Perceber", "ASTUCIA", true))
         val listaAncestralidades = listOf(
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "AVIANOS",
                 habilidades = listOf(
-                    com.example.swadebuilder.model.RacialAbility("Frágil", ""),
-                    com.example.swadebuilder.model.RacialAbility("Movimentação Reduzida", ""),
-                    com.example.swadebuilder.model.RacialAbility("Não Sabe Nadar", ""),
-                    com.example.swadebuilder.model.RacialAbility("Sentidos Aguçados", ""),
-                    com.example.swadebuilder.model.RacialAbility("Voo", "")
+                    RacialAbility("Frágil", ""),
+                    RacialAbility("Movimentação Reduzida", ""),
+                    RacialAbility("Não Sabe Nadar", ""),
+                    RacialAbility("Sentidos Aguçados", ""),
+                    RacialAbility("Voo", "")
                 ),
                 origem = "FC",
                 especieId = "avianos"
@@ -201,14 +203,14 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "ELFOS",
                     origem = "FC",
                     opcoes = listOf("Básico", "Comunitário"),
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility("Ágil", ""),
-                        com.example.swadebuilder.model.RacialAbility("Desastrado", ""),
-                        com.example.swadebuilder.model.RacialAbility("Visão no Escuro", "")
+                        RacialAbility("Ágil", ""),
+                        RacialAbility("Desastrado", ""),
+                        RacialAbility("Visão no Escuro", "")
                     ),
                     especieId = "elfos"
                 )
@@ -355,16 +357,16 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "CENTAUX",
                     origem = "FC",
                     opcoes = listOf("Padrão", "Gazela"),
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility("Estável", ""),
-                        com.example.swadebuilder.model.RacialAbility("Movimentação +2", ""),
-                        com.example.swadebuilder.model.RacialAbility("Tamanho +2", ""),
-                        com.example.swadebuilder.model.RacialAbility("Grande", ""),
-                        com.example.swadebuilder.model.RacialAbility("Óbvio", "")
+                        RacialAbility("Estável", ""),
+                        RacialAbility("Movimentação +2", ""),
+                        RacialAbility("Tamanho +2", ""),
+                        RacialAbility("Grande", ""),
+                        RacialAbility("Óbvio", "")
                     ),
                     especieId = "centaux"
                 )
@@ -469,12 +471,12 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "HUMANOS",
                     origem = "ARTE_DA_GUERRA",
                     especieId = "humano",
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "Aparar +1 (Garça)",
                             descricao = "",
                             id = "APARAR"
@@ -519,12 +521,12 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "TANUKIMIMI",
                     origem = "ARTE_DA_GUERRA",
                     especieId = "tanukimimi",
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
                             descricao = "",
                             id = "APARAR_BAIXO",
@@ -605,12 +607,12 @@ class SummaryUtilsTest {
                 )
             ),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "TANUKIMIMI",
                     origem = "ARTE_DA_GUERRA",
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility("Pensamentos Positivos", ""),
-                        com.example.swadebuilder.model.RacialAbility("Lentos para Agir", "")
+                        RacialAbility("Pensamentos Positivos", ""),
+                        RacialAbility("Lentos para Agir", "")
                     ),
                     especieId = "tanukimimi"
                 )
@@ -707,12 +709,12 @@ class SummaryUtilsTest {
                 )
             ),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "FERAL",
                     origem = "ARTE_DA_GUERRA",
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility("Insanidade (Sanguinário)", ""),
-                        com.example.swadebuilder.model.RacialAbility("Primitivo", "")
+                        RacialAbility("Insanidade (Sanguinário)", ""),
+                        RacialAbility("Primitivo", "")
                     ),
                     especieId = "feral"
                 )
@@ -800,13 +802,13 @@ class SummaryUtilsTest {
             ),
             allAdvantages = emptyList(),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "Humano (Império San)",
                     origem = "ARTE_DA_GUERRA",
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility("Pontos de Perícia", ""),
-                        com.example.swadebuilder.model.RacialAbility("Adaptável ou Signo", ""),
-                        com.example.swadebuilder.model.RacialAbility("Signos de Nascença", "")
+                        RacialAbility("Pontos de Perícia", ""),
+                        RacialAbility("Adaptável ou Signo", ""),
+                        RacialAbility("Signos de Nascença", "")
                     ),
                     especieId = "humano"
                 )
@@ -861,11 +863,11 @@ class SummaryUtilsTest {
                 )
             ),
             listaAncestralidades = listOf(
-                com.example.swadebuilder.model.RacialModifier(
+                RacialModifier(
                     nome = "SAURIOS",
                     origem = "BASICO",
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility(
+                        RacialAbility(
                             nome = "Sentidos Aguçados",
                             descricao = "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
                             id = "PRONTIDAO",
@@ -889,6 +891,63 @@ class SummaryUtilsTest {
         assertTrue(racialLine!!.contains("Sentidos Aguçados"))
         assertFalse("Não deveria repetir o nome da Vantagem concedida (Prontidão) numa entrada à parte", racialLine.contains("Prontidão"))
         assertEquals(1, "Sentidos Aguçados".toRegex().findAll(racialLine).count())
+    }
+
+    @Test
+    fun `buildSummaryLines para transmorfos exibe Mudar de Forma em caracteristicas raciais e nao duplica Antecedente Arcano Dom`() {
+        val transmorfos = RacialModifier(
+            nome = "TRANSMORFOS",
+            origem = "FANTASIA",
+            habilidades = listOf(
+                RacialAbility(
+                    nome = "Carismático",
+                    descricao = "",
+                    id = "CARISMATICO",
+                    category = "racial_edge"
+                ),
+                RacialAbility(
+                    nome = "Mudar de Forma",
+                    descricao = "",
+                    id = "PODER_RACIAL",
+                    category = "racial_trait_positive"
+                )
+            ),
+            especieId = "transmorfos"
+        )
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Transmorfo",
+                ancestralidade = "TRANSMORFOS",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = listOf("Carismático", "Antecedente Arcano (Dom)"),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("carismatico", "antecedente_arcano_dom"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap()
+            ),
+            allAdvantages = listOf(
+                Vantagem(id = "carismatico", nome = "Carismático", descricao = "", categoria = Categoria.SOCIAIS, requisitos = Requisito()),
+                Vantagem(id = "antecedente_arcano_dom", nome = "Antecedente Arcano (Dom)", descricao = "", categoria = Categoria.ANTECEDENTE, requisitos = Requisito())
+            ),
+            listaAncestralidades = listOf(transmorfos),
+            listaTropos = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = emptyMap(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertTrue(racialLine!!.contains("Mudar de Forma"))
+        assertFalse("Não deveria repetir Antecedente Arcano nas características raciais", racialLine.contains("Antecedente Arcano"))
     }
 
     @Test

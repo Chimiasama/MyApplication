@@ -2,6 +2,8 @@ package com.example.swadebuilder.model
 
 import kotlinx.serialization.json.*
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -220,5 +222,28 @@ class RacialTraitAuditFormatterTest {
         }
 
         assertTrue("Habilidades de raças sem catálogo/efeito encontradas:\n" + falhas.joinToString("\n"), falhas.isEmpty())
+    }
+
+    @Test
+    fun `ogros fantasia possuem duas penalidades de pericia de catalogo e nenhuma habilidade exclusiva sem nocao`() {
+        fun findAssetFile(fileName: String): File {
+            val candidatos = listOf(File("src/main/assets/$fileName"), File("app/src/main/assets/$fileName"))
+            return candidatos.firstOrNull { it.isFile } ?: error("Arquivo $fileName não encontrado")
+        }
+        val jsonText = findAssetFile("ancestralidades.json").readText()
+        val racas: JsonArray = Json.parseToJsonElement(jsonText).jsonArray
+        val ogroObj = racas.firstOrNull { it.jsonObject["nome"]?.jsonPrimitive?.content == "OGROS" }?.jsonObject
+        assertNotNull(ogroObj)
+
+        val habilidadesArr = ogroObj!!["habilidades"]!!.jsonArray
+        val ids = habilidadesArr.map { it.jsonObject["id"]?.jsonPrimitive?.content }
+        val nomes = habilidadesArr.map { it.jsonObject["nome"]?.jsonPrimitive?.content }
+
+        assertFalse("SEM_NOCAO não deve mais existir no Ogro", ids.contains("SEM_NOCAO"))
+        assertTrue("Deve possuir Sem Noção - Con. Geral", nomes.contains("Sem Noção - Con. Geral"))
+        assertTrue("Deve possuir Sem Noção - Perceber", nomes.contains("Sem Noção - Perceber"))
+
+        val penalidadesPericia = habilidadesArr.filter { it.jsonObject["id"]?.jsonPrimitive?.content == "PENALIDADE_PERICIA_1" }
+        assertTrue("Deve ter ao menos 4 penalidades de perícia no Ogro", penalidadesPericia.size >= 4)
     }
 }

@@ -55,7 +55,7 @@ class CriadorStateTransmorfosPoderTest {
             RacialAbility(
                 nome = "MUDAR DE FORMA",
                 descricao = "Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal.",
-                id = "ANTECEDENTE_ARCANO_PODER",
+                id = "PODER_RACIAL",
                 category = "racial_trait_positive"
             ),
             RacialAbility(

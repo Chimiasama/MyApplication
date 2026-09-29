@@ -244,12 +244,14 @@ object RacialTraitPointCatalog {
         "MOVIMENTACAO" to "Movimentação +2",
         "ESGUIOS" to "Esguios",
         "FEROCIDADE_ORC" to "Ferocidade Orc",
-        "FORCA_CARGA_ARMADURA" to "Robustez (Força +1 para Carga/Armadura)",
+        "FORCA_CARGA_ARMADURA" to "Aumento de Força Para Carga",
         "FRAGIL" to "Frágil",
         "LENTO" to "Lento",
         "METADE_CONSTRUTO" to "Metade Construto",
         "MOVIMENTACAO_REDUZIDA" to "Movimentação Reduzida",
         "MORTO_VIVO" to "Morto-Vivo",
+        "PODER_RACIAL" to "Poder (S)",
+        "ANTECEDENTE_ARCANO_PODER" to "Poder (S)",
         "RESISTENCIA" to "Resistência",
         "VELOCIDADE_RACIAL" to "Velocidade",
         "VISAO_NO_ESCURO" to "Visão no Escuro",
@@ -455,6 +457,7 @@ object RacialTraitPointCatalog {
         // (com a Limitação Pessoal) nesse único slot, batendo com este tier
         // de 2 pontos. MUDAR_DE_FORMA continua registrado, sem uso hoje,
         // pra uma futura raça com transformação completa de verdade.
+        "PODER_RACIAL" to 2,
         "ANTECEDENTE_ARCANO_PODER" to 2,
         "APARAR" to 1, // oficial: aparar_positivo (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
         "APARAR_BAIXO" to -1, // oficial: aparar_baixo (-1 = -1pt/compra — ver VEZES_MAX, até 3x)
@@ -740,9 +743,6 @@ object RacialTraitPointCatalog {
         "REFLEXOS_DE_COMBATE" to 3, // oficial vantagem_racial (2) + bônus extra de +2 Espírito recuperar Abalado
         "RESISTENCIA" to 1, // oficial: resistencia_racial (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
         "RESISTENCIA_AMBIENTAL" to 1, // oficial: resistencia_ambiental
-        "RESISTENCIA_AO_FRIO" to 1, // oficial: resistencia_ambiental (mesmo conceito, frio)
-        "RESISTENCIA_NATURAL" to 1, // oficial: imune_doencas_venenos
-        "RESISTENTE" to 2, // oficial: aumento_atributo
         "ROBO" to 6, // oficial: robo
         "ROBUSTO" to 2, // oficial: "Robusto (1)" — 2º Abalado não vira Ferimento (Ogros); sem entrada em EFEITOS, não é cálculo automático
         "RUDE" to -2, // oficial: penalidade_pericia_2 (-2 Persuadir, perícia)
@@ -1018,6 +1018,7 @@ object RacialTraitPointCatalog {
             // algo mais forte).
             "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" ->
                 vantagemConcedidaPor(targetRef, nome, allVantagens)?.let { custoDeVantagem(it) } ?: 2
+            "PODER_RACIAL", "ANTECEDENTE_ARCANO_PODER" -> if (value <= 1) 2 else 2 + (value - 1)
             "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
             // Complicações reais de complicacoes.json com severidade "Menor ou
             // Maior" (a raça escolhe qual) — CUSTOS sozinho não sabe qual

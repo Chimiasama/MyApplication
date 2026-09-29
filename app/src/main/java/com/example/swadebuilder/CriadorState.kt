@@ -5996,8 +5996,16 @@ class CriadorState {
         // agora lê o id do traço já presente na raça resolvida (INTIMIDANTE,
         // comentado em CUSTOS como "Intimidar d4, teto ampliado" desde antes
         // desta correção) — nenhuma outra raça cadastrada usa este id hoje.
-        val temIntimidanteTetoAmpliado = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "INTIMIDANTE" } == true &&
-                per.nome.keyify() == "INTIMIDAR"
+        val temIntimidanteTetoAmpliado = currentAncestryDef?.habilidades?.any { hab ->
+            val key = hab.id?.keyify().orEmpty()
+            val traitKey = hab.resolvedTraitId().keyify()
+            val targetKey = hab.targetRef?.keyify().orEmpty()
+            val nomeKey = hab.nome.keyify()
+            key == "INTIMIDANTE" ||
+            nomeKey == "INTIMIDANTE" ||
+            (key == "PERICIA_RACIAL_D4" && targetKey == "INTIMIDAR") ||
+            (traitKey == "SKILL_BOOST" && targetKey == "INTIMIDAR" && hab.value == 0)
+        } == true && per.nome.keyify() == "INTIMIDAR"
 
         val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
 

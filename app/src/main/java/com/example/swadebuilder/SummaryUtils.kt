@@ -210,8 +210,16 @@ fun buildRacialTraitsList(
         // `habilidades[]`) — essa aparece aqui do jeito normal (sem skin pra usar).
         val vantagensCobertasPorHabilidadeEstatica = (ancestralidadeAtual ?: ancestralidadeNomeObj)
             ?.habilidades
-            ?.filter { it.category == "racial_edge" }
-            ?.map { hab -> (hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome).keyify() }
+            ?.flatMap { hab ->
+                val ref = (hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome).keyify()
+                if (hab.category == "racial_edge") {
+                    listOf(ref)
+                } else if (hab.id?.keyify() == "PODER_RACIAL" || hab.resolvedTraitId().keyify() == "PODER_RACIAL" || hab.id?.keyify() == "ANTECEDENTE_ARCANO_PODER") {
+                    listOf(ref, "ANTECEDENTE_ARCANO_DOM", "ANTECEDENTE_ARCANO", "ANTECEDENTE ARCANO (DOM)", "ANTECEDENTE ARCANO DOM")
+                } else {
+                    emptyList()
+                }
+            }
             ?.toSet()
             ?: emptySet()
         val vantagensRaciaisSemSkinEstatico = personagem.vantagensRaciais

@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import org.junit.Test
 import java.io.File
 
+/** Gera o relatório auditoria_tracos_exclusivos.md em docs/ (updated). */
 class AncestryAuditTest {
 
     private val json = Json {
