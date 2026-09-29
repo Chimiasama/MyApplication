@@ -3278,9 +3278,12 @@
         "descricaoLite": "Sua composição gelatinosa dificulta implantes cibernéticos, o que lhes dá a Complicação Ciber-Resistência."
       },
       {
-        "nome": "FRACO",
+        "nome": "Fraco",
         "descricao": "Devido à falta de ossos e músculos, gelatinoides têm dificuldade em exercer força física. Eles subtraem 1 de rolagens de Força e dano corpo a corpo.",
-        "id": "FRACO",
+        "id": "PENALIDADE_ATRIBUTO_1",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Força",
+        "value": 1,
         "category": "racial_trait_negative",
         "descricaoLite": "A falta de estrutura óssea e muscular custa -1 em Força e no dano corpo a corpo."
       },
