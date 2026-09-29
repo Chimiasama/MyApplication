@@ -3683,17 +3683,21 @@
     ],
     "habilidades": [
       {
-        "nome": "NERVOS DE AÇO",
+        "nome": "Nervos de Aço",
         "descricao": "Bloqueadores de nervos permitem que o soldado registre dor, mas diminuem seus efeitos, conferindo-lhes a Vantagem Nervos de Aço; isso ignora 1 ponto de penalidades por Ferimentos.",
         "id": "NERVOS_DE_ACO",
-        "category": "racial_trait_positive",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "Nervos de Aço",
+        "category": "racial_edge",
         "descricaoLite": "Implantes que atenuam a dor concedem a Vantagem Nervos de Aço, reduzindo em 1 ponto a penalidade imposta por Ferimentos."
       },
       {
-        "nome": "REFLEXOS DE COMBATE",
+        "nome": "Reflexos de Combate",
         "descricao": "O reflexo de lutar ou fugir destes soldados foi programado em seus sistemas nervosos, dando a eles a Vantagem Reflexos de Combate. Adicionam +2 em Espírito para se recuperar do Estado Abalado.",
         "id": "REFLEXOS_DE_COMBATE",
-        "category": "racial_trait_positive",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "Reflexos de Combate",
+        "category": "racial_edge",
         "descricaoLite": "Reações de luta ou fuga vêm programadas em seus sistemas, concedendo a Vantagem Reflexos de Combate e +2 em Espírito ao tentar sair do Estado Abalado."
       },
       {
@@ -3712,11 +3716,14 @@
         "descricaoLite": "Caso se liberte desse condicionamento, a Complicação passa a ser Procurado — se o antigo contratante buscar revanche — ou Inimigo — se alguém que sofreu no passado quiser vê-lo morto."
       },
       {
-        "nome": "TREINADOS PARA A GUERRA",
-        "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral.",
-        "id": "TREINADOS_PARA_A_GUERRA",
+        "nome": "Treinados para a Guerra",
+        "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 2 das rolagens de Conhecimento Geral.",
+        "id": "PENALIDADE_PERICIA_2",
+        "traitId": "PENALIDADE_PERICIA_2",
+        "targetRef": "Conhecimento Geral",
+        "value": 2,
         "category": "racial_trait_negative",
-        "descricaoLite": "Pouco familiarizados com a vida civil, sofrem -4 em Conhecimento Geral."
+        "descricaoLite": "Pouco familiarizados com a vida civil, sofrem -2 em Conhecimento Geral."
       }
     ],
     "tags": [
