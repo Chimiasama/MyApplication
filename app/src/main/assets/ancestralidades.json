@@ -3099,9 +3099,12 @@
     ],
     "habilidades": [
       {
-        "nome": "CABEÇA-DURA",
+        "nome": "Cabeça-dura",
         "descricao": "Elementais de pedra não processam pensamentos tão rapidamente quanto outros seres. Rolagens de Astúcia são feitas com -1.",
-        "id": "CABECA_DURA",
+        "id": "PENALIDADE_ATRIBUTO_1",
+        "traitId": "PENALIDADE_ATRIBUTO_1",
+        "targetRef": "Astúcia",
+        "value": 1,
         "category": "racial_trait_negative",
         "descricaoLite": "Pensam mais devagar que a maioria: -1 nas rolagens de Astúcia."
       },
