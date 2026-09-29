@@ -307,6 +307,7 @@ object RacialTraitPointCatalog {
         "SALTADOR" to "Saltador",
         "SEM_MANIPULADORES" to "Sem Manipuladores",
         "SEMIAQUATICO" to "Semiaquático",
+        "SEMI_AQUATICO" to "Semi-Aquático",
         "TENTACULOS" to "Tentáculos",
         // Tier base (1pt): Sci-Fi descreve como veneno "Moderado", Fantasia como
         // "Leve ou Incapacitante" — mesmo custo nos dois livros, só muda o nome do
@@ -826,6 +827,7 @@ object RacialTraitPointCatalog {
         "SALTADOR" to 2, // Básico "Saltador (1)"
         "SEM_MANIPULADORES" to -4, // Sci-Fi "Sem Manipuladores (1)"
         "SEMIAQUATICO" to 1, // Básico "Aquático/Semi-Aquático (1)": tier semi-aquático (1pt); tier Aquático completo é AQUATICO (2pts)
+        "SEMI_AQUATICO" to 1,
         "TENTACULOS" to 2, // Sci-Fi "Tentáculos (2)": tier base (+2 Agarrar); 2ª ação de tentáculo custa 4
         "REGENERACAO" to 2, // Básico "Regeneração (1)": tier base (cura 1x/dia)
         "REGENERACAO_MAIOR" to 3, // mesmo trecho: também recupera lesão permanente
@@ -1050,7 +1052,7 @@ object RacialTraitPointCatalog {
 
     val IDS_CATALOGO_LIVRO_BASICO: Set<String> = setOf(
         "ACAO_ADICIONAL_MENOR", "ACAO_ADICIONAL", "ACAO_ADICIONAL_MAIOR", "ADAPTAVEL", "ALCANCE",
-        "ANDAR_PAREDES", "ANDAR_NAS_PAREDES", "APARAR", "ARMA_DE_SOPRO", "SEMI_AQUATICO", "AQUATICO",
+        "ANDAR_PAREDES", "ANDAR_NAS_PAREDES", "APARAR", "ARMA_DE_SOPRO", "SEMI_AQUATICO", "SEMIAQUATICO", "AQUATICO",
         "ARMADURA", "ATORDOAR", "AUMENTO_ATRIBUTO", "BIOLOGIA_ACIDA", "BONUS_PERICIA_1", "BONUS_PERICIA_2",
         "CAMUFLAGEM_1", "CAMUFLAGEM_2", "CASCA", "CAVAR", "CHIFRES", "CHIFRES_MAIOR", "CHIFRES_MAIORES",
         "COMUNITARIO", "CONSTRUTO", "DIMINUTO_PEQUENO", "DIMINUTO_MUITO_PEQUENO", "DIMINUTO_MINUSCULO",
