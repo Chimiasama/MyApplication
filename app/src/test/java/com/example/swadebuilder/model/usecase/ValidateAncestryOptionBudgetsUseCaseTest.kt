@@ -246,4 +246,27 @@ class ValidateAncestryOptionBudgetsUseCaseTest {
         assertEquals(0, results.first { it.optionId == "tigre" }.saldo)
         assertEquals(0, results.first { it.optionId == "serpente" }.saldo)
     }
+
+    @Test
+    fun `terracota real fecha em 3 pontos nas duas opcoes de complicacao`() {
+        val base = RacialModifier(
+            nome = "Terracota",
+            habilidades = listOf(
+                RacialAbility(nome = "Metade Construto", descricao = "", id = "METADE_CONSTRUTO"),
+                RacialAbility(nome = "Metade Carne", descricao = "", id = "METADE_CARNE"),
+                RacialAbility(nome = "Forasteiro", descricao = "", id = "FORASTEIRO", severity = "Menor"),
+                RacialAbility(nome = "Chi Reduzido", descricao = "", id = "CHI_REDUZIDO"),
+                RacialAbility(nome = "Articulações Limitadas", descricao = "", id = "ARTICULACOES_LIMITADAS")
+            ),
+            origem = "ARTE_DA_GUERRA",
+            pontosRaciaisEsperados = 3
+        )
+        val config = AncestryVariantRegistry.get("TERRACOTA", "ARTE_DA_GUERRA")!!
+
+        val results = useCase.execute(base, config)
+
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.dentroDoOrcamento })
+        assertTrue(results.all { it.saldo == 3 })
+    }
 }

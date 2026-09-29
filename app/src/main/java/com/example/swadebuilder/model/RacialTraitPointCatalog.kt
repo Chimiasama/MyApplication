@@ -687,7 +687,7 @@ object RacialTraitPointCatalog {
         "MENTE_DE_COLMEIA" to -3, // duas Complicações juntas: Guiado (Maior, -2) + Leal (-1)
         "MENTE_PRIMITIVA" to -1, // sem equivalente oficial, teto de Astúcia travado em d6 na criação
         "METADE_CARNE" to 0, // só esclarece que ainda precisa comer/descansar (contraponto narrativo de Metade Construto, sem efeito mecânico próprio)
-        "METADE_CONSTRUTO" to 6, // entre robo (6) e construto (8): pacote quase completo (+3 Resistência, não respira, imune veneno/doença, sem dano extra de Ataque Localizado) mas não cura naturalmente
+        "METADE_CONSTRUTO" to 8, // pacote com +3 Resistência (+3), Não Respira (+2), Imune Veneno/Doença (+2), Sem Órgãos Vitais (+1) = 8pts (cura normal na Hora de Ouro, Consertar depois)
         // Mordida oficial (livro): base 1 ponto = For+d4, sem PA (Rakashanos,
         // Sáurios, Centauros, Insetoides, Povo Ratazana, Povo Serpente,
         // Renascidos etc. — nenhum menciona PA no texto). Mesmo padrão de
