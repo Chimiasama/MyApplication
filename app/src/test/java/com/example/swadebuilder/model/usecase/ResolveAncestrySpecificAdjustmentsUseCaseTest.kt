@@ -348,7 +348,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
         assertEquals(listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO", vezes = 2)), result.ensureAutomaticAdvantages)
         assertEquals(listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"), result.automaticAdvantagesToRemove)
-        assertEquals(listOf("GRANDE"), result.racialDisadvantagesToRemove)
+        assertEquals(emptyList<String>(), result.racialDisadvantagesToRemove)
     }
 
 

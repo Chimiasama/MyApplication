@@ -65,7 +65,8 @@ class AncestralidadeCatalogBudgetTest {
         "INSETOIDES" to "SCI_FI",
         "MÍMICOS" to "SCI_FI",
         "UMVEE (FILHOS DA LUA)" to "ARTE_DA_GUERRA",
-        "HUMANO (IMPÉRIO SAN)" to "ARTE_DA_GUERRA"
+        "HUMANO (IMPÉRIO SAN)" to "ARTE_DA_GUERRA",
+        "TERRACOTA" to "ARTE_DA_GUERRA"
     )
 
     private fun catalogFile(): File {
