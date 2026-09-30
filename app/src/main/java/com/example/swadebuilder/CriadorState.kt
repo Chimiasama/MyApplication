@@ -1275,6 +1275,24 @@ class CriadorState {
             )
         }
 
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" &&
+            base.habilidades.any { it.id?.keyify() == "TERRACOTA_COMPLICACAO" || it.id?.keyify() == "METADE_CARNE" }
+        ) {
+            val optionText = resolveSciFiVariantSelectionFor(base.opcoes)
+            val choiceId = if (optionText?.contains("Obrigação", ignoreCase = true) == true) "obrigacao" else "voto"
+            return resolveMarkedSelection(
+                base = base,
+                marcador = if (base.habilidades.any { it.id?.keyify() == "TERRACOTA_COMPLICACAO" }) "TERRACOTA_COMPLICACAO" else "METADE_CARNE",
+                ancestralidadeId = "TERRACOTA",
+                livro = "ARTE_DA_GUERRA",
+                answer = SelectionAnswer(
+                    selectionId = "terracota_complicacao",
+                    fixedPackageChoiceId = choiceId
+                ),
+                manterMarcadorVisivel = true
+            )
+        }
+
         // Meio-Orc (Fantasia): Endurecido — escolha entre Força/Vigor d6.
         // Feral (Arte da Guerra): Primitivo — escolha entre Força/Vigor/
         // Agilidade d6. Mesmo mecanismo genérico acima (resolveMarkedSelection),

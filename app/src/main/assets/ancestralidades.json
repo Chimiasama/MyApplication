@@ -4309,7 +4309,7 @@
         "value": 1
       },
       {
-        "nome": "Fortuna Dá",
+        "nome": "Sorte",
         "descricao": "A Fortuna dá. Os nekomimi começam cada sessão com um Bene adicional. Esse benefício racial não é a Vantagem Sorte, mas acumula com Sorte e Sorte Grande.",
         "category": "racial_trait_positive",
         "id": "FORTUNA_DA",
@@ -4410,7 +4410,7 @@
         "nome": "Velocidade da Lebre",
         "descricao": "Eles têm +2 de Movimentação e seu dado de corrida aumenta em um passo.",
         "category": "racial_trait_positive",
-        "id": "VELOCIDADE_DA_LEBRE",
+        "id": "MOVIMENTACAO",
         "descricaoLite": "+2 de deslocamento e o dado de corrida sobe um tipo."
       },
       {
@@ -4435,11 +4435,33 @@
     "descricao": "Terracotas são espíritos reencarnados de qualquer linhagem trazidos de volta para cumprir um dever e uma obrigação. Um Terracota “nasce” a partir de um bloco de argila e Chi de tamanho considerável.",
     "habilidades": [
       {
-        "nome": "Metade Construto",
-        "descricao": "Terracotas são um equilíbrio entre carne e pedra, recebem +3 em Resistência. Terracotas não respiram, portanto não são afetadas por toxinas inaláveis, não podem se afogar ou sufocar. São imunes a venenos e doenças, e não sofrem dano extra de Ataques Localizados devido à resiliência biológica. Terracotas podem ser tratadas durante a “Hora de Ouro” como outros, mas após esse período, não conseguem se curar naturalmente. O sangue seca e os ferimentos endurecem, exigindo o uso de Consertar com materiais de barro e água, que leva uma hora por nível de Ferimento atual por tentativa. A rolagem de Consertar não está limitada à regra da “Hora de Ouro”.",
+        "nome": "Metade Construto (Resistência)",
+        "descricao": "Terracotas são um equilíbrio entre carne e pedra, recebendo +3 em Resistência.",
         "category": "racial_trait_positive",
-        "id": "METADE_CONSTRUTO",
-        "descricaoLite": "+3 de Resistência; não respira, logo é imune a toxinas inaladas e não se afoga nem sofre asfixia, além de ser imune a venenos e doenças e não sofrer dano extra de Ataques Localizados. Pode ser tratado normalmente durante a Hora de Ouro, mas depois disso não regenera sozinho — exige uma rolagem de Consertar com argila e água, levando 1 hora por nível de Ferimento atual, sem o limite de tempo da Hora de Ouro."
+        "id": "RESISTENCIA",
+        "vezes": 3,
+        "descricaoLite": "+3 na Resistência."
+      },
+      {
+        "nome": "Metade Construto (Não Respira)",
+        "descricao": "Terracotas não respiram, portanto são imunes a toxinas inaláveis e não se afogam nem sufocam.",
+        "category": "racial_trait_positive",
+        "id": "NAO_RESPIRA",
+        "descricaoLite": "Não precisa respirar, imune a toxinas inaláveis, afogamento e asfixia."
+      },
+      {
+        "nome": "Metade Construto (Sem Órgãos Vitais)",
+        "descricao": "Terracotas não possuem órgãos vitais, ignorando dano extra por acertos críticos ou ataques chamados.",
+        "category": "racial_trait_positive",
+        "id": "SEM_ORGAOS_VITAIS",
+        "descricaoLite": "Não possui órgãos vitais; ignora dano adicional de acertos críticos e ataques chamados."
+      },
+      {
+        "nome": "Metade Construto (Imune a Doenças e Venenos)",
+        "descricao": "Terracotas são imunes a doenças e venenos.",
+        "category": "racial_trait_positive",
+        "id": "IMUNE_A_DOENCAS_E_VENENOS",
+        "descricaoLite": "Imunidade total a doenças e venenos."
       },
       {
         "nome": "Metade Carne",
@@ -4467,8 +4489,16 @@
         "nome": "Articulações Limitadas",
         "descricao": "A metade construto é feita de grandes pilhas de minerais, tornando-os pesados. A Movimentação inicial é 5 e seu dado de corrida é d4.",
         "category": "racial_trait_negative",
-        "id": "ARTICULACOES_LIMITADAS",
+        "id": "MOVIMENTACAO_REDUZIDA",
         "descricaoLite": "Deslocamento inicial de 5 quadros e dado de corrida d4."
+      },
+      {
+        "nome": "Escolha a Complicação de nascença",
+        "descricao": "A existência de um Terracota está atada a um dever espiritual, manifestando-se como Voto (Maior) ou Obrigação (Maior).",
+        "category": "racial_hindrance",
+        "severity": "Maior",
+        "id": "TERRACOTA_COMPLICACAO",
+        "descricaoLite": "Nasce com Voto (Maior) ou Obrigação (Maior) a escolher."
       }
     ],
     "opcoes": [

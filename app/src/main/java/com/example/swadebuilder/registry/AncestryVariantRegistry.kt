@@ -761,6 +761,7 @@ object AncestryVariantRegistry {
                 id = "terracota_complicacao",
                 rotulo = "Escolha a Complicação de nascença",
                 tipo = SelectionType.FIXED_PACKAGE,
+                marcadorTraitId = "TERRACOTA_COMPLICACAO",
                 pacotesFixos = listOf(
                     FixedPackageOption(
                         id = "voto",

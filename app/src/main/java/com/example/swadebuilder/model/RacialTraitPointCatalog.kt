@@ -252,6 +252,7 @@ object RacialTraitPointCatalog {
         "MORTO_VIVO" to "Morto-Vivo",
         "PODER_RACIAL" to "Poder (S)",
         "ANTECEDENTE_ARCANO_PODER" to "Poder (S)",
+        "TERRACOTA_COMPLICACAO" to "Complicação de Nascença (Voto ou Obrigação)",
         "RESISTENCIA" to "Resistência",
         "VELOCIDADE_RACIAL" to "Velocidade",
         "VISAO_NO_ESCURO" to "Visão no Escuro",
@@ -713,6 +714,7 @@ object RacialTraitPointCatalog {
         "MUITO_RESISTENTE" to 4, // 2x oficial aumento_atributo (dois passos de Vigor)
         "NAO_PODE_CURAR" to -1, // oficial: nao_pode_curar
         "NAO_SABE_NADAR" to -1, // oficial: complicacao_racial_menor
+        "NAO_RESPIRA" to 2, // oficial: nao_respira
         "NATURALMENTE_SOBRENATURAL" to 1, // oficial: pericia_racial_d4 (Ocultismo d4)
         "NERVOS_DE_ACO" to 2, // oficial: vantagem_racial
         "NOCAO_DO_PERIGO" to 2, // oficial: vantagem_racial
@@ -876,6 +878,7 @@ object RacialTraitPointCatalog {
         "ARMA_DE_SOPRO_FRIO" to 2, // mesmo valor de ARMA_DE_SOPRO, elemento Frio (Yetis Sopro)
         "ACAO_ADICIONAL_FISICA" to 4, // oficial Sci-Fi: tier condicional físico/mental — também usado por Insetoides (Fantasia), ver nota acima em ACAO_ADICIONAL
         "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS" to 5, // mesmo valor de ACAO_ADICIONAL (tier incondicional)
+        "TERRACOTA_COMPLICACAO" to -2,
         "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to 1, // Sci-Fi "Sentidos Aguçados (3)" tier "Visão de Águia" — 1pt/pick, efeito estreito diferente do pericia_racial_d6 que SENTIDOS_AGUCADOS representa em outras raças
         "SENTIDOS_AGUCADOS_AUDICAO" to 1, // mesmo trecho, opção "Audição" — 1pt/pick. Sem raça cadastrada ainda
         "SENTIDOS_AGUCADOS_OLFATO" to 1, // mesmo trecho, opção "Olfato" — 1pt/pick. Sem raça cadastrada ainda
