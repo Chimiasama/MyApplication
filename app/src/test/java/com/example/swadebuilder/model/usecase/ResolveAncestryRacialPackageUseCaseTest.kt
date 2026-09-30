@@ -199,7 +199,7 @@ class ResolveAncestryRacialPackageUseCaseTest {
 
 
     @Test
-    fun `centaux gazela remove tamanho grande e usa movimentacao mais quatro`() {
+    fun `centaux gazela mantem traco grande e usa movimentacao mais quatro`() {
         val result = useCase.execute(
             ResolveAncestryRacialPackageUseCase.Params(
                 anc = "CENTAUX",
@@ -218,7 +218,7 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertTrue(result.vantagensRaciais.any { it.equals("MOVIMENTAÇÃO +4", ignoreCase = true) })
         assertFalse(result.vantagensRaciais.any { it.equals("TAMANHO +2", ignoreCase = true) })
         assertFalse(result.vantagensRaciais.any { it.equals("MOVIMENTAÇÃO +2", ignoreCase = true) })
-        assertFalse(result.desvantagensRaciais.any { it.equals("GRANDE", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("GRANDE", ignoreCase = true) })
     }
 
 

@@ -151,7 +151,7 @@ object ModifierEngine {
                 if (isCentauxGazela) {
                     removeAll { trait ->
                         when (trait.keyify()) {
-                            "MOVIMENTACAO +2", "TAMANHO +2", "GRANDE" -> true
+                            "MOVIMENTACAO +2", "TAMANHO +2" -> true
                             else -> false
                         }
                     }

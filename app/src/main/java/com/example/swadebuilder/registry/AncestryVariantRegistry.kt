@@ -295,8 +295,7 @@ object AncestryVariantRegistry {
                     nome = "Gazela",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO", vezes = 2)),
-                        tracosParaRemoverPorNome = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
-                        desvantagensParaRemover = listOf("GRANDE")
+                        tracosParaRemoverPorNome = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2")
                     )
                 )
             )
