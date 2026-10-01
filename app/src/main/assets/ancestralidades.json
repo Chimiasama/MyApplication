@@ -3056,11 +3056,11 @@
         "value": 1
       },
       {
-        "nome": "LENTO",
+        "nome": "Lento",
         "descricao": "Drakens são corredores lentos. Reduzem 1 de sua Movimentação e seu dado de corrida para d4.",
-        "id": "LENTO",
+        "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative",
-        "descricaoLite": "São corredores lentos: -1 na Movimentação e dado de corrida fixado em d4."
+        "descricaoLite": "São corredores lentos: -1 na Movimentação e dado de corrida reduzido em um tipo."
       },
       {
         "nome": "RESISTÊNCIA +2",

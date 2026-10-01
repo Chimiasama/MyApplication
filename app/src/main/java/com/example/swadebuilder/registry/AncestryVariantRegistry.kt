@@ -323,7 +323,7 @@ object AncestryVariantRegistry {
                     id = "dragao",
                     nome = "Dragão",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("ARMA DE SOPRO (Fogo)", "ARMA_DE_SOPRO_FOGO")),
+                        tracosParaAdicionar = listOf(TraitAddition("Arma de Sopro (Fogo)", "ARMA_DE_SOPRO", traitId = "ARMA_DE_SOPRO", targetRef = "Fogo")),
                         tracosParaRemoverPorNome = listOf("FORTE")
                     )
                 )
@@ -370,11 +370,8 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "defensivo",
                     nome = "Defensivo",
-                    // Toque Venenoso (Paralisante) custa 3 — deixava a raça 1
-                    // ponto acima do orçamento. O livro é Nocauteador (2), não
-                    // Paralisante (3): base(0) + Nocauteador(2) = 2, fecha.
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Nocauteador)", "TOQUE_VENENOSO_NOCAUTEADOR"))
+                        tracosParaAdicionar = listOf(TraitAddition("Toque Venenoso", "TOQUE_VENENOSO_PARALISANTE"))
                     )
                 )
             )
@@ -394,10 +391,7 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "ameba",
                     nome = "Ameba",
-                    // Camuflagem Total (2), não a Camuflagem básica (1) — bate
-                    // com a Regeneração (2) que a raça perde ao trocar de
-                    // Padrão pra Ameba.
-                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("CAMUFLAGEM TOTAL", "CAMUFLAGEM_TOTAL")))
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("Camuflagem", "CAMUFLAGEM_2")))
                 )
             )
         )
@@ -742,7 +736,7 @@ object AncestryVariantRegistry {
                     id = "sopro",
                     nome = "Sopro",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("ARMA DE SOPRO (Frio)", "ARMA_DE_SOPRO_FRIO")),
+                        tracosParaAdicionar = listOf(TraitAddition("Arma de Sopro (Frio)", "ARMA_DE_SOPRO", traitId = "ARMA_DE_SOPRO", targetRef = "Frio")),
                         desvantagensParaAdicionar = listOf(TraitAddition("DEPENDÊNCIA", "DEPENDENCIA"))
                     )
                 )

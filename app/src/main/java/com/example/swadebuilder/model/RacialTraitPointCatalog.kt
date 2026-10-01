@@ -240,6 +240,7 @@ object RacialTraitPointCatalog {
         "APARAR" to "Aparar +1",
         "APARAR_BAIXO" to "Aparar -1",
         "ARMADURA" to "Armadura +2",
+        "CAMUFLAGEM_2" to "Camuflagem (-4)",
         "TAMANHO_MAIS_1" to "Tamanho +1",
         "MOVIMENTACAO" to "Movimentação +2",
         "ESGUIOS" to "Esguios",
@@ -816,6 +817,7 @@ object RacialTraitPointCatalog {
         "BIOLOGIA_ACIDA" to 1, // Sci-Fi "Biologia Ácida (1)"
         "CAVAR" to 1, // Básico "Cavar (1)"
         "CAMUFLAGEM" to 1, // Fantasia/Sci-Fi "Camuflagem (1)": 1pt por 1 terreno (tier base)
+        "CAMUFLAGEM_2" to 2, // oficial: camuflagem_2 (-4 para detectar/acertar à distância)
         "CAMUFLAGEM_TOTAL" to 2, // mesmo trecho: "qualquer ambiente", cor mutável
         "ECOLOCALIZACAO" to 1, // Fantasia/Sci-Fi "Ecolocalização (1)"
         "FOSFORESCENCIA" to 1, // Fantasia "Fosforescência (1)": tier base (1 ponto)
