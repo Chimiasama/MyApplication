@@ -481,11 +481,8 @@ fun AncestralidadesSection(
             listaCompletaText = ""
         )
 
-        // Só aparece quando "Ver detalhes" existe pra ver (allowLongTexts) — sem esse painel
-        // expandido, ligar o modo auditoria não muda nada visível. Deliberadamente sem
-        // esconder atrás de nenhuma outra flag: é um botão a mais na tela, não algo o
-        // jogador vai entender ou se importar, mas também não precisa de mistério.
-        if (allowLongTexts) {
+        // Só aparece quando "Ver detalhes" existe pra ver (allowLongTexts) e na versão Full (EditionConfig.isFullEdition).
+        if (EditionConfig.isFullEdition && allowLongTexts) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -1289,7 +1286,7 @@ fun AncestralidadesSection(
                                             )
                                         }
 
-                                        if (modoAuditoriaIdPuro) {
+                                        if (EditionConfig.isFullEdition && modoAuditoriaIdPuro) {
                                             // Leitura "crua": ignora de propósito `descricao`/nome
                                             // reskinado da raça — só id/traitId de cada habilidade
                                             // contra a definição oficial do catálogo. Ver
