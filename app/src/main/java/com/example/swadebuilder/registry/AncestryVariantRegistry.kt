@@ -1039,13 +1039,12 @@ object AncestryVariantRegistry {
                     nome = "Nômades do Deserto",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition(
-                                "Sobrevivência d6", "NOMADES_DESERTO_SOBREVIVENCIA",
-                                traitId = "SKILL_BOOST", targetRef = "Sobrevivência", value = 1
-                            )
+                            TraitAddition("Sobrevivência d6", "SKILL_BOOST", traitId = "SKILL_BOOST", targetRef = "Sobrevivência", value = 1),
+                            TraitAddition("Resistência Ambiental (Calor)", "RESISTENCIA_AMBIENTAL", traitId = "RESISTENCIA_AMBIENTAL", targetRef = "Calor")
                         ),
-                        tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Frio)", "FRAQUEZA_AMBIENTAL_FRIO")),
-                        vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Calor)", "RESISTENCIA_AMBIENTAL_CALOR"))
+                        tracosNegativosParaAdicionar = listOf(
+                            TraitAddition("Fraqueza Ambiental (Frio)", "FRAQUEZA_AMBIENTAL", traitId = "FRAQUEZA_AMBIENTAL", targetRef = "Frio")
+                        )
                     )
                 ),
                 VariantOption(
@@ -1053,13 +1052,12 @@ object AncestryVariantRegistry {
                     nome = "Povo da Montanha",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition(
-                                "Vigor d6", "POVO_MONTANHA_VIGOR",
-                                traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor", value = 1
-                            )
+                            TraitAddition("Vigor d6", "ATTRIBUTE_BOOST", traitId = "ATTRIBUTE_BOOST", targetRef = "Vigor", value = 1),
+                            TraitAddition("Resistência Ambiental (Frio)", "RESISTENCIA_AMBIENTAL", traitId = "RESISTENCIA_AMBIENTAL", targetRef = "Frio")
                         ),
-                        tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Calor)", "FRAQUEZA_AMBIENTAL_CALOR")),
-                        vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Frio)", "RESISTENCIA_AMBIENTAL_FRIO"))
+                        tracosNegativosParaAdicionar = listOf(
+                            TraitAddition("Fraqueza Ambiental (Calor)", "FRAQUEZA_AMBIENTAL", traitId = "FRAQUEZA_AMBIENTAL", targetRef = "Calor")
+                        )
                     )
                 ),
                 VariantOption(
@@ -1067,14 +1065,11 @@ object AncestryVariantRegistry {
                     nome = "Povo do Mar",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition(
-                                "Atletismo d6", "POVO_MAR_ATLETISMO",
-                                traitId = "SKILL_BOOST", targetRef = "Atletismo", value = 1
-                            ),
-                            TraitAddition(
-                                "Navegar d6", "POVO_MAR_NAVEGAR",
-                                traitId = "SKILL_BOOST", targetRef = "Navegar", value = 1
-                            )
+                            TraitAddition("Atletismo d6", "SKILL_BOOST", traitId = "SKILL_BOOST", targetRef = "Atletismo", value = 1),
+                            TraitAddition("Navegação d6", "SKILL_BOOST", traitId = "SKILL_BOOST", targetRef = "Navegação", value = 1)
+                        ),
+                        tracosNegativosParaAdicionar = listOf(
+                            TraitAddition("Penalidade em Cavalgar", "PENALIDADE_PERICIA_1", traitId = "PENALIDADE_PERICIA_1", targetRef = "Cavalgar", value = 1)
                         )
                     ),
                     selecoes = listOf(
@@ -1085,17 +1080,10 @@ object AncestryVariantRegistry {
                             pacotesFixos = listOf(
                                 FixedPackageOption("nenhuma", "Nenhuma", ResolvedTraitPackage()),
                                 FixedPackageOption(
-                                    "penalidade_cavalgar", "Penalidade em Cavalgar",
-                                    ResolvedTraitPackage(
-                                        tracosNegativosParaAdicionar = listOf(
-                                            TraitAddition("Penalidade em Cavalgar", "PENALIDADE_CAVALGAR")
-                                        )
-                                    )
-                                ),
-                                FixedPackageOption(
                                     "procurado_maior", "Procurado (Maior)",
                                     ResolvedTraitPackage(
-                                        desvantagensParaAdicionar = listOf(TraitAddition("PROCURADO (Maior)", "PROCURADO_MAIOR"))
+                                        desvantagensParaAdicionar = listOf(TraitAddition("PROCURADO (Maior)", "PROCURADO_MAIOR")),
+                                        tracosParaAdicionar = listOf(TraitAddition("Adaptável", "ADAPTAVEL", traitId = "ADAPTAVEL"))
                                     )
                                 )
                             )
@@ -1107,10 +1095,7 @@ object AncestryVariantRegistry {
                     nome = "Senhores dos Cavalos",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition(
-                                "Cavalgar d6", "SENHORES_CAVALOS_CAVALGAR",
-                                traitId = "SKILL_BOOST", targetRef = "Cavalgar", value = 1
-                            )
+                            TraitAddition("Cavalgar d6", "SKILL_BOOST", traitId = "SKILL_BOOST", targetRef = "Cavalgar", value = 1)
                         )
                     ),
                     selecoes = listOf(
@@ -1120,16 +1105,11 @@ object AncestryVariantRegistry {
                             tipo = SelectionType.FIXED_PACKAGE,
                             pacotesFixos = listOf(
                                 FixedPackageOption("nenhum", "Nenhum", ResolvedTraitPackage()),
-                                // "Nascido na Sela" sozinho (sem Complicação) foi removido: pelo
-                                // livro, ganhar a Vantagem precisa vir com uma Complicação pra
-                                // compensar (Código de Honra ou Sem Escrúpulos + Analfabeto) —
-                                // as duas opções abaixo. Sem Complicação nenhuma, a única opção
-                                // válida é "Nenhum" (só o Cavalgar d6 do pacote cultural).
                                 FixedPackageOption(
                                     "codigo_de_honra", "Nascido na Sela + Código de Honra",
                                     ResolvedTraitPackage(
                                         vantagensGratisIds = listOf("nascido_na_sela"),
-                                        desvantagensParaAdicionar = listOf(TraitAddition("CÓDIGO DE HONRA", "CODIGO_DE_HONRA"))
+                                        desvantagensParaAdicionar = listOf(TraitAddition("CÓDIGO DE HONRA (Maior)", "CODIGO_DE_HONRA"))
                                     )
                                 ),
                                 FixedPackageOption(
@@ -1137,8 +1117,8 @@ object AncestryVariantRegistry {
                                     ResolvedTraitPackage(
                                         vantagensGratisIds = listOf("nascido_na_sela"),
                                         desvantagensParaAdicionar = listOf(
-                                            TraitAddition("SEM ESCRÚPULOS (Menor)", "SEM_ESCRUPULOS_MENOR"),
-                                            TraitAddition("ANALFABETO", "ANALFABETO")
+                                            TraitAddition("SEM ESCRÚPULOS (Menor)", "SEM_ESCRUPULOS"),
+                                            TraitAddition("ANALFABETO (Menor)", "ANALFABETO")
                                         )
                                     )
                                 )
@@ -1459,12 +1439,9 @@ object AncestryVariantRegistry {
                 tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
                 targetKind = TraitTargetKind.ATTRIBUTE,
                 targetOptions = listOf("Força", "Vigor"),
-                // Livro não define um padrão pra "Endurecido" — "Vigor"
-                // preserva o comportamento default de antes desta raça
-                // migrar pro mesmo mecanismo de Feral/Minerador.
                 defaultTargetChoice = "Vigor",
                 injectionTemplate = "{alvo} d6 (Endurecido)",
-                marcadorTraitId = "ENDURECIDO"
+                marcadorTraitId = "ATTRIBUTE_BOOST"
             )
         )
     )

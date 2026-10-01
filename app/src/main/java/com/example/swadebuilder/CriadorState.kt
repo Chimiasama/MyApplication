@@ -840,10 +840,12 @@ class CriadorState {
         // `applyAncestryVariantAdjustments` incondicionalmente (só FC/
         // SCI_FI fazem isso logo abaixo).
         fun temEscolhaDeAtributoOuPericia(candidato: RacialModifier): Boolean =
-            candidato.habilidades.any {
-                it.id?.keyify() in setOf(
-                    "ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO", "FLEXIBILIDADE"
-                )
+            candidato.nome.keyify().contains("MEIO ORC") ||
+            candidato.habilidades.any { hab ->
+                val idKey = hab.id?.keyify().orEmpty()
+                val nomeKey = hab.nome.keyify()
+                idKey in setOf("ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO", "FLEXIBILIDADE") ||
+                nomeKey in setOf("ENDURECIDO", "PRIMITIVO", "PREPARADO", "OBSESSIVOS", "DEFINIDO_PELO_OFICIO", "FLEXIBILIDADE")
             }
 
         val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
@@ -1153,8 +1155,18 @@ class CriadorState {
 
                 val nestedDef = opcoes.firstOrNull { it.id == variantOptionId }?.selecoes?.firstOrNull()
                 val nestedAnswer = nestedDef?.let { def ->
-                    val matchId = def.pacotesFixos?.firstOrNull {
-                        it.nome.equals(humanoFantasiaSelecaoAninhada, ignoreCase = true)
+                    val matchId = def.pacotesFixos?.firstOrNull { option ->
+                        val targetVal = humanoFantasiaSelecaoAninhada.orEmpty().keyify()
+                        val optionIdKey = option.id.keyify()
+                        val optionNomeKey = option.nome.keyify()
+                        targetVal.isNotBlank() && (
+                            optionIdKey == targetVal ||
+                            optionNomeKey == targetVal ||
+                            optionNomeKey.contains(targetVal) ||
+                            targetVal.contains(optionNomeKey) ||
+                            (targetVal.contains("PROCURADO") && optionIdKey.contains("PROCURADO")) ||
+                            (targetVal.contains("SELA") && (optionIdKey.contains("NASCIDO") || optionNomeKey.contains("SELA")))
+                        )
                     }?.id
                     SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
                 }
@@ -1305,10 +1317,11 @@ class CriadorState {
         // AncestryVariantRegistry.meioOrc()/feral()) já acontecem lá dentro
         // (ResolveAncestryVariantPackageUseCase.resolveTargetAttributeOrSkill),
         // não precisam ser duplicados aqui.
-        if (base.habilidades.any { it.id?.keyify() == "ENDURECIDO" }) {
+        if (base.habilidades.any { it.id?.keyify() == "ENDURECIDO" || (it.resolvedTraitId().keyify() == "ATTRIBUTE_BOOST" && it.nome.keyify() == "ENDURECIDO") } || base.nome.keyify().contains("MEIO ORC")) {
+            val marcador = if (base.habilidades.any { it.id?.keyify() == "ENDURECIDO" }) "ENDURECIDO" else "ATTRIBUTE_BOOST"
             return resolveMarkedSelection(
                 base = base,
-                marcador = "ENDURECIDO",
+                marcador = marcador,
                 ancestralidadeId = "MEIO-ORCS",
                 livro = "FANTASIA",
                 answer = SelectionAnswer(

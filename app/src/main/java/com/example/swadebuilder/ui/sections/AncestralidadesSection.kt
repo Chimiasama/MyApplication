@@ -178,21 +178,24 @@ private fun AtributoEscolhidoPicker(
 ) {
     Spacer(Modifier.height(8.dp))
     val defaultAtributos = listOf("Agilidade", "Astúcia", "Espírito", "Força", "Vigor")
-    val initialOptions = def.targetOptions.takeIf { !it.isNullOrEmpty() } ?: defaultAtributos
+    val initialOptions = def.targetOptions.takeIf { !it.isNullOrEmpty() }
 
     // Deduplica por keyify(): preserva o nome formatado/acentuado sem duplicar por caixa alta ou falta de acento.
     val opcoesMap = LinkedHashMap<String, String>()
-    initialOptions.forEach { opt ->
-        val key = opt.keyify()
-        if (key !in opcoesMap) {
-            opcoesMap[key] = opt
+    if (initialOptions != null) {
+        initialOptions.forEach { opt ->
+            val key = opt.keyify()
+            if (key !in opcoesMap) {
+                opcoesMap[key] = opt
+            }
         }
-    }
-    atributosDisponiveis.forEach { attr ->
-        val key = attr.keyify()
-        if (key !in opcoesMap) {
-            val displayName = mapaAtributosDisplay[attr] ?: attr.toFancyTitleCase()
-            opcoesMap[key] = displayName
+    } else {
+        atributosDisponiveis.ifEmpty { defaultAtributos }.forEach { attr ->
+            val key = attr.keyify()
+            if (key !in opcoesMap) {
+                val displayName = mapaAtributosDisplay[attr] ?: attr.toFancyTitleCase()
+                opcoesMap[key] = displayName
+            }
         }
     }
     val opcoes = opcoesMap.values.toList()
@@ -1114,7 +1117,7 @@ fun AncestralidadesSection(
                                 // Meio-Orc (Endurecido), Humano/Meio-Elfo Pathfinder (Flexibilidade): mesmo seletor genérico
                                 // gateado pelo id do traço-marcador.
                                 atributoEscolhidoSelectionDefFor(item, variantConfig, currentSelection = null)
-                                    ?.takeIf { it.marcadorTraitId == "ENDURECIDO" || it.marcadorTraitId == "FLEXIBILIDADE" }
+                                    ?.takeIf { it.marcadorTraitId == "ENDURECIDO" || it.marcadorTraitId == "ATTRIBUTE_BOOST" || it.marcadorTraitId == "FLEXIBILIDADE" }
                                     ?.let { def ->
                                         AtributoEscolhidoPicker(
                                             def = def,

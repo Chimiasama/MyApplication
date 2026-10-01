@@ -1393,9 +1393,12 @@
     "variantes": "Ideias Variantes: Meio-orcs podem ser mais do que simplesmente brutais em alguns cenários, ganhando Agilidade, Espírito ou Sorte em vez de Força e Vigor.",
     "habilidades": [
       {
-        "nome": "ENDURECIDO",
+        "nome": "Endurecido",
         "descricao": "Meio-orcs herdam algumas das proezas físicas de seus ancestrais orcs. Começam com um d6 em Força ou Vigor em vez de um d4. Isso também aumenta o limite do atributo escolhido para d12+1.",
-        "id": "ENDURECIDO",
+        "id": "ATTRIBUTE_BOOST",
+        "traitId": "ATTRIBUTE_BOOST",
+        "targetRef": "Vigor",
+        "value": 1,
         "category": "racial_trait_positive",
         "descricaoLite": "Substitui o d4 inicial de Força ou Vigor (à escolha) por d6, elevando o teto desse atributo para d12+1."
       },
