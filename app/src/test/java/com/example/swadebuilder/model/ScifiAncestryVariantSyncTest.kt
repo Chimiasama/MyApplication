@@ -37,7 +37,7 @@ class ScifiAncestryVariantSyncTest {
                 nome = "ELEMENTAIS", origem = "SCI_FI",
                 // MUITO_FORTE (Força d8) e RESISTENCIA +2 são a raça base
                 // ("Padrão"); CriadorState.applyAncestryVariantAdjustments
-                // troca as duas por FORMA_DE_ENERGIA quando "Ar, Fogo ou
+                // troca as duas por FORMA_ENERGIA quando "Ar, Fogo ou
                 // Água" é selecionado — ver ancestralidades.json real, que
                 // segue o mesmo formato.
                 habilidades = listOf(

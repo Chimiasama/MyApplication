@@ -71,7 +71,7 @@ class CriadorStateElementaisVariantTest {
         val habilidades = state.currentAncestryDef?.habilidades.orEmpty()
         assertTrue(habilidades.any { it.id == "MUITO_FORTE" })
         assertTrue(habilidades.any { it.id == "RESISTENCIA" })
-        assertFalse(habilidades.any { it.id == "FORMA_DE_ENERGIA" })
+        assertFalse(habilidades.any { it.id == "FORMA_ENERGIA" })
         assertFalse(habilidades.any { it.id == "AJUSTE_FORMA_DE_ENERGIA" })
     }
 
@@ -87,7 +87,7 @@ class CriadorStateElementaisVariantTest {
         assertFalse(habilidades.any { it.id == "MUITO_FORTE" })
         assertFalse(habilidades.any { it.id == "RESISTENCIA" })
 
-        val formaDeEnergia = habilidades.firstOrNull { it.id == "FORMA_DE_ENERGIA" }
+        val formaDeEnergia = habilidades.firstOrNull { it.id == "FORMA_ENERGIA" }
         assertTrue(formaDeEnergia != null)
         assertFalse(formaDeEnergia!!.invisivel)
 
