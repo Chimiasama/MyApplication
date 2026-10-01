@@ -146,7 +146,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
         // orçamento com o ajuste invisível de +2 pts.
         assertEquals(
             listOf(
-                TraitAddition("Forma de Energia", "FORMA_DE_ENERGIA"),
+                TraitAddition("Forma de Energia", "FORMA_ENERGIA"),
                 TraitAddition("Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA", pontos = 2, invisivel = true)
             ),
             result.tracosParaAdicionar

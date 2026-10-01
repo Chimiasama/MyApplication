@@ -547,7 +547,7 @@ object AncestryVariantRegistry {
                     id = "energia",
                     nome = "Energia",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
+                        tracosParaAdicionar = listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_ENERGIA")),
                         tracosParaRemoverPorNome = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
                         // Nota pro mestre, não uma desvantagem de verdade —
                         // pertence a `anotacoes`, não a `desvantagensParaAdicionar`
@@ -887,7 +887,7 @@ object AncestryVariantRegistry {
                         ResolvedTraitPackage(
                             tracosParaRemoverPorNome = listOf("MUITO FORTE", "RESISTÊNCIA +2"),
                             tracosParaAdicionar = listOf(
-                                TraitAddition("Forma de Energia", "FORMA_DE_ENERGIA"),
+                                TraitAddition("Forma de Energia", "FORMA_ENERGIA"),
                                 TraitAddition(
                                     "Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA",
                                     pontos = 2, invisivel = true
