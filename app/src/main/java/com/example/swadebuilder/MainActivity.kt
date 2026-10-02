@@ -194,6 +194,36 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun onResume() {
+        super.onResume()
+        accelerometer?.let {
+            sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager?.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+            val gForce = Math.sqrt((x * x + y * y + z * z).toDouble()) / SensorManager.GRAVITY_EARTH
+            if (gForce > 2.7) {
+                val now = System.currentTimeMillis()
+                if (now - lastShakeTime > 1200) {
+                    lastShakeTime = now
+                    spenNavigationAction = SPenNavigationAction.RESUMO_TAB
+                }
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+
     private fun getModuleIcon(flags: SnapshotFlags?): ImageVector {
         if (flags == null) return Icons.AutoMirrored.Filled.MenuBook
         return when {
