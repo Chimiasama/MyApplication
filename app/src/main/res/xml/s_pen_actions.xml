@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s-pen-actions>
+    <preference>
+        <action
+            name="next_tab"
+            label="Próxima Aba" />
+        <action
+            name="previous_tab"
+            label="Aba Anterior" />
+        <action
+            name="resumo_tab"
+            label="Aba Resumo" />
+    </preference>
+
+    <air-actions>
+        <action
+            name="next_tab"
+            gesture="swipe_right" />
+        <action
+            name="previous_tab"
+            gesture="swipe_left" />
+        <action
+            name="resumo_tab"
+            gesture="shake" />
+        <action
+            name="next_tab"
+            gesture="button_click" />
+        <action
+            name="resumo_tab"
+            gesture="button_double_click" />
+    </air-actions>
+</s-pen-actions>

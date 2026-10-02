@@ -47,6 +47,13 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Samsung S Pen Air Actions declaration -->
+            <meta-data
+                android:name="com.samsung.android.sdk.pen.penremote.element"
+                android:resource="@xml/s_pen_actions" />
+            <meta-data
+                android:name="com.samsung.android.airactions"
+                android:resource="@xml/s_pen_actions" />
         </activity>
 
     </application>
