@@ -111,6 +111,8 @@ fun UnifiedScreen(
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>,
+    spenNavigationAction: SPenNavigationAction? = null,
+    onSPenActionConsumed: () -> Unit = {},
     onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit,
 ) {
@@ -137,6 +139,29 @@ fun UnifiedScreen(
 
     LaunchedEffect(forcedSection) {
         forcedSection?.let { activeSection = it }
+    }
+
+    LaunchedEffect(spenNavigationAction, availableSections) {
+        if (spenNavigationAction != null && availableSections.isNotEmpty()) {
+            val currentIndex = activeSectionIndex(availableSections, activeSection)
+            when (spenNavigationAction) {
+                SPenNavigationAction.NEXT_TAB -> {
+                    val nextIndex = (currentIndex + 1) % availableSections.size
+                    activeSection = availableSections[nextIndex]
+                    onUserFeedback()
+                }
+                SPenNavigationAction.PREVIOUS_TAB -> {
+                    val prevIndex = if (currentIndex - 1 < 0) availableSections.size - 1 else currentIndex - 1
+                    activeSection = availableSections[prevIndex]
+                    onUserFeedback()
+                }
+                SPenNavigationAction.RESUMO_TAB -> {
+                    activeSection = MainSection.RESUMO
+                    onUserFeedback()
+                }
+            }
+            onSPenActionConsumed()
+        }
     }
 
     val pagerState = rememberPagerState(initialPage = activeSectionIndex(availableSections, activeSection)) {

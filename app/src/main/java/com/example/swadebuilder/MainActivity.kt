@@ -5,8 +5,13 @@
 
 package com.example.swadebuilder
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -119,10 +124,75 @@ enum class PendingNavigationAction {
     StartProgression
 }
 
+enum class SPenNavigationAction {
+    NEXT_TAB,
+    PREVIOUS_TAB,
+    RESUMO_TAB
+}
+
 @ExperimentalSerializationApi
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), SensorEventListener {
 
     private val isDataLoaded = MutableStateFlow<LoadingState>(LoadingState.Loading)
+    private var sensorManager: SensorManager? = null
+    private var accelerometer: Sensor? = null
+    private var lastShakeTime: Long = 0L
+    var spenNavigationAction by mutableStateOf<SPenNavigationAction?>(null)
+        private set
+
+    private var lastSPenKeyPressTime: Long = 0L
+
+    fun consumeSPenNavigationAction() {
+        spenNavigationAction = null
+    }
+
+    private fun handleSPenKeyEvent(keyCode: Int, event: KeyEvent): Boolean {
+        // Prevent repeated triggers on long press
+        if (event.repeatCount > 0) return false
+
+        val currentTime = System.currentTimeMillis()
+        val isDoublePress = (currentTime - lastSPenKeyPressTime) < 400L
+        lastSPenKeyPressTime = currentTime
+
+        when (keyCode) {
+            KeyEvent.KEYCODE_PAGE_DOWN,
+            KeyEvent.KEYCODE_MEDIA_NEXT,
+            KeyEvent.KEYCODE_BUTTON_1,
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                spenNavigationAction = if (isDoublePress) {
+                    SPenNavigationAction.RESUMO_TAB
+                } else {
+                    SPenNavigationAction.NEXT_TAB
+                }
+                return true
+            }
+            KeyEvent.KEYCODE_PAGE_UP,
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+            KeyEvent.KEYCODE_BUTTON_2,
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                spenNavigationAction = if (isDoublePress) {
+                    SPenNavigationAction.RESUMO_TAB
+                } else {
+                    SPenNavigationAction.PREVIOUS_TAB
+                }
+                return true
+            }
+            KeyEvent.KEYCODE_ESCAPE,
+            KeyEvent.KEYCODE_MOVE_HOME,
+            KeyEvent.KEYCODE_BUTTON_3 -> {
+                spenNavigationAction = SPenNavigationAction.RESUMO_TAB
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null && handleSPenKeyEvent(keyCode, event)) {
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
     private fun getModuleIcon(flags: SnapshotFlags?): ImageVector {
         if (flags == null) return Icons.AutoMirrored.Filled.MenuBook
@@ -161,6 +231,9 @@ class MainActivity : ComponentActivity() {
         window.decorView.filterTouchesWhenObscured = true
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as? SensorManager
+        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         val viewModel = ViewModelProvider(this)[CriadorViewModel::class.java]
         val activeKeys = viewModel.state.getActiveModuleKeys()
@@ -1026,6 +1099,8 @@ class MainActivity : ComponentActivity() {
                                             equipamentoCategorias = criadorViewModel.gameDataStore.getEquipamentoCategorias(),
                                             superequipCategorias  = criadorViewModel.gameDataStore.getSuperequipCategorias(),
                                             listaSuperPoderes     = criadorViewModel.gameDataStore.getSuperPoderes(),
+                                            spenNavigationAction  = spenNavigationAction,
+                                            onSPenActionConsumed  = ::consumeSPenNavigationAction,
                                             onShowMessage         = { message ->
                                                 scope.launch {
                                                     snackHost.showSnackbar(message)
