@@ -232,7 +232,6 @@ object AncestryVariantRegistry {
                     id = "baixa_gravidade",
                     nome = "Baixa Gravidade",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaRemoverPorNome = listOf("ADAPTÁVEL", "ADAPTAVEL"),
                         desvantagensParaAdicionar = listOf(TraitAddition("HABITANTE DE GRAVIDADE BAIXA", "HABITANTE_DE_GRAVIDADE_BAIXA"))
                     )
                 ),
@@ -419,14 +418,11 @@ object AncestryVariantRegistry {
                     nome = "Vespa",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("FERRÃO (Mordida For+d4)", "FERRAO_MORDIDA_FOR_D4"),
-                            // Mesmo id de Fadas/Avianos (voo_6, ver
-                            // RacialTraitPointCatalog.LABEL/CUSTOS) — mesmo
-                            // tier de Voo, só concedido por outra raça.
-                            TraitAddition("VOO (Movimentação 6)", "VOO_MOV_6"),
-                            TraitAddition("TOQUE VENENOSO (Moderado)", "TOQUE_VENENOSO_MODERADO")
+                            TraitAddition("Ferrão", "MORDIDA", traitId = "MORDIDA"),
+                            TraitAddition("Voo (Movimentação 6)", "VOO_MOV_6"),
+                            TraitAddition("Toque Venenoso", "TOQUE_VENENOSO", traitId = "TOQUE_VENENOSO")
                         ),
-                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Ferrão", dano = "For+d4"))
+                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Ferrão", dano = "For+d4", pa = 0, id = "MORDIDA"))
                     )
                 )
             )
@@ -442,28 +438,16 @@ object AncestryVariantRegistry {
                     id = "padrao",
                     nome = "Padrão",
                     pacoteFixo = ResolvedTraitPackage(
-                        // Mesmo id oficial de "Mudar de Forma" usado no
-                        // catálogo de custos (RacialTraitPointCatalog.CUSTOS
-                        // "MUDAR_DE_FORMA"), não um slug novo pro mesmo conceito.
-                        tracosParaAdicionar = listOf(TraitAddition("MUDANÇA DE FORMA", "MUDAR_DE_FORMA"))
+                        tracosParaAdicionar = listOf(TraitAddition("Mudança de Forma", "MUDANCA_FORMA", traitId = "MUDANCA_FORMA"))
                     )
                 ),
                 VariantOption(
                     id = "resistente",
                     nome = "Resistente",
-                    // Livro: usa o valor oficial de "Mudança de Forma (Sem
-                    // variação de Tamanho)" (4) e a Variante fica 1 ponto
-                    // acima do orçamento. Provavelmente o livro pretendia um
-                    // tier de 3 pontos pra esse traço aqui e não formalizou —
-                    // sem fonte oficial, usamos um id pontual só pra esta
-                    // raça fechar a conta (MUDAR_DE_FORMA_AJUSTE_MIMICOS, 3
-                    // pontos, mesmo texto de exibição — não muda Tamanho, ver
-                    // RacialTraitPointCatalog). Não cadastrado como traço
-                    // oficial escolhível em nenhum editor de Variante custom.
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("RESISTÊNCIA +1", "RESISTENCIA"),
-                            TraitAddition("MUDANÇA DE FORMA (Sem variação de tamanho)", "MUDAR_DE_FORMA_AJUSTE_MIMICOS")
+                            TraitAddition("Resistência +1", "RESISTENCIA"),
+                            TraitAddition("Mudança de Forma", "MUDANCA_FORMA", traitId = "MUDANCA_FORMA")
                         )
                     )
                 )
@@ -524,8 +508,8 @@ object AncestryVariantRegistry {
                     id = "aterrorizado",
                     nome = "Aterrorizado",
                     pacoteFixo = ResolvedTraitPackage(
+                        vantagensGratisParaAdicionar = listOf(TraitAddition("Poderes Místicos (Telepata)", "GRANTED_EDGE", traitId = "GRANTED_EDGE", targetRef = "Poderes Místicos (Telepata)")),
                         vantagensGratisIds = listOf("poderes_misticos"),
-                        tracosParaAdicionar = listOf(TraitAddition("PODERES MÍSTICOS (TELEPATA)", "PODERES_MISTICOS_TELEPATA")),
                         tracosParaRemoverPorNome = listOf("NOÇÃO DO PERIGO", "NOCAO_DO_PERIGO")
                     )
                 )
@@ -679,16 +663,7 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "limitado",
                     nome = "Limitado",
-                    pacoteFixo = ResolvedTraitPackage(
-                        // Id fixo e previsível porque isPericiaBasicaEfetiva/
-                        // periciaStartRawInternal em CriadorState checam esse
-                        // id diretamente pra saber se removem o d4 grátis de
-                        // todas as perícias básicas (periciasBasicasReduzidasTotalId).
-                        tracosParaAdicionar = listOf(
-                            TraitAddition("PERÍCIAS BÁSICAS REDUZIDAS (TOTAL)", "PERICIAS_BASICAS_REDUZIDAS_TOTAL")
-                        ),
-                        anotacoes = listOf("Robôs Limitado: Combine com o mestre compensação de Perícias Reduzidas.")
-                    )
+                    pacoteFixo = ResolvedTraitPackage()
                 )
             )
         )
@@ -710,16 +685,16 @@ object AncestryVariantRegistry {
                     id = "maquina_procurado",
                     nome = "Máquina (Procurado)",
                     pacoteFixo = ResolvedTraitPackage(
-                        desvantagensParaAdicionar = listOf(TraitAddition("PROCURADO (Maior)", "PROCURADO_MAIOR")),
-                        desvantagensParaRemover = listOf("PROGRAMADO (Maior)")
+                        desvantagensParaAdicionar = listOf(TraitAddition("Procurado (Maior)", "PROCURADO_MAIOR")),
+                        desvantagensParaRemover = listOf("PROGRAMADO", "PROGRAMADO (Maior)")
                     )
                 ),
                 VariantOption(
                     id = "maquina_forasteiro",
                     nome = "Máquina (Forasteiro)",
                     pacoteFixo = ResolvedTraitPackage(
-                        desvantagensParaAdicionar = listOf(TraitAddition("FORASTEIRO (Maior)", "FORASTEIRO_MAIOR")),
-                        desvantagensParaRemover = listOf("PROGRAMADO (Maior)")
+                        desvantagensParaAdicionar = listOf(TraitAddition("Forasteiro (Maior)", "FORASTEIRO")),
+                        desvantagensParaRemover = listOf("PROGRAMADO", "PROGRAMADO (Maior)")
                     )
                 )
             )
@@ -887,11 +862,7 @@ object AncestryVariantRegistry {
                         ResolvedTraitPackage(
                             tracosParaRemoverPorNome = listOf("MUITO FORTE", "RESISTÊNCIA +2"),
                             tracosParaAdicionar = listOf(
-                                TraitAddition("Forma de Energia", "FORMA_ENERGIA"),
-                                TraitAddition(
-                                    "Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA",
-                                    pontos = 2, invisivel = true
-                                )
+                                TraitAddition("Forma de Energia", "FORMA_ENERGIA")
                             )
                         )
                     )

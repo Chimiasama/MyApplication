@@ -67,7 +67,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         return Result(
             naturalArmorFromRace = resolved.naturalArmor,
             ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
-            ensureAdvantageIds = resolved.vantagensGratisIds,
+            ensureAdvantageIds = resolved.vantagensGratisIds + resolved.vantagensGratisParaAdicionar.map { it.id },
             ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
             automaticAdvantagesToRemove = resolved.tracosParaRemoverPorNome,
             ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,

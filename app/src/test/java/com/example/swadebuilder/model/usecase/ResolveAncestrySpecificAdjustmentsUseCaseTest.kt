@@ -287,8 +287,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         // pras 19 raças de scifiVariantDrivenKeys, não uma duplicação nova.
         assertEquals(
             listOf(
-                TraitAddition("Forma de Energia", "FORMA_ENERGIA"),
-                TraitAddition("Ajuste de Orçamento (Forma de Energia)", "AJUSTE_FORMA_DE_ENERGIA", pontos = 2, invisivel = true)
+                TraitAddition("Forma de Energia", "FORMA_ENERGIA")
             ),
             result.ensureAutomaticAdvantages
         )

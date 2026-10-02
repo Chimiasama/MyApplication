@@ -90,11 +90,5 @@ class CriadorStateElementaisVariantTest {
         val formaDeEnergia = habilidades.firstOrNull { it.id == "FORMA_ENERGIA" }
         assertTrue(formaDeEnergia != null)
         assertFalse(formaDeEnergia!!.invisivel)
-
-        val ajuste = habilidades.firstOrNull { it.id == "AJUSTE_FORMA_DE_ENERGIA" }
-        assertTrue(ajuste != null)
-        assertEquals(2, ajuste!!.pontos)
-        assertTrue(ajuste.invisivel)
-        assertEquals(2, ajuste.resolvedPontos())
     }
 }

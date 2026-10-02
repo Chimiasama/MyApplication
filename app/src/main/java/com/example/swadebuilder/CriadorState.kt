@@ -614,6 +614,8 @@ class CriadorState {
     var anoesScifiSelecionado by mutableStateOf<String?>(null)
     var scifiVariant by mutableStateOf<String?>(null)
     var humanoMineradorAtributo by mutableStateOf<String?>(null)
+    var robosLimitadoPericia1 by mutableStateOf("Atletismo")
+    var robosLimitadoPericia2 by mutableStateOf("Conhecimento Geral")
     /** Id de CustomAncestryVariant selecionada pra raça atual (Variante custom, ver Tarefa #18). */
     var customVarianteRacialSelecionadaId by mutableStateOf<String?>(null)
     var anaoCiberTracosSelecionados by mutableStateOf<List<AnaoCiberTraitSelection>>(emptyList())
@@ -1464,9 +1466,27 @@ class CriadorState {
             }
         }
 
-        // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
-        // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
-        // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
+        if (key == "ROBOS" && variant == "Limitado") {
+            newHabilidades.removeAll {
+                it.id?.keyify() == "PERICIAS_BASICAS_REDUZIDAS" ||
+                it.id?.keyify() == "PERICIAS_BASICAS_REDUZIDAS_TOTAL" ||
+                it.nome.keyify().contains("PERICIA BASICA REDUZIDA")
+            }
+            val p1 = robosLimitadoPericia1.ifBlank { "Atletismo" }
+            val p2 = robosLimitadoPericia2.ifBlank { "Conhecimento Geral" }
+            newHabilidades.add(
+                RacialAbility(
+                    nome = "Perícias Básicas Reduzidas",
+                    descricao = "Começa o jogo sem o d4 gratuito em $p1 e $p2.",
+                    id = "PERICIAS_BASICAS_REDUZIDAS",
+                    category = "racial_trait_negative",
+                    traitId = "PERICIAS_BASICAS_REDUZIDAS",
+                    targetRef = "$p1, $p2",
+                    vezes = 2,
+                    descricaoLite = "Sem d4 inicial em $p1 e $p2."
+                )
+            )
+        }
 
         // Elementais (Sci-Fi): a troca Padrão↔"Ar, Fogo ou Água" (Forte+
         // Resistência vira Forma de Energia + ajuste de orçamento) mora nos
@@ -3834,10 +3854,16 @@ class CriadorState {
         if (!per.basica) return false
         val habilidades = currentAncestryDef?.habilidades ?: return true
         if (habilidades.any { it.id == periciasBasicasReduzidasTotalId }) return false
-        if (habilidades.any { it.id == periciasBasicasReduzidasParcialId }) {
-            val key = per.nome.keyify()
-            if (key == "CONHECIMENTO GERAL" || key == "PERSUADIR" || key == "FURTIVIDADE") {
-                return false
+        val perKey = per.nome.keyify()
+        val reduzidas = habilidades.filter { it.id?.keyify() == "PERICIAS_BASICAS_REDUZIDAS" || it.resolvedTraitId().keyify() == "PERICIAS_BASICAS_REDUZIDAS" }
+        if (reduzidas.isNotEmpty()) {
+            val temTargetEspecifico = reduzidas.any { !it.targetRef.isNullOrBlank() }
+            if (temTargetEspecifico) {
+                if (reduzidas.any { hab ->
+                    hab.targetRef.orEmpty().split(",").map { it.trim().keyify() }.contains(perKey)
+                }) return false
+            } else {
+                if (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE") return false
             }
         }
         return true
@@ -3861,9 +3887,17 @@ class CriadorState {
                 if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
             )?.habilidades.orEmpty()
             val isTotalmenteReduzida = habilidadesDaRaca.any { it.id == periciasBasicasReduzidasTotalId }
-            val isParcialmenteReduzida = !isTotalmenteReduzida &&
-                habilidadesDaRaca.any { it.id == periciasBasicasReduzidasParcialId } &&
-                (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
+            val reduzidas = habilidadesDaRaca.filter { it.id?.keyify() == "PERICIAS_BASICAS_REDUZIDAS" || it.resolvedTraitId().keyify() == "PERICIAS_BASICAS_REDUZIDAS" }
+            val isParcialmenteReduzida = !isTotalmenteReduzida && reduzidas.isNotEmpty() && run {
+                val temTargetEspecifico = reduzidas.any { !it.targetRef.isNullOrBlank() }
+                if (temTargetEspecifico) {
+                    reduzidas.any { hab ->
+                        hab.targetRef.orEmpty().split(",").map { it.trim().keyify() }.contains(perKey)
+                    }
+                } else {
+                    perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE"
+                }
+            }
 
             if (!isTotalmenteReduzida && !isParcialmenteReduzida) {
                 defaultBase = 4
@@ -6790,6 +6824,32 @@ class CriadorState {
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
         recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
+    }
+
+    fun selecionarRobosLimitadoPericia1(pericia: String?) {
+        if (pericia.isNullOrBlank() || robosLimitadoPericia1 == pericia) return
+        robosLimitadoPericia1 = pericia
+        if (robosLimitadoPericia2.keyify() == pericia.keyify()) {
+            val basicSkills = listOf("Atletismo", "Conhecimento Geral", "Furtividade", "Perceber", "Persuadir")
+            val fallback = basicSkills.firstOrNull { it.keyify() != pericia.keyify() } ?: "Conhecimento Geral"
+            robosLimitadoPericia2 = fallback
+        }
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+        rebuildAllPericiaStacks(msgs)
+    }
+
+    fun selecionarRobosLimitadoPericia2(pericia: String?) {
+        if (pericia.isNullOrBlank() || robosLimitadoPericia2 == pericia) return
+        robosLimitadoPericia2 = pericia
+        if (robosLimitadoPericia1.keyify() == pericia.keyify()) {
+            val basicSkills = listOf("Atletismo", "Conhecimento Geral", "Furtividade", "Perceber", "Persuadir")
+            val fallback = basicSkills.firstOrNull { it.keyify() != pericia.keyify() } ?: "Atletismo"
+            robosLimitadoPericia1 = fallback
+        }
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+        rebuildAllPericiaStacks(msgs)
     }
 
     /**

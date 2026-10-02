@@ -63,6 +63,7 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitAuditFormatter
 import com.example.swadebuilder.model.SelectionDef
 import com.example.swadebuilder.model.SelectionType
+import com.example.swadebuilder.model.TraitTargetKind
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
@@ -796,6 +797,45 @@ fun AncestralidadesSection(
                                                 mapaAtributosDisplay = state.mapaAtributosDisplay
                                             )
                                         }
+
+                                    if (item.nome.keyify() == "ROBOS" && currentSelection == "Limitado") {
+                                        val basicSkills = listOf("Atletismo", "Conhecimento Geral", "Furtividade", "Perceber", "Persuadir")
+                                        val p1Key = state.robosLimitadoPericia1.keyify()
+                                        val p2Key = state.robosLimitadoPericia2.keyify()
+                                        val optionsForP2 = basicSkills.filter { it.keyify() != p1Key }
+                                        val optionsForP1 = basicSkills.filter { it.keyify() != p2Key }
+
+                                        val def1 = SelectionDef(
+                                            id = "robos_limitado_p1",
+                                            rotulo = "1ª Perícia Básica Reduzida",
+                                            tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                                            targetKind = TraitTargetKind.SKILL,
+                                            targetOptions = optionsForP1,
+                                            defaultTargetChoice = "Atletismo"
+                                        )
+                                        val def2 = SelectionDef(
+                                            id = "robos_limitado_p2",
+                                            rotulo = "2ª Perícia Básica Reduzida",
+                                            tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
+                                            targetKind = TraitTargetKind.SKILL,
+                                            targetOptions = optionsForP2,
+                                            defaultTargetChoice = "Conhecimento Geral"
+                                        )
+                                        AtributoEscolhidoPicker(
+                                            def = def1,
+                                            valorAtual = state.robosLimitadoPericia1,
+                                            onSelecionar = { state.selecionarRobosLimitadoPericia1(it) },
+                                            atributosDisponiveis = emptyList(),
+                                            mapaAtributosDisplay = state.mapaAtributosDisplay
+                                        )
+                                        AtributoEscolhidoPicker(
+                                            def = def2,
+                                            valorAtual = state.robosLimitadoPericia2,
+                                            onSelecionar = { state.selecionarRobosLimitadoPericia2(it) },
+                                            atributosDisponiveis = emptyList(),
+                                            mapaAtributosDisplay = state.mapaAtributosDisplay
+                                        )
+                                    }
 
                                     // Anões Ciber: até 2 pontos de traços raciais negativos (nenhum maior que -2)
                                     if (item.nome.keyify() == "ANOES" && currentSelection == "Ciber") {
