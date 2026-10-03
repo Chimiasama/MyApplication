@@ -237,7 +237,7 @@ fun desvantagensEfetivas(habilidades: List<RacialAbility>, allComplicacoes: List
         val rawRef = hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.nome
         val key = rawRef.keyify()
         val compMatch = allComplicacoes.firstOrNull { it.id.keyify() == key || it.name.keyify() == key }
-        val base = compMatch?.name ?: rawRef.toFancyTitleCase()
+        val base = compMatch?.name?.lowercase()?.toFancyTitleCase() ?: rawRef.toFancyTitleCase()
         val sev = hab.severity ?: compMatch?.severity
         if (sev != null && !base.contains("($sev)", ignoreCase = true)) {
             "$base ($sev)"

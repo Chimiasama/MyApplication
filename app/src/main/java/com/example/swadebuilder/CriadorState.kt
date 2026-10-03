@@ -5449,9 +5449,7 @@ class CriadorState {
 
     val pontosComplicacao: Int
         get() {
-            val ancestryDef = currentAncestryDef
-            val ancestryAuto = ancestryDef?.let { effectiveDesvantagens(it) }.orEmpty()
-            val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
+            val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + desvantagensAutomaticasDoTropo)
                 .map { normalizeAutoKey(it.substringBefore("(").trim()) }
                 .toSet()
 
@@ -5644,8 +5642,7 @@ class CriadorState {
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
         // Automatic checks
-        val ancestryAuto = currentAncestryDef?.let { effectiveDesvantagens(it) }.orEmpty()
-        val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
+        val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + desvantagensAutomaticasDoTropo)
             .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
         if (normalizeAutoKey(comp.id) in autoKeys || normalizeAutoKey(comp.name) in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."

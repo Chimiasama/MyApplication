@@ -92,8 +92,7 @@ fun ComplicacoesSection(
 
     fun normalizeUIKey(s: String): String = s.keyify().replace("_", "").replace("-", "").replace(" ", "")
 
-    val ancestryAuto = state.getAncestralidadeDef(state.ancestralidade)?.resolvedDesvantagens().orEmpty()
-    val autoBaseKeys = (state.desvantagensAutomaticas + state.desvantagensRaciais + ancestryAuto)
+    val autoBaseKeys = (state.desvantagensAutomaticas + state.desvantagensRaciais + state.desvantagensAutomaticasDoTropo)
         .map { normalizeUIKey(it.substringBefore("(").trim()) }
         .toSet()
 
@@ -112,21 +111,6 @@ fun ComplicacoesSection(
     var selectedCategoriaId by rememberSaveable { mutableStateOf<String?>(null) }
     val categoriasComplicacao = remember(state.listaCategoriasCustomizadas) {
         state.listaCategoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO }
-    }
-
-    val automaticComplicationsList = remember(state.desvantagensAutomaticas, state.desvantagensRaciais, ancestryAuto, state.desvantagensAutomaticasDoTropo, state.listaComplicacoes) {
-        val allAutoNames = (state.desvantagensAutomaticas + state.desvantagensRaciais + ancestryAuto + state.desvantagensAutomaticasDoTropo)
-            .distinctBy { it.keyify() }
-        allAutoNames.map { rawName ->
-            val cleanName = rawName.substringBefore("(").trim()
-            val sevInText = Regex("""\((Maior|Menor)\)""", RegexOption.IGNORE_CASE).find(rawName)?.groupValues?.get(1)?.toFancyTitleCase()
-            val compMatch = state.listaComplicacoes.firstOrNull { it.id.keyify() == cleanName.keyify() || it.name.keyify() == cleanName.keyify() }
-            val displayName = compMatch?.name ?: cleanName.toFancyTitleCase()
-            val sev = sevInText ?: compMatch?.severity ?: ""
-            val desc = compMatch?.description ?: ""
-            val fullTitle = if (sev.isNotBlank() && !displayName.contains("($sev)", ignoreCase = true)) "$displayName ($sev)" else displayName
-            Triple(fullTitle, desc, compMatch)
-        }
     }
 
     val complicacoesFiltradas = state.listaComplicacoes.filter { comp ->
@@ -217,43 +201,7 @@ fun ComplicacoesSection(
                     Spacer(Modifier.height(8.dp))
                 }
 
-                if (automaticComplicationsList.isNotEmpty()) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 6.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                text = "Complicações Automáticas (Raciais e de Tropo):",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                            Spacer(Modifier.height(4.dp))
-                            automaticComplicationsList.forEach { (title, desc, _) ->
-                                Text(
-                                    text = "• $title",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                                )
-                                if (desc.isNotBlank()) {
-                                    Text(
-                                        text = desc,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
-                                        modifier = Modifier.padding(start = 12.dp, bottom = 4.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                }
+
 
                 if (state.habilitarCriacaoNasAbas) {
                     var targetCreationCategory by rememberSaveable { mutableStateOf<String?>(null) }
@@ -297,6 +245,21 @@ fun ComplicacoesSection(
                             .padding(8.dp)
                             .alpha(if (locked && !state.modoProgressaoAtivo) 0.6f else 1f)
                     ) {
+                        // Racial / Tropo Automatic Complications
+                        state.desvantagensRaciais.forEach { racialCompName ->
+                            val cleanTitle = racialCompName.toFancyTitleCase()
+                            AssistChip(
+                                onClick = {},
+                                enabled = false,
+                                label = { Text("$cleanTitle - Automática/Racial", style = MaterialTheme.typography.labelSmall) },
+                                modifier = Modifier.height(24.dp),
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                        }
+
                         // Standard Complications
                         state.complicacoesSelecionadas
                             .filterValues { it != null }
