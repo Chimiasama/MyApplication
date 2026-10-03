@@ -322,8 +322,7 @@ fun buildAncestralidadeDisplay(
  */
 fun tropoDisplaySuffix(personagem: MeuPersonagem, listaTropos: List<Tropo>): String {
     val tropo = listaTropos.firstOrNull { it.id == personagem.tropoSelecionadoId } ?: return ""
-    val label = if (tropo.categoria == "MONSTRO") "Monstro" else "Tropo"
-    return " ($label: ${tropo.nome})"
+    return tropo.nome.toFancyTitleCase()
 }
 
 fun buildSummaryLines(
@@ -559,7 +558,10 @@ fun buildSummaryLines(
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
     val ancestralidadeDisplay = buildAncestralidadeDisplay(personagem, ancestralidadeNome, especieIdAtual)
-    lines += "$ancestralidadeDisplay$monstroNome"
+    lines += ancestralidadeDisplay
+    if (monstroNome.isNotBlank()) {
+        lines += monstroNome
+    }
     if (personagem.coracaoCrystalSelecionado != null) {
         val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(personagem.coracaoCrystalSelecionado.nome) else personagem.coracaoCrystalSelecionado.nome
         lines += "Coração de Cristal: $heartName"

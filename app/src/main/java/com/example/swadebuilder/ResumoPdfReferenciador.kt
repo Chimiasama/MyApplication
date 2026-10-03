@@ -301,44 +301,70 @@ interface PdfBlock {
     fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?>
 }
 
-abstract class TextListBlock(private val title: String, private val items: List<String>) : PdfBlock {
+open class TextListBlock(
+    private val title: String,
+    private val items: List<String>,
+    private val inline: Boolean = true
+) : PdfBlock {
     override fun measure(width: Float, theme: PdfTheme): Float {
         if (items.isEmpty()) return 0f
         val paint = TextPaint().apply {
             textSize = 11f; typeface = theme.typefaceBody
         }
-        val titleH = 20f
-        var totalH = titleH
-        items.forEach { item ->
-            val sl = StaticLayout.Builder.obtain(item, 0, item.length, paint, width.toInt())
+        val titleH = if (title.isNotBlank()) 20f else 0f
+        return if (inline) {
+            val joinedText = items.joinToString(", ").ifBlank { "– Nenhuma" }
+            val sl = StaticLayout.Builder.obtain(joinedText, 0, joinedText.length, paint, width.toInt())
                 .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
                 .setLineSpacing(0f, 1f)
                 .setIncludePad(true)
                 .build()
-            totalH += sl.height + 5f // 5f padding
+            titleH + sl.height + 5f
+        } else {
+            var totalH = titleH
+            items.forEach { item ->
+                val sl = StaticLayout.Builder.obtain(item, 0, item.length, paint, width.toInt())
+                    .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                    .setLineSpacing(0f, 1f)
+                    .setIncludePad(true)
+                    .build()
+                totalH += sl.height + 5f
+            }
+            totalH
         }
-        return totalH
     }
 
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
         if (items.isEmpty()) return
-        val titlePaint = TextPaint().apply {
-            color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true
+        var currY = y
+        if (title.isNotBlank()) {
+            val titlePaint = TextPaint().apply {
+                color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true
+            }
+            canvas.drawText(title, x, y + 14f, titlePaint)
+            currY += 20f
         }
-        canvas.drawText(title, x, y + 14f, titlePaint) // Title baseline approx
 
         val bodyPaint = TextPaint().apply {
             color = theme.textColor; textSize = 11f; typeface = theme.typefaceBody
         }
 
-        var currY = y + 20f
-        items.forEach { item ->
-            val sl = StaticLayout.Builder.obtain(item, 0, item.length, bodyPaint, width.toInt())
+        if (inline) {
+            val joinedText = items.joinToString(", ").ifBlank { "– Nenhuma" }
+            val sl = StaticLayout.Builder.obtain(joinedText, 0, joinedText.length, bodyPaint, width.toInt())
                 .build()
             canvas.withTranslation(x, currY) {
                 sl.draw(this)
             }
-            currY += sl.height + 5f
+        } else {
+            items.forEach { item ->
+                val sl = StaticLayout.Builder.obtain(item, 0, item.length, bodyPaint, width.toInt())
+                    .build()
+                canvas.withTranslation(x, currY) {
+                    sl.draw(this)
+                }
+                currY += sl.height + 5f
+            }
         }
     }
 
@@ -346,12 +372,17 @@ abstract class TextListBlock(private val title: String, private val items: List<
         val fullHeight = measure(width, theme)
         if (fullHeight <= availableHeight) return this to null
 
-        // Calculate how many items fit
+        if (inline) {
+            val titleH = if (title.isNotBlank()) 20f else 0f
+            if (availableHeight < titleH + 15f) return null to this
+            return null to this
+        }
+
         val paint = TextPaint().apply { textSize = 11f; typeface = theme.typefaceBody }
-        val titleH = 20f
+        val titleH = if (title.isNotBlank()) 20f else 0f
         var currentH = titleH
 
-        if (availableHeight < titleH) return null to this // Can't even fit title
+        if (availableHeight < titleH) return null to this
 
         val headItems = mutableListOf<String>()
         val tailItems = mutableListOf<String>()
@@ -374,37 +405,10 @@ abstract class TextListBlock(private val title: String, private val items: List<
         }
 
         val head = if (headItems.isEmpty() && availableHeight < titleH + 15f) null
-                   else object : TextListBlock(title, headItems) {}
+                   else TextListBlock(title, headItems, false)
 
-        // Tail doesn't need title repeated usually, but for context maybe?
-        // Let's assume continuation doesn't repeat title to save space, or user can infer.
-        // Actually, clearer if we don't repeat title.
         val tail = if (tailItems.isEmpty()) null
-                   else object : TextListBlock("", tailItems) {
-                       override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
-                           // Override to skip title logic/space if empty title
-                           if (items.isEmpty()) return
-                           val bPaint = TextPaint().apply { color = theme.textColor; textSize = 11f; typeface = theme.typefaceBody }
-                           var cy = y
-                           items.forEach {
-                               val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
-                                canvas.withTranslation(x, cy) {
-                                    sl.draw(this)
-                                }
-                                cy += sl.height + 5f
-                           }
-                       }
-                       override fun measure(width: Float, theme: PdfTheme): Float {
-                           if (items.isEmpty()) return 0f
-                           val bPaint = TextPaint().apply { textSize = 11f; typeface = theme.typefaceBody }
-                           var h = 0f
-                           items.forEach {
-                               val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
-                               h += sl.height + 5f
-                           }
-                           return h
-                       }
-                   }
+                   else TextListBlock("", tailItems, false)
 
         return head to tail
     }
@@ -415,13 +419,13 @@ abstract class TextListBlock(private val title: String, private val items: List<
 class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
     private val skills = p.pericias.entries
         .filter { it.value > 0 } // Fix: Filter out d0 (value <= 0)
-        .sortedByDescending { it.value }
+        .sortedWith { a, b -> com.example.swadebuilder.util.ptBrCollator.compare(a.key.toFancyTitleCase(), b.key.toFancyTitleCase()) }
         .map { entry ->
             val name = entry.key
             val value = entry.value
             val note = p.notasPericia[name]
             val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
-            "$name ${value.toDiceString()}$noteStr"
+            "${name.toFancyTitleCase()} ${value.toDiceString()}$noteStr"
         }
 
     private val separator = "    "
@@ -986,7 +990,7 @@ fun gerarFichaEmPdf(
             hindranceNames.add(mappedFallback.toFancyTitleCase())
         }
     }
-    mainQueue.add(object : TextListBlock("Complicações", hindranceNames) {})
+    mainQueue.add(TextListBlock("Complicações", hindranceNames))
 
     // Edges
     val edgeNames = personagem.vantagens.map { id ->
@@ -1010,7 +1014,7 @@ fun gerarFichaEmPdf(
             fallback.toFancyTitleCase()
         }
     }
-    mainQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
+    mainQueue.add(TextListBlock("Vantagens", edgeNames))
 
     // Habilidades Raciais — mesma lista/lógica que o Resumo mostra na tela (Sáurios
     // "Sentidos Aguçados", Ogros "Robusto" etc.), extraída pra SummaryUtils
@@ -1025,7 +1029,7 @@ fun gerarFichaEmPdf(
         especieIdAtual = especieId,
         showOfficialNames = showOfficialNames
     )
-    mainQueue.add(object : TextListBlock("Habilidades Raciais", racialTraits) {})
+    mainQueue.add(TextListBlock("Habilidades Raciais", racialTraits))
 
     // Poderes agora ganham página dedicada (ver renderPoderesPages logo abaixo do loop
     // principal) — página 1 fica só com o essencial de combate/perícias.
@@ -1042,7 +1046,7 @@ fun gerarFichaEmPdf(
             "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})",
             "Limite por Poder: ${personagem.limitePorPoderPadrao}"
         )
-        mainQueue.add(object : TextListBlock("Superpoderes", superLines) {})
+        mainQueue.add(TextListBlock("Superpoderes", superLines))
     }
 
     // Armas e Armaduras — ficam na página principal por serem referência constante em
@@ -1054,7 +1058,7 @@ fun gerarFichaEmPdf(
 
     // Notes
     if (personagem.anotacoes.isNotBlank()) {
-        mainQueue.add(object : TextListBlock("Anotações", listOf(personagem.anotacoes)) {})
+        mainQueue.add(TextListBlock("Anotações", listOf(personagem.anotacoes), inline = false))
     }
 
     var pageIndex = 0
@@ -1641,17 +1645,25 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
 
     canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
     val ancestralidadeTitulo = buildAncestralidadeDisplay(p, especieId = especieId)
-    val tropoSuffixTexto = tropoDisplaySuffix(p, listaTropos)
-    canvas.drawText("$ancestralidadeTitulo$tropoSuffixTexto - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
+    val tropoNome = tropoDisplaySuffix(p, listaTropos)
+
+    canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
+
+    var currentSubtitleY = 50f
+    if (tropoNome.isNotBlank()) {
+        currentSubtitleY += 18f
+        canvas.drawText(tropoNome, rect.left + 10f, rect.top + currentSubtitleY, subtitlePaint)
+    }
 
     if (p.coracaoCrystalSelecionado != null) {
         val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(p.coracaoCrystalSelecionado.nome) else p.coracaoCrystalSelecionado.nome
         val heartText = "Coração: $heartName"
-        canvas.drawText(heartText, rect.left + 10f, rect.top + 70f, subtitlePaint)
+        currentSubtitleY += 18f
+        canvas.drawText(heartText, rect.left + 10f, rect.top + currentSubtitleY, subtitlePaint)
     }
 
     val trackX = rect.left + 10f
-    val trackY = if (p.coracaoCrystalSelecionado != null) rect.top + 95f else rect.top + 80f
+    val trackY = rect.top + currentSubtitleY + 22f
     // Duro na Queda (+1) e Muito Duro na Queda (+1 adicional, exige Duro na Queda) elevam o
     // limite de 3 para até 5 Ferimentos antes de Incapacitado (livro básico, Vantagens
     // Lendárias) — o track antes sempre desenhava 3 caixas, ignorando as duas Vantagens.
