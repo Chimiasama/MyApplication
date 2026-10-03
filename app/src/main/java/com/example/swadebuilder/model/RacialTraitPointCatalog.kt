@@ -198,6 +198,9 @@ object RacialTraitPointCatalog {
             "MUITO_RESISTENTE" -> RacialTraitEffect.AtributoStep(targetRef ?: "Vigor", 2)
             "BRINCALHAO" -> RacialTraitEffect.PericiaStep("Provocar", passos = 0)
             "SENTIDOS_AGUCADOS" -> RacialTraitEffect.PericiaStep("Perceber")
+            "PREPARADO" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 0) else RacialTraitEffect.Nenhum
+            "DEFINIDO_PELO_OFICIO" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 1) else RacialTraitEffect.Nenhum
+            "OBSESSIVOS" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 1, relativo = true) else RacialTraitEffect.Nenhum
             else -> EFEITOS[key] ?: RacialTraitEffect.Nenhum
         }
     }

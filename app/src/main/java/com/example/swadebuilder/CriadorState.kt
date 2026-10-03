@@ -3936,12 +3936,18 @@ class CriadorState {
         var modifiedBase = defaultBase
 
         val currentDef = if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
-        currentDef?.habilidades?.forEach { hab ->
+        val matchingEffects = currentDef?.habilidades.orEmpty().mapNotNull { hab ->
             val tid = hab.resolvedTraitId()
             val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
-            if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
-                modifiedBase = maxOf(modifiedBase, 4 + efeito.passos * 2)
-            }
+            if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) efeito else null
+        }
+
+        matchingEffects.filter { !it.relativo }.forEach { efeito ->
+            modifiedBase = maxOf(modifiedBase, 4 + efeito.passos * 2)
+        }
+
+        matchingEffects.filter { it.relativo }.forEach { efeito ->
+            modifiedBase = applySuperStepsFrom(modifiedBase, efeito.passos)
         }
 
         // Monstro Heroico (Horror, virou Tropo — ver rodada 44): mesma leitura genérica de
@@ -3997,22 +4003,9 @@ class CriadorState {
             ?: emptySet()
 
         // Gnomo (Obsessivos), Kitsunemimi (Preparado) e Usagimimi (Definido
-        // pelo Ofício): escolha de perícia à escolha do jogador.
-        if (habilidadeIdsPericia.contains("OBSESSIVOS") || ancKey.contains("GNOMO")) {
-            if (perKey == gnomoPericiaEscolhida?.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-        if (habilidadeIdsPericia.contains("PREPARADO") || ancKey.contains("KITSUNEMIMI")) {
-            if (perKey == kitsunemimiPericiaEscolhida?.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO") || ancKey.contains("USAGIMIMI")) {
-            if (perKey == usagimimiPericiaEscolhida?.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
+        // pelo Ofício): escolhas já resolvidas via resolveMarkedSelection em
+        // habilidades[] (com SKILL_BOOST/SKILL_STEP_UP) e processadas no loop
+        // genérico acima.
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
@@ -6105,7 +6098,11 @@ class CriadorState {
             (traitKey == "SKILL_BOOST" && targetKey == "INTIMIDAR" && hab.value == 0)
         } == true && per.nome.keyify() == "INTIMIDAR"
 
-        val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
+        val baseCap = when {
+            startRaw >= 6 -> 12 + (startRaw - 4) / 2
+            temIntimidanteTetoAmpliado -> 13
+            else -> 12
+        }
 
         // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
         // comentário lá (a descrição de Especialista é "um passo adicional"

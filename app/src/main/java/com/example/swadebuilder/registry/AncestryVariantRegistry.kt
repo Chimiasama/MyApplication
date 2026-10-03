@@ -1469,12 +1469,8 @@ object AncestryVariantRegistry {
     )
 
     // --- Gnomo (Pathfinder): "Obsessivos" — escolhe 1 perícia baseada em
-    // Astúcia (dentre as do próprio livro Pathfinder) pra começar em d4.
-    // Lista estática (mesma ideia de Meio-Orc Força/Vigor), gerada a partir
-    // de todas as perícias de Astúcia cadastradas em pericias.json com
-    // "PATHFINDER" nos livros (12 no total — a rodada 36 migrou isso com
-    // essa lista faltando "Provocar" por engano; corrigido na rodada 37 ao
-    // conferir contra o catálogo real, não de memória).
+    // Astúcia (dentre as do próprio livro Pathfinder) que recebe um boost de +1
+    // passo de dado (skill step up).
     private fun gnomoPathfinder(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "GNOMO",
         livro = "PATHFINDER",
@@ -1485,16 +1481,14 @@ object AncestryVariantRegistry {
                 tipo = SelectionType.TARGET_ATTRIBUTE_OR_SKILL,
                 targetKind = TraitTargetKind.SKILL,
                 targetOptions = listOf(
-                    "Conhecimento de Batalha", "Ciência", "Conhecimento Acadêmico",
-                    "Conhecimento Geral", "Conjurar", "Consertar", "Curar", "Jogar",
-                    "Ocultismo", "Perceber", "Provocar", "Sobrevivência"
+                    "Ciência", "Conhecimento Acadêmico", "Conhecimento Geral",
+                    "Conhecimento de Batalha", "Conjurar", "Consertar", "Curar",
+                    "Jogar", "Ocultismo", "Perceber", "Provocar", "Sobrevivência"
                 ),
                 defaultTargetChoice = "Conhecimento Acadêmico",
-                // passos=0: mesmo caso de Kitsunemimi acima — "d4" é o
-                // primeiro patamar de uma perícia destreinada.
-                passos = 0,
-                injectionTemplate = "{alvo} d4 (Obsessivos)",
-                marcadorTraitId = "OBSESSIVOS"
+                passos = 1,
+                injectionTemplate = "{alvo} (Obsessivos)",
+                marcadorTraitId = "SKILL_STEP_UP"
             )
         )
     )
