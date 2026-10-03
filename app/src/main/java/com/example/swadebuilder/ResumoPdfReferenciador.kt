@@ -575,8 +575,10 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         "Casco", "Chifre", "Cabeça Dura", "Ferrão",
         "Toque Arrepiante", "Toque da Morte", "Toque Venenoso", "Tentáculo"
     )
-    fun nomeExibido(item: EquipamentoItem): String =
-        (if (showOfficialNames) item.originalName else null)?.takeIf { it.isNotBlank() } ?: item.nomeExibicao
+    fun nomeExibido(item: EquipamentoItem): String {
+        val baseName = (if (showOfficialNames) item.originalName else null)?.takeIf { it.isNotBlank() } ?: item.nomeExibicao
+        return if (item.equipado) baseName else "$baseName (Mochila)"
+    }
 
     // Vantagem Brutamontes (livro básico, pág. 42): "+1 na Curta Distância de qualquer
     // item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para

@@ -870,7 +870,8 @@ private fun CombatAndEquipmentCard(
                     }
                     val notesBase = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                     val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
-                    CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
+                    val displayName = weapon.nome.toFancyTitleCase() + if (!weapon.equipado) " (Mochila)" else ""
+                    CombatRow(name = displayName, stats = stats.ifBlank { dmg }, notes = notes)
                 }
             }
 
@@ -928,11 +929,13 @@ private fun CombatAndEquipmentCard(
                     val forcaMinTxt = (weapon.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
                     val notasExtras = mutableListOf<String>()
-                    if (passos > 0) notasExtras.add("Ataque -$passos (Força abaixo da Força Mínima)")
+                    if (!weapon.equipado) notasExtras.add("Na Mochila")
+                    if (passos > 0 && weapon.equipado) notasExtras.add("Ataque -$passos (Força abaixo da Força Mínima)")
 
                     val notesBase = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                     val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
-                    CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
+                    val displayName = weapon.nome.toFancyTitleCase() + if (!weapon.equipado) " (Mochila)" else ""
+                    CombatRow(name = displayName, stats = stats.ifBlank { dmg }, notes = notes)
                 }
             }
 
@@ -1019,19 +1022,17 @@ private fun CombatAndEquipmentCard(
                     if (parryVal != null && parryVal != 0) parts.add("Aparar +$parryVal")
                     if (!coberturaVal.isNullOrBlank() && coberturaVal != "-") parts.add("Cobertura $coberturaVal")
 
-                    // Peça sem `local`: só dá pra avaliar a Força Mínima dela sozinha (não tem
-                    // como saber com quem ela empilha). Peça com `local`: a penalidade já foi
-                    // resolvida por local acima — nota por peça aqui seria redundante ou, pior,
-                    // errada (mostraria a Força Mínima crua da peça, não a efetiva do local).
-                    val notasExtras = if (item.local == null) {
+                    val notasExtras = mutableListOf<String>()
+                    if (!item.equipado) {
+                        notasExtras.add("Na Mochila")
+                    } else if (item.local == null) {
                         val passos = passosDaPeca((item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content)
-                        if (passos > 0) listOf("Força abaixo da Força Mínima desta peça (-$passos)") else emptyList()
-                    } else {
-                        emptyList()
+                        if (passos > 0) notasExtras.add("Força abaixo da Força Mínima desta peça (-$passos)")
                     }
                     val notesBase = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                     val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
-                    CombatRow(name = item.nome.toFancyTitleCase(), stats = parts.joinToString(", "), notes = notes)
+                    val displayName = item.nome.toFancyTitleCase() + if (!item.equipado) " (Mochila)" else ""
+                    CombatRow(name = displayName, stats = parts.joinToString(", "), notes = notes)
                 }
             }
 
@@ -1049,7 +1050,8 @@ private fun CombatAndEquipmentCard(
                 )
             } else {
                 others.forEach { item ->
-                    Text("• ${item.nome.toFancyTitleCase()}", style = MaterialTheme.typography.bodySmall)
+                    val statusStr = if (item.equipado) "" else " (Mochila)"
+                    Text("• ${item.nome.toFancyTitleCase()}$statusStr", style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

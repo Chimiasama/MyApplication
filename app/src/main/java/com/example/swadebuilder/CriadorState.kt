@@ -3069,9 +3069,17 @@ class CriadorState {
         return ForcaMinimaCalculator.custoInteiroReduzidoPorDiminuto(custoBase, passosDiminuto())
     }
 
-    /** Soma do peso de todos os itens comprados, já com o desconto de Diminuto aplicado. */
+    /** Soma do peso dos itens equipados, já com o desconto de Diminuto aplicado. */
     fun totalPesoEquipamentos(): Float =
-        equipamentosComprados.sumOf { (pesoEquipamentoEfetivo(it) ?: 0f).toDouble() }.toFloat()
+        equipamentosComprados.filter { it.equipado }.sumOf { (pesoEquipamentoEfetivo(it) ?: 0f).toDouble() }.toFloat()
+
+    fun toggleEquipado(item: EquipamentoItem) {
+        val index = equipamentosComprados.indexOfFirst { it == item }
+        if (index >= 0) {
+            val current = equipamentosComprados[index]
+            equipamentosComprados[index] = current.copy(equipado = !current.equipado)
+        }
+    }
 
     fun gastarPcParaRecursos(): Boolean {
         if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
@@ -5356,6 +5364,7 @@ class CriadorState {
     fun armaduraPorLocal(): Map<String, ArmorLocalInfo> {
         val pecasPorLocal = mutableMapOf<String, MutableList<Pair<Int, String?>>>()
         equipamentosComprados.forEach { item ->
+            if (!item.equipado) return@forEach
             val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
             if (valor == null || valor == 0) return@forEach
             val locaisItem = item.local ?: return@forEach
@@ -5410,6 +5419,7 @@ class CriadorState {
             if (porLocal.isNotEmpty()) return porLocal.values.maxOf { it.valor }
 
             val pecasSemLocal = equipamentosComprados.mapNotNull { item ->
+                if (!item.equipado) return@mapNotNull null
                 if (item.local != null) return@mapNotNull null
                 val valor = (item.armadura as? JsonPrimitive)?.content?.toIntOrNull()
                 if (valor == null || valor == 0) return@mapNotNull null

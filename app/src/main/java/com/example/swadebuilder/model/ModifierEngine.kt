@@ -82,6 +82,7 @@ object ModifierEngine {
         // está 100% migrado) mantêm o comportamento por peça de antes, já que não dá
         // pra agrupar por local sem saber qual é.
         state.equipamentosComprados.forEach { item ->
+            if (!item.equipado) return@forEach
             if (item.armadura == null) return@forEach
             if (item.local != null) return@forEach
             val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
@@ -425,6 +426,7 @@ object ModifierEngine {
         val nonStackingArmorToughness = mutableListOf<Pair<String, Int>>()
 
         state.equipamentosComprados.forEach { item ->
+            if (!item.equipado) return@forEach
             val resVal = (item.resistencia as? kotlinx.serialization.json.JsonPrimitive)
                 ?.content?.toIntOrNull() ?: 0
 
