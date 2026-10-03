@@ -186,14 +186,64 @@ class CriadorStateRacialTraitDrivenAttributesTest {
     }
 
     @Test
-    fun `obsessivos concede d4 na pericia escolhida pelo traco`() {
+    fun `obsessivos eleva em 1 passo a pericia basica de Astucia escolhida`() {
+        val gnomoPathfinder = RacialModifier(
+            nome = "Gnomo",
+            origem = "PATHFINDER",
+            habilidades = listOf(
+                RacialAbility(nome = "Obsessivos", descricao = "", id = "OBSESSIVOS")
+            )
+        )
         val state = CriadorState()
-        state.updateGameData(snapshotWith(listOf(racaComTraco("GNOMO_TESTE", "OBSESSIVOS"))))
-        state.ancestralidade = "GNOMO_TESTE"
-        state.gnomoPericiaEscolhida = "Furtividade"
+        state.updateGameData(snapshotWith(listOf(gnomoPathfinder)))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Gnomo"
+        state.selecionarPericiaGnomo("Conhecimento Geral")
 
-        val furtividade = Pericia(nome = "Furtividade", atributo = "AGILIDADE", basica = true)
-        assertEquals(4, state.periciaStartRaw("GNOMO_TESTE", furtividade))
+        val conhecimentoGeral = Pericia(nome = "Conhecimento Geral", atributo = "ASTUCIA", basica = true)
+        assertEquals(6, state.periciaStartRaw("Gnomo", conhecimentoGeral)) // d4 básico + 1 passo = d6 (6)
+        assertEquals(13, state.periciaCapRaw(conhecimentoGeral)) // d6 inicial -> teto d12+1 (13)
+    }
+
+    @Test
+    fun `obsessivos eleva em 1 passo a pericia Perceber que ja inicia em d6 por Sentidos Apurados`() {
+        val gnomoPathfinder = RacialModifier(
+            nome = "Gnomo",
+            origem = "PATHFINDER",
+            habilidades = listOf(
+                RacialAbility(nome = "Sentidos Apurados", descricao = "", id = "SENTIDOS_APURADOS", traitId = "SKILL_BOOST", targetRef = "Perceber", value = 1),
+                RacialAbility(nome = "Obsessivos", descricao = "", id = "OBSESSIVOS")
+            )
+        )
+        val state = CriadorState()
+        state.updateGameData(snapshotWith(listOf(gnomoPathfinder)))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Gnomo"
+        state.selecionarPericiaGnomo("Perceber")
+
+        val perceber = Pericia(nome = "Perceber", atributo = "ASTUCIA", basica = true)
+        assertEquals(8, state.periciaStartRaw("Gnomo", perceber)) // d6 por Sentidos Apurados + 1 passo (Obsessivos) = d8 (8)
+        assertEquals(14, state.periciaCapRaw(perceber)) // d8 inicial -> teto d12+2 (14)
+    }
+
+    @Test
+    fun `obsessivos eleva em 1 passo pericia nao basica de Astucia destreinada`() {
+        val gnomoPathfinder = RacialModifier(
+            nome = "Gnomo",
+            origem = "PATHFINDER",
+            habilidades = listOf(
+                RacialAbility(nome = "Obsessivos", descricao = "", id = "OBSESSIVOS")
+            )
+        )
+        val state = CriadorState()
+        state.updateGameData(snapshotWith(listOf(gnomoPathfinder)))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Gnomo"
+        state.selecionarPericiaGnomo("Ocultismo")
+
+        val ocultismo = Pericia(nome = "Ocultismo", atributo = "ASTUCIA", basica = false)
+        assertEquals(4, state.periciaStartRaw("Gnomo", ocultismo)) // 0 destreinado + 1 passo = d4 (4)
+        assertEquals(12, state.periciaCapRaw(ocultismo)) // d4 inicial -> teto d12 (12)
     }
 
     @Test

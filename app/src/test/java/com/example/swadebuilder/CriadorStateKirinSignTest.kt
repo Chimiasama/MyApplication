@@ -235,7 +235,7 @@ class CriadorStateKirinSignTest {
         val conhecimento = Pericia("Conhecimento Geral", "ASTUCIA", true)
 
         assertEquals(13, state.periciaCapRaw(convencao))
-        assertEquals(13, state.periciaCapRaw(conhecimento))
+        assertEquals(14, state.periciaCapRaw(conhecimento))
     }
 
 

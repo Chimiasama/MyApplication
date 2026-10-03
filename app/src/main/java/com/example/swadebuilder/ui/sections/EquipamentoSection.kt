@@ -752,18 +752,33 @@ fun EquipamentoSection(
                                 labelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                                 leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                             )
+                        } else if (!eq.equipado) {
+                            androidx.compose.material3.AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                            )
                         } else {
                             androidx.compose.material3.AssistChipDefaults.assistChipColors()
                         }
 
+                        val statusPrefix = if (eq.equipado) "⚔️ " else "🎒 "
+                        val statusSuffix = if (eq.equipado) "" else " (Mochila)"
+                        val labelText = "$statusPrefix${eq.nome.toFancyTitleCase()}$statusSuffix"
+
                         AssistChip(
-                            onClick = { onRemoveEquipamentoClick(eq) },
-                            label = { Text(eq.nome.toFancyTitleCase()) },
-                            leadingIcon = {
-                                Icon(
-                                    if (isLocked) Icons.Default.Lock else Icons.Default.Close,
-                                    contentDescription = if (isLocked) "Concedido por vantagem" else "Remover"
-                                )
+                            onClick = { state.toggleEquipado(eq) },
+                            label = { Text(labelText) },
+                            trailingIcon = {
+                                androidx.compose.material3.IconButton(
+                                    onClick = { if (!isLocked) onRemoveEquipamentoClick(eq) },
+                                    modifier = Modifier.size(20.dp)
+                                ) {
+                                    Icon(
+                                        if (isLocked) Icons.Default.Lock else Icons.Default.Close,
+                                        contentDescription = if (isLocked) "Concedido por vantagem" else "Remover",
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
                             },
                             colors = chipColors
                         )

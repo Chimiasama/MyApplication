@@ -121,7 +121,7 @@ class CriadorStatePericiaEscolhidaTest {
         val conhecimento = Pericia(nome = "Conhecimento Acadêmico", atributo = "ASTUCIA", basica = false)
         val perceber = Pericia(nome = "Perceber", atributo = "ASTUCIA", basica = true)
         assertEquals(0, state.periciaStartRaw(state.ancestralidade, conhecimento))
-        assertEquals(4, state.periciaStartRaw(state.ancestralidade, perceber))
+        assertEquals(6, state.periciaStartRaw(state.ancestralidade, perceber))
     }
 
     @Test
