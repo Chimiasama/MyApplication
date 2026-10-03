@@ -61,6 +61,11 @@ class ValidatePrerequisiteUseCase {
                             (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
                 }
             }
+            "PODERES_MISTICOS", "PODERES_MISTICOS:*" -> {
+                input.vantagensSelecionadas.any { poss ->
+                    poss.id == "poderes_misticos" || poss.id.startsWith("poderes_misticos_")
+                }
+            }
             else -> {
                 val idNorm = refId.keyify().replace(" ", "_")
                 val temVantagem = input.vantagensSelecionadas.any { poss ->
