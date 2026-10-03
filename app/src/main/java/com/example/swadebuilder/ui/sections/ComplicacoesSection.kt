@@ -245,20 +245,30 @@ fun ComplicacoesSection(
                             .padding(8.dp)
                             .alpha(if (locked && !state.modoProgressaoAtivo) 0.6f else 1f)
                     ) {
-                        // Racial / Tropo Automatic Complications
-                        state.desvantagensRaciais.forEach { racialCompName ->
-                            val cleanTitle = racialCompName.toFancyTitleCase()
-                            AssistChip(
-                                onClick = {},
-                                enabled = false,
-                                label = { Text("$cleanTitle - Automática/Racial", style = MaterialTheme.typography.labelSmall) },
-                                modifier = Modifier.height(24.dp),
-                                colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        // Racial / Tropo Automatic Complications not already resolved into complicacoesSelecionadas
+                        val selectedCompKeys = state.complicacoesSelecionadas.keys.flatMap { comp ->
+                            listOf(normalizeUIKey(comp.id), normalizeUIKey(comp.name))
+                        }.toSet()
+
+                        (state.desvantagensRaciais + state.desvantagensAutomaticas + state.desvantagensAutomaticasDoTropo)
+                            .distinctBy { normalizeUIKey(it.substringBefore("(").trim()) }
+                            .filter { racialCompName ->
+                                val key = normalizeUIKey(racialCompName.substringBefore("(").trim())
+                                key !in selectedCompKeys
+                            }
+                            .forEach { racialCompName ->
+                                val cleanTitle = racialCompName.toFancyTitleCase()
+                                AssistChip(
+                                    onClick = {},
+                                    enabled = false,
+                                    label = { Text("$cleanTitle - Automática/Racial", style = MaterialTheme.typography.labelSmall) },
+                                    modifier = Modifier.height(24.dp),
+                                    colors = AssistChipDefaults.assistChipColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
                                 )
-                            )
-                        }
+                            }
 
                         // Standard Complications
                         state.complicacoesSelecionadas
