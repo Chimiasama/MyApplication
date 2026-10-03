@@ -688,17 +688,6 @@ private fun performRemoval(
             }
         }
 
-        "pobreza" -> {
-            if (state.compendioPathfinderAtivo) {
-                state.dinheiro += 15000
-            } else if (state.compendioFantasiaAtivo) {
-                state.dinheiro += 150
-            } else {
-                state.dinheiro += 250
-            }
-            state.checkAndRefundResourcePb()
-        }
-
         "obeso" -> {
             state.obesoBonusSize = 0
             state.obesoMalusMov = 0
@@ -860,15 +849,6 @@ private fun ComplicacaoItem(
                                 "obeso" -> {
                                     state.obesoBonusSize = 1
                                     state.obesoMalusMov = 1
-                                }
-                                "pobreza" -> {
-                                    if(state.compendioPathfinderAtivo){
-                                        state.dinheiro -= 15000
-                                    } else if (state.compendioFantasiaAtivo) {
-                                        state.dinheiro -= 150
-                                    } else {
-                                        state.dinheiro -= 250
-                                    }
                                 }
                             }
                             onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")

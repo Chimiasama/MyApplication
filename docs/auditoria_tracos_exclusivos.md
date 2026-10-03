@@ -5,7 +5,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ## 1. Traços Identificados como Exclusivos de Uma Raça (`exclusivo-desta-raça`)
 
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=null` | Audit: `[id=ELEMENTO_ANCESTRAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral · +2 pts`
-- **MEIO-ORCS** (BASICO) — Traço: **ENDURECIDO** | `id=ENDURECIDO` | `traitId=null` | Audit: `[id=ENDURECIDO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=null` | Audit: `[id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **Humano (Império San)** [anc_humano_adg] (BASICO) — Traço: **Signos de Nascença** | `id=SIGNOS_DE_NASCENCA` | `traitId=null` | Audit: `[id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
@@ -25,7 +24,6 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 ## 2. Traços Identificados como Fora do Catálogo (`[Regra Única da Raça / Fora do Catálogo]`)
 
 - **DESCENDENTE ELEMENTAL** (BASICO) — Traço: **ELEMENTO ANCESTRAL** | `id=ELEMENTO_ANCESTRAL` | `traitId=null` | Audit: `[id=ELEMENTO_ANCESTRAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Elemento Ancestral · +2 pts`
-- **MEIO-ORCS** (BASICO) — Traço: **ENDURECIDO** | `id=ENDURECIDO` | `traitId=null` | Audit: `[id=ENDURECIDO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts`
 - **RENASCIDOS** (BASICO) — Traço: **AVERSÃO ANIMAL** | `id=AVERSAO_ANIMAL` | `traitId=null` | Audit: `[id=AVERSAO_ANIMAL exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-1 pts). · -1 pts`
 - **RENASCIDOS** (BASICO) — Traço: **SENSIBILIDADE À LUZ SOLAR** | `id=SENSIBILIDADE_A_LUZ_SOLAR` | `traitId=null` | Audit: `[id=SENSIBILIDADE_A_LUZ_SOLAR exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (-2 pts). · -2 pts`
 - **Humano (Império San)** [anc_humano_adg] (BASICO) — Traço: **Signos de Nascença** | `id=SIGNOS_DE_NASCENCA` | `traitId=null` | Audit: `[id=SIGNOS_DE_NASCENCA exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+0 pts).`
@@ -227,7 +225,7 @@ Este relatório sintetiza a varredura automática realizada sobre todas as ances
 - [id=TAMANHO_MAIS_1 x3] [Catálogo Oficial] Tamanho +1: +1 na Resistência e +1 no máximo de Força. Skin: "TAMANHO +3" · +3 pts
 
 ### MEIO-ORCS (BASICO)
-- [id=ENDURECIDO exclusivo-desta-raça] [Regra Única da Raça / Fora do Catálogo] Traço específico desta raça, sem nome genérico reaproveitável — custo calibrado no catálogo interno (+2 pts). · +2 pts
+- [id=ATTRIBUTE_BOOST alvo=Vigor] [Catálogo Oficial] Atributo Vigor +1 passo(s) Skin: "Endurecido" · +2 pts
 - [id=FORASTEIRO categoria=racial_hindrance] Complicação concedida ao personagem: FORASTEIRO (Menor) Skin: "FORASTEIRO" · -1 pts
 - [id=INFRAVISAO] [Catálogo Oficial] Infravisão: Reduz pela metade penalidades de Iluminação contra alvos quentes. · +1 pts
 

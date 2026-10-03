@@ -2147,7 +2147,6 @@ class CriadorState {
     }
 
     fun compactPathfinderMoney() {
-        updateTotalPathfinderMoney()
         var remaining = dinheiro
 
         val pl = remaining / 1000
@@ -2161,6 +2160,8 @@ class CriadorState {
         carteiraPathfinder[PathfinderCurrencyIds.PO] = po
         carteiraPathfinder[PathfinderCurrencyIds.PP] = pp
         carteiraPathfinder[PathfinderCurrencyIds.PC] = pc
+
+        updateTotalPathfinderMoney()
     }
 
     var famaManual by mutableIntStateOf(0)
@@ -3653,7 +3654,11 @@ class CriadorState {
             pontosVantagem += 1
         }
         if (key == "POBREZA") {
-            dinheiro = (dinheiro / 2).coerceAtLeast(0)
+            val base = getBaseWealth()
+            dinheiro = (dinheiro - base / 2).coerceAtLeast(0)
+            if (compendioPathfinderAtivo) {
+                compactPathfinderMoney()
+            }
         }
         complicacoesSelecionadas[comp] = nivel
     }
@@ -3671,6 +3676,10 @@ class CriadorState {
         if (key == "POBREZA") {
             val base = getBaseWealth()
             dinheiro += base / 2
+            checkAndRefundResourcePb()
+            if (compendioPathfinderAtivo) {
+                compactPathfinderMoney()
+            }
         }
 
         if (key == "CEGO") {
@@ -4654,7 +4663,17 @@ class CriadorState {
     }
 
     private fun getBaseWealth(): Int {
-        return if (compendioFantasiaAtivo) 300 else 500
+        return com.example.swadebuilder.model.rules.RulesResolver().resolve(
+            compendioPathfinderAtivo = compendioPathfinderAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
+            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+            compendioFantasiaAtivo = compendioFantasiaAtivo,
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+            compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+            compendioWiseguysAtivo = compendioWiseguysAtivo
+        ).startingResources().dinheiro
     }
 
     fun applyVantagemDinheiro(v: Vantagem) {

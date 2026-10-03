@@ -232,14 +232,16 @@ object AncestryVariantRegistry {
                     id = "baixa_gravidade",
                     nome = "Baixa Gravidade",
                     pacoteFixo = ResolvedTraitPackage(
-                        desvantagensParaAdicionar = listOf(TraitAddition("HABITANTE DE GRAVIDADE BAIXA", "HABITANTE_DE_GRAVIDADE_BAIXA"))
+                        desvantagensParaAdicionar = listOf(TraitAddition("HABITANTE DE GRAVIDADE BAIXA", "HABITANTE_DE_GRAVIDADE_BAIXA")),
+                        tracosParaRemoverPorNome = listOf("ADAPTÁVEL", "ADAPTAVEL")
                     )
                 ),
                 VariantOption(
                     id = "minerador",
                     nome = "Minerador",
                     pacoteFixo = ResolvedTraitPackage(
-                        desvantagensParaAdicionar = listOf(TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR"))
+                        desvantagensParaAdicionar = listOf(TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR")),
+                        tracosParaRemoverPorNome = listOf("ADAPTÁVEL", "ADAPTAVEL")
                     ),
                     // Seleção aninhada (mesmo padrão de humanoFantasia() —
                     // VariantOption.selecoes): o jogador escolhe Força OU

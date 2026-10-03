@@ -363,7 +363,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertTrue(result.ensureAdvantageIds.contains("poderes_misticos"))
-        assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertTrue(result.ensureAdvantageNames.contains("Poderes Místicos (Telepata)"))
     }
 
 
