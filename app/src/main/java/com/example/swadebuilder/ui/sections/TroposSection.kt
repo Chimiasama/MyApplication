@@ -33,9 +33,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,9 +50,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
+import com.example.swadebuilder.model.HabilidadeCriacao
+import com.example.swadebuilder.model.RacialTraitAuditFormatter
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.DropdownField
+import com.example.swadebuilder.util.AppPreferences
+import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.util.keyify
@@ -104,6 +111,14 @@ fun TroposSection(
     // escolha de um Tropo; os demais o oferecem como regra opcional, ver TelaInicial).
     if (!state.modoTroposAtivo) return
 
+    val context = LocalContext.current
+    var modoAuditoriaIdPuro by remember { mutableStateOf(AppPreferences.loadModoAuditoriaIdPuro(context)) }
+    val catalogoOficialHabilidades: List<HabilidadeCriacao> = remember {
+        runCatching {
+            context.loadJsonAsset<List<HabilidadeCriacao>>("basico_habilidades_raciais.json")
+        }.getOrElse { emptyList() }
+    }
+
     val tropos = remember(listaTropos) { listaTropos }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
     val allowLongTexts = true
@@ -130,6 +145,30 @@ fun TroposSection(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
+
+            if (EditionConfig.isFullEdition) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Auditoria: ID de traço (sem skin)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Switch(
+                        checked = modoAuditoriaIdPuro,
+                        onCheckedChange = {
+                            modoAuditoriaIdPuro = it
+                            AppPreferences.saveModoAuditoriaIdPuro(context, it)
+                        }
+                    )
+                }
+                Spacer(Modifier.height(8.dp))
+            }
 
             // Option "None" to unlock race change
             val noneSelected = state.tropoSelecionado == null
@@ -236,12 +275,41 @@ fun TroposSection(
                             }
 
                             AnimatedVisibility(visible = detalhesExpandidos[tropo.id] == true) {
-                                Text(
-                                    text = tropo.descricao,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                Column {
+                                    Text(
+                                        text = tropo.descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+
+                                    if (EditionConfig.isFullEdition && modoAuditoriaIdPuro && tropo.habilidades.isNotEmpty()) {
+                                        Spacer(Modifier.height(8.dp))
+                                        Text(
+                                            text = "Auditoria (id puro, sem skin):",
+                                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                            color = MaterialTheme.colorScheme.tertiary,
+                                            modifier = Modifier.padding(start = 40.dp)
+                                        )
+                                        Spacer(Modifier.height(2.dp))
+                                        val auditLinhas = remember(tropo.habilidades, catalogoOficialHabilidades, listaVantagens) {
+                                            RacialTraitAuditFormatter.formatar(
+                                                tropo.habilidades,
+                                                catalogoOficialHabilidades,
+                                                emptyMap(),
+                                                listaVantagens
+                                            )
+                                        }
+                                        auditLinhas.forEach { linha ->
+                                            Text(
+                                                text = "• $linha",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(start = 40.dp, top = 2.dp, end = 8.dp)
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
 
