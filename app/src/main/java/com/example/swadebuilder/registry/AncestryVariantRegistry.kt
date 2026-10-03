@@ -618,9 +618,10 @@ object AncestryVariantRegistry {
                     nome = "Fuzileiro Zero G",
                     pacoteFixo = ResolvedTraitPackage(
                         vantagensGratisParaAdicionar = listOf(
-                            TraitAddition("ADAPTAÇÃO GRAVITACIONAL", "ADAPTACAO_GRAVITACIONAL"),
-                            TraitAddition("REFLEXOS DE COMBATE", "REFLEXOS_DE_COMBATE")
-                        )
+                            TraitAddition("ADAPTAÇÃO GRAVITACIONAL", "ADAPTACAO_GRAVITACIONAL")
+                        ),
+                        vantagensGratisIds = listOf("adaptacao_gravitacional"),
+                        tracosParaRemoverPorNome = listOf("NERVOS DE AÇO", "NERVOS_DE_ACO")
                     )
                 )
             )
