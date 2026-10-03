@@ -545,6 +545,9 @@ object RacialTraitPointCatalog {
         // skin no nome), igual ao padrão de Mente de Colmeia.
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 2, // skin de Imune a Doenças e Venenos (IMUNE_DOENCAS_VENENOS), Araiguma
+        "EMBELEZAR_ANJO" to 1, // Embelezar (Anjo)
+        "IMUNE_DOENCAS_VENENOS" to 2, // Imune a Doenças e Venenos (Anjo)
+        "NAO_ENVELHECE" to 1, // Não Envelhece (Anjo)
         // Humanos (Fantasia) - Pacotes Culturais (ver AncestryVariantRegistry.humanoFantasia())
         "NOMADES_DESERTO_SOBREVIVENCIA" to 2, // oficial: pericia_racial_d6 (Sobrevivência d6)
         "POVO_MONTANHA_VIGOR" to 2, // oficial: aumento_atributo (Vigor d6)

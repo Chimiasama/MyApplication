@@ -232,13 +232,13 @@ fun vantagensGratisEfetivas(habilidades: List<RacialAbility>): List<String> =
         hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome
     }.distinctBy { it.racialGrantDedupeKey() }
 
-fun desvantagensEfetivas(habilidades: List<RacialAbility>): List<String> =
+fun desvantagensEfetivas(habilidades: List<RacialAbility>, allComplicacoes: List<Complicacao> = emptyList()): List<String> =
     habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
-        // targetRef (traitId=RACIAL_HINDRANCE) tem prioridade, mesmo motivo
-        // do caso GRANTED_EDGE acima (skin de nome, ex.: Kitsunemimi
-        // "Excessivamente Detalhistas" concedendo "Cauteloso").
-        val base = hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.nome
-        val sev = hab.severity
+        val rawRef = hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.nome
+        val key = rawRef.keyify()
+        val compMatch = allComplicacoes.firstOrNull { it.id.keyify() == key || it.name.keyify() == key }
+        val base = compMatch?.name ?: rawRef.toFancyTitleCase()
+        val sev = hab.severity ?: compMatch?.severity
         if (sev != null && !base.contains("($sev)", ignoreCase = true)) {
             "$base ($sev)"
         } else {
@@ -268,10 +268,15 @@ fun desvantagensEfetivas(habilidades: List<RacialAbility>): List<String> =
  */
 object RacialCaracteristicasResolver {
 
-    fun resolver(habilidades: List<RacialAbility>, allVantagens: List<Vantagem> = emptyList()): List<String> {
+    fun resolver(
+        habilidades: List<RacialAbility>,
+        allVantagens: List<Vantagem> = emptyList(),
+        showPoints: Boolean = true
+    ): List<String> {
         val linhas = mutableListOf<String>()
 
         fun formatPts(pts: Int): String = when {
+            !showPoints -> ""
             pts > 0 -> " (+$pts pts)"
             pts < 0 -> " ($pts pts)"
             else -> ""

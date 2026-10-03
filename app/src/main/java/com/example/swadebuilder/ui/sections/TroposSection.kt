@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.HabilidadeCriacao
+import com.example.swadebuilder.model.RacialAbility
+import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialTraitAuditFormatter
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
@@ -257,7 +259,49 @@ fun TroposSection(
                             )
                         }
 
-                        if (allowLongTexts && tropo.descricao.isNotBlank()) {
+                        val caracteristicasTropo = remember(tropo, selecionado, state.habilidadesDoTropoResolvidas, listaVantagens) {
+                            val habsEfetivas = if (selecionado && state.habilidadesDoTropoResolvidas.isNotEmpty()) {
+                                state.habilidadesDoTropoResolvidas
+                            } else {
+                                tropo.habilidades
+                            }
+                            val habsConvertidas = if (habsEfetivas.isEmpty()) {
+                                val habsLegadas = mutableListOf<RacialAbility>()
+                                tropo.ganhaAoComprar.forEach { vantIdOrNome ->
+                                    habsLegadas.add(
+                                        RacialAbility(
+                                            nome = vantIdOrNome,
+                                            descricao = "",
+                                            id = "GRANTED_EDGE",
+                                            category = "racial_edge",
+                                            traitId = "GRANTED_EDGE",
+                                            targetRef = vantIdOrNome
+                                        )
+                                    )
+                                }
+                                tropo.periciasGratuitas.forEach { (pericia, passos) ->
+                                    habsLegadas.add(
+                                        RacialAbility(
+                                            nome = pericia,
+                                            descricao = "",
+                                            traitId = "SKILL_BOOST",
+                                            targetRef = pericia,
+                                            value = passos
+                                        )
+                                    )
+                                }
+                                habsLegadas
+                            } else {
+                                habsEfetivas
+                            }
+                            RacialCaracteristicasResolver.resolver(
+                                habilidades = habsConvertidas,
+                                allVantagens = listaVantagens,
+                                showPoints = false
+                            )
+                        }
+
+                        if (allowLongTexts) {
                             Spacer(Modifier.height(2.dp))
                             TextButton(
                                 onClick = {
@@ -276,12 +320,34 @@ fun TroposSection(
 
                             AnimatedVisibility(visible = detalhesExpandidos[tropo.id] == true) {
                                 Column {
-                                    Text(
-                                        text = tropo.descricao,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                                    if (caracteristicasTropo.isNotEmpty()) {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            text = if (tropo.categoria == "MONSTRO") "Características de Monstro:" else "Características:",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(start = 40.dp, top = 2.dp),
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        caracteristicasTropo.forEach { linha ->
+                                            Text(
+                                                text = "• $linha",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                modifier = Modifier.padding(start = 40.dp, top = 1.dp, end = 8.dp),
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                        Spacer(Modifier.height(8.dp))
+                                    }
+
+                                    if (tropo.descricao.isNotBlank()) {
+                                        Text(
+                                            text = tropo.descricao,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
 
                                     if (EditionConfig.isFullEdition && modoAuditoriaIdPuro && tropo.habilidades.isNotEmpty()) {
                                         Spacer(Modifier.height(8.dp))

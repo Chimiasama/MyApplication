@@ -31,6 +31,8 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -38,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -109,6 +112,21 @@ fun ComplicacoesSection(
     var selectedCategoriaId by rememberSaveable { mutableStateOf<String?>(null) }
     val categoriasComplicacao = remember(state.listaCategoriasCustomizadas) {
         state.listaCategoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO }
+    }
+
+    val automaticComplicationsList = remember(state.desvantagensAutomaticas, state.desvantagensRaciais, ancestryAuto, state.desvantagensAutomaticasDoTropo, state.listaComplicacoes) {
+        val allAutoNames = (state.desvantagensAutomaticas + state.desvantagensRaciais + ancestryAuto + state.desvantagensAutomaticasDoTropo)
+            .distinctBy { it.keyify() }
+        allAutoNames.map { rawName ->
+            val cleanName = rawName.substringBefore("(").trim()
+            val sevInText = Regex("""\((Maior|Menor)\)""", RegexOption.IGNORE_CASE).find(rawName)?.groupValues?.get(1)?.toFancyTitleCase()
+            val compMatch = state.listaComplicacoes.firstOrNull { it.id.keyify() == cleanName.keyify() || it.name.keyify() == cleanName.keyify() }
+            val displayName = compMatch?.name ?: cleanName.toFancyTitleCase()
+            val sev = sevInText ?: compMatch?.severity ?: ""
+            val desc = compMatch?.description ?: ""
+            val fullTitle = if (sev.isNotBlank() && !displayName.contains("($sev)", ignoreCase = true)) "$displayName ($sev)" else displayName
+            Triple(fullTitle, desc, compMatch)
+        }
     }
 
     val complicacoesFiltradas = state.listaComplicacoes.filter { comp ->
@@ -196,6 +214,44 @@ fun ComplicacoesSection(
                         )
                     }
                 } else {
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                if (automaticComplicationsList.isNotEmpty()) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "Complicações Automáticas (Raciais e de Tropo):",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            automaticComplicationsList.forEach { (title, desc, _) ->
+                                Text(
+                                    text = "• $title",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                                if (desc.isNotBlank()) {
+                                    Text(
+                                        text = desc,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
+                                        modifier = Modifier.padding(start = 12.dp, bottom = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
                     Spacer(Modifier.height(8.dp))
                 }
 

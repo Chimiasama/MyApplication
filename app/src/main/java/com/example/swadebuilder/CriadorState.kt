@@ -713,6 +713,22 @@ class CriadorState {
      * Marcial "Potencial Físico": Agilidade->Esquiva, Força->Bloquear, Vigor->Reflexos de
      * Combate).
      */
+    val desvantagensAutomaticasDoTropo = mutableStateListOf<String>()
+
+    private fun reconciliarDesvantagensDeHabilidadesDoTropo() {
+        val anteriores = desvantagensAutomaticasDoTropo.toList()
+        desvantagensRaciais.removeAll { it in anteriores }
+        desvantagensAutomaticasDoTropo.clear()
+
+        val novas = desvantagensEfetivas(habilidadesDoTropoResolvidas, listaComplicacoes)
+        novas.forEach { desv ->
+            if (!desvantagensRaciais.contains(desv)) {
+                desvantagensRaciais.add(desv)
+            }
+            desvantagensAutomaticasDoTropo.add(desv)
+        }
+    }
+
     private fun reconciliarGrantsDeHabilidadesDoTropo(idsAnteriores: List<String>) {
         val idsNovos = tropoVantagensGratisIds()
         idsAnteriores
@@ -725,6 +741,7 @@ class CriadorState {
                 vantagensAutomaticasDoTropo += vant.id
             }
         }
+        reconciliarDesvantagensDeHabilidadesDoTropo()
     }
 
     /**
@@ -6366,6 +6383,7 @@ class CriadorState {
 
         desvantagensRaciais.clear()
         desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
+        reconciliarGrantsDeHabilidadesDoTropo(emptyList())
 
         racialTraitIdsFromVariants.clear()
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
@@ -7434,6 +7452,7 @@ class CriadorState {
                     vantagensAutomaticasDoTropo += vant.id
                 }
             }
+            reconciliarDesvantagensDeHabilidadesDoTropo()
 
             // PROMPT: Equipamentos de Tropo
             // Se encontrar equipamento com ID "kit_[nome_tropo_limpo]", adiciona.
