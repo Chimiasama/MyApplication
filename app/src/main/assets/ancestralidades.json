@@ -4533,7 +4533,10 @@
         "nome": "Naturalmente Sobrenatural",
         "descricao": "Os Umvee estão ligados ao mundo espiritual e possuem um conhecimento inato dele, começando com Ocultismo d4.",
         "category": "racial_trait_positive",
-        "id": "NATURALMENTE_SOBRENATURAL",
+        "id": "PERICIA_RACIAL_D4",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Ocultismo",
+        "value": 0,
         "descricaoLite": "Ocultismo inicial d4."
       },
       {
