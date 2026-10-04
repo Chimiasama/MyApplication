@@ -1593,7 +1593,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     // completo (só apareciam no resumo do app).
     val corePairs = listOf(
         "Aparar" to p.aparar.toString(),
-        "Resistência" to p.resistencia.toString(),
+        "Resistência" to calcResistencia(p),
         "Tamanho" to p.tamanho.toString(),
         "Movimentação" to p.movimentacao.toString(),
         "Corrida" to p.dadoCorrida

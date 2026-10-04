@@ -97,4 +97,25 @@ class EquipamentoEquipadoTest {
         assertEquals(0f, state.totalPesoEquipamentos(), 0.01f)
         assertEquals(0, state.armadura)
     }
+
+    @Test
+    fun `calcResistencia formata resistencia e armadura para PDF`() {
+        val state = CriadorState()
+        state.updateGameData(emptySnapshot())
+
+        val armaduraTronco = EquipamentoItem(
+            nome = "Corselete de Couro",
+            armadura = JsonPrimitive("+2"),
+            local = listOf("TRONCO"),
+            equipado = true
+        )
+        state.equipamentosComprados.add(armaduraTronco)
+
+        val meuPersonagem = state.toMeuPersonagem()
+        assertEquals("4(6)", calcResistencia(meuPersonagem))
+
+        val semArmaduraState = CriadorState()
+        semArmaduraState.updateGameData(emptySnapshot())
+        assertEquals("4", calcResistencia(semArmaduraState.toMeuPersonagem()))
+    }
 }
