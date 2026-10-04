@@ -4540,10 +4540,13 @@
         "descricaoLite": "Ocultismo inicial d4."
       },
       {
-        "nome": "Instinto de Sobrevivência",
-        "descricao": "Filhos da natureza selvagem, os Umvee sabem se virar ao ar livre desde cedo, começando com Sobrevivência d4.",
+        "nome": "Ligado à Natureza",
+        "descricao": "Umvee começam com d4 em Sobrevivência.",
         "category": "racial_trait_positive",
-        "id": "INSTINTO_DE_SOBREVIVENCIA",
+        "id": "PERICIA_RACIAL_D4",
+        "traitId": "SKILL_BOOST",
+        "targetRef": "Sobrevivência",
+        "value": 0,
         "descricaoLite": "Sobrevivência inicial d4."
       },
       {
