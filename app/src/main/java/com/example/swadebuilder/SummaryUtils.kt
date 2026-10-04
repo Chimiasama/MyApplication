@@ -691,7 +691,8 @@ fun buildSummaryLines(
         lines += "Equipamentos:"
         personagem.equipamentos.forEach { eq ->
             val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName.toFancyTitleCase() else eq.nomeExibicao.toFancyTitleCase()
-            lines += "• $nomeEq"
+            val statusStr = if (eq.equipado) "" else " (Mochila)"
+            lines += "• $nomeEq$statusStr"
         }
     }
     lines += ""

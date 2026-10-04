@@ -4953,10 +4953,10 @@
       },
       {
         "nome": "Obsessivos",
-        "descricao": "Começam com d4 em uma Perícia baseada em Astúcia à escolha.",
+        "descricao": "Recebem um aumento de um tipo de dado em uma perícia baseada em Astúcia à escolha.",
         "category": "racial_trait_positive",
         "id": "OBSESSIVOS",
-        "descricaoLite": "Uma perícia baseada em Astúcia, à escolha, começa em d4."
+        "descricaoLite": "Eleva em um tipo de dado uma perícia baseada em Astúcia à escolha."
       },
       {
         "nome": "Resistente",

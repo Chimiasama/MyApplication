@@ -93,7 +93,11 @@ data class EquipamentoItem(
     // nome da categoria é resolvido dinamicamente, então renomear a categoria
     // atualiza a seção sem precisar editar cada item.
     @SerialName("categoriaCustomizadaId")
-    val categoriaCustomizadaId: String? = null
+    val categoriaCustomizadaId: String? = null,
+    // Indica se o equipamento está atualmente vestido/empunhado pelo personagem.
+    // Quando false (item na mochila), não conta para o peso total, resistência, aparar
+    // ou penalidades de Força Mínima.
+    val equipado: Boolean = true
 ) {
     val nomeExibicao: String
         get() = if (EditionConfig.isFullEdition) {
