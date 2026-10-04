@@ -1488,7 +1488,7 @@ object AncestryVariantRegistry {
                 defaultTargetChoice = "Conhecimento Acadêmico",
                 passos = 1,
                 injectionTemplate = "{alvo} (Obsessivos)",
-                marcadorTraitId = "SKILL_STEP_UP"
+                marcadorTraitId = "OBSESSIVOS"
             )
         )
     )

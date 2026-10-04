@@ -106,12 +106,38 @@ class CriadorStatePericiaEscolhidaTest {
 
         val conhecimento = Pericia(nome = "Conhecimento Acadêmico", atributo = "ASTUCIA", basica = false)
         assertEquals(4, state.periciaStartRaw(state.ancestralidade, conhecimento))
+        assertEquals(12, state.periciaCapRaw(conhecimento))
+    }
+
+    @Test
+    fun `gnomo com Perceber escolhido eleva Perceber para d8 e cap para d12+2`() {
+        val state = CriadorState()
+        val gnomoComSentidos = gnomo().copy(
+            habilidades = listOf(
+                RacialAbility(nome = "Sentidos Aguçados", descricao = "", id = "SENTIDOS_AGUCADOS"),
+                RacialAbility(nome = "Obsessivos", descricao = "", id = "OBSESSIVOS")
+            )
+        )
+        state.updateGameData(snapshotCom(gnomoComSentidos))
+        state.compendioPathfinderAtivo = true
+        state.ancestralidade = "Gnomo"
+        state.selecionarPericiaGnomo("Perceber")
+
+        val perceber = Pericia(nome = "Perceber", atributo = "ASTUCIA", basica = true)
+        assertEquals(8, state.periciaStartRaw(state.ancestralidade, perceber))
+        assertEquals(14, state.periciaCapRaw(perceber))
     }
 
     @Test
     fun `trocar de pericia escolhida no gnomo nao deixa a anterior vazando`() {
         val state = CriadorState()
-        state.updateGameData(snapshotCom(gnomo()))
+        val gnomoComSentidos = gnomo().copy(
+            habilidades = listOf(
+                RacialAbility(nome = "Sentidos Aguçados", descricao = "", id = "SENTIDOS_AGUCADOS"),
+                RacialAbility(nome = "Obsessivos", descricao = "", id = "OBSESSIVOS")
+            )
+        )
+        state.updateGameData(snapshotCom(gnomoComSentidos))
         state.compendioPathfinderAtivo = true
         state.ancestralidade = "Gnomo"
         state.selecionarPericiaGnomo("Conhecimento Acadêmico")
@@ -121,7 +147,8 @@ class CriadorStatePericiaEscolhidaTest {
         val conhecimento = Pericia(nome = "Conhecimento Acadêmico", atributo = "ASTUCIA", basica = false)
         val perceber = Pericia(nome = "Perceber", atributo = "ASTUCIA", basica = true)
         assertEquals(0, state.periciaStartRaw(state.ancestralidade, conhecimento))
-        assertEquals(6, state.periciaStartRaw(state.ancestralidade, perceber))
+        assertEquals(8, state.periciaStartRaw(state.ancestralidade, perceber))
+        assertEquals(14, state.periciaCapRaw(perceber))
     }
 
     @Test
