@@ -304,7 +304,7 @@ class CriadorStateKirinSignTest {
     }
 
     @Test
-    fun `usagimimi permite escolher pericia da adg para iniciar em d6`() {
+    fun `usagimimi permite escolher pericia da adg para aumentar um passo`() {
         val state = CriadorState().apply {
             injectKitsuneUsagiAncestries(this)
             compendioArteDaGuerraAtivo = true
@@ -314,7 +314,7 @@ class CriadorStateKirinSignTest {
 
         val provocar = Pericia("Provocar", "ESPIRITO", false, origem = "ARTE_DA_GUERRA")
 
-        assertEquals(6, state.periciaStartRaw(state.ancestralidade, provocar))
+        assertEquals(4, state.periciaStartRaw(state.ancestralidade, provocar))
     }
 
     @Test

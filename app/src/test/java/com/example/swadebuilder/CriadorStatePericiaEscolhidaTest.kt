@@ -152,7 +152,7 @@ class CriadorStatePericiaEscolhidaTest {
     }
 
     @Test
-    fun `usagimimi com Provocar escolhido comeca com Provocar d6, nao d4`() {
+    fun `usagimimi com Provocar escolhido comeca com Provocar d4 por mais 1 passo`() {
         val state = CriadorState()
         state.updateGameData(snapshotCom(usagimimi()))
         state.compendioArteDaGuerraAtivo = true
@@ -160,7 +160,7 @@ class CriadorStatePericiaEscolhidaTest {
         state.selecionarPericiaUsagimimi("Provocar")
 
         val provocar = Pericia(nome = "Provocar", atributo = "ESPIRITO", basica = false)
-        assertEquals(6, state.periciaStartRaw(state.ancestralidade, provocar))
+        assertEquals(4, state.periciaStartRaw(state.ancestralidade, provocar))
     }
 
     @Test

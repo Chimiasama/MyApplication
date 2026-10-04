@@ -199,8 +199,7 @@ object RacialTraitPointCatalog {
             "BRINCALHAO" -> RacialTraitEffect.PericiaStep("Provocar", passos = 0)
             "SENTIDOS_AGUCADOS" -> RacialTraitEffect.PericiaStep("Perceber")
             "PREPARADO" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 0) else RacialTraitEffect.Nenhum
-            "DEFINIDO_PELO_OFICIO" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 1) else RacialTraitEffect.Nenhum
-            "OBSESSIVOS" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 1, relativo = true) else RacialTraitEffect.Nenhum
+            "DEFINIDO_PELO_OFICIO", "OBSESSIVOS" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, 1, relativo = true) else RacialTraitEffect.Nenhum
             else -> EFEITOS[key] ?: RacialTraitEffect.Nenhum
         }
     }
@@ -537,7 +536,7 @@ object RacialTraitPointCatalog {
         "CONSTRUTO" to 8, // oficial: construto
         "COVARDE" to -2, // oficial: complicacao_racial_maior
         "CURIOSO" to -2, // oficial: complicacao_racial_maior
-        "DEFINIDO_PELO_OFICIO" to 2, // oficial: pericia_racial_d6 (1 perícia à escolha d6)
+        "DEFINIDO_PELO_OFICIO" to 1, // oficial: pericia_racial_d4 (1 perícia à escolha +1 passo)
         "DEPENDENCIA" to -2, // oficial: dependencia
         "DEPENDENCIA_ATMOSFERICA" to -1, // oficial: dependencia_atmosferica_1 (tier "Horas", sem qualificador explícito no JSON)
         "DESAGRADAVEL" to -1, // oficial: complicacao_racial_menor
