@@ -4397,11 +4397,10 @@
     "habilidades": [
       {
         "nome": "Definido pelo Ofício",
-        "descricao": "Os Usagimimi respeitam e apreciam o trabalho árduo realizado pelos outros. Eles se esforçam para ter sucesso em uma perícia própria, recebendo um aumento de um tipo de dado em uma perícia à escolha.",
+        "descricao": "Os Usagimimi respeitam e apreciam o trabalho árduo realizado pelos outros. Eles se esforçam para ter sucesso em uma perícia própria. Os Usagimimi começam com uma perícia (de sua escolha) em d6.",
         "category": "racial_trait_positive",
-        "id": "PERICIA_RACIAL_D4",
-        "traitId": "SKILL_BOOST",
-        "descricaoLite": "Eleva em um tipo de dado uma perícia à escolha."
+        "id": "DEFINIDO_PELO_OFICIO",
+        "descricaoLite": "Uma perícia à escolha começa em d6."
       },
       {
         "nome": "Visão no Escuro",
