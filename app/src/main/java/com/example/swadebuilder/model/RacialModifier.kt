@@ -356,7 +356,7 @@ object RacialCaracteristicasResolver {
             val tid = hab.resolvedTraitId().uppercase()
             if (hab.category == "racial_hindrance" || hab.category == "racial_edge" || tid == "RACIAL_HINDRANCE" || tid == "GRANTED_EDGE") return@forEach
             val id = hab.id?.keyify()
-            val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
 
             val catalogLabel = id?.takeIf { RacialTraitPointCatalog.LABEL.containsKey(it) }
