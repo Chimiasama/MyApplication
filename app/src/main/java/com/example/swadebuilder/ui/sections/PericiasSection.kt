@@ -193,9 +193,7 @@ fun SkillCarouselPopoverDialog(
                     steps.forEach { targetRaw ->
                         val cost = calcularCustoAcumuladoPericia(startRaw, attrRaw, targetRaw)
                         val additionalCost = if (targetRaw > currentRaw) calcularCustoAcumuladoPericia(currentRaw, attrRaw, targetRaw) else 0
-                        val bloqueadoPorRestricao = bloqueioMensagem != null && targetRaw > currentRaw
-                        val canAfford = !bloqueadoPorRestricao &&
-                            (availableSp == null || targetRaw <= currentRaw || (additionalCost <= availableSp && (capRaw >= 100 || targetRaw <= capRaw)))
+                        val canAfford = availableSp == null || targetRaw <= currentRaw || (additionalCost <= availableSp && (capRaw >= 100 || targetRaw <= capRaw))
 
                         val isSelected = targetRaw == currentRaw
                         val isAboveAttr = targetRaw > attrRaw

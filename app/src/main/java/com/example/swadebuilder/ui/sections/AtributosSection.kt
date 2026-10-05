@@ -809,6 +809,16 @@ fun AtributosContent(
         val capRaw = state.periciaCapRaw(per)
         val idosoActive = state.idosoBonusSp > 0
 
+        val astuciaGastoPopover = state.spCostStackPorPericia
+            .filterKeys { it.atributo == com.example.swadebuilder.model.RuleConstants.ATRIBUTO_ASTUCIA }
+            .values
+            .sumOf { it.sum() }
+        val bloqueioIdoso = if (!state.modoLivre && idosoActive && astuciaGastoPopover < 5 && per.atributo != com.example.swadebuilder.model.RuleConstants.ATRIBUTO_ASTUCIA) {
+            "Idoso: gaste ${5 - astuciaGastoPopover} pt(s) em Astúcia antes de subir esta perícia."
+        } else {
+            null
+        }
+
         SkillCarouselPopoverDialog(
             skillName = per.nome,
             startRaw = startRaw,
@@ -817,6 +827,7 @@ fun AtributosContent(
             currentRaw = currentRaw,
             capRaw = capRaw,
             availableSp = if (state.modoLivre) null else (state.pontosPericia + pcLivres),
+            bloqueioMensagem = bloqueioIdoso,
             onSelectRaw = { targetRaw: Int ->
                 if (targetRaw > currentRaw) {
                     val stepsToAdd = dieStepsCount(currentRaw, targetRaw)
@@ -838,15 +849,11 @@ fun AtributosContent(
                     repeat(stepsToRemove) {
                         state.decreasePericia(per)
                     }
-                    // Mesmo "auto-refund" que o stepper de um passo só já tinha — sem
-                    // isso, reduzir vários passos de uma vez pelo carrossel nunca
-                    // soltava de volta Ponto(s) de Complicação gastos num passo
-                    // comprado com PB em vez de PP.
                     while (state.pontosPericia > 0 && state.cpSpStack.isNotEmpty()) {
                         state.devolverPcDePericia()
                     }
                 }
-                state.rebuildAllPericiaStacks(enforcePoolLimit = true)
+                state.rebuildAllPericiaStacks(feedbackMessages ?: mutableListOf(), enforcePoolLimit = true)
                 onUserFeedback()
             },
             onDismiss = { skillPopoverTarget = null }
