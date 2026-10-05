@@ -84,12 +84,7 @@ fun CriadorState.calcularPericiaRules(
     } else {
         !locked &&
             pontosPericia >= costNormal &&
-            nextRaw <= capRaw &&
-            (if (idosoActive && astuciaSpent < 5) {
-                pericia.atributo == RuleConstants.ATRIBUTO_ASTUCIA
-            } else {
-                true
-            })
+            nextRaw <= capRaw
     }
 
     return PericiaRuleSnapshot(

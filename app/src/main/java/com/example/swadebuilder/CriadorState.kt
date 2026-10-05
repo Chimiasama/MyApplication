@@ -7705,13 +7705,13 @@ class CriadorState {
 
         // Safety check for creation mode + Idoso
         if (!modoProgressaoAtivo && !modoLivre) {
-             val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
+             val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" } || idosoBonusSp > 0
              if (hasIdoso && per.atributo != "ASTUCIA") {
                  val spentOnSmarts = periciasComIdiomas()
                      .filter { it.atributo == "ASTUCIA" }
                      .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
                  if (spentOnSmarts < 5) {
-                     feedbackMessages?.add("Distribua ao menos 5 pontos em perícias de astúcia antes.")
+                     feedbackMessages?.add("Gaste ao menos 5 pontos em perícias baseadas em Astúcia")
                      return
                  }
              }

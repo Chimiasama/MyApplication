@@ -831,7 +831,7 @@ fun AtributosContent(
                                 return@repeat
                             }
                         }
-                        state.increasePericiaFromAdvancement(per, reg.cost, null)
+                        state.increasePericiaFromAdvancement(per, reg.cost, feedbackMessages)
                     }
                 } else if (targetRaw < currentRaw) {
                     val stepsToRemove = dieStepsCount(targetRaw, currentRaw)
