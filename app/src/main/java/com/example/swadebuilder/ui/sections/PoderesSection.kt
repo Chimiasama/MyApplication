@@ -1,5 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
+import com.example.swadebuilder.EditionConfig
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -1051,7 +1053,7 @@ fun PoderesSection(
                                         displayNome = "$displayNome ⓒ"
                                     }
 
-                                    Column(modifier = Modifier.clickable { showPowerDetailsDialog = true }) {
+                                    Column(modifier = Modifier.clickable(enabled = EditionConfig.isFullEdition) { showPowerDetailsDialog = true }) {
                                         Text(
                                             text = displayNome,
                                             fontWeight = FontWeight.Bold,
@@ -1119,12 +1121,13 @@ fun PoderesSection(
                                 val isCustomDialog = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
                                 if (isCustomDialog) displayNomeDialog = "$displayNomeDialog ⓒ"
 
-                                AlertDialog(
-                                    onDismissRequest = { showPowerDetailsDialog = false },
-                                    title = {
-                                        Text(displayNomeDialog, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                    },
-                                    text = {
+                                if (showPowerDetailsDialog && EditionConfig.isFullEdition) {
+                                    AlertDialog(
+                                        onDismissRequest = { showPowerDetailsDialog = false },
+                                        title = {
+                                            Text(displayNomeDialog, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                        },
+                                        text = {
                                         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                                             if (poder.descricao.isNotBlank()) {
                                                 Text(poder.descricao, style = MaterialTheme.typography.bodyMedium)
@@ -1159,6 +1162,7 @@ fun PoderesSection(
                                         }
                                     }
                                 )
+                                }
                             }
                             }
                         }

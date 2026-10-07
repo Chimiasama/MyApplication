@@ -809,7 +809,7 @@ private fun ComplicacaoItem(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable { showDetailsDialog = true }
+                    .clickable(enabled = EditionConfig.isFullEdition) { showDetailsDialog = true }
             ) {
                 val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
                 val customBadge = if (isCustom) " ⓒ" else ""
@@ -941,7 +941,7 @@ private fun ComplicacaoItem(
         }
     }
 
-    if (showDetailsDialog) {
+    if (showDetailsDialog && EditionConfig.isFullEdition) {
         val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toFancyTitleCase() else comp.name.toFancyTitleCase()
         AlertDialog(
             onDismissRequest = { showDetailsDialog = false },

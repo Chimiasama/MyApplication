@@ -24,8 +24,8 @@ android {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 37
-        versionCode = 24
-        versionName = "3.2"
+        versionCode = 25
+        versionName = "3.3"
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")

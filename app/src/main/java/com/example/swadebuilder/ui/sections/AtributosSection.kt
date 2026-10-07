@@ -446,12 +446,16 @@ fun AtributosContent(
                             .weight(1f)
                             .combinedClickable(
                                 onClick = {
-                                    infoDialogTitle = displayName
-                                    infoDialogContent = descricao
+                                    if (EditionConfig.isFullEdition) {
+                                        infoDialogTitle = displayName
+                                        infoDialogContent = descricao
+                                    }
                                 },
                                 onLongClick = {
-                                    infoDialogTitle = displayName
-                                    infoDialogContent = descricao
+                                    if (EditionConfig.isFullEdition) {
+                                        infoDialogTitle = displayName
+                                        infoDialogContent = descricao
+                                    }
                                 }
                             ),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
@@ -615,12 +619,16 @@ fun AtributosContent(
                                             .weight(1f)
                                             .combinedClickable(
                                                 onClick = {
-                                                    infoDialogTitle = per.nome.toFancyTitleCase()
-                                                    infoDialogContent = getSkillDescription(per, state)
+                                                    if (EditionConfig.isFullEdition) {
+                                                        infoDialogTitle = per.nome.toFancyTitleCase()
+                                                        infoDialogContent = getSkillDescription(per, state)
+                                                    }
                                                 },
                                                 onLongClick = {
-                                                    infoDialogTitle = per.nome.toFancyTitleCase()
-                                                    infoDialogContent = getSkillDescription(per, state)
+                                                    if (EditionConfig.isFullEdition) {
+                                                        infoDialogTitle = per.nome.toFancyTitleCase()
+                                                        infoDialogContent = getSkillDescription(per, state)
+                                                    }
                                                 }
                                             )
                                     ) {
@@ -860,7 +868,7 @@ fun AtributosContent(
         )
     }
 
-    if (infoDialogTitle != null) {
+    if (infoDialogTitle != null && EditionConfig.isFullEdition) {
         AlertDialog(
             onDismissRequest = {
                 infoDialogTitle = null

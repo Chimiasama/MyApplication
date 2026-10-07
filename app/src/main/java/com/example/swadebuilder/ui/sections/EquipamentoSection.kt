@@ -40,6 +40,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -515,6 +516,9 @@ fun EquipamentoSection(
         Column(modifier = containerModifier) {
             // 1. Prepare Data
             val activeOrigins = state.getActiveOrigins()
+            LaunchedEffect(activeOrigins) {
+                state.clearEquipExpandedState()
+            }
             val esconderSupers = superequipCategorias.isEmpty()
             val rawCategories = (categorias + superequipCategorias)
                 .filterNot {

@@ -1,5 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
+import com.example.swadebuilder.EditionConfig
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -261,7 +263,7 @@ fun CiberneticosSection(
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )
-                            if (item.efeito.isNotBlank()) {
+                            if (EditionConfig.isFullEdition && item.efeito.isNotBlank()) {
                                 Text(
                                     text = item.efeito,
                                     style = MaterialTheme.typography.bodySmall,
@@ -422,7 +424,11 @@ fun CiberneticosSection(
                                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                             )
                             Text(
-                                text = "Tensão: ${installed.strain_custo} | ${installed.efeito}",
+                                text = if (EditionConfig.isFullEdition && installed.efeito.isNotBlank()) {
+                                    "Tensão: ${installed.strain_custo} | ${installed.efeito}"
+                                } else {
+                                    "Tensão: ${installed.strain_custo}"
+                                },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

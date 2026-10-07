@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -97,13 +98,15 @@ fun StandardEquipamentoItem(
                  )
             }
 
-            resumo.observacao?.let {
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            if (EditionConfig.isFullEdition) {
+                resumo.observacao?.let {
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
             // Details

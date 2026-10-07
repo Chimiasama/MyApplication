@@ -2211,6 +2211,14 @@ class CriadorState {
     val equipExpandedSubGroups = mutableStateMapOf<String, Boolean>()
     var equipSectionFilters = mutableStateMapOf<EquipSuperType, Set<String>>()
 
+    fun clearEquipExpandedState() {
+        equipExpandedTypes.clear()
+        equipExpandedGroups.clear()
+        equipExpandedSubGroups.clear()
+        equipSectionFilters.clear()
+        equipSelectedSuperTypes.clear()
+    }
+
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
     // expandirRetrato: Se true, ocupa 50% da largura no Resumo. Se false, ocupa menos espaço (default).

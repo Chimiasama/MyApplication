@@ -1959,7 +1959,7 @@ private fun VantagemItem(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .clickable { showDetailsDialog = true }
+                        .clickable(enabled = EditionConfig.isFullEdition) { showDetailsDialog = true }
                 ) {
                     val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
                     val customBadge = if (isCustom) " ⓒ" else ""
@@ -2027,7 +2027,7 @@ private fun VantagemItem(
         }
     }
 
-    if (showDetailsDialog) {
+    if (showDetailsDialog && EditionConfig.isFullEdition) {
         val titleText = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
         val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
             vant.originalDescription.trim()

@@ -1351,7 +1351,7 @@ fun AncestralidadesSection(
                                                 }
                                         } else {
                                             // Description
-                                            if (descricao.isNotBlank()) {
+                                            if (EditionConfig.isFullEdition && descricao.isNotBlank()) {
                                                 Text(
                                                     text = descricao,
                                                     style = MaterialTheme.typography.bodySmall,
