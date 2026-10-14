@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.EditionConfig
+import com.example.swadebuilder.util.keyify
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -133,3 +134,59 @@ data class MechaModCatalogWrapper(
 data class MechaWeaponCatalogWrapper(
     val armas: List<MechaWeaponItem> = emptyList()
 )
+
+object MechaModIncompatibilityValidator {
+
+    private data class ModConflictRule(val idA: String, val idB: String, val nomeA: String, val nomeB: String)
+
+    private val REGRAS = listOf(
+        ModConflictRule("mod_neg_manob_reduzida", "mod_loc_manobrabilidade", "Manobrabilidade Reduzida", "Manobrabilidade Melhora"),
+        ModConflictRule("mod_neg_vel_reduzida", "mod_loc_velocidade_ampliada", "Velocidade Reduzida", "Velocidade Ampliada"),
+        ModConflictRule("mod_neg_forca_reduzida", "mod_cent_forca_ampliada", "Força Reduzida", "Força Ampliada"),
+        ModConflictRule("mod_neg_drone", "mod_neg_pilotagem_dupla", "Drone", "Pilotagem Dupla"),
+        ModConflictRule("mod_neg_drone", "mod_neg_tripulacao_exposta", "Drone", "Tripulação Exposta"),
+        ModConflictRule("mod_neg_drone", "mod_cent_assento", "Drone", "Assento para Tripulação"),
+        ModConflictRule("mod_neg_manual", "mod_cent_ia", "Manual", "Inteligência Artificial (IA)"),
+        ModConflictRule("mod_neg_manual", "mod_of_controle_remoto", "Manual", "Controle Remoto"),
+        ModConflictRule("mod_neg_manual", "mod_def_drones_reparo", "Manual", "Drones de Reparo"),
+        ModConflictRule("mod_neg_manual", "mod_def_nanomaquinas", "Manual", "Nanomáquinas (Reparo)"),
+        ModConflictRule("mod_neg_manual", "mod_of_sistema_mira", "Manual", "Sistema de Mira"),
+        ModConflictRule("mod_neg_manual", "mod_def_cace", "Manual", "CA/CE (Contramedidas Antimísseis)"),
+        ModConflictRule("mod_neg_manual", "mod_def_blindagem_pem", "Manual", "Blindagem PEM"),
+        ModConflictRule("mod_neg_sem_maos", "mod_of_lamina_braco", "Sem Mãos", "Lâmina de Braço"),
+        ModConflictRule("mod_neg_sem_maos", "mod_of_lamina_energia", "Sem Mãos", "Lâmina de Energia"),
+        ModConflictRule("mod_neg_sem_maos", "mod_def_escudo_bracal", "Sem Mãos", "Escudo Braçal"),
+        ModConflictRule("mod_neg_sem_maos", "mod_of_acessorios_extras", "Sem Mãos", "Acessórios Extras")
+    )
+
+    fun validarInstalacao(modParaInstalar: MechaModItem, modsInstalados: List<MechaModItem>): String? {
+        val targetIdKey = modParaInstalar.id.keyify()
+        val targetNomeKey = modParaInstalar.nome.keyify()
+
+        for (regra in REGRAS) {
+            val keyA = regra.idA.keyify()
+            val keyB = regra.idB.keyify()
+            val nameAKey = regra.nomeA.keyify()
+            val nameBKey = regra.nomeB.keyify()
+
+            val isTargetA = targetIdKey == keyA || targetNomeKey.contains(nameAKey) || nameAKey.contains(targetNomeKey)
+            val isTargetB = targetIdKey == keyB || targetNomeKey.contains(nameBKey) || nameBKey.contains(targetNomeKey)
+
+            if (isTargetA) {
+                val modExistente = modsInstalados.firstOrNull { it.id.keyify() == keyB || it.nome.keyify().contains(nameBKey) || nameBKey.contains(it.nome.keyify()) }
+                if (modExistente != null) {
+                    return "Remova '${modExistente.nome}' para instalar '${modParaInstalar.nome}'."
+                }
+            }
+
+            if (isTargetB) {
+                val modExistente = modsInstalados.firstOrNull { it.id.keyify() == keyA || it.nome.keyify().contains(nameAKey) || nameAKey.contains(it.nome.keyify()) }
+                if (modExistente != null) {
+                    return "Remova '${modExistente.nome}' para instalar '${modParaInstalar.nome}'."
+                }
+            }
+        }
+
+        return null
+    }
+}

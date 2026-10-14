@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -9,13 +10,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -24,11 +28,13 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +48,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.MechaCatalogWrapper
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.MechaModCatalogWrapper
@@ -421,10 +429,13 @@ private fun MechaCardItem(
     onUpdateMecha: (MechaItem) -> Unit,
     onRemove: () -> Unit
 ) {
+    val context = LocalContext.current
     var systemInput by remember { mutableStateOf("") }
     var showModDialog by remember { mutableStateOf(false) }
     var showWeaponCatalogDialog by remember { mutableStateOf(false) }
     var showCreateCustomWeaponDialog by remember { mutableStateOf(false) }
+    var infoDialogTitle by remember { mutableStateOf<String?>(null) }
+    var infoDialogContent by remember { mutableStateOf<String?>(null) }
 
     // Dynamic stat calculations with modifiers and equipped weapons MOD costs. Mods cujo custo
     // escala com o Tamanho ("Metade do Tam." no livro) são resolvidos contra o tamanho ATUAL do
@@ -532,78 +543,47 @@ private fun MechaCardItem(
                     )
                 }
 
+                val modsAgrupados = remember(mecha.mods_instalados, mecha.tamanho) {
+                    mecha.mods_instalados.groupBy { it.id }.values.map { lista ->
+                        val embaixador = lista.first()
+                        val qtd = lista.size
+                        val custoUnitario = embaixador.custoResolvido(mecha.tamanho)
+                        val custoTotal = custoUnitario * qtd
+                        Triple(embaixador, qtd, custoTotal)
+                    }
+                }
+
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.padding(vertical = 4.dp)
                 ) {
-                    mecha.mods_instalados.forEach { mod ->
-                        val isNeg = mod.mods_cost < 0
+                    modsAgrupados.forEach { (mod, qtd, custoTotal) ->
+                        val isNeg = custoTotal < 0
+                        val sign = if (isNeg) "" else "+"
+                        val labelTexto = if (qtd > 1) {
+                            "${mod.nome} x$qtd [$sign$custoTotal MODs]"
+                        } else {
+                            "${mod.nome} [$sign$custoTotal MODs]"
+                        }
+
                         InputChip(
                             selected = true,
                             onClick = {
-                                onUpdateMecha(
-                                    mecha.copy(
-                                        mods_instalados = mecha.mods_instalados - mod
-                                    )
-                                )
+                                val indexParaRemover = mecha.mods_instalados.indexOfLast { it.id == mod.id }
+                                if (indexParaRemover >= 0) {
+                                    val novaLista = mecha.mods_instalados.toMutableList().apply { removeAt(indexParaRemover) }
+                                    onUpdateMecha(mecha.copy(mods_instalados = novaLista))
+                                }
                             },
-                            label = { Text("${mod.nome} [${if (isNeg) "${mod.mods_cost} MODs" else "+${mod.mods_cost} MODs"}]") },
-                            trailingIcon = { Icon(Icons.Default.Delete, contentDescription = null) }
+                            label = { Text(labelTexto) },
+                            trailingIcon = { Icon(Icons.Default.Delete, contentDescription = "Remover $labelTexto") }
                         )
                     }
                 }
             }
 
-            // Customizações Rápidas
-            OutlinedCard(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.outlinedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Blindagem Extra: ", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
-                        FilledTonalIconButton(
-                            onClick = {
-                                val newBlindagem = (mecha.customizacoes.blindagem_extra - 1).coerceAtLeast(0)
-                                onUpdateMecha(
-                                    mecha.copy(
-                                        customizacoes = mecha.customizacoes.copy(blindagem_extra = newBlindagem)
-                                    )
-                                )
-                            },
-                            modifier = Modifier.size(28.dp)
-                        ) {
-                            Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.size(14.dp))
-                        }
-                        Text(
-                            text = " +${mecha.customizacoes.blindagem_extra} ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        FilledTonalIconButton(
-                            onClick = {
-                                val newBlindagem = mecha.customizacoes.blindagem_extra + 1
-                                onUpdateMecha(
-                                    mecha.copy(
-                                        customizacoes = mecha.customizacoes.copy(blindagem_extra = newBlindagem)
-                                    )
-                                )
-                            },
-                            modifier = Modifier.size(28.dp)
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.size(14.dp))
-                        }
-                    }
-                }
-            }
+
 
             // Armas Equipadas
             Column {
@@ -613,31 +593,19 @@ private fun MechaCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Armas Equipadas", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                    Row {
-                        OutlinedButton(
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        AssistChip(
                             onClick = { showWeaponCatalogDialog = true },
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                            Spacer(Modifier.width(4.dp))
-                            Text("Catálogo de Armas", fontSize = 12.sp)
-                        }
-                        Spacer(Modifier.width(6.dp))
-                        OutlinedButton(
+                            label = { Text("Catálogo") },
+                            leadingIcon = { Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp)) }
+                        )
+                        AssistChip(
                             onClick = { showCreateCustomWeaponDialog = true },
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                            Spacer(Modifier.width(4.dp))
-                            Text("Criar Arma", fontSize = 12.sp)
-                        }
+                            label = { Text("Criar") },
+                            leadingIcon = { Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp)) }
+                        )
                     }
                 }
-                Text(
-                    text = "Uma arma customizada precisa de um custo em MODs (não existe arma de Mecha de graça) — use \"Criar Arma\" em vez de escrever o nome dela em outro lugar.",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
 
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -754,7 +722,6 @@ private fun MechaCardItem(
                                 // bloqueadas pelo orçamento — só por max_uses. Mods de custo
                                 // positivo são bloqueados se ultrapassarem o total do chassi.
                                 val estouraOrcamento = custoMod > 0 && modsGasto + custoMod > mecha.mod_pontos_max
-                                val podeInstalarMod = !isMaxed && !estouraOrcamento
 
                                 OutlinedCard(
                                     modifier = Modifier
@@ -773,57 +740,79 @@ private fun MechaCardItem(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Column(
-                                            modifier = Modifier.weight(1f),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .clickable(enabled = EditionConfig.isFullEdition) {
+                                                    val custoStr = if (mod.custo.isNotBlank()) "\n\nCusto: ${mod.custo}" else ""
+                                                    infoDialogTitle = mod.nome
+                                                    infoDialogContent = (mod.descricao + custoStr).ifBlank { "Nenhuma descrição disponível." }
+                                                },
                                             verticalArrangement = Arrangement.spacedBy(2.dp)
                                         ) {
                                             MarqueeText(
                                                 text = mod.nome,
                                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                                             )
-                                            Text(
-                                                text = mod.descricao + if (mod.custo.isNotBlank()) " (${mod.custo})" else "",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
                                         }
                                         Spacer(Modifier.width(8.dp))
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                        val conflitoMsg = com.example.swadebuilder.model.MechaModIncompatibilityValidator.validarInstalacao(mod, mecha.mods_instalados)
+                                        val temConflito = conflitoMsg != null
+                                        val custoTotalAcumulado = custoMod * currentUses
+
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
-                                            Text(
-                                                text = if (isMaxed) "Máx" else if (estouraOrcamento) "Sem MODs" else if (custoMod >= 0) "+$custoMod" else "$custoMod",
-                                                modifier = Modifier
-                                                    .clip(CircleShape)
-                                                    .clickable(enabled = podeInstalarMod) {
-                                                        onUpdateMecha(
-                                                            mecha.copy(
-                                                                mods_instalados = mecha.mods_instalados + mod
-                                                            )
-                                                        )
-                                                    }
-                                                    .padding(horizontal = 10.dp, vertical = 2.dp),
-                                                style = MaterialTheme.typography.titleMedium,
-                                                color = if (!podeInstalarMod) MaterialTheme.colorScheme.onSurfaceVariant else if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                                                fontWeight = FontWeight.Bold
-                                            )
                                             if (currentUses > 0) {
-                                                Text(
-                                                    text = "-",
-                                                    modifier = Modifier
-                                                        .clip(CircleShape)
-                                                        .clickable {
-                                                            onUpdateMecha(
-                                                                mecha.copy(
-                                                                    mods_instalados = mecha.mods_instalados - mod
-                                                                )
-                                                            )
+                                                FilledTonalIconButton(
+                                                    onClick = {
+                                                        val idx = mecha.mods_instalados.indexOfLast { it.id == mod.id }
+                                                        if (idx >= 0) {
+                                                            val novaLista = mecha.mods_instalados.toMutableList().apply { removeAt(idx) }
+                                                            onUpdateMecha(mecha.copy(mods_instalados = novaLista))
                                                         }
-                                                        .padding(horizontal = 10.dp, vertical = 0.dp),
-                                                    style = MaterialTheme.typography.titleMedium,
-                                                    color = MaterialTheme.colorScheme.error,
+                                                    },
+                                                    modifier = Modifier.size(28.dp)
+                                                ) {
+                                                    Icon(Icons.Default.Remove, contentDescription = "Diminuir ${mod.nome}", modifier = Modifier.size(14.dp))
+                                                }
+
+                                                val signTotal = if (custoTotalAcumulado < 0) "" else "+"
+                                                Text(
+                                                    text = "x$currentUses [$signTotal$custoTotalAcumulado MODs]",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                                                )
+                                            } else {
+                                                val signUnit = if (isNeg) "" else "+"
+                                                Text(
+                                                    text = if (isMaxed) "Máx" else if (estouraOrcamento) "Sem MODs" else if (temConflito) "Bloq" else "$signUnit$custoMod MODs",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = if (temConflito || isMaxed || estouraOrcamento) MaterialTheme.colorScheme.onSurfaceVariant else if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                                     fontWeight = FontWeight.Bold
                                                 )
+                                            }
+
+                                            FilledTonalIconButton(
+                                                onClick = {
+                                                    if (conflitoMsg != null) {
+                                                        android.widget.Toast.makeText(context, conflitoMsg, android.widget.Toast.LENGTH_LONG).show()
+                                                        return@FilledTonalIconButton
+                                                    }
+                                                    if (isMaxed) {
+                                                        android.widget.Toast.makeText(context, "Limite máximo atingido para '${mod.nome}'.", android.widget.Toast.LENGTH_SHORT).show()
+                                                        return@FilledTonalIconButton
+                                                    }
+                                                    if (estouraOrcamento) {
+                                                        android.widget.Toast.makeText(context, "Espaço de MODs insuficiente para '${mod.nome}'.", android.widget.Toast.LENGTH_SHORT).show()
+                                                        return@FilledTonalIconButton
+                                                    }
+                                                    onUpdateMecha(mecha.copy(mods_instalados = mecha.mods_instalados + mod))
+                                                },
+                                                modifier = Modifier.size(28.dp)
+                                            ) {
+                                                Icon(Icons.Default.Add, contentDescription = "Instalar ${mod.nome}", modifier = Modifier.size(14.dp))
                                             }
                                         }
                                     }
@@ -868,29 +857,26 @@ private fun MechaCardItem(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clickable(enabled = EditionConfig.isFullEdition) {
+                                            val custoStr = if (w.custo.isNotBlank()) "\n\nCusto: ${w.custo}" else ""
+                                            infoDialogTitle = w.nome
+                                            infoDialogContent = (w.descricao + custoStr).ifBlank { "Nenhuma descrição disponível." }
+                                        },
                                     verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                    ) {
-                                        Text(
-                                            text = w.nome,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Text(
-                                            text = "${w.mods_cost} MODs" + if (w.custo.isNotBlank()) " (${w.custo})" else "",
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
                                     Text(
-                                        text = w.descricao,
+                                        text = w.nome,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    val custoText = if (w.custo.isNotBlank()) " | ${w.custo}" else ""
+                                    Text(
+                                        text = "${w.mods_cost} MODs$custoText",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.SemiBold
                                     )
                                 }
                                 Spacer(Modifier.width(8.dp))
@@ -910,6 +896,37 @@ private fun MechaCardItem(
                             }
                         }
                     }
+                }
+            }
+        )
+    }
+
+    if (infoDialogTitle != null && EditionConfig.isFullEdition) {
+        AlertDialog(
+            onDismissRequest = {
+                infoDialogTitle = null
+                infoDialogContent = null
+            },
+            title = {
+                Text(infoDialogTitle!!, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Text(
+                        text = infoDialogContent.orEmpty().ifBlank { "Nenhuma descrição disponível." },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        infoDialogTitle = null
+                        infoDialogContent = null
+                    }
+                ) {
+                    Text("Fechar")
                 }
             }
         )
@@ -941,10 +958,41 @@ private fun CreateCustomMechaWeaponDialog(
     onCreate: (MechaWeaponItem) -> Unit
 ) {
     var nomeText by remember { mutableStateOf("") }
-    var danoText by remember { mutableStateOf("") }
-    var descricaoText by remember { mutableStateOf("") }
+
+    // Dano Estruturado
+    var danoBaseadoEmForca by remember { mutableStateOf(false) }
+    var danoQtd by remember { mutableStateOf("3") }
+    var danoDado by remember { mutableStateOf("d8") }
+    var danoBonusText by remember { mutableStateOf("0") }
+
+    // Estatísticas da Arma
+    var paText by remember { mutableStateOf("4") }
+    var cdt by remember { mutableStateOf("1") }
+    var distancia by remember { mutableStateOf("50/100/200") }
     var modsCostText by remember { mutableStateOf("1") }
-    var custoText by remember { mutableStateOf("") }
+    var tamanhoMinimoText by remember { mutableStateOf("4") }
+    var custoRefText by remember { mutableStateOf("") }
+
+    // Propriedades / Observações
+    val propriedadesDisponiveis = listOf("Arma Pesada", "Cauterizante", "Sobrecarga", "Defesa de Ponto", "Tiro de Reação", "MPE", "MME", "MGE", "Guiada")
+    val propriedadesSelecionadas = remember { mutableStateListOf<String>() }
+    var obsLivreText by remember { mutableStateOf("") }
+
+    fun montarDano(): String {
+        val b = danoBonusText.toIntOrNull() ?: 0
+        val sufixoBonus = if (b > 0) "+$b" else if (b < 0) "$b" else ""
+        return if (danoBaseadoEmForca) {
+            "For+$danoDado$sufixoBonus"
+        } else {
+            val qtd = danoQtd.toIntOrNull()?.coerceAtLeast(1) ?: 1
+            val base = if (qtd <= 1) danoDado else "$qtd$danoDado"
+            "$base$sufixoBonus"
+        }
+    }
+
+    val danoFinal = montarDano()
+    val paInt = paText.toIntOrNull() ?: 0
+    val modsCostInt = modsCostText.toIntOrNull()?.coerceAtLeast(0) ?: 1
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -952,14 +1000,30 @@ private fun CreateCustomMechaWeaponDialog(
             FilledTonalButton(
                 enabled = nomeText.isNotBlank(),
                 onClick = {
-                    val nomeFinal = if (danoText.isNotBlank()) "${nomeText.trim()} (${danoText.trim()})" else nomeText.trim()
+                    val propsStr = propriedadesSelecionadas.joinToString(", ")
+                    val descPartes = listOfNotNull(
+                        distancia.takeIf { it.isNotBlank() }?.let { "Distância: $it" },
+                        tamanhoMinimoText.takeIf { it.isNotBlank() && it != "-" }?.let { "Tamanho Mín.: $it" },
+                        propsStr.takeIf { it.isNotBlank() },
+                        obsLivreText.takeIf { it.isNotBlank() }
+                    )
+                    val descFinal = descPartes.joinToString(". ")
+
+                    val nomeComDanoEPa = buildString {
+                        append(nomeText.trim())
+                        append(" ($danoFinal")
+                        if (paInt > 0) append(", PA $paInt")
+                        if (cdt.isNotBlank() && cdt != "1") append(", CdT $cdt")
+                        append(")")
+                    }
+
                     onCreate(
                         MechaWeaponItem(
                             id = "custom_mecha_weapon_${java.util.UUID.randomUUID()}",
-                            nome = nomeFinal,
-                            mods_cost = modsCostText.toIntOrNull()?.coerceAtLeast(0) ?: 1,
-                            custo = custoText.trim(),
-                            descricao = descricaoText.trim()
+                            nome = nomeComDanoEPa,
+                            mods_cost = modsCostInt,
+                            custo = custoRefText.trim(),
+                            descricao = descFinal
                         )
                     )
                 }
@@ -976,13 +1040,15 @@ private fun CreateCustomMechaWeaponDialog(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "Fica registrada só neste Mecha (não entra no catálogo geral). O custo em MODs é decidido por você/o Mestre com base em armas parecidas do catálogo oficial.",
+                    text = "Monte uma arma estruturada com dados de SWADE, custo em MODs e propriedades de Mecha.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                // Nome da Arma
                 OutlinedTextField(
                     value = nomeText,
                     onValueChange = { nomeText = it },
@@ -990,35 +1056,174 @@ private fun CreateCustomMechaWeaponDialog(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
-                OutlinedTextField(
-                    value = danoText,
-                    onValueChange = { danoText = it },
-                    label = { Text("Dano / PA (ex.: 3d8, PA 4)") },
+
+                // --- CONSTRUTOR DE DANO ---
+                Text("Dano da Arma:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                Row(
                     modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    FilterChip(
+                        selected = !danoBaseadoEmForca,
+                        onClick = { danoBaseadoEmForca = false },
+                        label = { Text("Dado Fixo (3d8)") }
+                    )
+                    FilterChip(
+                        selected = danoBaseadoEmForca,
+                        onClick = { danoBaseadoEmForca = true },
+                        label = { Text("Baseado em Força (For+d12)") }
+                    )
+                }
+
+                // Dado e Quantidade (Carrossel Horizontal de 1 a 20 e Tipos de Dados)
+                if (!danoBaseadoEmForca) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text("Quantidade de Dados (1 a 20): $danoQtd", style = MaterialTheme.typography.labelSmall)
+                        Spacer(Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            (1..20).forEach { q ->
+                                val qStr = q.toString()
+                                FilterChip(
+                                    selected = danoQtd == qStr,
+                                    onClick = { danoQtd = qStr },
+                                    label = { Text(qStr) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text("Tipo do Dado:", style = MaterialTheme.typography.labelSmall)
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        listOf("d4", "d6", "d8", "d10", "d12", "d20", "d100").forEach { d ->
+                            FilterChip(
+                                selected = danoDado == d,
+                                onClick = { danoDado = d },
+                                label = { Text(d) }
+                            )
+                        }
+                    }
+                }
+
+                // Bônus Fixo de Dano (Campo numérico livre)
+                OutlinedTextField(
+                    value = danoBonusText,
+                    onValueChange = { danoBonusText = it.filter { c -> c.isDigit() || c == '-' } },
+                    label = { Text("Bônus Fixo de Dano (ex: 0, 2, 20, 100)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true
                 )
-                OutlinedTextField(
-                    value = descricaoText,
-                    onValueChange = { descricaoText = it },
-                    label = { Text("Alcance / Observações") },
-                    modifier = Modifier.fillMaxWidth()
+
+                Text(
+                    text = "Dano Resultante: $danoFinal",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 )
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+
+                HorizontalDivider()
+
+                // --- PA e CdT e Alcance ---
+                OutlinedTextField(
+                    value = paText,
+                    onValueChange = { paText = it.filter { c -> c.isDigit() } },
+                    label = { Text("PA - Penetração de Armadura (ex: 0, 4, 20, 100)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     OutlinedTextField(
-                        value = modsCostText,
-                        onValueChange = { modsCostText = it.filter { char -> char.isDigit() } },
-                        label = { Text("Custo em MODs") },
+                        value = cdt,
+                        onValueChange = { cdt = it },
+                        label = { Text("CdT (Cadência)") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
                     OutlinedTextField(
-                        value = custoText,
-                        onValueChange = { custoText = it },
-                        label = { Text("Preço de referência ($)") },
+                        value = distancia,
+                        onValueChange = { distancia = it },
+                        label = { Text("Alcance / Distância") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
                 }
+
+                // --- CUSTO EM MODS & TAMANHO MÍNIMO ---
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = modsCostText,
+                        onValueChange = { modsCostText = it.filter { c -> c.isDigit() } },
+                        label = { Text("Custo em MODs (ex: 0, 1, 2, 20)") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = tamanhoMinimoText,
+                        onValueChange = { tamanhoMinimoText = it },
+                        label = { Text("Tam. Mín. (ex: 4, 7, 12, -)") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+
+                OutlinedTextField(
+                    value = custoRefText,
+                    onValueChange = { custoRefText = it },
+                    label = { Text("Preço de Referência ($ opcional)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                // --- PROPRIEDADES ESPECIAIS ---
+                Text("Propriedades / Módulos Especiais:", style = MaterialTheme.typography.labelSmall)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    propriedadesDisponiveis.forEach { prop ->
+                        val sel = prop in propriedadesSelecionadas
+                        FilterChip(
+                            selected = sel,
+                            onClick = {
+                                if (sel) propriedadesSelecionadas.remove(prop)
+                                else propriedadesSelecionadas.add(prop)
+                            },
+                            label = { Text(prop) }
+                        )
+                    }
+                }
+
+                OutlinedTextField(
+                    value = obsLivreText,
+                    onValueChange = { obsLivreText = it },
+                    label = { Text("Observações Adicionais (opcional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     )
